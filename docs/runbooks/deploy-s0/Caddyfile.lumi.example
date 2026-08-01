@@ -1,0 +1,6 @@
+# This exact S0 block is already live. For a fresh server only, append it after
+# all existing site blocks; never add a duplicate, replace an existing block,
+# or overwrite the complete Caddyfile. Validate before reloading Caddy.
+lumi.bot.cd {
+    reverse_proxy 127.0.0.1:3100
+}

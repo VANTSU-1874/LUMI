@@ -1,0 +1,242 @@
+{
+  "schemaVersion": 1,
+  "version": "2026-07-17.9",
+  "description": "触映当前 Runtime 的跨艺术设计专业、长会话、任务隔离、重启恢复与故障注入统一基准。",
+  "designCases": [
+    {
+      "id": "benchmark-visual-hierarchy",
+      "discipline": "visual-communication",
+      "message": "公益海报里标题、时间、地点和说明文字都很重要，我该怎么建立清楚的信息层级？",
+      "expected": {
+        "episodes": ["UNDERSTAND", "BUILD"],
+        "conceptGroups": [
+          ["信息层级", "主次", "优先级", "次要信息", "视觉分组", "重要性排序"],
+          ["阅读路径", "视线", "阅读顺序", "顶部", "下方", "底部", "第一眼", "其次", "最后阅读", "按顺序", "快速阅读", "2秒"],
+          ["版式", "网格", "字号"]
+        ],
+        "forbiddenTerms": ["超出课程", "无法回答", "重新填写逻辑卡"],
+        "maxQuestions": 1
+      }
+    },
+    {
+      "id": "benchmark-brand-positioning",
+      "discipline": "brand-design",
+      "message": "我想把一个本地茶品牌做得高级一点，但现在只有名字，应该先想什么？",
+      "expected": {
+        "episodes": ["EXPLORE", "BUILD"],
+        "conceptGroups": [
+          ["受众", "人群", "消费者", "卖给谁"],
+          ["品牌性格", "品牌定位", "品牌气质", "品牌调性", "高级感方向", "核心价值", "视觉气质", "基调", "关键词"],
+          ["触点", "应用场景", "使用场景", "场景", "场合", "送礼", "自饮", "茶歇", "品鉴", "收藏"]
+        ],
+        "forbiddenTerms": ["超出课程", "无法回答", "先填写专业字段"],
+        "maxQuestions": 1
+      }
+    },
+    {
+      "id": "benchmark-packaging-shelf",
+      "discipline": "packaging-design",
+      "message": "农产品包装既要有地方文化又要在货架上一眼被认出来，第一版原型怎么做？",
+      "expected": {
+        "episodes": ["BUILD", "EXPLORE"],
+        "conceptGroups": [
+          ["货架", "识别", "远距离", "退后", "2米", "两米", "3米", "三米", "陈列", "竞品"],
+          ["信息层级", "视觉优先级", "主信息", "品牌名", "产品名", "字号最大", "高饱和", "色块", "图形符号", "对比度", "视觉冲击", "第一眼", "最先跳出来"],
+          ["材料", "结构", "包装原型", "纸样", "黑白稿", "打样", "草图", "轮廓", "叠在货架", "现场照片", "纸板", "A4纸", "包装盒", "实物模拟", "产品盒", "模型", "泡沫", "折出", "贴图"]
+        ],
+        "forbiddenTerms": ["超出课程", "无法回答", "没有课程依据"],
+        "maxQuestions": 1
+      }
+    },
+    {
+      "id": "benchmark-ui-task-flow",
+      "discipline": "ui-ux",
+      "message": "校园报修App功能不多但学生还是找不到提交入口，怎样重新梳理体验？",
+      "expected": {
+        "episodes": ["DEBUG", "UNDERSTAND", "BUILD"],
+        "conceptGroups": [
+          ["用户路径", "任务流程", "操作路径", "点击路径", "交互流程", "点击"],
+          ["入口", "可见性", "视觉层级", "视觉权重", "颜色突出", "颜色鲜明", "显眼", "全局可见", "固定位置", "常驻", "标签命名"],
+          ["可用性", "用户测试", "同学测试", "无障碍", "点击次数", "心理模型", "认知负荷", "多级菜单", "二级菜单", "界面截图", "截图", "首屏", "滚动", "标记", "猜测位置", "注意力", "行为数据"]
+        ],
+        "forbiddenTerms": ["超出课程", "无法回答", "只能讨论数字交互课程"],
+        "maxQuestions": 1
+      }
+    },
+    {
+      "id": "benchmark-product-ergonomics",
+      "discipline": "product-design",
+      "message": "老人用的水杯握把总是滑，我怎样从人体工学和结构上做第一轮验证？",
+      "expected": {
+        "episodes": ["BUILD", "DEBUG", "UNDERSTAND"],
+        "conceptGroups": [
+          ["人体工学", "手型", "握持"],
+          ["样机", "模型", "测试", "验证", "模拟", "原型", "黏土", "橡皮泥"],
+          ["材料", "防滑", "摩擦", "滑动", "滑脱", "纹理", "抓握", "指印", "压力分布"]
+        ],
+        "forbiddenTerms": ["超出课程", "无法回答", "没有专门课程"],
+        "maxQuestions": 1
+      }
+    },
+    {
+      "id": "benchmark-space-circulation",
+      "discipline": "spatial-design",
+      "message": "一个小型展览空间入口很窄，观众容易堵在第一件作品前，动线应该怎么改？",
+      "expected": {
+        "episodes": ["DEBUG", "BUILD", "UNDERSTAND"],
+        "conceptGroups": [
+          ["动线", "路径", "流线", "引导", "分流"],
+          ["停留", "节点", "拥堵", "缓冲", "堵", "滞留"],
+          ["安全", "疏散", "通行"]
+        ],
+        "forbiddenTerms": ["超出课程", "无法回答", "不属于现有课程"],
+        "maxQuestions": 1
+      }
+    },
+    {
+      "id": "benchmark-fashion-drape",
+      "discipline": "fashion-design",
+      "message": "我想做柔软但有力量感的服装轮廓，怎样用面料和立裁先验证？",
+      "expected": {
+        "episodes": ["BUILD", "EXPLORE", "UNDERSTAND"],
+        "conceptGroups": [
+          ["垂感", "面料", "克重", "垂坠", "弹性", "厚度"],
+          ["廓形", "结构", "轮廓", "侧缝", "张力", "上宽下窄"],
+          ["样衣", "立裁", "坯布", "人台", "珠针"]
+        ],
+        "forbiddenTerms": ["超出课程", "无法回答", "没有服装课程包"],
+        "maxQuestions": 1
+      }
+    },
+    {
+      "id": "benchmark-jewelry-wearability",
+      "discipline": "jewelry-design",
+      "message": "我做的胸针造型好看但佩戴时总往下坠，应该从哪些方面修改？",
+      "expected": {
+        "episodes": ["DEBUG", "BUILD", "UNDERSTAND"],
+        "conceptGroups": [
+          ["佩戴", "身体", "衣料"],
+          ["重量", "重心", "配重"],
+          ["连接", "别针", "固定"]
+        ],
+        "forbiddenTerms": ["超出课程", "无法回答", "没有首饰资料"],
+        "maxQuestions": 1
+      }
+    },
+    {
+      "id": "benchmark-video-rhythm",
+      "discipline": "video-design",
+      "message": "30秒品牌短片信息很多但看完没有印象，怎样重新安排镜头和节奏？",
+      "expected": {
+        "episodes": ["DEBUG", "BUILD", "UNDERSTAND"],
+        "conceptGroups": [
+          ["镜头", "分镜", "景别", "空镜", "特写", "镜头分组"],
+          ["节奏", "时长", "时间", "秒", "剪辑", "重剪", "前3秒", "前5秒", "快速切换", "不超过2秒", "镜头时长", "剪成"],
+          ["声音", "画面", "视听", "视觉焦点", "视觉冲击", "钩子", "视觉呼吸", "信息密度", "氛围"]
+        ],
+        "forbiddenTerms": ["超出课程", "无法回答", "不是设计问题"],
+        "maxQuestions": 1
+      }
+    },
+    {
+      "id": "benchmark-animation-weight",
+      "discipline": "animation-design",
+      "message": "角色从高处落地的动画很轻飘，关键动作和时间应该怎样调整？",
+      "expected": {
+        "episodes": ["DEBUG", "BUILD", "UNDERSTAND"],
+        "conceptGroups": [
+          ["关键帧", "关键动作", "姿势"],
+          ["节奏", "时间", "帧数", "帧", "触地瞬间", "速度变化"],
+          ["重量", "惯性", "缓冲"]
+        ],
+        "forbiddenTerms": ["超出课程", "无法回答", "没有动画课程"],
+        "maxQuestions": 1
+      }
+    },
+    {
+      "id": "benchmark-craft-material-test",
+      "discipline": "craft-design",
+      "message": "陶瓷灯罩既要透光又不能太脆，我应该怎样安排材料和烧成试样？",
+      "expected": {
+        "episodes": ["BUILD", "UNDERSTAND", "DEBUG"],
+        "conceptGroups": [
+          ["材料", "泥料", "厚度", "瓷泥", "陶泥", "薄片"],
+          ["工艺", "烧成", "窑温", "温度", "℃"],
+          ["试样", "测试", "样片", "对比", "记录"]
+        ],
+        "forbiddenTerms": ["超出课程", "无法回答", "没有工艺美术课程包"],
+        "maxQuestions": 1
+      }
+    }
+  ],
+  "longSession": {
+    "id": "benchmark-20-turn-continuity",
+    "goalIncludes": "校园非遗节",
+    "minimumBriefFields": 8,
+    "maxQuestionsPerTurn": 1,
+    "turns": [
+      { "message": "我要为校园非遗节建立一套年轻但不幼稚的视觉识别。" },
+      { "message": "主要给第一次接触非遗的新生看。" },
+      { "message": "使用场景先放在校园入口和社交媒体。" },
+      { "message": "核心内容是让大家愿意走进现场体验。" },
+      { "message": "视觉上想保留手工痕迹，但不要做成仿古。" },
+      { "message": "颜色可以鲜明一些，但要控制数量。" },
+      { "message": "字体需要兼顾活动感和信息清楚。" },
+      { "message": "第一轮先做海报、导视和手机端封面。" },
+      { "message": "预算不高，印刷工艺只能选一种。" },
+      { "message": "帮我把制作顺序排一下。" },
+      { "message": "海报和导视怎样保持同一个识别系统？" },
+      { "message": "什么指标能判断新生真的看懂了？" },
+      { "message": "我准备先做三张黑白构图。" },
+      { "message": "同学说第二张更活泼，但标题不够突出。" },
+      { "message": "那我先只调整标题层级，不换整体方向。" },
+      { "message": "社交媒体封面需要从海报里保留什么？" },
+      { "message": "前面确认的受众和设计目标是什么？" },
+      { "message": "不要改变已经确认的目标，只补充媒介限制。" },
+      { "message": "现在最适合执行的下一步是什么？" },
+      { "message": "最后用一句话总结当前项目理解。" }
+    ]
+  },
+  "taskIsolation": {
+    "id": "benchmark-task-isolation",
+    "taskA": {
+      "title": "社区茶馆品牌",
+      "goalIncludes": "社区茶馆",
+      "turns": [
+        { "message": "为社区茶馆做一套温暖、日常的品牌识别。" },
+        { "message": "主要受众是附近居民和年轻上班族。" }
+      ]
+    },
+    "taskB": {
+      "title": "未来音乐节海报",
+      "goalIncludes": "音乐节",
+      "turns": [
+        { "message": "为未来感音乐节做一张高对比动态海报。" },
+        { "message": "主要在手机屏幕和现场大屏使用。" }
+      ]
+    }
+  },
+  "restartRecovery": {
+    "id": "benchmark-restart-recovery",
+    "goalIncludes": "社区医院",
+    "message": "为社区医院做一套让老人也容易理解的导视系统。"
+  },
+  "requiredHarnessCases": [
+    "normal-grounded-tool",
+    "empty-tool-result",
+    "invalid-tool-arguments",
+    "forged-tool-rejected",
+    "cross-pack-tool-rejected",
+    "repeated-tool-rejected",
+    "model-rate-limit-after-observation",
+    "model-provider-offline",
+    "formal-authority-blocked",
+    "write-effect-requires-confirmation",
+    "model-budget-exhausted",
+    "cross-student-action-rejected",
+    "action-idempotency-replay",
+    "tool-timeout-contained",
+    "tool-output-invalid-contained",
+    "legacy-policy-trace-migrated"
+  ]
+}

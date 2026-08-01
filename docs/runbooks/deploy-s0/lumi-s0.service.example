@@ -1,0 +1,43 @@
+[Unit]
+Description=Lumi visual communication design tutor
+Documentation=file:@@RELEASE_ROOT@@/docs/runbooks/deploy-s0.md
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User=@@SERVICE_USER@@
+Group=@@SERVICE_GROUP@@
+WorkingDirectory=@@RELEASE_ROOT@@
+Environment=NODE_ENV=production
+Environment=CHUYING_SERVICE_ENV=/etc/lumi/lumi.env
+EnvironmentFile=/etc/lumi/lumi.env
+ExecStartPre=/usr/bin/test -r /etc/lumi/lumi.env
+ExecStartPre=/usr/bin/test -f @@RELEASE_ROOT@@/.next/BUILD_ID
+ExecStart=@@NODE_BINARY@@ @@RELEASE_ROOT@@/node_modules/tsx/dist/cli.mjs @@RELEASE_ROOT@@/scripts/start-local-host.ts
+Restart=on-failure
+RestartSec=5s
+TimeoutStopSec=30s
+KillSignal=SIGTERM
+KillMode=control-group
+UMask=0077
+LimitNOFILE=65536
+
+# The release is read-only except for Next.js runtime cache. Persistent data
+# lives under /var/lib/lumi and is referenced by /etc/lumi/lumi.env.
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+ReadWritePaths=@@RELEASE_ROOT@@/.next/cache /var/lib/lumi
+
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=lumi-s0
+
+[Install]
+WantedBy=multi-user.target

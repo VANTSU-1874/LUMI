@@ -1,0 +1,112 @@
+{
+  "schemaVersion": 1,
+  "collection": "Lumi W3 原创预置演示资产",
+  "notice": "本清单仅登记自创矢量预置素材及其确定性栅格派生，不含实拍、课程截图或学生提交物。",
+  "sha256Algorithm": "SHA-256",
+  "assets": [
+    {
+      "id": "digital-interaction-proposal-board-preset",
+      "path": "/demo/digital-interaction-proposal-board-preset.svg",
+      "purpose": "在数字交互文创主线中说明文化意图、参与动作、反馈关系与可验证关系链。",
+      "authoringMethod": "ORIGINAL_VECTOR",
+      "COPYRIGHT": "self-created",
+      "dataType": "DEMONSTRATION_DATA",
+      "label": "预置",
+      "sha256": "c6bc433afd9c6a6b5b65eb609d4438be9ca65b0f2da324982be6eb047882d1c8",
+      "禁止对外表述": [
+        "不得表述为真实学生作品或真实课堂产出",
+        "不得表述为安岳石刻照片、拓片或官方纹样复原",
+        "不得表述为 TouchDesigner 或 DigiShow 实拍截图",
+        "不得用于证明真实教学成效"
+      ]
+    },
+    {
+      "id": "digital-interaction-three-states-preset",
+      "path": "/demo/digital-interaction-three-states-preset.svg",
+      "purpose": "展示待机、靠近、反馈三种预置状态及动作与画面反馈的关系。",
+      "authoringMethod": "ORIGINAL_VECTOR",
+      "COPYRIGHT": "self-created",
+      "dataType": "DEMONSTRATION_DATA",
+      "label": "预置",
+      "sha256": "397312e35a31c0a85bea16242f79e79121c49d0dca90d7db418ce25dac67a233",
+      "禁止对外表述": [
+        "不得表述为真实交互装置运行记录",
+        "不得表述为 TouchDesigner 或 DigiShow 实拍截图",
+        "不得表述为真实学生作品或真实课堂产出",
+        "不得用于证明真实教学成效"
+      ]
+    },
+    {
+      "id": "layout-poster-before-preset",
+      "path": "/demo/layout-poster-before-preset.svg",
+      "purpose": "作为版式切课演示中的修改前对照，呈现阅读入口和对齐关系尚未建立的预置稿。",
+      "authoringMethod": "ORIGINAL_VECTOR",
+      "COPYRIGHT": "self-created",
+      "dataType": "DEMONSTRATION_DATA",
+      "label": "预置",
+      "sha256": "0690d84b7ae939bee39ecaf7dba446ae6a5d8fd1b87fb69de3332d83ac0fdab5",
+      "禁止对外表述": [
+        "不得表述为真实学生作品或真实课程作业",
+        "不得表述为真实活动海报或招生信息",
+        "不得用于证明真实教学成效"
+      ]
+    },
+    {
+      "id": "layout-poster-after-preset",
+      "path": "/demo/layout-poster-after-preset.svg",
+      "purpose": "使用与修改前相同的信息，展示建立主题、分组和阅读层级后的预置对照稿。",
+      "authoringMethod": "ORIGINAL_VECTOR",
+      "COPYRIGHT": "self-created",
+      "dataType": "DEMONSTRATION_DATA",
+      "label": "预置",
+      "sha256": "56e4fa6928d735fb12fdc0244324995d5e812a8074b99bb51abd2ed51bf13782",
+      "禁止对外表述": [
+        "不得表述为真实学生作品或真实课程作业",
+        "不得表述为真实活动海报或招生信息",
+        "不得用于证明真实教学成效"
+      ]
+    },
+    {
+      "id": "d017-proposal-before-preset",
+      "path": "/demo/d017-proposal-before-preset.png",
+      "purpose": "作为 D-017 跨会话会诊历史的前一版栅格作品输入，并在种子阶段复制到私有作品存储。",
+      "authoringMethod": "DERIVED_RASTER",
+      "derivedFrom": "digital-interaction-proposal-board-preset",
+      "mimeType": "image/png",
+      "width": 1600,
+      "height": 1000,
+      "byteSize": 42386,
+      "COPYRIGHT": "self-created",
+      "dataType": "DEMONSTRATION_DATA",
+      "label": "预置",
+      "sha256": "46c37393c9b616dae099762f5597f5c18c46381af6f0351d6bdf27632c13460a",
+      "禁止对外表述": [
+        "不得表述为真实学生作品或真实课堂产出",
+        "不得表述为安岳石刻照片、拓片或官方纹样复原",
+        "不得表述为 TouchDesigner 或 DigiShow 实拍截图",
+        "不得用于证明真实教学成效"
+      ]
+    },
+    {
+      "id": "d017-three-states-after-preset",
+      "path": "/demo/d017-three-states-after-preset.png",
+      "purpose": "作为 D-017 本轮会诊的修订版栅格作品输入，并在种子阶段复制到私有作品存储。",
+      "authoringMethod": "DERIVED_RASTER",
+      "derivedFrom": "digital-interaction-three-states-preset",
+      "mimeType": "image/png",
+      "width": 1600,
+      "height": 900,
+      "byteSize": 30238,
+      "COPYRIGHT": "self-created",
+      "dataType": "DEMONSTRATION_DATA",
+      "label": "预置",
+      "sha256": "47a3238ce76fa0432f81577c4f7c830b4cb4e3e4e9780214853e88f178e71ec5",
+      "禁止对外表述": [
+        "不得表述为真实交互装置运行记录",
+        "不得表述为 TouchDesigner 或 DigiShow 实拍截图",
+        "不得表述为真实学生作品或真实课堂产出",
+        "不得用于证明真实教学成效"
+      ]
+    }
+  ]
+}

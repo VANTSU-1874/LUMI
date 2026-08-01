@@ -1,0 +1,2733 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-07-13T16:02:06.591Z",
+  "sourceLabel": "1、posters",
+  "totals": {
+    "modules": 10,
+    "cases": 23,
+    "versions": 83,
+    "parsedVersions": 83,
+    "backupVersions": 52,
+    "duplicateVersions": 15,
+    "structures": 61
+  },
+  "modules": [
+    {
+      "id": "td-module-c851b8a6d79d",
+      "sequence": 1,
+      "title": "1.1 平面几何（4）",
+      "cases": [
+        {
+          "id": "td-case-9546be16a493",
+          "moduleId": "td-module-c851b8a6d79d",
+          "title": "1.1.1渐变颜色叠加示范",
+          "relativeFolder": "1.1_平面几何（4）/1.1.1渐变颜色叠加示范",
+          "activeVersionId": "td-version-84a3627d6541",
+          "versions": [
+            {
+              "id": "td-version-97bad9fb7aff",
+              "label": "备份 01",
+              "fileLabel": "1.1示范",
+              "kind": "BACKUP",
+              "origin": "FILE",
+              "relativePath": "1.1_平面几何（4）/1.1.1渐变颜色叠加示范/Backup/1.1示范.toe",
+              "modifiedAt": "2025-08-11T03:52:26.099Z",
+              "sizeBytes": 3594,
+              "structureId": "939bafc11a37bb80c512297241a4889efd315e4ecdbc306b507a53bdef5b3129",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": null
+            },
+            {
+              "id": "td-version-84a3627d6541",
+              "label": "主工程",
+              "fileLabel": "1.1.1渐变颜色叠加示范",
+              "kind": "PRIMARY",
+              "origin": "FILE",
+              "relativePath": "1.1_平面几何（4）/1.1.1渐变颜色叠加示范/1.1.1渐变颜色叠加示范.toe",
+              "modifiedAt": "2025-08-11T08:05:09.881Z",
+              "sizeBytes": 114258,
+              "structureId": "d50f9e8c32896a18bbd6d90b3ee4248269f8233950d6a28b61226e7e4966aba4",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": {
+                "added": 378,
+                "removed": 0,
+                "changed": 1,
+                "addedNodes": [
+                  "project1/___5___",
+                  "project1/bg",
+                  "project1/colour_lovers_picker",
+                  "project1/colour_lovers_picker/CLPickerExt",
+                  "project1/colour_lovers_picker/colors_data",
+                  "project1/colour_lovers_picker/colors_data/all_colors",
+                  "project1/colour_lovers_picker/colors_data/all_colors/export_colors",
+                  "project1/colour_lovers_picker/colors_data/all_colors/merge1",
+                  "project1/colour_lovers_picker/colors_data/all_colors/select1",
+                  "project1/colour_lovers_picker/colors_data/all_colors/select2",
+                  "project1/colour_lovers_picker/colors_data/all_colors/select3",
+                  "project1/colour_lovers_picker/colors_data/all_colors/select4"
+                ],
+                "removedNodes": [],
+                "changedNodes": [
+                  "project1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "td-case-0ff5a57e51bf",
+          "moduleId": "td-module-c851b8a6d79d",
+          "title": "1.1.2声音驱动画面",
+          "relativeFolder": "1.1_平面几何（4）/1.1.2声音驱动画面",
+          "activeVersionId": "td-version-00d21cf8459f",
+          "versions": [
+            {
+              "id": "td-version-3699cefb6ccb",
+              "label": "备份 01",
+              "fileLabel": "1.1示范",
+              "kind": "BACKUP",
+              "origin": "FILE",
+              "relativePath": "1.1_平面几何（4）/1.1.2声音驱动画面/Backup/1.1示范.toe",
+              "modifiedAt": "2025-08-11T03:52:26.099Z",
+              "sizeBytes": 3594,
+              "structureId": "939bafc11a37bb80c512297241a4889efd315e4ecdbc306b507a53bdef5b3129",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": null
+            },
+            {
+              "id": "td-version-167ffdaf1272",
+              "label": "备份 02",
+              "fileLabel": "声音驱动画面示范.1",
+              "kind": "BACKUP",
+              "origin": "FILE",
+              "relativePath": "1.1_平面几何（4）/1.1.2声音驱动画面/声音驱动画面示范.1.toe",
+              "modifiedAt": "2025-09-16T01:35:49.233Z",
+              "sizeBytes": 312962,
+              "structureId": "453c740b9575229c78d5b381a5ba4cc71432586fdfc24daae4df5d0b9508d141",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": {
+                "added": 1268,
+                "removed": 0,
+                "changed": 1,
+                "addedNodes": [
+                  "audioAnalysis",
+                  "audioAnalysis/addHigh",
+                  "audioAnalysis/addLow",
+                  "audioAnalysis/addMid",
+                  "audioAnalysis/analyze1",
+                  "audioAnalysis/analyze10",
+                  "audioAnalysis/analyze11",
+                  "audioAnalysis/analyze12",
+                  "audioAnalysis/analyze2",
+                  "audioAnalysis/analyze3",
+                  "audioAnalysis/analyze4",
+                  "audioAnalysis/analyze5"
+                ],
+                "removedNodes": [],
+                "changedNodes": [
+                  "project1"
+                ]
+              }
+            },
+            {
+              "id": "td-version-00d21cf8459f",
+              "label": "主工程",
+              "fileLabel": "声音驱动画面示范",
+              "kind": "PRIMARY",
+              "origin": "FILE",
+              "relativePath": "1.1_平面几何（4）/1.1.2声音驱动画面/声音驱动画面示范.toe",
+              "modifiedAt": "2025-09-16T01:35:49.233Z",
+              "sizeBytes": 312962,
+              "structureId": "453c740b9575229c78d5b381a5ba4cc71432586fdfc24daae4df5d0b9508d141",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": "td-version-167ffdaf1272",
+              "diffFromPrevious": {
+                "added": 0,
+                "removed": 0,
+                "changed": 0,
+                "addedNodes": [],
+                "removedNodes": [],
+                "changedNodes": []
+              }
+            }
+          ]
+        },
+        {
+          "id": "td-case-0ddd487252e0",
+          "moduleId": "td-module-c851b8a6d79d",
+          "title": "1.1.3随机像素生成",
+          "relativeFolder": "1.1_平面几何（4）/1.1.3随机像素生成",
+          "activeVersionId": "td-version-615368bc3e5c",
+          "versions": [
+            {
+              "id": "td-version-df70d76c1021",
+              "label": "备份 01",
+              "fileLabel": "1.1示范",
+              "kind": "BACKUP",
+              "origin": "FILE",
+              "relativePath": "1.1_平面几何（4）/1.1.3随机像素生成/Backup/1.1示范.toe",
+              "modifiedAt": "2025-08-11T03:52:26.099Z",
+              "sizeBytes": 3594,
+              "structureId": "939bafc11a37bb80c512297241a4889efd315e4ecdbc306b507a53bdef5b3129",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": null
+            },
+            {
+              "id": "td-version-1d7bba22f30c",
+              "label": "备份 02",
+              "fileLabel": "随机像素生成.1",
+              "kind": "BACKUP",
+              "origin": "FILE",
+              "relativePath": "1.1_平面几何（4）/1.1.3随机像素生成/随机像素生成.1.toe",
+              "modifiedAt": "2025-08-21T04:07:48.564Z",
+              "sizeBytes": 317346,
+              "structureId": "b0e3be118f24da8af5fbed490a1e4f9be27b93a67f2f234bfa732b9095a470d6",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": {
+                "added": 1383,
+                "removed": 0,
+                "changed": 1,
+                "addedNodes": [
+                  "audioAnalysis",
+                  "audioAnalysis/addHigh",
+                  "audioAnalysis/addLow",
+                  "audioAnalysis/addMid",
+                  "audioAnalysis/analyze1",
+                  "audioAnalysis/analyze10",
+                  "audioAnalysis/analyze11",
+                  "audioAnalysis/analyze12",
+                  "audioAnalysis/analyze2",
+                  "audioAnalysis/analyze3",
+                  "audioAnalysis/analyze4",
+                  "audioAnalysis/analyze5"
+                ],
+                "removedNodes": [],
+                "changedNodes": [
+                  "project1"
+                ]
+              }
+            },
+            {
+              "id": "td-version-615368bc3e5c",
+              "label": "主工程",
+              "fileLabel": "随机像素生成",
+              "kind": "PRIMARY",
+              "origin": "FILE",
+              "relativePath": "1.1_平面几何（4）/1.1.3随机像素生成/随机像素生成.toe",
+              "modifiedAt": "2025-08-21T04:07:48.564Z",
+              "sizeBytes": 317346,
+              "structureId": "b0e3be118f24da8af5fbed490a1e4f9be27b93a67f2f234bfa732b9095a470d6",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": "td-version-1d7bba22f30c",
+              "diffFromPrevious": {
+                "added": 0,
+                "removed": 0,
+                "changed": 0,
+                "addedNodes": [],
+                "removedNodes": [],
+                "changedNodes": []
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "td-module-3e811aa1bfb4",
+      "sequence": 2,
+      "title": "1.2 扭曲滤镜（6）",
+      "cases": [
+        {
+          "id": "td-case-adabb7709084",
+          "moduleId": "td-module-3e811aa1bfb4",
+          "title": "1.2.1声音互动扭曲",
+          "relativeFolder": "1.2_扭曲滤镜（6）/1.2.1声音互动扭曲",
+          "activeVersionId": "td-version-b83fb671633e",
+          "versions": [
+            {
+              "id": "td-version-0853751a5663",
+              "label": "备份 01",
+              "fileLabel": "1.2.1声音互动扭曲",
+              "kind": "BACKUP",
+              "origin": "FILE",
+              "relativePath": "1.2_扭曲滤镜（6）/1.2.1声音互动扭曲/Backup/1.2.1声音互动扭曲.toe",
+              "modifiedAt": "2025-08-22T02:30:19.621Z",
+              "sizeBytes": 4594,
+              "structureId": "d44db2e824bf2fa3e6393838222163dc37b317fcc4221aaf939d44dce017bd29",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": null
+            },
+            {
+              "id": "td-version-fd84e85cf567",
+              "label": "阶段 01",
+              "fileLabel": "1.2.1_声音互动扭曲",
+              "kind": "STAGE",
+              "origin": "FILE",
+              "relativePath": "1.2_扭曲滤镜（6）/1.2.1声音互动扭曲/1.2.1_声音互动扭曲.toe",
+              "modifiedAt": "2025-08-22T04:05:17.376Z",
+              "sizeBytes": 5386,
+              "structureId": "79e20df8d68e279afd027cf81036555f770ba84b9b50c11757d05cd7d0333c2c",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": {
+                "added": 15,
+                "removed": 8,
+                "changed": 4,
+                "addedNodes": [
+                  "null1",
+                  "project1/___2____2",
+                  "project1/___2____3",
+                  "project1/analyze1",
+                  "project1/audiodevin1",
+                  "project1/comp1",
+                  "project1/comp2",
+                  "project1/constant1",
+                  "project1/filter1",
+                  "project1/fit1",
+                  "project1/flip1",
+                  "project1/math1"
+                ],
+                "removedNodes": [
+                  "project1/chopto1",
+                  "project1/geo1",
+                  "project1/geo1/box1",
+                  "project1/geo1/in1",
+                  "project1/geo1/out1",
+                  "project1/geo1/phong1",
+                  "project1/geo1/texture1",
+                  "project1/moviefilein1"
+                ],
+                "changedNodes": [
+                  "project1",
+                  "project1/displace1",
+                  "project1/noise1",
+                  "project1/out1"
+                ]
+              }
+            },
+            {
+              "id": "td-version-0cfc79886d00",
+              "label": "阶段 02",
+              "fileLabel": "1.2.3声音互动扭曲",
+              "kind": "STAGE",
+              "origin": "FILE",
+              "relativePath": "1.2_扭曲滤镜（6）/1.2.1声音互动扭曲/1.2.3声音互动扭曲.toe",
+              "modifiedAt": "2025-08-27T03:53:50.799Z",
+              "sizeBytes": 7570,
+              "structureId": "6accf4e5dac4ee1de66dd60e8bf8a85e6f449c8ebed2173c38298ef4a27b174a",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": {
+                "added": 0,
+                "removed": 0,
+                "changed": 3,
+                "addedNodes": [],
+                "removedNodes": [],
+                "changedNodes": [
+                  "project1",
+                  "project1/out1",
+                  "project1/videodevin1"
+                ]
+              }
+            },
+            {
+              "id": "td-version-b83fb671633e",
+              "label": "主工程",
+              "fileLabel": "1.2声音互动扭曲",
+              "kind": "PRIMARY",
+              "origin": "FILE",
+              "relativePath": "1.2_扭曲滤镜（6）/1.2.1声音互动扭曲/1.2声音互动扭曲.toe",
+              "modifiedAt": "2025-08-27T03:53:50.799Z",
+              "sizeBytes": 7570,
+              "structureId": "6accf4e5dac4ee1de66dd60e8bf8a85e6f449c8ebed2173c38298ef4a27b174a",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": "td-version-0cfc79886d00",
+              "diffFromPrevious": {
+                "added": 0,
+                "removed": 0,
+                "changed": 0,
+                "addedNodes": [],
+                "removedNodes": [],
+                "changedNodes": []
+              }
+            }
+          ]
+        },
+        {
+          "id": "td-case-fb37c10dd57f",
+          "moduleId": "td-module-3e811aa1bfb4",
+          "title": "1.2.2线条错位扭曲",
+          "relativeFolder": "1.2_扭曲滤镜（6）/1.2.2线条错位扭曲",
+          "activeVersionId": "td-version-50e07d3924d6",
+          "versions": [
+            {
+              "id": "td-version-62ba03e8cc8b",
+              "label": "备份 01",
+              "fileLabel": "1.2.1声音互动扭曲",
+              "kind": "BACKUP",
+              "origin": "FILE",
+              "relativePath": "1.2_扭曲滤镜（6）/1.2.2线条错位扭曲/Backup/1.2.1声音互动扭曲.toe",
+              "modifiedAt": "2025-08-22T02:30:19.621Z",
+              "sizeBytes": 4594,
+              "structureId": "d44db2e824bf2fa3e6393838222163dc37b317fcc4221aaf939d44dce017bd29",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": null
+            },
+            {
+              "id": "td-version-290cc07e4892",
+              "label": "阶段 01",
+              "fileLabel": "1.2.2_线条错位扭曲",
+              "kind": "STAGE",
+              "origin": "FILE",
+              "relativePath": "1.2_扭曲滤镜（6）/1.2.2线条错位扭曲/1.2.2_线条错位扭曲.toe",
+              "modifiedAt": "2025-08-22T06:23:26.121Z",
+              "sizeBytes": 8930,
+              "structureId": "ea580bf4ba2f85c412c908e735d1552db9a8ac0243104a6be2270fcce58e5d98",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": {
+                "added": 28,
+                "removed": 8,
+                "changed": 4,
+                "addedNodes": [
+                  "null1",
+                  "null2",
+                  "project1/___2____2",
+                  "project1/___2____3",
+                  "project1/analyze1",
+                  "project1/audiodevin1",
+                  "project1/comp1",
+                  "project1/comp2",
+                  "project1/constant1",
+                  "project1/filter1",
+                  "project1/fit1",
+                  "project1/flip1"
+                ],
+                "removedNodes": [
+                  "project1/chopto1",
+                  "project1/geo1",
+                  "project1/geo1/box1",
+                  "project1/geo1/in1",
+                  "project1/geo1/out1",
+                  "project1/geo1/phong1",
+                  "project1/geo1/texture1",
+                  "project1/moviefilein1"
+                ],
+                "changedNodes": [
+                  "project1",
+                  "project1/displace1",
+                  "project1/noise1",
+                  "project1/out1"
+                ]
+              }
+            },
+            {
+              "id": "td-version-e6da7a67faa9",
+              "label": "阶段 02",
+              "fileLabel": "1.2.3声音互动扭曲",
+              "kind": "STAGE",
+              "origin": "FILE",
+              "relativePath": "1.2_扭曲滤镜（6）/1.2.2线条错位扭曲/1.2.3声音互动扭曲.toe",
+              "modifiedAt": "2025-08-22T06:23:26.121Z",
+              "sizeBytes": 8930,
+              "structureId": "ea580bf4ba2f85c412c908e735d1552db9a8ac0243104a6be2270fcce58e5d98",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": "td-version-290cc07e4892",
+              "diffFromPrevious": {
+                "added": 0,
+                "removed": 0,
+                "changed": 0,
+                "addedNodes": [],
+                "removedNodes": [],
+                "changedNodes": []
+              }
+            },
+            {
+              "id": "td-version-50e07d3924d6",
+              "label": "主工程",
+              "fileLabel": "1.2声音互动扭曲",
+              "kind": "PRIMARY",
+              "origin": "FILE",
+              "relativePath": "1.2_扭曲滤镜（6）/1.2.2线条错位扭曲/1.2声音互动扭曲.toe",
+              "modifiedAt": "2025-08-26T01:27:13.989Z",
+              "sizeBytes": 8938,
+              "structureId": "c762fc34ee82f0cd597ee3c36181b747597e39ddcc0aa82293b17b6c30a35042",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": {
+                "added": 0,
+                "removed": 0,
+                "changed": 2,
+                "addedNodes": [],
+                "removedNodes": [],
+                "changedNodes": [
+                  "project1",
+                  "project2"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "td-case-83b815eb8755",
+          "moduleId": "td-module-3e811aa1bfb4",
+          "title": "1.2.3水流气泡质感",
+          "relativeFolder": "1.2_扭曲滤镜（6）/1.2.3水流气泡质感",
+          "activeVersionId": "td-version-8ab57bd5f726",
+          "versions": [
+            {
+              "id": "td-version-20268a704b81",
+              "label": "备份 01",
+              "fileLabel": "1.2.1声音互动扭曲",
+              "kind": "BACKUP",
+              "origin": "FILE",
+              "relativePath": "1.2_扭曲滤镜（6）/1.2.3水流气泡质感/Backup/1.2.1声音互动扭曲.toe",
+              "modifiedAt": "2025-08-22T02:30:19.621Z",
+              "sizeBytes": 4594,
+              "structureId": "d44db2e824bf2fa3e6393838222163dc37b317fcc4221aaf939d44dce017bd29",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": null
+            },
+            {
+              "id": "td-version-c2a5f5471a3e",
+              "label": "备份 02",
+              "fileLabel": "1.2.4声音互动扭曲",
+              "kind": "BACKUP",
+              "origin": "FILE",
+              "relativePath": "1.2_扭曲滤镜（6）/1.2.3水流气泡质感/Backup/1.2.4声音互动扭曲.toe",
+              "modifiedAt": "2025-08-22T06:55:21.193Z",
+              "sizeBytes": 9178,
+              "structureId": "d4b19be16157e36eba0cda41b0fbcefcbb91be2a41751bc625a2f4f89f927214",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": {
+                "added": 35,
+                "removed": 8,
+                "changed": 4,
+                "addedNodes": [
+                  "container1",
+                  "container1/___11",
+                  "container1/null1",
+                  "container1/over1",
+                  "container1/ramp1",
+                  "container1/ramp1_keys",
+                  "container1/text1",
+                  "null1",
+                  "null2",
+                  "project1/___2____2",
+                  "project1/___2____3",
+                  "project1/analyze1"
+                ],
+                "removedNodes": [
+                  "project1/chopto1",
+                  "project1/geo1",
+                  "project1/geo1/box1",
+                  "project1/geo1/in1",
+                  "project1/geo1/out1",
+                  "project1/geo1/phong1",
+                  "project1/geo1/texture1",
+                  "project1/moviefilein1"
+                ],
+                "changedNodes": [
+                  "project1",
+                  "project1/displace1",
+                  "project1/noise1",
+                  "project1/out1"
+                ]
+              }
+            },
+            {
+              "id": "td-version-8ab57bd5f726",
+              "label": "主工程",
+              "fileLabel": "1.2.3水流气泡质感",
+              "kind": "PRIMARY",
+              "origin": "FILE",
+              "relativePath": "1.2_扭曲滤镜（6）/1.2.3水流气泡质感/1.2.3水流气泡质感.toe",
+              "modifiedAt": "2025-08-27T13:48:48.885Z",
+              "sizeBytes": 9826,
+              "structureId": "96760fda82fb27ce068f10b85d2c034af915d701ba2c823a3328ac078b6dbf77",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": {
+                "added": 17,
+                "removed": 0,
+                "changed": 10,
+                "addedNodes": [
+                  "container1/bg",
+                  "container1/blur1",
+                  "container1/displace1",
+                  "container1/displace2",
+                  "container1/lfo1",
+                  "container1/lookup1",
+                  "container1/math1",
+                  "container1/noise1",
+                  "container1/noise2",
+                  "container1/null3",
+                  "container1/null4",
+                  "container1/out1"
+                ],
+                "removedNodes": [],
+                "changedNodes": [
+                  "container1",
+                  "container1/null1",
+                  "container1/over1",
+                  "container1/text1",
+                  "project2",
+                  "project2/comp1",
+                  "project2/edge1",
+                  "project2/noise1",
+                  "project2/out1",
+                  "project2/ramp1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "td-case-227e7b35db4b",
+          "moduleId": "td-module-3e811aa1bfb4",
+          "title": "1.2.4动态玻璃扭曲",
+          "relativeFolder": "1.2_扭曲滤镜（6）/1.2.4动态玻璃扭曲",
+          "activeVersionId": "td-version-57e74999d6aa",
+          "versions": [
+            {
+              "id": "td-version-b583be2f0cf1",
+              "label": "备份 01",
+              "fileLabel": "动态玻璃扭曲.1",
+              "kind": "BACKUP",
+              "origin": "FILE",
+              "relativePath": "1.2_扭曲滤镜（6）/1.2.4动态玻璃扭曲/Backup/动态玻璃扭曲.1.toe",
+              "modifiedAt": "2025-08-27T15:19:12.100Z",
+              "sizeBytes": 8346,
+              "structureId": "1aede0184897ebd60ba81e56f9886415f8982b1118aa33249908f8ee6f5488f6",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": null
+            },
+            {
+              "id": "td-version-12a939940263",
+              "label": "备份 02",
+              "fileLabel": "动态玻璃扭曲.2",
+              "kind": "BACKUP",
+              "origin": "FILE",
+              "relativePath": "1.2_扭曲滤镜（6）/1.2.4动态玻璃扭曲/动态玻璃扭曲.2.toe",
+              "modifiedAt": "2025-08-30T06:00:04.909Z",
+              "sizeBytes": 11314,
+              "structureId": "f8dc4234234c8b69ea0869af309b71d369b9e4a470f881b29dd5228f8e498f31",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": {
+                "added": 3,
+                "removed": 5,
+                "changed": 10,
+                "addedNodes": [
+                  "moviefileout1",
+                  "moviefileout2",
+                  "project4/moviefileout1"
+                ],
+                "removedNodes": [
+                  "count1",
+                  "keyboardin1",
+                  "limit1",
+                  "project4/out1",
+                  "switch1"
+                ],
+                "changedNodes": [
+                  "project2",
+                  "project2/bg",
+                  "project2/comp1",
+                  "project2/edge1",
+                  "project2/noise1",
+                  "project2/ramp1",
+                  "project2/transform1",
+                  "project3",
+                  "project4",
+                  "project4/panel1"
+                ]
+              }
+            },
+            {
+              "id": "td-version-57e74999d6aa",
+              "label": "主工程",
+              "fileLabel": "动态玻璃扭曲",
+              "kind": "PRIMARY",
+              "origin": "FILE",
+              "relativePath": "1.2_扭曲滤镜（6）/1.2.4动态玻璃扭曲/动态玻璃扭曲.toe",
+              "modifiedAt": "2025-08-30T06:00:04.909Z",
+              "sizeBytes": 11314,
+              "structureId": "f8dc4234234c8b69ea0869af309b71d369b9e4a470f881b29dd5228f8e498f31",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": "td-version-12a939940263",
+              "diffFromPrevious": {
+                "added": 0,
+                "removed": 0,
+                "changed": 0,
+                "addedNodes": [],
+                "removedNodes": [],
+                "changedNodes": []
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "td-module-5801cb114c7f",
+      "sequence": 3,
+      "title": "1.3 无限拉伸（8）",
+      "cases": [
+        {
+          "id": "td-case-0934c64fb169",
+          "moduleId": "td-module-5801cb114c7f",
+          "title": "1.3 4无限反馈生成",
+          "relativeFolder": "1.3_无限拉伸（8）/1.3_4无限反馈生成",
+          "activeVersionId": "td-version-5c223f31e9b2",
+          "versions": [
+            {
+              "id": "td-version-0a0028046f37",
+              "label": "备份 01",
+              "fileLabel": "1.3_4无限反馈生成.1",
+              "kind": "BACKUP",
+              "origin": "FILE",
+              "relativePath": "1.3_无限拉伸（8）/1.3_4无限反馈生成/1.3_4无限反馈生成.1.toe",
+              "modifiedAt": "2025-09-24T06:06:14.781Z",
+              "sizeBytes": 121306,
+              "structureId": "704190f66e36324b7964b466e61c64b2c0945e27f084837444fc2ff4dde290a6",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": null
+            },
+            {
+              "id": "td-version-5c223f31e9b2",
+              "label": "主工程",
+              "fileLabel": "1.3_4无限反馈生成",
+              "kind": "PRIMARY",
+              "origin": "FILE",
+              "relativePath": "1.3_无限拉伸（8）/1.3_4无限反馈生成/1.3_4无限反馈生成.toe",
+              "modifiedAt": "2025-09-24T06:06:14.781Z",
+              "sizeBytes": 121306,
+              "structureId": "704190f66e36324b7964b466e61c64b2c0945e27f084837444fc2ff4dde290a6",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": "td-version-0a0028046f37",
+              "diffFromPrevious": {
+                "added": 0,
+                "removed": 0,
+                "changed": 0,
+                "addedNodes": [],
+                "removedNodes": [],
+                "changedNodes": []
+              }
+            }
+          ]
+        },
+        {
+          "id": "td-case-9f93dc1320db",
+          "moduleId": "td-module-5801cb114c7f",
+          "title": "1.3.1 声音互动拉伸",
+          "relativeFolder": "1.3_无限拉伸（8）/1.3.1_声音互动拉伸",
+          "activeVersionId": "td-version-5c58cc525b6b",
+          "versions": [
+            {
+              "id": "td-version-ae94100766bb",
+              "label": "备份 01",
+              "fileLabel": "声音互动拉伸.1",
+              "kind": "BACKUP",
+              "origin": "FILE",
+              "relativePath": "1.3_无限拉伸（8）/1.3.1_声音互动拉伸/Backup/声音互动拉伸.1.toe",
+              "modifiedAt": "2025-09-05T02:26:07.889Z",
+              "sizeBytes": 4050,
+              "structureId": "5ce3aec8a9e7dd50b7380dee34b689c1b9bb2433b14bfeadaea4140de3943838",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": null
+            },
+            {
+              "id": "td-version-bd267b888241",
+              "label": "备份 02",
+              "fileLabel": "声音互动拉伸.2",
+              "kind": "BACKUP",
+              "origin": "FILE",
+              "relativePath": "1.3_无限拉伸（8）/1.3.1_声音互动拉伸/声音互动拉伸.2.toe",
+              "modifiedAt": "2025-09-05T03:59:15.519Z",
+              "sizeBytes": 7762,
+              "structureId": "8f1e47e2e22a80f9355d1cdbdd286e0de11636f7b07d932c7cb3389ea661339e",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": {
+                "added": 44,
+                "removed": 0,
+                "changed": 8,
+                "addedNodes": [
+                  "project1/___2____2",
+                  "project1/analyze1",
+                  "project1/audiodevin1",
+                  "project1/BG",
+                  "project1/circle1",
+                  "project1/dent",
+                  "project1/dent/docsHelper",
+                  "project1/dent/dryWetMix",
+                  "project1/dent/dryWetMix/cross1",
+                  "project1/dent/dryWetMix/in2",
+                  "project1/dent/dryWetMix/in3",
+                  "project1/dent/dryWetMix/math9"
+                ],
+                "removedNodes": [],
+                "changedNodes": [
+                  "project1",
+                  "project1/constant1",
+                  "project1/edge1",
+                  "project1/feedback1",
+                  "project1/null1",
+                  "project1/null2",
+                  "project1/text1",
+                  "project1/transform1"
+                ]
+              }
+            },
+            {
+              "id": "td-version-5c58cc525b6b",
+              "label": "主工程",
+              "fileLabel": "声音互动拉伸",
+              "kind": "PRIMARY",
+              "origin": "FILE",
+              "relativePath": "1.3_无限拉伸（8）/1.3.1_声音互动拉伸/声音互动拉伸.toe",
+              "modifiedAt": "2025-09-05T03:59:15.519Z",
+              "sizeBytes": 7762,
+              "structureId": "8f1e47e2e22a80f9355d1cdbdd286e0de11636f7b07d932c7cb3389ea661339e",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": "td-version-bd267b888241",
+              "diffFromPrevious": {
+                "added": 0,
+                "removed": 0,
+                "changed": 0,
+                "addedNodes": [],
+                "removedNodes": [],
+                "changedNodes": []
+              }
+            }
+          ]
+        },
+        {
+          "id": "td-case-a15c8a3be2c9",
+          "moduleId": "td-module-5801cb114c7f",
+          "title": "1.3.2 等高热力图",
+          "relativeFolder": "1.3_无限拉伸（8）/1.3.2_等高热力图",
+          "activeVersionId": "td-version-f838227d8403",
+          "versions": [
+            {
+              "id": "td-version-ae664ff325d6",
+              "label": "备份 01",
+              "fileLabel": "声音互动拉伸.1",
+              "kind": "BACKUP",
+              "origin": "FILE",
+              "relativePath": "1.3_无限拉伸（8）/1.3.2_等高热力图/Backup/声音互动拉伸.1.toe",
+              "modifiedAt": "2025-09-05T02:26:07.889Z",
+              "sizeBytes": 4050,
+              "structureId": "5ce3aec8a9e7dd50b7380dee34b689c1b9bb2433b14bfeadaea4140de3943838",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": null
+            },
+            {
+              "id": "td-version-13627439ca3e",
+              "label": "备份 02",
+              "fileLabel": "1.3.2等高热力图",
+              "kind": "BACKUP",
+              "origin": "FILE",
+              "relativePath": "1.3_无限拉伸（8）/1.3.2_等高热力图/Backup/1.3.2等高热力图.toe",
+              "modifiedAt": "2025-09-05T03:59:15.519Z",
+              "sizeBytes": 7762,
+              "structureId": "8f1e47e2e22a80f9355d1cdbdd286e0de11636f7b07d932c7cb3389ea661339e",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": {
+                "added": 44,
+                "removed": 0,
+                "changed": 8,
+                "addedNodes": [
+                  "project1/___2____2",
+                  "project1/analyze1",
+                  "project1/audiodevin1",
+                  "project1/BG",
+                  "project1/circle1",
+                  "project1/dent",
+                  "project1/dent/docsHelper",
+                  "project1/dent/dryWetMix",
+                  "project1/dent/dryWetMix/cross1",
+                  "project1/dent/dryWetMix/in2",
+                  "project1/dent/dryWetMix/in3",
+                  "project1/dent/dryWetMix/math9"
+                ],
+                "removedNodes": [],
+                "changedNodes": [
+                  "project1",
+                  "project1/constant1",
+                  "project1/edge1",
+                  "project1/feedback1",
+                  "project1/null1",
+                  "project1/null2",
+                  "project1/text1",
+                  "project1/transform1"
+                ]
+              }
+            },
+            {
+              "id": "td-version-7e23cc85264d",
+              "label": "备份 03",
+              "fileLabel": "1.3.3等高热力图",
+              "kind": "BACKUP",
+              "origin": "FILE",
+              "relativePath": "1.3_无限拉伸（8）/1.3.2_等高热力图/Backup/1.3.3等高热力图.toe",
+              "modifiedAt": "2025-09-23T07:20:07.418Z",
+              "sizeBytes": 118194,
+              "structureId": "7edcd5c5062d3221d9ca74571745a478b99b3a6a74786740e207e36b014de1ea",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": {
+                "added": 362,
+                "removed": 0,
+                "changed": 1,
+                "addedNodes": [
+                  "container1",
+                  "container1/antialias1",
+                  "container1/colour_lovers_picker",
+                  "container1/colour_lovers_picker/CLPickerExt",
+                  "container1/colour_lovers_picker/colors_data",
+                  "container1/colour_lovers_picker/colors_data/all_colors",
+                  "container1/colour_lovers_picker/colors_data/all_colors/export_colors",
+                  "container1/colour_lovers_picker/colors_data/all_colors/merge1",
+                  "container1/colour_lovers_picker/colors_data/all_colors/select1",
+                  "container1/colour_lovers_picker/colors_data/all_colors/select2",
+                  "container1/colour_lovers_picker/colors_data/all_colors/select3",
+                  "container1/colour_lovers_picker/colors_data/all_colors/select4"
+                ],
+                "removedNodes": [],
+                "changedNodes": [
+                  "project1"
+                ]
+              }
+            },
+            {
+              "id": "td-version-9ad6b761433b",
+              "label": "备份 04",
+              "fileLabel": "1.3.4等高热力图",
+              "kind": "BACKUP",
+              "origin": "FILE",
+              "relativePath": "1.3_无限拉伸（8）/1.3.2_等高热力图/Backup/1.3.4等高热力图.toe",
+              "modifiedAt": "2025-09-23T08:06:14.733Z",
+              "sizeBytes": 8786,
+              "structureId": "2ccea4b7e164ef39b1e5f33a0aeac4fff7ccc7cef5d1f0152b2471b72b9350b5",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": {
+                "added": 24,
+                "removed": 362,
+                "changed": 0,
+                "addedNodes": [
+                  "moviefileout1",
+                  "null1",
+                  "project2",
+                  "project2/___2",
+                  "project2/antialias1",
+                  "project2/bg",
+                  "project2/circle1",
+                  "project2/comp1",
+                  "project2/constant1",
+                  "project2/edge1",
+                  "project2/feedback1",
+                  "project2/level1"
+                ],
+                "removedNodes": [
+                  "container1",
+                  "container1/antialias1",
+                  "container1/colour_lovers_picker",
+                  "container1/colour_lovers_picker/CLPickerExt",
+                  "container1/colour_lovers_picker/colors_data",
+                  "container1/colour_lovers_picker/colors_data/all_colors",
+                  "container1/colour_lovers_picker/colors_data/all_colors/export_colors",
+                  "container1/colour_lovers_picker/colors_data/all_colors/merge1",
+                  "container1/colour_lovers_picker/colors_data/all_colors/select1",
+                  "container1/colour_lovers_picker/colors_data/all_colors/select2",
+                  "container1/colour_lovers_picker/colors_data/all_colors/select3",
+                  "container1/colour_lovers_picker/colors_data/all_colors/select4"
+                ],
+                "changedNodes": []
+              }
+            },
+            {
+              "id": "td-version-557f6203a61f",
+              "label": "备份 05",
+              "fileLabel": "1.3.5等高热力图",
+              "kind": "BACKUP",
+              "origin": "FILE",
+              "relativePath": "1.3_无限拉伸（8）/1.3.2_等高热力图/Backup/1.3.5等高热力图.toe",
+              "modifiedAt": "2025-09-23T08:06:49.390Z",
+              "sizeBytes": 8794,
+              "structureId": "0571120953ccaa4606e90b589b79f39a6b73fa8ebac0290df376f5129b21e589",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": {
+                "added": 0,
+                "removed": 0,
+                "changed": 1,
+                "addedNodes": [],
+                "removedNodes": [],
+                "changedNodes": [
+                  "project2"
+                ]
+              }
+            },
+            {
+              "id": "td-version-c6834936b1e3",
+              "label": "阶段 01",
+              "fileLabel": "1.3.6等高热力图",
+              "kind": "STAGE",
+              "origin": "FILE",
+              "relativePath": "1.3_无限拉伸（8）/1.3.2_等高热力图/1.3.6等高热力图.toe",
+              "modifiedAt": "2025-09-23T08:09:36.021Z",
+              "sizeBytes": 118098,
+              "structureId": "74efd115efd88eb1fba0f79e4e890bf305c00575c84bdf468e28c0a603f563d6",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": {
+                "added": 347,
+                "removed": 0,
+                "changed": 4,
+                "addedNodes": [
+                  "project2/colour_lovers_picker",
+                  "project2/colour_lovers_picker/CLPickerExt",
+                  "project2/colour_lovers_picker/colors_data",
+                  "project2/colour_lovers_picker/colors_data/all_colors",
+                  "project2/colour_lovers_picker/colors_data/all_colors/export_colors",
+                  "project2/colour_lovers_picker/colors_data/all_colors/merge1",
+                  "project2/colour_lovers_picker/colors_data/all_colors/select1",
+                  "project2/colour_lovers_picker/colors_data/all_colors/select2",
+                  "project2/colour_lovers_picker/colors_data/all_colors/select3",
+                  "project2/colour_lovers_picker/colors_data/all_colors/select4",
+                  "project2/colour_lovers_picker/colors_data/all_colors/select5",
+                  "project2/colour_lovers_picker/colors_data/all_colors/select6"
+                ],
+                "removedNodes": [],
+                "changedNodes": [
+                  "project2",
+                  "project2/out1",
+                  "project2/ramp1",
+                  "project2/ramp1_keys"
+                ]
+              }
+            },
+            {
+              "id": "td-version-f838227d8403",
+              "label": "主工程",
+              "fileLabel": "1.3等高热力图",
+              "kind": "PRIMARY",
+              "origin": "FILE",
+              "relativePath": "1.3_无限拉伸（8）/1.3.2_等高热力图/1.3等高热力图.toe",
+              "modifiedAt": "2025-09-23T08:09:36.021Z",
+              "sizeBytes": 118098,
+              "structureId": "74efd115efd88eb1fba0f79e4e890bf305c00575c84bdf468e28c0a603f563d6",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": "td-version-c6834936b1e3",
+              "diffFromPrevious": {
+                "added": 0,
+                "removed": 0,
+                "changed": 0,
+                "addedNodes": [],
+                "removedNodes": [],
+                "changedNodes": []
+              }
+            }
+          ]
+        },
+        {
+          "id": "td-case-5104b4ebceeb",
+          "moduleId": "td-module-5801cb114c7f",
+          "title": "1.3.3 鼠标跟随拉伸",
+          "relativeFolder": "1.3_无限拉伸（8）/1.3.3_鼠标跟随拉伸",
+          "activeVersionId": "td-version-c009324623bb",
+          "versions": [
+            {
+              "id": "td-version-776ce3b3b21a",
+              "label": "阶段 01",
+              "fileLabel": "1.3.3_鼠标跟随拉伸",
+              "kind": "STAGE",
+              "origin": "FILE",
+              "relativePath": "1.3_无限拉伸（8）/1.3.3_鼠标跟随拉伸/1.3.3_鼠标跟随拉伸.toe",
+              "modifiedAt": "2025-09-24T06:02:20.265Z",
+              "sizeBytes": 119042,
+              "structureId": "d38d98ad4ba7437093604202fe11130432ddc6fdc0e288e42beed09dc33a51f2",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": null
+            },
+            {
+              "id": "td-version-420c5f621b90",
+              "label": "阶段 02",
+              "fileLabel": "1.3_鼠标跟随拉伸",
+              "kind": "STAGE",
+              "origin": "FILE",
+              "relativePath": "1.3_无限拉伸（8）/1.3.3_鼠标跟随拉伸/1.3_鼠标跟随拉伸.toe",
+              "modifiedAt": "2025-10-17T00:54:47.213Z",
+              "sizeBytes": 119074,
+              "structureId": "2347d891aca0052a50e32cc2ea6e228023f00ab0a4489db14e2178db1927db6b",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": {
+                "added": 0,
+                "removed": 0,
+                "changed": 11,
+                "addedNodes": [],
+                "removedNodes": [],
+                "changedNodes": [
+                  "constant1",
+                  "project1",
+                  "project1/___2____2",
+                  "project1/out1",
+                  "project2",
+                  "project2/___2",
+                  "project2/circle1",
+                  "project2/colour_lovers_picker",
+                  "project3",
+                  "project3/comp1",
+                  "project3/LT"
+                ]
+              }
+            },
+            {
+              "id": "td-version-c009324623bb",
+              "label": "主工程",
+              "fileLabel": "1.3.4_鼠标跟随拉伸",
+              "kind": "PRIMARY",
+              "origin": "FILE",
+              "relativePath": "1.3_无限拉伸（8）/1.3.3_鼠标跟随拉伸/1.3.4_鼠标跟随拉伸.toe",
+              "modifiedAt": "2025-10-17T00:54:47.213Z",
+              "sizeBytes": 119074,
+              "structureId": "2347d891aca0052a50e32cc2ea6e228023f00ab0a4489db14e2178db1927db6b",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": "td-version-420c5f621b90",
+              "diffFromPrevious": {
+                "added": 0,
+                "removed": 0,
+                "changed": 0,
+                "addedNodes": [],
+                "removedNodes": [],
+                "changedNodes": []
+              }
+            }
+          ]
+        },
+        {
+          "id": "td-case-64a9677cfb87",
+          "moduleId": "td-module-5801cb114c7f",
+          "title": "1.3无限拉伸",
+          "relativeFolder": "1.3_无限拉伸（8）/1.3无限拉伸",
+          "activeVersionId": "td-version-e4cc62d59b35",
+          "versions": [
+            {
+              "id": "td-version-e4cc62d59b35",
+              "label": "主工程",
+              "fileLabel": "无限拉伸",
+              "kind": "PRIMARY",
+              "origin": "FILE",
+              "relativePath": "1.3_无限拉伸（8）/1.3无限拉伸/无限拉伸.toe",
+              "modifiedAt": "2022-06-25T10:18:35.453Z",
+              "sizeBytes": 1362624,
+              "structureId": "d2c8db566880f8fae8a0d0c408e4b6c9bbc09ad95a521118d4f2da0566ff6760",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "td-module-e07c88a203d1",
+      "sequence": 4,
+      "title": "2.1 文字变幻（4）",
+      "cases": [
+        {
+          "id": "td-case-b7a64ec1c765",
+          "moduleId": "td-module-e07c88a203d1",
+          "title": "2.1 1文字变换",
+          "relativeFolder": "2.1_文字变幻（4）/2.1_1文字变换",
+          "activeVersionId": "td-version-85401e648748",
+          "versions": [
+            {
+              "id": "td-version-c64873b385e8",
+              "label": "备份 01",
+              "fileLabel": "2.1_1文字变换.1",
+              "kind": "BACKUP",
+              "origin": "FILE",
+              "relativePath": "2.1_文字变幻（4）/2.1_1文字变换/Backup/2.1_1文字变换.1.toe",
+              "modifiedAt": "2025-09-24T06:15:03.965Z",
+              "sizeBytes": 3586,
+              "structureId": "0d99843dfe13f4c3d48efea0acd4f8a03b58fbdf2208676386b9975df59e6304",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": null
+            },
+            {
+              "id": "td-version-44f0eaa3ccd9",
+              "label": "备份 02",
+              "fileLabel": "2.1_1文字变换.2",
+              "kind": "BACKUP",
+              "origin": "FILE",
+              "relativePath": "2.1_文字变幻（4）/2.1_1文字变换/Backup/2.1_1文字变换.2.toe",
+              "modifiedAt": "2025-09-24T07:01:21.784Z",
+              "sizeBytes": 5754,
+              "structureId": "2f223b354e000ec3dd58396a8fd3d1d233380bb19fba29ba5ed97afee95c6bc0",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": {
+                "added": 42,
+                "removed": 0,
+                "changed": 1,
+                "addedNodes": [
+                  "project1/___4",
+                  "project1/cam1",
+                  "project1/cam1/file1",
+                  "project1/constant1",
+                  "project1/geo1",
+                  "project1/geo1/in1",
+                  "project1/geo1/out1",
+                  "project1/light1",
+                  "project1/light1/add1",
+                  "project1/light1/circle1",
+                  "project1/light1/circle2",
+                  "project1/light1/circle3"
+                ],
+                "removedNodes": [],
+                "changedNodes": [
+                  "project1"
+                ]
+              }
+            },
+            {
+              "id": "td-version-acdd690f93fc",
+              "label": "备份 03",
+              "fileLabel": "2.1_1文字变换.3",
+              "kind": "BACKUP",
+              "origin": "FILE",
+              "relativePath": "2.1_文字变幻（4）/2.1_1文字变换/Backup/2.1_1文字变换.3.toe",
+              "modifiedAt": "2025-09-24T07:10:54.467Z",
+              "sizeBytes": 5258,
+              "structureId": "8ca4b43aec22790d4ba517f87e2c4ffcfb8def1d8db6ef2fad8a34057361257f",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": {
+                "added": 5,
+                "removed": 32,
+                "changed": 6,
+                "addedNodes": [
+                  "project1/bg",
+                  "project1/line1",
+                  "project1/noise1",
+                  "project1/over1",
+                  "project1/render1"
+                ],
+                "removedNodes": [
+                  "project1/light1",
+                  "project1/light1/add1",
+                  "project1/light1/circle1",
+                  "project1/light1/circle2",
+                  "project1/light1/circle3",
+                  "project1/light1/circle4",
+                  "project1/light1/circle5",
+                  "project1/light1/copy1",
+                  "project1/light1/cross1",
+                  "project1/light1/grid1",
+                  "project1/light1/line1",
+                  "project1/light1/line2"
+                ],
+                "changedNodes": [
+                  "project1",
+                  "project1/___4",
+                  "project1/cam1",
+                  "project1/geo1",
+                  "project1/null2",
+                  "project1/text1"
+                ]
+              }
+            },
+            {
+              "id": "td-version-5691123f4538",
+              "label": "备份 04",
+              "fileLabel": "2.1_1文字变换.4",
+              "kind": "BACKUP",
+              "origin": "FILE",
+              "relativePath": "2.1_文字变幻（4）/2.1_1文字变换/Backup/2.1_1文字变换.4.toe",
+              "modifiedAt": "2025-09-24T07:14:06.690Z",
+              "sizeBytes": 6146,
+              "structureId": "e79ac5d1e3ecdf6ecc1fa5823e6efb019795c5b17a092a1edff382b34f0afe6e",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": {
+                "added": 5,
+                "removed": 0,
+                "changed": 13,
+                "addedNodes": [
+                  "project1/analyze1",
+                  "project1/audiodevin1",
+                  "project1/math1",
+                  "project1/null3",
+                  "project1/trail1"
+                ],
+                "removedNodes": [],
+                "changedNodes": [
+                  "project1",
+                  "project1/___4",
+                  "project1/bg",
+                  "project1/cam1",
+                  "project1/constant1",
+                  "project1/geo1",
+                  "project1/line1",
+                  "project1/noise1",
+                  "project1/null1",
+                  "project1/null2",
+                  "project1/over1",
+                  "project1/render1"
+                ]
+              }
+            },
+            {
+              "id": "td-version-3967e6f9853c",
+              "label": "备份 05",
+              "fileLabel": "2.1_1文字变换.5",
+              "kind": "BACKUP",
+              "origin": "FILE",
+              "relativePath": "2.1_文字变幻（4）/2.1_1文字变换/Backup/2.1_1文字变换.5.toe",
+              "modifiedAt": "2025-09-24T07:20:42.398Z",
+              "sizeBytes": 7954,
+              "structureId": "54973119036718c939935b77e3daadce54936baab2247a059fcaa06073b9d356",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": {
+                "added": 0,
+                "removed": 0,
+                "changed": 18,
+                "addedNodes": [],
+                "removedNodes": [],
+                "changedNodes": [
+                  "project1",
+                  "project1/___4",
+                  "project1/analyze1",
+                  "project1/audiodevin1",
+                  "project1/bg",
+                  "project1/cam1",
+                  "project1/constant1",
+                  "project1/geo1",
+                  "project1/line1",
+                  "project1/math1",
+                  "project1/noise1",
+                  "project1/null1"
+                ]
+              }
+            },
+            {
+              "id": "td-version-70258a93aed3",
+              "label": "备份 06",
+              "fileLabel": "2.1_1文字变换.6",
+              "kind": "BACKUP",
+              "origin": "FILE",
+              "relativePath": "2.1_文字变幻（4）/2.1_1文字变换/Backup/2.1_1文字变换.6.toe",
+              "modifiedAt": "2025-09-24T07:52:27.521Z",
+              "sizeBytes": 8778,
+              "structureId": "26276e44be5b45af06a78609da29bb71166de512f74697bef9b2f6a32a02ad27",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": {
+                "added": 7,
+                "removed": 0,
+                "changed": 16,
+                "addedNodes": [
+                  "project1/comp1",
+                  "project1/feedback1",
+                  "project1/filter1",
+                  "project1/filter2",
+                  "project1/level1",
+                  "project1/math2",
+                  "project1/null4"
+                ],
+                "removedNodes": [],
+                "changedNodes": [
+                  "project1",
+                  "project1/___4",
+                  "project1/analyze1",
+                  "project1/audiodevin1",
+                  "project1/bg",
+                  "project1/cam1",
+                  "project1/geo1",
+                  "project1/line1",
+                  "project1/math1",
+                  "project1/noise1",
+                  "project1/null2",
+                  "project1/null3"
+                ]
+              }
+            },
+            {
+              "id": "td-version-fbeac6d80d5b",
+              "label": "备份 07",
+              "fileLabel": "2.1_1文字变换.7",
+              "kind": "BACKUP",
+              "origin": "FILE",
+              "relativePath": "2.1_文字变幻（4）/2.1_1文字变换/Backup/2.1_1文字变换.7.toe",
+              "modifiedAt": "2025-09-24T07:55:12.463Z",
+              "sizeBytes": 6858,
+              "structureId": "2f33a8bd7a4700c42ab25dd3d8d68977eaf2c07a430e52985d6d56fc493e055d",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": {
+                "added": 0,
+                "removed": 0,
+                "changed": 7,
+                "addedNodes": [],
+                "removedNodes": [],
+                "changedNodes": [
+                  "project1",
+                  "project1/audiodevin1",
+                  "project1/geo1",
+                  "project1/level1",
+                  "project1/noise1",
+                  "project1/null2",
+                  "project1/render1"
+                ]
+              }
+            },
+            {
+              "id": "td-version-88f0b91a73fa",
+              "label": "备份 08",
+              "fileLabel": "2.1_1文字变换.8",
+              "kind": "BACKUP",
+              "origin": "FILE",
+              "relativePath": "2.1_文字变幻（4）/2.1_1文字变换/Backup/2.1_1文字变换.8.toe",
+              "modifiedAt": "2025-09-24T07:56:06.030Z",
+              "sizeBytes": 7138,
+              "structureId": "8c7215d56b2c868fdbeec7d81c1d9e3d3c45b112b5becf6d77886a87e175b106",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": {
+                "added": 0,
+                "removed": 0,
+                "changed": 4,
+                "addedNodes": [],
+                "removedNodes": [],
+                "changedNodes": [
+                  "project1",
+                  "project1/constant1",
+                  "project1/level1",
+                  "project1/noise1"
+                ]
+              }
+            },
+            {
+              "id": "td-version-55816383a6b9",
+              "label": "备份 09",
+              "fileLabel": "2.1_1文字变换.9",
+              "kind": "BACKUP",
+              "origin": "FILE",
+              "relativePath": "2.1_文字变幻（4）/2.1_1文字变换/2.1_1文字变换.9.toe",
+              "modifiedAt": "2025-09-28T03:20:08.123Z",
+              "sizeBytes": 6402,
+              "structureId": "c49d5428801676e9a506eef5faf73bbc4fa22a3a5cb7ffd20619865b31b109f3",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": {
+                "added": 0,
+                "removed": 0,
+                "changed": 10,
+                "addedNodes": [],
+                "removedNodes": [],
+                "changedNodes": [
+                  "project1",
+                  "project1/___4",
+                  "project1/bg",
+                  "project1/cam1",
+                  "project1/constant1",
+                  "project1/geo1",
+                  "project1/line1",
+                  "project1/noise1",
+                  "project1/null2",
+                  "project1/over1"
+                ]
+              }
+            },
+            {
+              "id": "td-version-85401e648748",
+              "label": "主工程",
+              "fileLabel": "2.1_1文字变换",
+              "kind": "PRIMARY",
+              "origin": "FILE",
+              "relativePath": "2.1_文字变幻（4）/2.1_1文字变换/2.1_1文字变换.toe",
+              "modifiedAt": "2025-09-28T03:20:08.123Z",
+              "sizeBytes": 6402,
+              "structureId": "c49d5428801676e9a506eef5faf73bbc4fa22a3a5cb7ffd20619865b31b109f3",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": "td-version-55816383a6b9",
+              "diffFromPrevious": {
+                "added": 0,
+                "removed": 0,
+                "changed": 0,
+                "addedNodes": [],
+                "removedNodes": [],
+                "changedNodes": []
+              }
+            }
+          ]
+        },
+        {
+          "id": "td-case-ab5a199893d6",
+          "moduleId": "td-module-e07c88a203d1",
+          "title": "2.1 2线性结构材质",
+          "relativeFolder": "2.1_文字变幻（4）/2.1_2线性结构材质",
+          "activeVersionId": "td-version-9f27ba53095a",
+          "versions": [
+            {
+              "id": "td-version-3c07ed95da08",
+              "label": "备份 01",
+              "fileLabel": "2.1_2线性结构材质.1",
+              "kind": "BACKUP",
+              "origin": "FILE",
+              "relativePath": "2.1_文字变幻（4）/2.1_2线性结构材质/Backup/2.1_2线性结构材质.1.toe",
+              "modifiedAt": "2025-09-24T08:18:53.818Z",
+              "sizeBytes": 6378,
+              "structureId": "377a52d857156f68be93ce011f57f823e49a8dceeb6ea8e4b546d69135445dd1",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": null
+            },
+            {
+              "id": "td-version-6ede60d8b028",
+              "label": "备份 02",
+              "fileLabel": "2.1_2线性结构材质.2",
+              "kind": "BACKUP",
+              "origin": "FILE",
+              "relativePath": "2.1_文字变幻（4）/2.1_2线性结构材质/Backup/2.1_2线性结构材质.2.toe",
+              "modifiedAt": "2025-09-24T08:33:40.417Z",
+              "sizeBytes": 7106,
+              "structureId": "4ba5e5bb31adf62fbe033c88b2bb4be15014b00cc6064bb662ba12572da59fc6",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": {
+                "added": 20,
+                "removed": 0,
+                "changed": 3,
+                "addedNodes": [
+                  "project2",
+                  "project2/___4",
+                  "project2/bg",
+                  "project2/cam1",
+                  "project2/cam1/file1",
+                  "project2/comp1",
+                  "project2/constant1",
+                  "project2/feedback1",
+                  "project2/geo1",
+                  "project2/geo1/in1",
+                  "project2/geo1/out1",
+                  "project2/level1"
+                ],
+                "removedNodes": [],
+                "changedNodes": [
+                  "project1",
+                  "project1/noise1",
+                  "project1/null2"
+                ]
+              }
+            },
+            {
+              "id": "td-version-fd18fa797636",
+              "label": "备份 03",
+              "fileLabel": "2.1_2线性结构材质.3",
+              "kind": "BACKUP",
+              "origin": "FILE",
+              "relativePath": "2.1_文字变幻（4）/2.1_2线性结构材质/Backup/2.1_2线性结构材质.3.toe",
+              "modifiedAt": "2025-09-24T08:49:43.183Z",
+              "sizeBytes": 7818,
+              "structureId": "b2a0498fea6ec97496fbdcf37d788f0a135c1efad048e7f88f678a581dc606dd",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": {
+                "added": 12,
+                "removed": 0,
+                "changed": 8,
+                "addedNodes": [
+                  "project2/lfo1",
+                  "project2/math1",
+                  "project2/null3",
+                  "project2/switch1",
+                  "project2/text2",
+                  "project2/text3",
+                  "project2/text4",
+                  "project2/text5",
+                  "project2/text6",
+                  "project2/text7",
+                  "project2/text8",
+                  "project2/text9"
+                ],
+                "removedNodes": [],
+                "changedNodes": [
+                  "project2",
+                  "project2/cam1",
+                  "project2/geo1",
+                  "project2/line1",
+                  "project2/noise1",
+                  "project2/null2",
+                  "project2/resample1",
+                  "project2/text1"
+                ]
+              }
+            },
+            {
+              "id": "td-version-cde4a3f0303f",
+              "label": "备份 04",
+              "fileLabel": "2.1_2线性结构材质.4",
+              "kind": "BACKUP",
+              "origin": "FILE",
+              "relativePath": "2.1_文字变幻（4）/2.1_2线性结构材质/Backup/2.1_2线性结构材质.4.toe",
+              "modifiedAt": "2025-09-24T08:51:58.477Z",
+              "sizeBytes": 7842,
+              "structureId": "eb35696151dfc2c13894a37e3ea67ac0f0eaee8f8c33ab93fe20f699e24c8d78",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": {
+                "added": 0,
+                "removed": 0,
+                "changed": 8,
+                "addedNodes": [],
+                "removedNodes": [],
+                "changedNodes": [
+                  "project2",
+                  "project2/cam1",
+                  "project2/geo1",
+                  "project2/math1",
+                  "project2/noise1",
+                  "project2/null2",
+                  "project2/resample1",
+                  "project2/switch1"
+                ]
+              }
+            },
+            {
+              "id": "td-version-2871fb0c38ff",
+              "label": "备份 05",
+              "fileLabel": "2.1_2线性结构材质.5",
+              "kind": "BACKUP",
+              "origin": "FILE",
+              "relativePath": "2.1_文字变幻（4）/2.1_2线性结构材质/Backup/2.1_2线性结构材质.5.toe",
+              "modifiedAt": "2025-09-24T08:55:31.003Z",
+              "sizeBytes": 7914,
+              "structureId": "e121ef441225078c678d6b2b505768e081ae4ee7323b76d4fd48bddf377bd899",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": {
+                "added": 1,
+                "removed": 0,
+                "changed": 9,
+                "addedNodes": [
+                  "project2/transform1"
+                ],
+                "removedNodes": [],
+                "changedNodes": [
+                  "project2",
+                  "project2/cam1",
+                  "project2/comp1",
+                  "project2/geo1",
+                  "project2/lfo1",
+                  "project2/math1",
+                  "project2/null2",
+                  "project2/resample1",
+                  "project2/switch1"
+                ]
+              }
+            },
+            {
+              "id": "td-version-e2fcbfb38850",
+              "label": "备份 06",
+              "fileLabel": "2.1_2线性结构材质.6",
+              "kind": "BACKUP",
+              "origin": "FILE",
+              "relativePath": "2.1_文字变幻（4）/2.1_2线性结构材质/2.1_2线性结构材质.6.toe",
+              "modifiedAt": "2025-09-24T09:00:37.356Z",
+              "sizeBytes": 8106,
+              "structureId": "56cb611b119456a84f584a3cb808d837f8a2e4a4ce9b8c112912a8b5d27b47ce",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": {
+                "added": 4,
+                "removed": 0,
+                "changed": 7,
+                "addedNodes": [
+                  "project2/count1",
+                  "project2/keyboardin1",
+                  "project2/limit1",
+                  "project2/null4"
+                ],
+                "removedNodes": [],
+                "changedNodes": [
+                  "project2",
+                  "project2/geo1",
+                  "project2/noise1",
+                  "project2/null2",
+                  "project2/resample1",
+                  "project2/switch1",
+                  "project2/transform1"
+                ]
+              }
+            },
+            {
+              "id": "td-version-9f27ba53095a",
+              "label": "主工程",
+              "fileLabel": "2.1_2线性结构材质",
+              "kind": "PRIMARY",
+              "origin": "FILE",
+              "relativePath": "2.1_文字变幻（4）/2.1_2线性结构材质/2.1_2线性结构材质.toe",
+              "modifiedAt": "2025-09-24T09:00:37.356Z",
+              "sizeBytes": 8106,
+              "structureId": "56cb611b119456a84f584a3cb808d837f8a2e4a4ce9b8c112912a8b5d27b47ce",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": "td-version-e2fcbfb38850",
+              "diffFromPrevious": {
+                "added": 0,
+                "removed": 0,
+                "changed": 0,
+                "addedNodes": [],
+                "removedNodes": [],
+                "changedNodes": []
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "td-module-1f76b50643ad",
+      "sequence": 5,
+      "title": "2.2 文字矩阵（8）",
+      "cases": [
+        {
+          "id": "td-case-c20547278ae0",
+          "moduleId": "td-module-1f76b50643ad",
+          "title": "2.2 1生成矩阵图形",
+          "relativeFolder": "2.2_文字矩阵（8）/2.2_1生成矩阵图形",
+          "activeVersionId": "td-version-eb984deaa7b9",
+          "versions": [
+            {
+              "id": "td-version-5ab06603ed13",
+              "label": "备份 01",
+              "fileLabel": "2.2_1生成矩阵图形.1",
+              "kind": "BACKUP",
+              "origin": "FILE",
+              "relativePath": "2.2_文字矩阵（8）/2.2_1生成矩阵图形/Backup/2.2_1生成矩阵图形.1.toe",
+              "modifiedAt": "2025-09-25T03:17:54.070Z",
+              "sizeBytes": 5234,
+              "structureId": "de83871411cbee32a5137940549e81b4b457b6708ed5ec32fb69ad78a7bd4b75",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": null
+            },
+            {
+              "id": "td-version-d0a2f58ab6a7",
+              "label": "备份 02",
+              "fileLabel": "2.2_1生成矩阵图形.2",
+              "kind": "BACKUP",
+              "origin": "FILE",
+              "relativePath": "2.2_文字矩阵（8）/2.2_1生成矩阵图形/Backup/2.2_1生成矩阵图形.2.toe",
+              "modifiedAt": "2025-09-25T03:35:09.362Z",
+              "sizeBytes": 5730,
+              "structureId": "9799c78e2eeb1094ea6aa12246d702cd4c110d2bcbf7b8c5e01c89b8cefeb1fe",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": {
+                "added": 9,
+                "removed": 5,
+                "changed": 12,
+                "addedNodes": [
+                  "project1/1a",
+                  "project1/bg",
+                  "project1/comp1",
+                  "project1/fit2",
+                  "project1/moviefilein2",
+                  "project1/noise1",
+                  "project1/ramp1",
+                  "project1/ramp1_keys",
+                  "project1/switch1"
+                ],
+                "removedNodes": [
+                  "project1/box2",
+                  "project1/line1",
+                  "project1/sphere1",
+                  "project1/torus1",
+                  "project1/tube1"
+                ],
+                "changedNodes": [
+                  "project1",
+                  "project1/cam1",
+                  "project1/fit1",
+                  "project1/geo1",
+                  "project1/grid1",
+                  "project1/info1",
+                  "project1/level1",
+                  "project1/moviefilein1",
+                  "project1/null2",
+                  "project1/null3",
+                  "project1/null4",
+                  "project1/render1"
+                ]
+              }
+            },
+            {
+              "id": "td-version-eebcf53c8ed8",
+              "label": "备份 03",
+              "fileLabel": "2.2_1生成矩阵图形.3",
+              "kind": "BACKUP",
+              "origin": "FILE",
+              "relativePath": "2.2_文字矩阵（8）/2.2_1生成矩阵图形/Backup/2.2_1生成矩阵图形.3.toe",
+              "modifiedAt": "2025-09-25T04:00:14.482Z",
+              "sizeBytes": 7770,
+              "structureId": "f97ffa181856fbd16154840a96e369c31af72a3b6375b54b657a15968f1b9c25",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": {
+                "added": 20,
+                "removed": 0,
+                "changed": 5,
+                "addedNodes": [
+                  "project1/button1",
+                  "project1/button1/out1",
+                  "project1/button1/panelexec1",
+                  "project1/button1/par1",
+                  "project1/button1/parexec1",
+                  "project1/button1/text",
+                  "project1/count1",
+                  "project1/field1",
+                  "project1/field1/color",
+                  "project1/field1/i",
+                  "project1/field1/out1",
+                  "project1/field1/panel1"
+                ],
+                "removedNodes": [],
+                "changedNodes": [
+                  "project1",
+                  "project1/fit2",
+                  "project1/geo1",
+                  "project1/moviefilein2",
+                  "project1/switch1"
+                ]
+              }
+            },
+            {
+              "id": "td-version-f16b2c93ac6f",
+              "label": "备份 04",
+              "fileLabel": "2.2_1生成矩阵图形.4",
+              "kind": "BACKUP",
+              "origin": "FILE",
+              "relativePath": "2.2_文字矩阵（8）/2.2_1生成矩阵图形/2.2_1生成矩阵图形.4.toe",
+              "modifiedAt": "2025-09-25T06:55:49.466Z",
+              "sizeBytes": 7834,
+              "structureId": "62a2b2daacdf87e92fea2237c8d4c9fafe7632ef9c0bc2fa316049d9e5d49a34",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": {
+                "added": 0,
+                "removed": 0,
+                "changed": 7,
+                "addedNodes": [],
+                "removedNodes": [],
+                "changedNodes": [
+                  "project1",
+                  "project1/button1",
+                  "project1/button1/panelexec1",
+                  "project1/button1/parexec1",
+                  "project1/button1/text",
+                  "project1/cam1",
+                  "project1/geo1"
+                ]
+              }
+            },
+            {
+              "id": "td-version-eb984deaa7b9",
+              "label": "主工程",
+              "fileLabel": "2.2_1生成矩阵图形",
+              "kind": "PRIMARY",
+              "origin": "FILE",
+              "relativePath": "2.2_文字矩阵（8）/2.2_1生成矩阵图形/2.2_1生成矩阵图形.toe",
+              "modifiedAt": "2025-09-25T06:55:49.466Z",
+              "sizeBytes": 7834,
+              "structureId": "62a2b2daacdf87e92fea2237c8d4c9fafe7632ef9c0bc2fa316049d9e5d49a34",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": "td-version-f16b2c93ac6f",
+              "diffFromPrevious": {
+                "added": 0,
+                "removed": 0,
+                "changed": 0,
+                "addedNodes": [],
+                "removedNodes": [],
+                "changedNodes": []
+              }
+            }
+          ]
+        },
+        {
+          "id": "td-case-e7a103be9965",
+          "moduleId": "td-module-1f76b50643ad",
+          "title": "2.2 2文字多样贴图",
+          "relativeFolder": "2.2_文字矩阵（8）/2.2_2文字多样贴图",
+          "activeVersionId": "td-version-a77262938c50",
+          "versions": [
+            {
+              "id": "td-version-778ce8b5b194",
+              "label": "备份 01",
+              "fileLabel": "2.2_2文字多样贴图.1",
+              "kind": "BACKUP",
+              "origin": "FILE",
+              "relativePath": "2.2_文字矩阵（8）/2.2_2文字多样贴图/Backup/2.2_2文字多样贴图.1.toe",
+              "modifiedAt": "2025-09-25T07:07:34.388Z",
+              "sizeBytes": 7898,
+              "structureId": "994c6bb6344b63229259aa190d384eb554b3432c09c8633e4783eec498f34265",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": null
+            },
+            {
+              "id": "td-version-0610bb0d3ecc",
+              "label": "备份 02",
+              "fileLabel": "2.2_2文字多样贴图.2",
+              "kind": "BACKUP",
+              "origin": "FILE",
+              "relativePath": "2.2_文字矩阵（8）/2.2_2文字多样贴图/Backup/2.2_2文字多样贴图.2.toe",
+              "modifiedAt": "2025-09-25T07:52:04.777Z",
+              "sizeBytes": 8706,
+              "structureId": "f227ba215e35946082852d614f6b450d36ed998ed63a8bac9879d66756932681",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": {
+                "added": 34,
+                "removed": 0,
+                "changed": 4,
+                "addedNodes": [
+                  "project2",
+                  "project2/1a",
+                  "project2/bg",
+                  "project2/button2",
+                  "project2/button2/out1",
+                  "project2/button2/panelexec1",
+                  "project2/button2/par1",
+                  "project2/button2/parexec1",
+                  "project2/button2/text",
+                  "project2/cam1",
+                  "project2/cam1/file1",
+                  "project2/comp1"
+                ],
+                "removedNodes": [],
+                "changedNodes": [
+                  "project1",
+                  "project1/cam1",
+                  "project1/geo1",
+                  "project1/transform1"
+                ]
+              }
+            },
+            {
+              "id": "td-version-a0459b8fb5c0",
+              "label": "备份 03",
+              "fileLabel": "2.2_2文字多样贴图.3",
+              "kind": "BACKUP",
+              "origin": "FILE",
+              "relativePath": "2.2_文字矩阵（8）/2.2_2文字多样贴图/Backup/2.2_2文字多样贴图.3.toe",
+              "modifiedAt": "2025-09-25T11:30:26.018Z",
+              "sizeBytes": 9170,
+              "structureId": "6e7513da878696bbee53944c71a6e009a6df84dc6113b19bee8da07450e0f339",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": {
+                "added": 9,
+                "removed": 0,
+                "changed": 12,
+                "addedNodes": [
+                  "project2/map",
+                  "project2/map1",
+                  "project2/map2",
+                  "project2/map3",
+                  "project2/null5",
+                  "project2/pattern1",
+                  "project2/text2",
+                  "project2/text3",
+                  "project2/text4"
+                ],
+                "removedNodes": [],
+                "changedNodes": [
+                  "project2",
+                  "project2/cam1",
+                  "project2/constant1",
+                  "project2/constant2",
+                  "project2/geo1",
+                  "project2/grid2",
+                  "project2/null1",
+                  "project2/null2",
+                  "project2/null3",
+                  "project2/switch1",
+                  "project2/text1",
+                  "project2/transform1"
+                ]
+              }
+            },
+            {
+              "id": "td-version-94592b406698",
+              "label": "备份 04",
+              "fileLabel": "2.2_2文字多样贴图.4",
+              "kind": "BACKUP",
+              "origin": "FILE",
+              "relativePath": "2.2_文字矩阵（8）/2.2_2文字多样贴图/Backup/2.2_2文字多样贴图.4.toe",
+              "modifiedAt": "2025-09-25T12:05:32.128Z",
+              "sizeBytes": 9266,
+              "structureId": "3de5ea2aab30f33b6481ad997df6bb57263fcd0a5ef476bc802ff36b4ecfcf1d",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": {
+                "added": 0,
+                "removed": 0,
+                "changed": 16,
+                "addedNodes": [],
+                "removedNodes": [],
+                "changedNodes": [
+                  "project2",
+                  "project2/cam1",
+                  "project2/constant2",
+                  "project2/geo1",
+                  "project2/grid1",
+                  "project2/info1",
+                  "project2/map2",
+                  "project2/null1",
+                  "project2/null3",
+                  "project2/null4",
+                  "project2/null5",
+                  "project2/pattern1"
+                ]
+              }
+            },
+            {
+              "id": "td-version-9538f318e80e",
+              "label": "备份 05",
+              "fileLabel": "2.2_2文字多样贴图.5",
+              "kind": "BACKUP",
+              "origin": "FILE",
+              "relativePath": "2.2_文字矩阵（8）/2.2_2文字多样贴图/2.2_2文字多样贴图.5.toe",
+              "modifiedAt": "2025-09-30T07:41:59.118Z",
+              "sizeBytes": 9778,
+              "structureId": "d2700c57aba493e6fc5d08e958aae64b82b38f67515b989d8401e76fabaef8a0",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": {
+                "added": 14,
+                "removed": 0,
+                "changed": 12,
+                "addedNodes": [
+                  "OPviewer1",
+                  "OPviewer2",
+                  "project2/add1",
+                  "project2/fit1",
+                  "project2/flip1",
+                  "project2/ramp2",
+                  "project2/ramp2_keys",
+                  "project2/ramp3",
+                  "project2/ramp3_keys",
+                  "project2/ramp4",
+                  "project2/ramp4_keys",
+                  "project2/ramp5"
+                ],
+                "removedNodes": [],
+                "changedNodes": [
+                  "project1",
+                  "project1/field1/text",
+                  "project2",
+                  "project2/1a",
+                  "project2/cam1",
+                  "project2/geo1",
+                  "project2/null1",
+                  "project2/ramp1",
+                  "project2/ramp1_keys",
+                  "project2/switch1",
+                  "project2/text1",
+                  "project2/transform1"
+                ]
+              }
+            },
+            {
+              "id": "td-version-a77262938c50",
+              "label": "主工程",
+              "fileLabel": "2.2_2文字多样贴图",
+              "kind": "PRIMARY",
+              "origin": "FILE",
+              "relativePath": "2.2_文字矩阵（8）/2.2_2文字多样贴图/2.2_2文字多样贴图.toe",
+              "modifiedAt": "2025-09-30T07:41:59.118Z",
+              "sizeBytes": 9778,
+              "structureId": "d2700c57aba493e6fc5d08e958aae64b82b38f67515b989d8401e76fabaef8a0",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": "td-version-9538f318e80e",
+              "diffFromPrevious": {
+                "added": 0,
+                "removed": 0,
+                "changed": 0,
+                "addedNodes": [],
+                "removedNodes": [],
+                "changedNodes": []
+              }
+            }
+          ]
+        },
+        {
+          "id": "td-case-9cb36d61279f",
+          "moduleId": "td-module-1f76b50643ad",
+          "title": "2.2 3生成螺旋矩阵",
+          "relativeFolder": "2.2_文字矩阵（8）/2.2_3生成螺旋矩阵",
+          "activeVersionId": "td-version-36464c163818",
+          "versions": [
+            {
+              "id": "td-version-936a4cf1f56d",
+              "label": "备份 01",
+              "fileLabel": "2.2_3生成螺旋矩阵.1",
+              "kind": "BACKUP",
+              "origin": "FILE",
+              "relativePath": "2.2_文字矩阵（8）/2.2_3生成螺旋矩阵/Backup/2.2_3生成螺旋矩阵.1.toe",
+              "modifiedAt": "2025-09-30T07:36:34.902Z",
+              "sizeBytes": 3602,
+              "structureId": "0d99843dfe13f4c3d48efea0acd4f8a03b58fbdf2208676386b9975df59e6304",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": null
+            },
+            {
+              "id": "td-version-8f4d4401b905",
+              "label": "备份 02",
+              "fileLabel": "2.2_3生成螺旋矩阵.2",
+              "kind": "BACKUP",
+              "origin": "FILE",
+              "relativePath": "2.2_文字矩阵（8）/2.2_3生成螺旋矩阵/Backup/2.2_3生成螺旋矩阵.2.toe",
+              "modifiedAt": "2025-09-30T08:07:29.361Z",
+              "sizeBytes": 15274,
+              "structureId": "6ad79add70f4295f3747a47a64c0c9f039ae97a616e00db64f0274031aba63c0",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": {
+                "added": 116,
+                "removed": 0,
+                "changed": 1,
+                "addedNodes": [
+                  "OPviewer1",
+                  "OPviewer2",
+                  "project2",
+                  "project2/1a",
+                  "project2/bg",
+                  "project2/box1",
+                  "project2/button2",
+                  "project2/button2/out1",
+                  "project2/button2/panelexec1",
+                  "project2/button2/par1",
+                  "project2/button2/parexec1",
+                  "project2/button2/text"
+                ],
+                "removedNodes": [],
+                "changedNodes": [
+                  "project1"
+                ]
+              }
+            },
+            {
+              "id": "td-version-07f07793661c",
+              "label": "备份 03",
+              "fileLabel": "2.2_3生成螺旋矩阵.3",
+              "kind": "BACKUP",
+              "origin": "FILE",
+              "relativePath": "2.2_文字矩阵（8）/2.2_3生成螺旋矩阵/Backup/2.2_3生成螺旋矩阵.3.toe",
+              "modifiedAt": "2025-09-30T08:11:27.177Z",
+              "sizeBytes": 15234,
+              "structureId": "5f2c44f1e506301bd2383a44a77bf5a9497815192faf03c688bf5bf3c342d047",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": {
+                "added": 0,
+                "removed": 0,
+                "changed": 3,
+                "addedNodes": [],
+                "removedNodes": [],
+                "changedNodes": [
+                  "OPviewer1",
+                  "OPviewer2",
+                  "project3"
+                ]
+              }
+            },
+            {
+              "id": "td-version-f6183ed1e32a",
+              "label": "备份 04",
+              "fileLabel": "2.2_3生成螺旋矩阵.4",
+              "kind": "BACKUP",
+              "origin": "FILE",
+              "relativePath": "2.2_文字矩阵（8）/2.2_3生成螺旋矩阵/2.2_3生成螺旋矩阵.4.toe",
+              "modifiedAt": "2025-09-30T08:14:40.543Z",
+              "sizeBytes": 15266,
+              "structureId": "c2114962771c161154534fd9df42e8fc399b953419d12c937ebd706aa2e95d72",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": {
+                "added": 1,
+                "removed": 0,
+                "changed": 14,
+                "addedNodes": [
+                  "project2/flip1"
+                ],
+                "removedNodes": [],
+                "changedNodes": [
+                  "OPviewer2",
+                  "project1",
+                  "project2",
+                  "project2/cam1",
+                  "project2/field1/i",
+                  "project2/fit2",
+                  "project2/geo1",
+                  "project2/grid1",
+                  "project2/in1",
+                  "project2/level2",
+                  "project2/null2",
+                  "project3"
+                ]
+              }
+            },
+            {
+              "id": "td-version-36464c163818",
+              "label": "主工程",
+              "fileLabel": "2.2_3生成螺旋矩阵",
+              "kind": "PRIMARY",
+              "origin": "FILE",
+              "relativePath": "2.2_文字矩阵（8）/2.2_3生成螺旋矩阵/2.2_3生成螺旋矩阵.toe",
+              "modifiedAt": "2025-09-30T08:14:40.543Z",
+              "sizeBytes": 15266,
+              "structureId": "c2114962771c161154534fd9df42e8fc399b953419d12c937ebd706aa2e95d72",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": "td-version-f6183ed1e32a",
+              "diffFromPrevious": {
+                "added": 0,
+                "removed": 0,
+                "changed": 0,
+                "addedNodes": [],
+                "removedNodes": [],
+                "changedNodes": []
+              }
+            }
+          ]
+        },
+        {
+          "id": "td-case-3d5c53b707e6",
+          "moduleId": "td-module-1f76b50643ad",
+          "title": "2.2文字矩阵",
+          "relativeFolder": "2.2_文字矩阵（8）/2.2文字矩阵",
+          "activeVersionId": "td-version-1e9cfb0586da",
+          "versions": [
+            {
+              "id": "td-version-1e9cfb0586da",
+              "label": "主工程",
+              "fileLabel": "文字矩阵",
+              "kind": "PRIMARY",
+              "origin": "FILE",
+              "relativePath": "2.2_文字矩阵（8）/2.2文字矩阵/2.2文字矩阵/文字矩阵.toe",
+              "modifiedAt": "2022-07-08T08:46:13.647Z",
+              "sizeBytes": 5052324,
+              "structureId": "b274e93d1a20625b10cea85bacbae0e6f798f9d398f3c612f3717c0541dddf83",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "td-module-b4f4ee6dda30",
+      "sequence": 6,
+      "title": "3.1 参数控制（8）",
+      "cases": [
+        {
+          "id": "td-case-675881e20cc8",
+          "moduleId": "td-module-b4f4ee6dda30",
+          "title": "3.1随机构成",
+          "relativeFolder": "3.1_参数控制（8）/3.1随机构成",
+          "activeVersionId": "td-version-f466abe0dd99",
+          "versions": [
+            {
+              "id": "td-version-f466abe0dd99",
+              "label": "主工程",
+              "fileLabel": "随机构成",
+              "kind": "PRIMARY",
+              "origin": "ARCHIVE",
+              "relativePath": "3.1_参数控制（8）/3.1随机构成/3.1随机构成.zip::3.1随机构成/随机构成.toe",
+              "modifiedAt": "2025-09-22T08:53:02.813Z",
+              "sizeBytes": 81441388,
+              "structureId": "d48c9a6baa9d3b09dfdb896f2d8ee3cab341cecf45414362e00bfaa7c527a3d2",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "td-module-acf4890afa88",
+      "sequence": 7,
+      "title": "3.2 创意材质（8）",
+      "cases": [
+        {
+          "id": "td-case-03355b8b869d",
+          "moduleId": "td-module-acf4890afa88",
+          "title": "3.2创意材质",
+          "relativeFolder": "3.2_创意材质（8）/3.2创意材质",
+          "activeVersionId": "td-version-a5d385684cd6",
+          "versions": [
+            {
+              "id": "td-version-a5d385684cd6",
+              "label": "主工程",
+              "fileLabel": "创意材质",
+              "kind": "PRIMARY",
+              "origin": "ARCHIVE",
+              "relativePath": "3.2_创意材质（8）/3.2创意材质/3.2创意材质.zip::3.2创意材质/创意材质.toe",
+              "modifiedAt": "2025-09-23T06:05:21.016Z",
+              "sizeBytes": 1853751956,
+              "structureId": "4dd3c58b1db50040164b54509c58a7722d263a686f65e5b8443138e2ef94e203",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "td-module-9b53de589eff",
+      "sequence": 8,
+      "title": "3.3 生成模型（4）",
+      "cases": [
+        {
+          "id": "td-case-508883d71960",
+          "moduleId": "td-module-9b53de589eff",
+          "title": "3.3生成模型",
+          "relativeFolder": "3.3_生成模型（4）/3.3生成模型",
+          "activeVersionId": "td-version-8f626fccc200",
+          "versions": [
+            {
+              "id": "td-version-8f626fccc200",
+              "label": "主工程",
+              "fileLabel": "生成互动模型",
+              "kind": "PRIMARY",
+              "origin": "FILE",
+              "relativePath": "3.3_生成模型（4）/3.3生成模型/生成互动模型.toe",
+              "modifiedAt": "2022-08-01T08:50:57.123Z",
+              "sizeBytes": 732558,
+              "structureId": "95be4637ca242fbed5dde352ce2f996e005368da059534667e8bc92c9f857f72",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "td-module-bb66f9233364",
+      "sequence": 9,
+      "title": "图片粒子效果",
+      "cases": [
+        {
+          "id": "td-case-bb66f9233364",
+          "moduleId": "td-module-bb66f9233364",
+          "title": "图片粒子效果",
+          "relativeFolder": "图片粒子效果",
+          "activeVersionId": "td-version-52c06a06ed4e",
+          "versions": [
+            {
+              "id": "td-version-f4c486416159",
+              "label": "备份 01",
+              "fileLabel": "NewProject.1",
+              "kind": "BACKUP",
+              "origin": "FILE",
+              "relativePath": "图片粒子效果/Backup/NewProject.1.toe",
+              "modifiedAt": "2025-11-05T03:55:50.658Z",
+              "sizeBytes": 33018,
+              "structureId": "d762f53da02e2b8bcc0bf39a30203f849e26d29ef675dc473129de6f09db97ea",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": null
+            },
+            {
+              "id": "td-version-cac2920fc4d0",
+              "label": "备份 02",
+              "fileLabel": "NewProject.2",
+              "kind": "BACKUP",
+              "origin": "FILE",
+              "relativePath": "图片粒子效果/NewProject.2.toe",
+              "modifiedAt": "2026-03-26T15:30:56.516Z",
+              "sizeBytes": 32434,
+              "structureId": "1648ce0c306c43722e171cc2a16587cf68cd87d7c5d4cd0ba874a518a6ee9945",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": {
+                "added": 6,
+                "removed": 0,
+                "changed": 16,
+                "addedNodes": [
+                  "project1/_____20250831230754_696_2003",
+                  "project1/_____20250905162537_725_2003",
+                  "project1/_____20250905162623_727_2003",
+                  "project1/_____20250905170211_734_2003",
+                  "project1/_____20250908213907_759_2003",
+                  "project1/switch1"
+                ],
+                "removedNodes": [],
+                "changedNodes": [
+                  "moviefileout1",
+                  "project1",
+                  "project1/annotate1",
+                  "project1/annotate4",
+                  "project1/annotate5",
+                  "project1/box1",
+                  "project1/cam1",
+                  "project1/constant1",
+                  "project1/geo1",
+                  "project1/grid1",
+                  "project1/light1",
+                  "project1/masterSlider"
+                ]
+              }
+            },
+            {
+              "id": "td-version-52c06a06ed4e",
+              "label": "主工程",
+              "fileLabel": "图像粒子化详解",
+              "kind": "PRIMARY",
+              "origin": "FILE",
+              "relativePath": "图片粒子效果/图像粒子化详解.toe",
+              "modifiedAt": "2026-07-13T15:27:53.716Z",
+              "sizeBytes": 35842,
+              "structureId": "043d1d8a471ad1179f964789ff06ed7df17a4bb98bc46a45fe6f311c59acbf32",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": {
+                "added": 0,
+                "removed": 5,
+                "changed": 22,
+                "addedNodes": [],
+                "removedNodes": [
+                  "project1/_____20250905162537_725_2003",
+                  "project1/_____20250905162623_727_2003",
+                  "project1/_____20250905170211_734_2003",
+                  "project1/_____20250908213907_759_2003",
+                  "project1/2a"
+                ],
+                "changedNodes": [
+                  "project1",
+                  "project1/_____20250831230754_696_2003",
+                  "project1/add1",
+                  "project1/annotate2",
+                  "project1/annotate3",
+                  "project1/annotate4",
+                  "project1/bloom",
+                  "project1/box1",
+                  "project1/cam1",
+                  "project1/constant1",
+                  "project1/geo1",
+                  "project1/level2"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "td-module-4de0e6bc7678",
+      "sequence": 10,
+      "title": "point cloud effect",
+      "cases": [
+        {
+          "id": "td-case-4de0e6bc7678",
+          "moduleId": "td-module-4de0e6bc7678",
+          "title": "point cloud effect",
+          "relativeFolder": "point cloud effect",
+          "activeVersionId": "td-version-519d324efed5",
+          "versions": [
+            {
+              "id": "td-version-cc718ecdc4ef",
+              "label": "阶段 01",
+              "fileLabel": "三维转粒子",
+              "kind": "STAGE",
+              "origin": "FILE",
+              "relativePath": "point cloud effect/三维转粒子.toe",
+              "modifiedAt": "2025-11-06T03:53:24.688Z",
+              "sizeBytes": 8810,
+              "structureId": "99471a9747e31f5a13556f7b450fa3d053547a0b77115c0792295ecabfce5939",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": null
+            },
+            {
+              "id": "td-version-b6758f7093f2",
+              "label": "备份 01",
+              "fileLabel": "新建 TouchDesigner Project.1",
+              "kind": "BACKUP",
+              "origin": "FILE",
+              "relativePath": "point cloud effect/Backup/新建 TouchDesigner Project.1.toe",
+              "modifiedAt": "2025-11-12T01:59:03.958Z",
+              "sizeBytes": 36666,
+              "structureId": "2a209ec76f321eb3afcc2ac2b148be944c7c9ef7b17c54b219dfe5a3d56d3b04",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": {
+                "added": 197,
+                "removed": 33,
+                "changed": 1,
+                "addedNodes": [
+                  "project1/add1",
+                  "project1/annotate1",
+                  "project1/bloom",
+                  "project1/bloom/addLookupMix",
+                  "project1/bloom/blurDown",
+                  "project1/bloom/blurUp",
+                  "project1/bloom/cross1",
+                  "project1/bloom/docsHelper",
+                  "project1/bloom/feedback1",
+                  "project1/bloom/glsl1_info",
+                  "project1/bloom/glsl1_pixel",
+                  "project1/bloom/in1"
+                ],
+                "removedNodes": [
+                  "project1/point_cloud",
+                  "project1/point_cloud/comp1",
+                  "project1/point_cloud/Flower",
+                  "project1/point_cloud/Flower1",
+                  "project1/point_cloud/goat_skull",
+                  "project1/point_cloud/goat_skull1",
+                  "project1/point_cloud/noise1_Flower",
+                  "project1/point_cloud/null1",
+                  "project1/point_cloud/null2",
+                  "project1/point_cloud/pointRender",
+                  "project1/point_cloud/pointRender/camera",
+                  "project1/point_cloud/pointRender/colorInstances"
+                ],
+                "changedNodes": [
+                  "project1"
+                ]
+              }
+            },
+            {
+              "id": "td-version-7c8129edbd88",
+              "label": "备份 02",
+              "fileLabel": "新建 TouchDesigner Project.2",
+              "kind": "BACKUP",
+              "origin": "FILE",
+              "relativePath": "point cloud effect/Backup/新建 TouchDesigner Project.2.toe",
+              "modifiedAt": "2025-11-12T03:39:40.025Z",
+              "sizeBytes": 37346,
+              "structureId": "fe132bb313792ae4db23e10d1ffd6fbe9e7130a6a8e49e6e1c53d2132e45f476",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": {
+                "added": 27,
+                "removed": 11,
+                "changed": 91,
+                "addedNodes": [
+                  "project1/chopto21",
+                  "project1/chopto22",
+                  "project1/chopto23",
+                  "project1/chopto24",
+                  "project1/chopto25",
+                  "project1/chopto26",
+                  "project1/constant21",
+                  "project1/constant22",
+                  "project1/constant23",
+                  "project1/constant24",
+                  "project1/constant25",
+                  "project1/constant26"
+                ],
+                "removedNodes": [
+                  "project1/chopto1",
+                  "project1/chopto2",
+                  "project1/constant1",
+                  "project1/constant2",
+                  "project1/pointfilein3",
+                  "project1/pointfilein4",
+                  "project1/pointRender/cam2",
+                  "project1/pointRender/cam2/file1",
+                  "project1/select1",
+                  "project1/switch3",
+                  "project1/topto1"
+                ],
+                "changedNodes": [
+                  "project1",
+                  "project1/annotate1",
+                  "project1/bloom/iter0",
+                  "project1/bloom/master/add",
+                  "project1/chopto10",
+                  "project1/chopto11",
+                  "project1/chopto12",
+                  "project1/chopto13",
+                  "project1/chopto14",
+                  "project1/chopto15",
+                  "project1/chopto16",
+                  "project1/chopto17"
+                ]
+              }
+            },
+            {
+              "id": "td-version-cb7b37aa9e88",
+              "label": "备份 03",
+              "fileLabel": "新建 TouchDesigner Project.3",
+              "kind": "BACKUP",
+              "origin": "FILE",
+              "relativePath": "point cloud effect/新建 TouchDesigner Project.3.toe",
+              "modifiedAt": "2025-11-12T03:51:52.825Z",
+              "sizeBytes": 37378,
+              "structureId": "281e0275bee41624527ea1f3c73b852880950c5e3f776f6f3fb488b4917da0d9",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": null,
+              "diffFromPrevious": {
+                "added": 0,
+                "removed": 0,
+                "changed": 18,
+                "addedNodes": [],
+                "removedNodes": [],
+                "changedNodes": [
+                  "project1",
+                  "project1/chopto21",
+                  "project1/chopto22",
+                  "project1/constant20",
+                  "project1/constant21",
+                  "project1/constant22",
+                  "project1/masterRadioButton",
+                  "project1/out1",
+                  "project1/point",
+                  "project1/pointRender",
+                  "project1/pointRender/cam1",
+                  "project1/pointRender/geo1"
+                ]
+              }
+            },
+            {
+              "id": "td-version-519d324efed5",
+              "label": "主工程",
+              "fileLabel": "新建 TouchDesigner Project",
+              "kind": "PRIMARY",
+              "origin": "FILE",
+              "relativePath": "point cloud effect/新建 TouchDesigner Project.toe",
+              "modifiedAt": "2025-11-12T03:51:52.825Z",
+              "sizeBytes": 37378,
+              "structureId": "281e0275bee41624527ea1f3c73b852880950c5e3f776f6f3fb488b4917da0d9",
+              "status": "PARSED",
+              "issue": null,
+              "duplicateOfVersionId": "td-version-cb7b37aa9e88",
+              "diffFromPrevious": {
+                "added": 0,
+                "removed": 0,
+                "changed": 0,
+                "addedNodes": [],
+                "removedNodes": [],
+                "changedNodes": []
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "issues": []
+}

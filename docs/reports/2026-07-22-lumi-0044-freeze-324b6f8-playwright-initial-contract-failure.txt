@@ -1,0 +1,428 @@
+
+[WebServer] ⚠ You are using a non-standard "NODE_ENV" value in your environment. This creates inconsistencies in the project and is strongly advised against. Read more: https://nextjs.org/docs/messages/non-standard-node-env
+
+Running 23 tests using 1 worker
+
+[1/23] [chromium] › tests\e2e\accessibility.spec.ts:14:5 › entry and current Lumi workspace expose landmarks, keyboard focus and errors
+  1) [chromium] › tests\e2e\accessibility.spec.ts:14:5 › entry and current Lumi workspace expose landmarks, keyboard focus and errors 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('tablist', { name: '进入身份' })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for getByRole('tablist', { name: '进入身份' })
+
+
+      15 |   await page.goto("/");
+      16 |   await expect(page.getByRole("main")).toBeVisible();
+    > 17 |   await expect(page.getByRole("tablist", { name: "进入身份" })).toBeVisible();
+         |                                                             ^
+      18 |
+      19 |   const studentTab = page.getByRole("tab", { name: "学生" });
+      20 |   await studentTab.focus();
+        at E:\第二届教师人工智能应用能力大赛\.worktrees\lumi-candidate\tests\e2e\accessibility.spec.ts:17:61
+
+    Error Context: test-results\accessibility-entry-and-cu-93a6e-s-keyboard-focus-and-errors-chromium\error-context.md
+
+
+[2/23] [chromium] › tests\e2e\accessibility.spec.ts:44:5 › current artwork controls expose names, validation feedback and review tabs
+  2) [chromium] › tests\e2e\accessibility.spec.ts:44:5 › current artwork controls expose names, validation feedback and review tabs 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.fill: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByLabel('班级邀请码')
+
+
+       5 | async function studentLogin(page: Page, identityCode: string) {
+       6 |   await page.goto("/");
+    >  7 |   await page.getByLabel("班级邀请码").fill("E2E2026");
+         |                                  ^
+       8 |   await page.getByLabel("匿名编号").fill(identityCode);
+       9 |   await page.getByRole("button", { name: "学生进入" }).click();
+      10 |   await expect(page).toHaveURL(/\/student$/);
+        at studentLogin (E:\第二届教师人工智能应用能力大赛\.worktrees\lumi-candidate\tests\e2e\accessibility.spec.ts:7:34)
+        at E:\第二届教师人工智能应用能力大赛\.worktrees\lumi-candidate\tests\e2e\accessibility.spec.ts:45:3
+
+    Error Context: test-results\accessibility-current-artw-0a1ae-on-feedback-and-review-tabs-chromium\error-context.md
+
+
+[3/23] [chromium] › tests\e2e\accessibility.spec.ts:74:5 › teacher analytics has named tables and keyboard-visible actions
+  3) [chromium] › tests\e2e\accessibility.spec.ts:74:5 › teacher analytics has named tables and keyboard-visible actions 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByRole('tab', { name: '教师' })
+
+
+      74 | test("teacher analytics has named tables and keyboard-visible actions", async ({ page }) => {
+      75 |   await page.goto("/");
+    > 76 |   await page.getByRole("tab", { name: "教师" }).click();
+         |                                               ^
+      77 |   await page.getByLabel("教师访问码").fill("e2e-teacher-code");
+      78 |   await page.getByRole("button", { name: "教师进入" }).press("Enter");
+      79 |   await expect(page).toHaveURL(/\/teacher$/);
+        at E:\第二届教师人工智能应用能力大赛\.worktrees\lumi-candidate\tests\e2e\accessibility.spec.ts:76:47
+
+    Error Context: test-results\accessibility-teacher-anal-a3f88-nd-keyboard-visible-actions-chromium\error-context.md
+
+
+[4/23] [chromium] › tests\e2e\demo-mode.spec.ts:3:5 › demo student sees truthful provenance, preset history and five-dimension closure
+[5/23] [chromium] › tests\e2e\demo-mode.spec.ts:17:5 › teacher keeps demo data opt-in when real classes exist
+  4) [chromium] › tests\e2e\demo-mode.spec.ts:17:5 › teacher keeps demo data opt-in when real classes exist 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByRole('tab', { name: '教师' })
+
+
+      17 | test("teacher keeps demo data opt-in when real classes exist", async ({ page }) => {
+      18 |   await page.goto("/");
+    > 19 |   await page.getByRole("tab", { name: "教师" }).click();
+         |                                               ^
+      20 |   await page.getByLabel("教师访问码").fill("e2e-teacher-code");
+      21 |   await page.getByRole("button", { name: "教师进入" }).click();
+      22 |   await expect(page).toHaveURL(/\/teacher$/);
+        at E:\第二届教师人工智能应用能力大赛\.worktrees\lumi-candidate\tests\e2e\demo-mode.spec.ts:19:47
+
+    Error Context: test-results\demo-mode-teacher-keeps-de-c0a50--in-when-real-classes-exist-chromium\error-context.md
+
+
+[6/23] [chromium] › tests\e2e\demo-mode.spec.ts:56:5 › current demo creates a conversation, supports speech capability detection and reacts without a model
+[7/23] [chromium] › tests\e2e\design-project-tasks.spec.ts:13:5 › current design conversations can be created, switched and restored
+  5) [chromium] › tests\e2e\design-project-tasks.spec.ts:13:5 › current design conversations can be created, switched and restored 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByRole('tab', { name: '学生' })
+
+
+      3 | async function loginStudent(page: import("@playwright/test").Page) {
+      4 |   await page.goto("/");
+    > 5 |   await page.getByRole("tab", { name: "学生" }).click();
+        |                                               ^
+      6 |   await page.getByLabel("班级邀请码").fill("E2E2026");
+      7 |   await page.getByLabel("匿名编号").fill("EF9M-P4S6-VR2X");
+      8 |   await page.getByRole("button", { name: "学生进入" }).click();
+        at loginStudent (E:\第二届教师人工智能应用能力大赛\.worktrees\lumi-candidate\tests\e2e\design-project-tasks.spec.ts:5:47)
+        at E:\第二届教师人工智能应用能力大赛\.worktrees\lumi-candidate\tests\e2e\design-project-tasks.spec.ts:14:3
+
+    Error Context: test-results\design-project-tasks-curre-e343a-eated-switched-and-restored-chromium\error-context.md
+
+
+[8/23] [chromium] › tests\e2e\evidence-tool-path.spec.ts:19:7 › DigiShow单工具路径通过已登录浏览器提交正确的传输回执
+  6) [chromium] › tests\e2e\evidence-tool-path.spec.ts:19:7 › DigiShow单工具路径通过已登录浏览器提交正确的传输回执 ───────
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.fill: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByLabel('班级邀请码')
+
+
+       9 | async function login(page: Page, code: string) {
+      10 |   await page.goto("/");
+    > 11 |   await page.getByLabel("班级邀请码").fill("E2E2026");
+         |                                  ^
+      12 |   await page.getByLabel("匿名编号").fill(code);
+      13 |   await page.getByRole("button", { name: "学生进入" }).click();
+      14 |   await expect(page).toHaveURL(/\/student$/);
+        at login (E:\第二届教师人工智能应用能力大赛\.worktrees\lumi-candidate\tests\e2e\evidence-tool-path.spec.ts:11:34)
+        at E:\第二届教师人工智能应用能力大赛\.worktrees\lumi-candidate\tests\e2e\evidence-tool-path.spec.ts:20:5
+
+    Error Context: test-results\evidence-tool-path-DigiShow单工具路径通过已登录浏览器提交正确的传输回执-chromium\error-context.md
+
+
+[9/23] [chromium] › tests\e2e\evidence-tool-path.spec.ts:19:7 › TouchDesigner单工具路径通过已登录浏览器提交正确的传输回执
+  7) [chromium] › tests\e2e\evidence-tool-path.spec.ts:19:7 › TouchDesigner单工具路径通过已登录浏览器提交正确的传输回执 ──
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.fill: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByLabel('班级邀请码')
+
+
+       9 | async function login(page: Page, code: string) {
+      10 |   await page.goto("/");
+    > 11 |   await page.getByLabel("班级邀请码").fill("E2E2026");
+         |                                  ^
+      12 |   await page.getByLabel("匿名编号").fill(code);
+      13 |   await page.getByRole("button", { name: "学生进入" }).click();
+      14 |   await expect(page).toHaveURL(/\/student$/);
+        at login (E:\第二届教师人工智能应用能力大赛\.worktrees\lumi-candidate\tests\e2e\evidence-tool-path.spec.ts:11:34)
+        at E:\第二届教师人工智能应用能力大赛\.worktrees\lumi-candidate\tests\e2e\evidence-tool-path.spec.ts:20:5
+
+    Error Context: test-results\evidence-tool-path-TouchDesigner单工具路径通过已登录浏览器提交正确的传输回执-chromium\error-context.md
+
+
+[10/23] [chromium] › tests\e2e\evidence-tool-path.spec.ts:19:7 › DigiShow + TouchDesigner协同路径通过已登录浏览器提交正确的传输回执
+  8) [chromium] › tests\e2e\evidence-tool-path.spec.ts:19:7 › DigiShow + TouchDesigner协同路径通过已登录浏览器提交正确的传输回执 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.fill: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByLabel('班级邀请码')
+
+
+       9 | async function login(page: Page, code: string) {
+      10 |   await page.goto("/");
+    > 11 |   await page.getByLabel("班级邀请码").fill("E2E2026");
+         |                                  ^
+      12 |   await page.getByLabel("匿名编号").fill(code);
+      13 |   await page.getByRole("button", { name: "学生进入" }).click();
+      14 |   await expect(page).toHaveURL(/\/student$/);
+        at login (E:\第二届教师人工智能应用能力大赛\.worktrees\lumi-candidate\tests\e2e\evidence-tool-path.spec.ts:11:34)
+        at E:\第二届教师人工智能应用能力大赛\.worktrees\lumi-candidate\tests\e2e\evidence-tool-path.spec.ts:20:5
+
+    Error Context: test-results\evidence-tool-path-DigiSho-18f29-signer协同路径通过已登录浏览器提交正确的传输回执-chromium\error-context.md
+
+
+[11/23] [chromium] › tests\e2e\gradual-blur.spec.ts:4:7 › Lumi homepage gradual blur › softens content below the sticky navigation without intercepting input
+  9) [chromium] › tests\e2e\gradual-blur.spec.ts:4:7 › Lumi homepage gradual blur › softens content below the sticky navigation without intercepting input 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  locator('.lumi-scroll-blur')
+    Expected: 1
+    Received: 0
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" with timeout 5000ms
+      - waiting for locator('.lumi-scroll-blur')
+        13 × locator resolved to 0 elements
+           - unexpected value "0"
+
+
+       9 |     const navigation = page.locator(".lumi-site-nav");
+      10 |
+    > 11 |     await expect(blur).toHaveCount(1);
+         |                        ^
+      12 |     await expect(blur.locator("[data-gradual-blur-layer]")).toHaveCount(5);
+      13 |     await expect(blur).toHaveCSS("pointer-events", "none");
+      14 |     await expect(blur).toHaveCSS("z-index", "30");
+        at E:\第二届教师人工智能应用能力大赛\.worktrees\lumi-candidate\tests\e2e\gradual-blur.spec.ts:11:24
+
+    Error Context: test-results\gradual-blur-Lumi-homepage-0ee33--without-intercepting-input-chromium\error-context.md
+
+
+[12/23] [chromium] › tests\e2e\gradual-blur.spec.ts:33:7 › Lumi homepage gradual blur › keeps the mobile layout readable while scrolling under the blur
+  10) [chromium] › tests\e2e\gradual-blur.spec.ts:33:7 › Lumi homepage gradual blur › keeps the mobile layout readable while scrolling under the blur 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.scrollIntoViewIfNeeded: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for locator('#how')
+
+
+      34 |     await page.setViewportSize({ width: 390, height: 844 });
+      35 |     await page.goto("/");
+    > 36 |     await page.locator("#how").scrollIntoViewIfNeeded();
+         |                                ^
+      37 |
+      38 |     const pageWidths = await page.evaluate(() => ({
+      39 |       client: document.documentElement.clientWidth,
+        at E:\第二届教师人工智能应用能力大赛\.worktrees\lumi-candidate\tests\e2e\gradual-blur.spec.ts:36:32
+
+    Error Context: test-results\gradual-blur-Lumi-homepage-d887e-le-scrolling-under-the-blur-chromium\error-context.md
+
+
+[13/23] [chromium] › tests\e2e\release-rehearsal.spec.ts:7:5 › machine-assisted local rehearsal follows the current labeled Lumi demo without a model
+[chromium] › tests\e2e\release-rehearsal.spec.ts:7:5 › machine-assisted local rehearsal follows the current labeled Lumi demo without a model
+RELEASE_REHEARSAL_TIMINGS {"environment":"Playwright Desktop Chrome; in-browser labeled mock; no model call","kind":"machine-assisted local rehearsal","totalMs":480}
+
+[14/23] [chromium] › tests\e2e\release-rehearsal.spec.ts:36:5 › book-design demo accepts an artwork and returns a five-dimension review
+[15/23] [chromium] › tests\e2e\student-flow.spec.ts:15:5 › student resumes the current Lumi conversation workspace and task history
+  11) [chromium] › tests\e2e\student-flow.spec.ts:15:5 › student resumes the current Lumi conversation workspace and task history 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByRole('tab', { name: '学生' })
+
+
+       5 | async function loginStudent(page: Page, identityCode: string = IDENTITY_CODES[0]) {
+       6 |   await page.goto("/");
+    >  7 |   await page.getByRole("tab", { name: "学生" }).click();
+         |                                               ^
+       8 |   await page.getByLabel("班级邀请码").fill("E2E2026");
+       9 |   await page.getByLabel("匿名编号").fill(identityCode);
+      10 |   await page.getByRole("button", { name: "学生进入" }).click();
+        at loginStudent (E:\第二届教师人工智能应用能力大赛\.worktrees\lumi-candidate\tests\e2e\student-flow.spec.ts:7:47)
+        at E:\第二届教师人工智能应用能力大赛\.worktrees\lumi-candidate\tests\e2e\student-flow.spec.ts:16:3
+
+    Error Context: test-results\student-flow-student-resum-2f793--workspace-and-task-history-chromium\error-context.md
+
+
+[16/23] [chromium] › tests\e2e\student-flow.spec.ts:38:5 › dashboard enforces student role
+  12) [chromium] › tests\e2e\student-flow.spec.ts:38:5 › dashboard enforces student role ───────────
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByRole('tab', { name: '教师' })
+
+
+      41 |
+      42 |   await page.goto("/");
+    > 43 |   await page.getByRole("tab", { name: "教师" }).click();
+         |                                               ^
+      44 |   await page.getByLabel("教师访问码").fill("e2e-teacher-code");
+      45 |   const [teacherLogin] = await Promise.all([
+      46 |     page.waitForResponse((response) => response.url().endsWith("/api/auth/teacher")),
+        at E:\第二届教师人工智能应用能力大赛\.worktrees\lumi-candidate\tests\e2e\student-flow.spec.ts:43:47
+
+    Error Context: test-results\student-flow-dashboard-enforces-student-role-chromium\error-context.md
+
+
+[17/23] [chromium] › tests\e2e\student-flow.spec.ts:58:5 › mobile learners can open history and growth without horizontal overflow
+  13) [chromium] › tests\e2e\student-flow.spec.ts:58:5 › mobile learners can open history and growth without horizontal overflow 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByRole('tab', { name: '学生' })
+
+
+       5 | async function loginStudent(page: Page, identityCode: string = IDENTITY_CODES[0]) {
+       6 |   await page.goto("/");
+    >  7 |   await page.getByRole("tab", { name: "学生" }).click();
+         |                                               ^
+       8 |   await page.getByLabel("班级邀请码").fill("E2E2026");
+       9 |   await page.getByLabel("匿名编号").fill(identityCode);
+      10 |   await page.getByRole("button", { name: "学生进入" }).click();
+        at loginStudent (E:\第二届教师人工智能应用能力大赛\.worktrees\lumi-candidate\tests\e2e\student-flow.spec.ts:7:47)
+        at E:\第二届教师人工智能应用能力大赛\.worktrees\lumi-candidate\tests\e2e\student-flow.spec.ts:60:3
+
+    Error Context: test-results\student-flow-mobile-learne-86271-without-horizontal-overflow-chromium\error-context.md
+
+
+[18/23] [chromium] › tests\e2e\teacher-flow.spec.ts:4:7 › teacher analytics flow › an unauthenticated teacher workspace receives a 401 dashboard response
+[19/23] [chromium] › tests\e2e\teacher-flow.spec.ts:12:7 › teacher analytics flow › teacher reviews an anonymous learner without replacing the original result
+  14) [chromium] › tests\e2e\teacher-flow.spec.ts:12:7 › teacher analytics flow › teacher reviews an anonymous learner without replacing the original result 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByRole('tab', { name: '教师' })
+
+
+      12 |   test("teacher reviews an anonymous learner without replacing the original result", async ({ page }) => {
+      13 |     await page.goto("/");
+    > 14 |     await page.getByRole("tab", { name: "教师" }).click();
+         |                                                 ^
+      15 |     await page.getByLabel("教师访问码").fill("e2e-teacher-code");
+      16 |     await page.getByRole("button", { name: "教师进入" }).click();
+      17 |     await expect(page).toHaveURL(/\/teacher$/);
+        at E:\第二届教师人工智能应用能力大赛\.worktrees\lumi-candidate\tests\e2e\teacher-flow.spec.ts:14:49
+
+    Error Context: test-results\teacher-flow-teacher-analy-b261d-placing-the-original-result-chromium\error-context.md
+
+
+[20/23] [chromium] › tests\e2e\teacher-flow.spec.ts:57:7 › teacher analytics flow › teacher evidence workspace has no page-level horizontal overflow at 375px
+  15) [chromium] › tests\e2e\teacher-flow.spec.ts:57:7 › teacher analytics flow › teacher evidence workspace has no page-level horizontal overflow at 375px 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByRole('tab', { name: '教师' })
+
+
+      58 |     await page.setViewportSize({ width: 375, height: 812 });
+      59 |     await page.goto("/");
+    > 60 |     await page.getByRole("tab", { name: "教师" }).click();
+         |                                                 ^
+      61 |     await page.getByLabel("教师访问码").fill("e2e-teacher-code");
+      62 |     await page.getByRole("button", { name: "教师进入" }).click();
+      63 |     await page.getByRole("button", { name: "查看匿名-教师01" }).click();
+        at E:\第二届教师人工智能应用能力大赛\.worktrees\lumi-candidate\tests\e2e\teacher-flow.spec.ts:60:49
+
+    Error Context: test-results\teacher-flow-teacher-analy-3aa17-orizontal-overflow-at-375px-chromium\error-context.md
+
+
+[21/23] [chromium] › tests\e2e\teacher-flow.spec.ts:68:7 › teacher analytics flow › teacher audits an agent policy, real tool trace and correction in the browser
+  16) [chromium] › tests\e2e\teacher-flow.spec.ts:68:7 › teacher analytics flow › teacher audits an agent policy, real tool trace and correction in the browser 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByRole('tab', { name: '教师' })
+
+
+      68 |   test("teacher audits an agent policy, real tool trace and correction in the browser", async ({ page }) => {
+      69 |     await page.goto("/");
+    > 70 |     await page.getByRole("tab", { name: "教师" }).click();
+         |                                                 ^
+      71 |     await page.getByLabel("教师访问码").fill("e2e-teacher-code");
+      72 |     await page.getByRole("button", { name: "教师进入" }).click();
+      73 |     await page.getByRole("button", { name: "查看匿名-教师01" }).click();
+        at E:\第二届教师人工智能应用能力大赛\.worktrees\lumi-candidate\tests\e2e\teacher-flow.spec.ts:70:49
+
+    Error Context: test-results\teacher-flow-teacher-analy-d3148-d-correction-in-the-browser-chromium\error-context.md
+
+
+[22/23] [chromium] › tests\e2e\teacher-flow.spec.ts:88:7 › teacher analytics flow › a student cannot access teacher analytics
+  17) [chromium] › tests\e2e\teacher-flow.spec.ts:88:7 › teacher analytics flow › a student cannot access teacher analytics 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.fill: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByLabel('班级邀请码')
+
+
+      88 |   test("a student cannot access teacher analytics", async ({ page }) => {
+      89 |     await page.goto("/");
+    > 90 |     await page.getByLabel("班级邀请码").fill("E2E2026");
+         |                                    ^
+      91 |     await page.getByLabel("匿名编号").fill("AB7K-C9M2-Q4RP");
+      92 |     await page.getByRole("button", { name: "学生进入" }).click();
+      93 |     await expect(page).toHaveURL(/\/student$/);
+        at E:\第二届教师人工智能应用能力大赛\.worktrees\lumi-candidate\tests\e2e\teacher-flow.spec.ts:90:36
+
+    Error Context: test-results\teacher-flow-teacher-analy-ca80c-ot-access-teacher-analytics-chromium\error-context.md
+
+
+[23/23] [chromium] › tests\e2e\tool-path-persistence.spec.ts:3:5 › generated tool-path details remain available through the authenticated contract after reload
+  18) [chromium] › tests\e2e\tool-path-persistence.spec.ts:3:5 › generated tool-path details remain available through the authenticated contract after reload 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.fill: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByLabel('班级邀请码')
+
+
+      3 | test("generated tool-path details remain available through the authenticated contract after reload", async ({ page }) => {
+      4 |   await page.goto("/");
+    > 5 |   await page.getByLabel("班级邀请码").fill("E2E2026");
+        |                                  ^
+      6 |   await page.getByLabel("匿名编号").fill("LM3T-R7V9-X2QA");
+      7 |   await page.getByRole("button", { name: "学生进入" }).click();
+      8 |   await expect(page).toHaveURL(/\/student$/);
+        at E:\第二届教师人工智能应用能力大赛\.worktrees\lumi-candidate\tests\e2e\tool-path-persistence.spec.ts:5:34
+
+    Error Context: test-results\tool-path-persistence-gene-cbf7d-cated-contract-after-reload-chromium\error-context.md
+
+

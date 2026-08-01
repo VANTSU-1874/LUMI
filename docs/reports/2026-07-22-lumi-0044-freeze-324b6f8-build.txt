@@ -1,0 +1,74 @@
+[WARN] Your node_modules are out of sync with your lockfile. The workspace structure has changed since last install
+$ node scripts/check-runtime-tools.mjs --tools next
+$ next build "--webpack"
+▲ Next.js 16.2.10 (webpack)
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 9.9s
+  Running TypeScript ...
+  Finished TypeScript in 14.5s ...
+  Collecting page data using 31 workers ...
+  Generating static pages using 31 workers (0/27) ...
+  Generating static pages using 31 workers (6/27) 
+  Generating static pages using 31 workers (13/27) 
+  Generating static pages using 31 workers (20/27) 
+✓ Generating static pages using 31 workers (27/27) in 557ms
+  Finalizing page optimization ...
+  Collecting build traces ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ƒ /api/agent/action
+├ ƒ /api/agent/artworks/[attachmentId]
+├ ƒ /api/agent/conversation
+├ ƒ /api/agent/runs
+├ ƒ /api/agent/runs/[runId]
+├ ƒ /api/agent/runs/[runId]/approvals/[actionId]
+├ ƒ /api/agent/runs/[runId]/cancel
+├ ƒ /api/agent/runs/[runId]/events
+├ ƒ /api/agent/runs/[runId]/events/stream
+├ ƒ /api/agent/runs/[runId]/retry
+├ ƒ /api/agent/tasks
+├ ƒ /api/agent/tasks/[taskId]
+├ ƒ /api/agent/tasks/[taskId]/messages
+├ ƒ /api/agent/turn
+├ ƒ /api/agent/turns/[turnId]/critique
+├ ƒ /api/auth/student
+├ ƒ /api/auth/teacher
+├ ƒ /api/book-layout
+├ ƒ /api/diagnostic
+├ ƒ /api/evidence
+├ ƒ /api/evidence/[evidenceId]
+├ ƒ /api/health
+├ ƒ /api/projects/[projectId]/evidence
+├ ƒ /api/projects/[projectId]/hints
+├ ƒ /api/projects/[projectId]/logic-card
+├ ƒ /api/projects/[projectId]/logic-card/coach
+├ ƒ /api/projects/[projectId]/tool-path
+├ ƒ /api/projects/[projectId]/transfer
+├ ƒ /api/projects/[projectId]/troubleshooting
+├ ƒ /api/student/dashboard
+├ ƒ /api/teacher/agent-reviews
+├ ƒ /api/teacher/agent/tasks/[taskId]/messages
+├ ƒ /api/teacher/dashboard
+├ ƒ /api/teacher/decisions
+├ ƒ /api/teacher/evidence/[evidenceId]
+├ ƒ /api/teacher/learners/[studentId]
+├ ƒ /api/teacher/learners/[studentId]/memories
+├ ƒ /api/teacher/learners/[studentId]/memories/[memoryId]
+├ ƒ /api/teacher/pilot-report
+├ ƒ /api/touchdesigner-cases
+├ ƒ /api/touchdesigner-cases/[structureId]
+├ ƒ /api/touchdesigner-node-catalog
+├ ○ /assistant-lab
+├ ○ /dev/mock
+├ ○ /dev/ui
+├ ○ /privacy
+├ ƒ /student
+└ ○ /teacher
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1400" viewBox="0 0 1000 1400" role="img" aria-labelledby="title description">
+  <title id="title">版式海报修改后预置示意图</title>
+  <desc id="description">使用同一组自创文字内容演示建立阅读层级后的版式。</desc>
+  <defs>
+    <style>
+      .sans { font-family: "Noto Sans SC", "Source Han Sans SC", "Microsoft YaHei", sans-serif; }
+      .serif { font-family: "Noto Serif SC", "Source Han Serif SC", "SimSun", serif; }
+      .ink { fill: #23201C; }
+      .muted { fill: #23201C; opacity: .58; }
+      .line { stroke: #D6D0C4; stroke-width: 2; fill: none; }
+      .fine { stroke: #23201C; stroke-width: 2; fill: none; }
+    </style>
+  </defs>
+
+  <rect width="1000" height="1400" fill="#EEEAE1"/>
+  <text x="58" y="62" class="sans muted" font-size="17" letter-spacing="3">LAYOUT STUDY / AFTER</text>
+  <rect x="678" y="28" width="264" height="62" rx="31" fill="#B23A2F"/>
+  <text x="810" y="68" class="sans" font-size="24" font-weight="700" fill="#EEEAE1" text-anchor="middle">预置示意图</text>
+  <path d="M58 108H942" class="line"/>
+
+  <text x="58" y="182" class="sans muted" font-size="20" letter-spacing="2">互动设计开放课 · 预置案例</text>
+  <text x="58" y="310" class="serif ink" font-size="92" font-weight="700">纹样如何</text>
+  <text x="58" y="418" class="serif ink" font-size="92" font-weight="700">回应靠近</text>
+  <rect x="58" y="454" width="138" height="10" fill="#B23A2F"/>
+
+  <g transform="translate(58 548)">
+    <circle cx="248" cy="248" r="214" fill="none" stroke="#D6D0C4" stroke-width="2"/>
+    <circle cx="248" cy="248" r="160" fill="none" stroke="#23201C" stroke-width="2"/>
+    <circle cx="248" cy="248" r="104" fill="none" stroke="#23201C" stroke-width="2"/>
+    <circle cx="248" cy="248" r="18" fill="#B23A2F"/>
+    <path d="M248 34V462M34 248H462M97 97L399 399M399 97L97 399" class="line"/>
+    <path d="M524 48H838M524 110H780M524 172H838" class="line"/>
+    <text x="524" y="242" class="sans ink" font-size="28" font-weight="700">从距离输入到纹样显影</text>
+    <text x="524" y="288" class="sans muted" font-size="21">观察动作如何被看见，</text>
+    <text x="524" y="324" class="sans muted" font-size="21">再用一次无讲解体验验证。</text>
+    <text x="524" y="408" class="sans ink" font-size="20">观察 / 动作 / 反馈 / 验证</text>
+  </g>
+
+  <path d="M58 1072H942" class="line"/>
+  <text x="58" y="1152" class="sans ink" font-size="42" font-weight="700">07.31</text>
+  <text x="58" y="1190" class="sans muted" font-size="18">日期（预置）</text>
+  <text x="338" y="1152" class="sans ink" font-size="42" font-weight="700">14:00</text>
+  <text x="338" y="1190" class="sans muted" font-size="18">时间（预置）</text>
+  <text x="650" y="1152" class="sans ink" font-size="42" font-weight="700">A-204</text>
+  <text x="650" y="1190" class="sans muted" font-size="18">地点（预置）</text>
+
+  <path d="M58 1288H942" class="line"/>
+  <text x="58" y="1335" class="sans ink" font-size="22">对照 B：先建立主题，再按信息用途组织时间、地点与说明</text>
+  <text x="942" y="1335" class="sans muted" font-size="17" text-anchor="end">DEMONSTRATION_DATA</text>
+</svg>

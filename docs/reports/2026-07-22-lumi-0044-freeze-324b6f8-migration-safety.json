@@ -1,0 +1,115 @@
+{
+  "result": "PASS",
+  "migrationSafe": true,
+  "realDatabaseTouched": false,
+  "candidate": {
+    "branch": "feature/lumi-candidate",
+    "inputCommit": "324b6f8ec739e25691a5e799abe7d6935e9b7380",
+    "migration": "0044_condemned_venus"
+  },
+  "baseline": {
+    "sourceWorktree": "E:\\第二届教师人工智能应用能力大赛\\.worktrees\\lumi-integration",
+    "sourceCommit": "423c050",
+    "seedScript": "scripts/seed-demo.ts",
+    "isolatedRoot": "C:\\Users\\18437\\AppData\\Local\\Temp\\lumi-0044-qa-324b6f8-20260722-1622",
+    "database": "demo-baseline-0043.sqlite",
+    "backup": "demo-baseline-0043.backup.sqlite",
+    "backupSha256": "11A44FE4B1D5ECE72ECF6B99791039304765BAFB8BBFFC62C251D8FD0B3A48D8",
+    "migrationCount": 44,
+    "latestMigration": {
+      "journalTag": "0043_agent-critiques",
+      "createdAt": 1784414706538,
+      "hash": "caa1cf93e40fd964c18f26289efcdbcb16d1c3dfe843812ad7e770015fd566f0"
+    },
+    "rows": {
+      "agent_turns": 3,
+      "agent_critiques": 2,
+      "design_project_tasks": 2
+    },
+    "agentMessagesTableExists": false,
+    "designProjectTaskColumns": {
+      "mode": false,
+      "pinned": false
+    },
+    "contentSha256": {
+      "agent_turns": "c03f1343848b699bef825258032a17677f2df1ae122fd95d6a48fee2422bfaa4",
+      "agent_critiques": "caa7a20854fc70ecf9bd0015b87493637285c870221edf0c25e6ccc5ff835be0"
+    },
+    "foreignKeyViolations": 0
+  },
+  "after0044": {
+    "migrationCount": 45,
+    "addedMigrations": ["0044_condemned_venus"],
+    "latestMigration": {
+      "createdAt": 1784705482760,
+      "hash": "3a83cac8374744274d4b03e41f9c9d24af479869147d0f0d02d699c324d604ae"
+    },
+    "rows": {
+      "agent_turns": 3,
+      "agent_critiques": 2,
+      "agent_messages": 0,
+      "design_project_tasks": 2
+    },
+    "taskDefaults": {
+      "mode": {
+        "conversation": 2
+      },
+      "pinned": {
+        "false": 2
+      }
+    },
+    "contentSha256": {
+      "agent_turns": "c03f1343848b699bef825258032a17677f2df1ae122fd95d6a48fee2422bfaa4",
+      "agent_critiques": "caa7a20854fc70ecf9bd0015b87493637285c870221edf0c25e6ccc5ff835be0"
+    },
+    "foreignKeyViolations": 0
+  },
+  "backfill": {
+    "script": "scripts/backfill-agent-messages.ts",
+    "implementation": "backfillAgentMessages",
+    "idStrategy": "${turnId}#u / ${turnId}#a",
+    "insertStrategy": "INSERT OR IGNORE",
+    "firstRun": {
+      "scannedTurns": 3,
+      "insertedMessages": 6,
+      "totalMessages": 6,
+      "userMessages": 3,
+      "assistantMessages": 3,
+      "stablePairs": 3,
+      "invalidStructures": 0
+    },
+    "secondRun": {
+      "scannedTurns": 3,
+      "insertedMessages": 0,
+      "totalMessages": 6,
+      "duplicateIds": 0
+    },
+    "expectedTotal": 6,
+    "contentMappingMatchesTurns": true,
+    "agentFactsUnchanged": true,
+    "foreignKeyViolations": 0,
+    "databaseSha256": "DF6E806AF720C67F8FD248C114883D4171765F31E405CCA884C74A196435D3D1"
+  },
+  "rollback": {
+    "method": "restore the byte-for-byte 0043 backup",
+    "restoredSha256": "11A44FE4B1D5ECE72ECF6B99791039304765BAFB8BBFFC62C251D8FD0B3A48D8",
+    "matchesBackup": true,
+    "migrationCount": 44,
+    "latestJournalTag": "0043_agent-critiques",
+    "agentMessagesTableExists": false,
+    "designProjectTaskColumns": {
+      "mode": false,
+      "pinned": false
+    },
+    "rows": {
+      "agent_turns": 3,
+      "agent_critiques": 2,
+      "design_project_tasks": 2
+    },
+    "contentSha256": {
+      "agent_turns": "c03f1343848b699bef825258032a17677f2df1ae122fd95d6a48fee2422bfaa4",
+      "agent_critiques": "caa7a20854fc70ecf9bd0015b87493637285c870221edf0c25e6ccc5ff835be0"
+    },
+    "foreignKeyViolations": 0
+  }
+}

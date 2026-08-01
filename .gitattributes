@@ -1,0 +1,6 @@
+/public/demo/*.svg text eol=lf
+/public/demo/manifest.json text eol=lf
+/scripts/ops/lumi-release text eol=lf
+/scripts/ops/lumi-release.sudoers text eol=lf
+/scripts/ops/lumi-release-allowed-signers text eol=lf
+/scripts/ops/install-lumi-release-wrapper.sh text eol=lf

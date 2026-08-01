@@ -1,0 +1,793 @@
+#!/usr/bin/env bash
+# Root-owned privilege boundary for Lumi release preparation and cutover.
+#
+# This program is intentionally installed outside the Git worktree. Its only
+# writable inputs are signed release bundles below INPUT_ROOT. It never runs a
+# user-writable shell script as root, never edits the service environment, and
+# keeps prepare and cutover as separate operations.
+
+set -Eeuo pipefail
+IFS=$'\n\t'
+umask 077
+
+export PATH=/usr/sbin:/usr/bin:/sbin:/bin
+unset BASH_ENV CDPATH ENV GIT_DIR GIT_WORK_TREE NODE_OPTIONS npm_config_userconfig
+
+readonly SERVICE='lumi-s0.service'
+readonly SERVICE_USER='lumi'
+readonly SERVICE_GROUP='lumi'
+readonly OPERATIONS_USER='arlo'
+readonly RELEASE_ROOT='/opt/lumi/releases'
+readonly CURRENT_LINK='/opt/lumi/current'
+readonly RUNTIME_NODE='/opt/lumi/runtime/node-v22.23.1/bin/node'
+readonly SERVICE_ENV='/etc/lumi/lumi.env'
+readonly BACKUP_WRAPPER='/usr/local/sbin/lumi-backup'
+readonly INPUT_ROOT='/home/arlo/lumi-release-input'
+readonly WORK_ROOT='/var/lib/lumi/release-operations'
+readonly SEAL_ROOT='/var/lib/lumi/release-operations/prepared'
+readonly EVIDENCE_ROOT='/home/arlo/lumi-deploy-attempts/deploy-attempts'
+readonly ALLOWED_SIGNERS='/etc/lumi/lumi-release-allowed-signers'
+readonly SIGNER_IDENTITY='lumi-release'
+readonly SIGNATURE_NAMESPACE='lumi-release'
+readonly ESBUILD_REL='node_modules/.pnpm/@esbuild+linux-x64@0.28.1/node_modules/@esbuild/linux-x64/bin/esbuild'
+readonly LOCK_FILE='/run/lock/lumi-release.lock'
+
+ACTIVE_EVIDENCE=''
+ACTIVE_RUN_ID=''
+ACTIVE_COMMIT=''
+ACTIVE_PHASE=''
+CURRENT_BEFORE=''
+CUTOVER_STARTED=false
+ROLLBACK_ATTEMPTED=false
+
+usage() {
+  cat <<'EOF'
+Usage:
+  lumi-release status
+  lumi-release backup
+  lumi-release prepare <40-hex-commit>
+  lumi-release cutover <prepare-run-id> <32-hex-confirmation-token>
+
+Signed release input layout:
+  /home/arlo/lumi-release-input/<commit>/manifest
+  /home/arlo/lumi-release-input/<commit>/manifest.sig
+  /home/arlo/lumi-release-input/<commit>/source.tar
+  /home/arlo/lumi-release-input/<commit>/built.tar.gz
+
+The signed manifest contains exactly:
+  source_commit=<40-hex-commit>
+  expected_current=<40-hex-commit>
+  source_sha256=<64-hex-sha256>
+  built_sha256=<64-hex-sha256>
+  build_id=<Next BUILD_ID>
+  esbuild_version=<semver>
+  database_migration=not-required
+  environment_write=not-requested
+EOF
+}
+
+die() {
+  printf 'ERROR: %s\n' "$*" >&2
+  exit 1
+}
+
+log() {
+  if [[ -n "$ACTIVE_EVIDENCE" ]]; then
+    printf '%s %s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$*" | tee -a "$ACTIVE_EVIDENCE/summary.log"
+  else
+    printf '%s\n' "$*"
+  fi
+}
+
+finalize_evidence() {
+  [[ -n "$ACTIVE_EVIDENCE" && -d "$ACTIVE_EVIDENCE" && ! -L "$ACTIVE_EVIDENCE" ]] || return 0
+  chown -hR "$OPERATIONS_USER:$OPERATIONS_USER" "$ACTIVE_EVIDENCE"
+  find "$ACTIVE_EVIDENCE" -xdev -type d -exec chmod 0700 {} +
+  find "$ACTIVE_EVIDENCE" -xdev -type f -exec chmod 0600 {} +
+}
+
+capture_health() {
+  local destination=$1
+  local temporary="$destination.tmp.$$"
+  curl -fsS --max-time 20 http://127.0.0.1:3100/api/health > "$temporary"
+  python3 - "$temporary" <<'PY'
+import json
+import sys
+
+with open(sys.argv[1], encoding="utf-8") as handle:
+    payload = json.load(handle)
+
+if payload.get("status") != "ok":
+    raise SystemExit("HEALTH_STATUS_NOT_OK")
+if payload.get("database", {}).get("available") is not True:
+    raise SystemExit("HEALTH_DATABASE_NOT_AVAILABLE")
+if payload.get("aiConfigured") is not True:
+    raise SystemExit("HEALTH_AI_NOT_CONFIGURED")
+if payload.get("competitionReady") is not True:
+    raise SystemExit("HEALTH_COMPETITION_NOT_READY")
+PY
+  mv -f -- "$temporary" "$destination"
+  printf 'HEALTH_OK\n'
+}
+
+status_health() {
+  curl -fsS --max-time 20 http://127.0.0.1:3100/api/health | python3 -c '
+import json
+import sys
+
+payload = json.load(sys.stdin)
+if payload.get("status") != "ok":
+    raise SystemExit("HEALTH_STATUS_NOT_OK")
+if payload.get("database", {}).get("available") is not True:
+    raise SystemExit("HEALTH_DATABASE_NOT_AVAILABLE")
+if payload.get("aiConfigured") is not True:
+    raise SystemExit("HEALTH_AI_NOT_CONFIGURED")
+if payload.get("competitionReady") is not True:
+    raise SystemExit("HEALTH_COMPETITION_NOT_READY")
+print("HEALTH_OK")
+'
+}
+
+service_preflight() {
+  local health_destination=$1
+  [[ -x "$RUNTIME_NODE" ]]
+  [[ -x "$BACKUP_WRAPPER" ]]
+  [[ -f "$SERVICE_ENV" && ! -L "$SERVICE_ENV" ]]
+  runuser -u "$SERVICE_USER" -- test -r "$SERVICE_ENV"
+  systemctl is-active --quiet "$SERVICE"
+  capture_health "$health_destination" | tee -a "$ACTIVE_EVIDENCE/summary.log"
+}
+
+assert_root() {
+  [[ "$EUID" -eq 0 ]] || die 'ROOT_REQUIRED'
+}
+
+assert_commit() {
+  [[ "$1" =~ ^[0-9a-f]{40}$ ]] || die 'COMMIT_MUST_BE_40_LOWERCASE_HEX'
+}
+
+assert_run_id() {
+  [[ "$1" =~ ^prepare-[0-9]{8}T[0-9]{6}Z-[0-9]+-[0-9]+$ ]] || die 'PREPARE_RUN_ID_INVALID'
+}
+
+assert_operations_roots() {
+  [[ -d "$INPUT_ROOT" && ! -L "$INPUT_ROOT" ]]
+  [[ "$(stat -c '%U:%G:%a' -- "$INPUT_ROOT")" == "$OPERATIONS_USER:$OPERATIONS_USER:700" ]]
+  [[ -d "$WORK_ROOT" && ! -L "$WORK_ROOT" ]]
+  [[ "$(stat -c '%U:%G:%a' -- "$WORK_ROOT")" == 'root:root:700' ]]
+  [[ -d "$SEAL_ROOT" && ! -L "$SEAL_ROOT" ]]
+  [[ "$(stat -c '%U:%G:%a' -- "$SEAL_ROOT")" == 'root:root:700' ]]
+  [[ -d "$EVIDENCE_ROOT" && ! -L "$EVIDENCE_ROOT" ]]
+  [[ -f "$ALLOWED_SIGNERS" && ! -L "$ALLOWED_SIGNERS" ]]
+  [[ "$(stat -c '%U:%G:%a' -- "$ALLOWED_SIGNERS")" == 'root:root:644' ]]
+}
+
+make_evidence() {
+  local phase=$1
+  local run_id=$2
+  local path="$EVIDENCE_ROOT/$run_id"
+  [[ ! -e "$path" && ! -L "$path" ]] || die 'EVIDENCE_PATH_ALREADY_EXISTS'
+  install -d -o root -g root -m 0700 "$path"
+  ACTIVE_EVIDENCE="$path"
+  ACTIVE_RUN_ID="$run_id"
+  ACTIVE_PHASE="$phase"
+  printf 'RUN_ID=%s\nPHASE=%s\n' "$run_id" "$phase" > "$path/summary.log"
+}
+
+write_failure() {
+  [[ -n "$ACTIVE_EVIDENCE" && -d "$ACTIVE_EVIDENCE" ]] || return 0
+  {
+    printf 'RUN_ID=%s\n' "$ACTIVE_RUN_ID"
+    printf 'SOURCE_COMMIT=%s\n' "$ACTIVE_COMMIT"
+    printf 'PHASE=%s\n' "$ACTIVE_PHASE"
+    printf 'STATUS=FAILED\n'
+    printf 'CUTOVER_STARTED=%s\n' "$CUTOVER_STARTED"
+    printf 'CURRENT_AT_FAILURE=%s\n' "$(readlink -f "$CURRENT_LINK" 2>/dev/null || printf 'UNREADABLE')"
+    printf 'ROLLBACK_ATTEMPTED=%s\n' "$ROLLBACK_ATTEMPTED"
+  } > "$ACTIVE_EVIDENCE/FAILED.result"
+}
+
+rollback_current() {
+  [[ "$CUTOVER_STARTED" == true && "$ROLLBACK_ATTEMPTED" == false ]] || return 0
+  ROLLBACK_ATTEMPTED=true
+  printf 'ROLLBACK=STARTED\n' >> "$ACTIVE_EVIDENCE/summary.log"
+  systemctl stop "$SERVICE" || true
+  if [[ -n "$CURRENT_BEFORE" && -d "$CURRENT_BEFORE" && ! -L "$CURRENT_BEFORE" ]]; then
+    local rollback_link="$CURRENT_LINK.rollback-$ACTIVE_RUN_ID.$$"
+    if [[ ! -e "$rollback_link" && ! -L "$rollback_link" ]]; then
+      ln -s "$CURRENT_BEFORE" "$rollback_link" && mv -Tf -- "$rollback_link" "$CURRENT_LINK" || true
+    fi
+  fi
+  systemctl start "$SERVICE" || true
+  if capture_health "$ACTIVE_EVIDENCE/rollback-health.json"; then
+    printf 'ROLLBACK=HEALTHY\n' >> "$ACTIVE_EVIDENCE/summary.log"
+  else
+    printf 'ROLLBACK=HEALTH_FAILED\n' >> "$ACTIVE_EVIDENCE/summary.log"
+  fi
+}
+
+on_error() {
+  local status=$?
+  trap - ERR
+  set +e
+  rollback_current
+  write_failure
+  finalize_evidence
+  exit "$status"
+}
+trap on_error ERR
+
+copy_regular_input() {
+  local source=$1
+  local destination=$2
+  local expected_sha256=$3
+  python3 - "$source" "$destination" "$expected_sha256" <<'PY'
+import hashlib
+import hmac
+import os
+import stat
+import sys
+
+source, destination, expected = sys.argv[1:]
+source_flags = os.O_RDONLY | os.O_CLOEXEC | os.O_NOFOLLOW
+destination_flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_CLOEXEC | os.O_NOFOLLOW
+source_fd = os.open(source, source_flags)
+try:
+    source_stat = os.fstat(source_fd)
+    if not stat.S_ISREG(source_stat.st_mode):
+        raise SystemExit("INPUT_NOT_REGULAR_FILE")
+    destination_fd = os.open(destination, destination_flags, 0o600)
+    try:
+        digest = hashlib.sha256()
+        while True:
+            block = os.read(source_fd, 1024 * 1024)
+            if not block:
+                break
+            digest.update(block)
+            view = memoryview(block)
+            while view:
+                written = os.write(destination_fd, view)
+                view = view[written:]
+        os.fsync(destination_fd)
+        os.fchmod(destination_fd, 0o600)
+    finally:
+        os.close(destination_fd)
+finally:
+    os.close(source_fd)
+
+actual = digest.hexdigest()
+if expected != "-" and not hmac.compare_digest(actual, expected):
+    raise SystemExit("INPUT_SHA256_MISMATCH")
+print(actual)
+PY
+}
+
+validate_archive() {
+  local archive=$1
+  local executable_list=$2
+  python3 - "$archive" "$executable_list" <<'PY'
+import posixpath
+from pathlib import PurePosixPath
+import sys
+import tarfile
+
+archive = sys.argv[1]
+executable_list = sys.argv[2]
+
+def reject(reason):
+    raise SystemExit(reason)
+
+def normalized_path(value, label):
+    if not value or "\x00" in value or "\n" in value or "\r" in value:
+        reject(f"UNSAFE_{label}_NAME")
+    if value.startswith("/"):
+        reject(f"ABSOLUTE_{label}_PATH")
+    normalized = posixpath.normpath(value)
+    while normalized.startswith("./"):
+        normalized = normalized[2:]
+    if normalized in ("", "."):
+        return ""
+    if normalized == ".." or normalized.startswith("../"):
+        reject(f"PATH_TRAVERSAL_{label}")
+    if PurePosixPath(normalized).is_absolute():
+        reject(f"ABSOLUTE_{label}_PATH")
+    return normalized
+
+def validate_symlink(path, target):
+    if not target or "\x00" in target or "\n" in target or "\r" in target:
+        reject("UNSAFE_SYMLINK_TARGET")
+    if target.startswith("/"):
+        reject("ABSOLUTE_SYMLINK_TARGET")
+    resolved = posixpath.normpath(posixpath.join(posixpath.dirname(path), target))
+    if resolved == ".." or resolved.startswith("../") or resolved.startswith("/"):
+        reject("SYMLINK_ESCAPES_RELEASE")
+
+seen = set()
+executables = set()
+with tarfile.open(archive, "r:*") as bundle:
+    for member in bundle:
+        path = normalized_path(member.name, "MEMBER")
+        if not path:
+            if member.isdir():
+                continue
+            reject("EMPTY_MEMBER_PATH")
+        if path in seen and not member.isdir():
+            reject(f"DUPLICATE_ARCHIVE_MEMBER:{path}")
+        seen.add(path)
+        if path.startswith(".env") and "/" not in path and path != ".env.example":
+            reject("ROOT_ENV_FILE_REJECTED")
+        if member.isdir():
+            continue
+        if member.isfile():
+            if member.mode & 0o111:
+                executables.add(path)
+            continue
+        if member.issym():
+            validate_symlink(path, member.linkname)
+            continue
+        if member.islnk():
+            target = normalized_path(member.linkname, "HARDLINK")
+            if not target:
+                reject("UNSAFE_HARDLINK_TARGET")
+            continue
+        reject(f"UNSUPPORTED_ARCHIVE_MEMBER:{path}")
+
+with open(executable_list, "w", encoding="utf-8") as handle:
+    for path in sorted(executables):
+        handle.write(path + "\n")
+print(f"ARCHIVE_VALID=PASS members={len(seen)} executables={len(executables)}")
+PY
+}
+
+repair_executable_permissions() {
+  local release=$1
+  local first_list=$2
+  local second_list=$3
+  local report=$4
+  python3 - "$release" "$first_list" "$second_list" "$report" <<'PY'
+from pathlib import Path
+import stat
+import sys
+
+release = Path(sys.argv[1]).resolve(strict=True)
+lists = [Path(sys.argv[2]), Path(sys.argv[3])]
+report = Path(sys.argv[4])
+paths = set()
+for listing in lists:
+    paths.update(line.strip() for line in listing.read_text(encoding="utf-8").splitlines() if line.strip())
+
+with report.open("w", encoding="utf-8") as output:
+    output.write("relative_path\tmode_before\tmode_after\n")
+    for relative in sorted(paths):
+        candidate = release / relative
+        if candidate.is_symlink():
+            raise SystemExit(f"EXECUTABLE_IS_SYMLINK:{relative}")
+        resolved = candidate.resolve(strict=True)
+        if release not in resolved.parents or not candidate.is_file():
+            raise SystemExit(f"UNSAFE_EXECUTABLE_MEMBER:{relative}")
+        before = stat.S_IMODE(candidate.stat().st_mode)
+        candidate.chmod(0o750)
+        after = stat.S_IMODE(candidate.stat().st_mode)
+        if after != 0o750:
+            raise SystemExit(f"EXECUTABLE_MODE_REPAIR_FAILED:{relative}")
+        output.write(f"{relative}\t{before:04o}\t{after:04o}\n")
+
+print(f"EXECUTABLE_FILE_COUNT={len(paths)}")
+PY
+}
+
+validate_manifest() {
+  local manifest=$1
+  local commit=$2
+  python3 - "$manifest" "$commit" <<'PY'
+import re
+from pathlib import Path
+import sys
+
+manifest = Path(sys.argv[1])
+commit = sys.argv[2]
+required = {
+    "source_commit",
+    "expected_current",
+    "source_sha256",
+    "built_sha256",
+    "build_id",
+    "esbuild_version",
+    "database_migration",
+    "environment_write",
+}
+values = {}
+for line in manifest.read_text(encoding="utf-8").splitlines():
+    if not line or "=" not in line:
+        raise SystemExit("MANIFEST_LINE_INVALID")
+    key, value = line.split("=", 1)
+    if key not in required or key in values or not value:
+        raise SystemExit("MANIFEST_FIELD_INVALID")
+    values[key] = value
+if set(values) != required:
+    raise SystemExit("MANIFEST_FIELDS_INCOMPLETE")
+if values["source_commit"] != commit:
+    raise SystemExit("MANIFEST_COMMIT_MISMATCH")
+if not re.fullmatch(r"[0-9a-f]{40}", values["expected_current"]):
+    raise SystemExit("MANIFEST_EXPECTED_CURRENT_INVALID")
+for key in ("source_sha256", "built_sha256"):
+    if not re.fullmatch(r"[0-9a-f]{64}", values[key]):
+        raise SystemExit("MANIFEST_SHA256_INVALID")
+if not re.fullmatch(r"[A-Za-z0-9_-]{1,128}", values["build_id"]):
+    raise SystemExit("MANIFEST_BUILD_ID_INVALID")
+if not re.fullmatch(r"[0-9]+\.[0-9]+\.[0-9]+", values["esbuild_version"]):
+    raise SystemExit("MANIFEST_ESBUILD_VERSION_INVALID")
+if values["database_migration"] != "not-required":
+    raise SystemExit("MANIFEST_DATABASE_MIGRATION_NOT_ALLOWED")
+if values["environment_write"] != "not-requested":
+    raise SystemExit("MANIFEST_ENVIRONMENT_WRITE_NOT_ALLOWED")
+print("MANIFEST=VALID")
+PY
+}
+
+manifest_field() {
+  local manifest=$1
+  local field=$2
+  awk -F= -v key="$field" '$1 == key { print substr($0, length(key) + 2) }' "$manifest"
+}
+
+write_release_marker() {
+  local release=$1
+  local commit=$2
+  local build_id=$3
+  local esbuild_version=$4
+  local marker="$release/.lumi-deploy-complete"
+  local marker_tmp
+  [[ ! -e "$marker" && ! -L "$marker" ]]
+  marker_tmp=$(mktemp "$release/.lumi-deploy-complete.XXXXXX")
+  {
+    printf 'source_commit=%s\n' "$commit"
+    printf 'node_version=%s\n' "$("$RUNTIME_NODE" --version)"
+    printf 'pnpm_version=11.7.0\n'
+    printf 'build_id=%s\n' "$build_id"
+    printf 'esbuild_version=%s\n' "$esbuild_version"
+    printf 'database_migration=not-required\n'
+    printf 'environment_write=not-requested\n'
+  } > "$marker_tmp"
+  chown root:"$SERVICE_GROUP" "$marker_tmp"
+  chmod 0640 "$marker_tmp"
+  [[ "$(stat -c '%U:%G:%a' -- "$marker_tmp")" == "root:$SERVICE_GROUP:640" ]]
+  mv -f -- "$marker_tmp" "$marker"
+  runuser -u "$SERVICE_USER" -- test -r "$marker"
+}
+
+verify_release() {
+  local commit=$1
+  local build_id=$2
+  local esbuild_version=$3
+  local release="$RELEASE_ROOT/$commit"
+  local marker="$release/.lumi-deploy-complete"
+  local esbuild="$release/$ESBUILD_REL"
+  [[ -d "$release" && ! -L "$release" ]]
+  [[ "$(stat -c '%U:%G:%a' -- "$release")" == "root:$SERVICE_GROUP:750" ]]
+  [[ -f "$marker" && ! -L "$marker" ]]
+  [[ "$(stat -c '%U:%G:%a' -- "$marker")" == "root:$SERVICE_GROUP:640" ]]
+  grep -Fqx "source_commit=$commit" "$marker"
+  grep -Fqx "build_id=$build_id" "$marker"
+  grep -Fqx "esbuild_version=$esbuild_version" "$marker"
+  grep -Fqx 'database_migration=not-required' "$marker"
+  grep -Fqx 'environment_write=not-requested' "$marker"
+  runuser -u "$SERVICE_USER" -- test -r "$release/.next/BUILD_ID"
+  [[ "$(cat "$release/.next/BUILD_ID")" == "$build_id" ]]
+  runuser -u "$SERVICE_USER" -- test -r "$release/node_modules/tsx/dist/cli.mjs"
+  runuser -u "$SERVICE_USER" -- test -r "$release/scripts/start-local-host.ts"
+  runuser -u "$SERVICE_USER" -- test -r "$marker"
+  runuser -u "$SERVICE_USER" -- test -w "$release/.next/cache"
+  runuser -u "$SERVICE_USER" -- test -x "$esbuild"
+  local actual_esbuild
+  actual_esbuild=$(runuser -u "$SERVICE_USER" -- "$esbuild" --version)
+  [[ "$actual_esbuild" == "$esbuild_version" ]]
+  printf 'TARGET_ESBUILD_VERSION=%s\n' "$actual_esbuild" | tee -a "$ACTIVE_EVIDENCE/summary.log"
+  runuser -u "$SERVICE_USER" -- "$RUNTIME_NODE" -e 'require(process.argv[1]); process.stdout.write("NATIVE_MODULE_LOAD=PASS\\n")' "$release/node_modules/better-sqlite3" | tee -a "$ACTIVE_EVIDENCE/summary.log"
+}
+
+write_seal() {
+  local run_id=$1
+  local commit=$2
+  local expected_current=$3
+  local build_id=$4
+  local esbuild_version=$5
+  local release="$RELEASE_ROOT/$commit"
+  local token
+  local token_hash
+  local seal="$SEAL_ROOT/$run_id.seal"
+  local seal_tmp
+  [[ ! -e "$seal" && ! -L "$seal" ]]
+  token=$(od -An -N16 -tx1 /dev/urandom | tr -d ' \n')
+  token_hash=$(printf '%s' "$token" | sha256sum | awk '{print $1}')
+  seal_tmp=$(mktemp "$SEAL_ROOT/.$run_id.XXXXXX")
+  {
+    printf 'run_id=%s\n' "$run_id"
+    printf 'source_commit=%s\n' "$commit"
+    printf 'expected_current=%s\n' "$expected_current"
+    printf 'release=%s\n' "$release"
+    printf 'build_id=%s\n' "$build_id"
+    printf 'esbuild_version=%s\n' "$esbuild_version"
+    printf 'token_sha256=%s\n' "$token_hash"
+  } > "$seal_tmp"
+  chown root:root "$seal_tmp"
+  chmod 0600 "$seal_tmp"
+  mv -f -- "$seal_tmp" "$seal"
+  printf '%s\n' "$token"
+}
+
+seal_field() {
+  local seal=$1
+  local field=$2
+  awk -F= -v key="$field" '$1 == key { print substr($0, length(key) + 2) }' "$seal"
+}
+
+prepare() {
+  local commit=$1
+  local run_id
+  local input_root_real
+  local input_dir
+  local stage
+  local manifest
+  local expected_current
+  local source_sha256
+  local built_sha256
+  local build_id
+  local esbuild_version
+  local source_archive
+  local built_archive
+  local release
+  local confirmation_token
+
+  assert_commit "$commit"
+  assert_operations_roots
+  input_root_real=$(realpath -e -- "$INPUT_ROOT")
+  input_dir=$(realpath -e -- "$INPUT_ROOT/$commit")
+  [[ "$input_dir" == "$input_root_real/$commit" && -d "$input_dir" && ! -L "$input_dir" ]]
+  for required in manifest manifest.sig source.tar built.tar.gz; do
+    [[ -f "$input_dir/$required" && ! -L "$input_dir/$required" ]]
+  done
+
+  run_id="prepare-$(date -u +%Y%m%dT%H%M%SZ)-$$-$RANDOM"
+  make_evidence prepare "$run_id"
+  ACTIVE_COMMIT="$commit"
+  stage="$WORK_ROOT/$run_id"
+  [[ ! -e "$stage" && ! -L "$stage" ]]
+  install -d -o root -g root -m 0700 "$stage"
+  log 'STAGE=PREFLIGHT'
+  service_preflight "$ACTIVE_EVIDENCE/before-health.json"
+
+  copy_regular_input "$input_dir/manifest" "$stage/manifest" - > "$ACTIVE_EVIDENCE/manifest.sha256"
+  copy_regular_input "$input_dir/manifest.sig" "$stage/manifest.sig" - > "$ACTIVE_EVIDENCE/manifest-signature.sha256"
+  ssh-keygen -Y verify -f "$ALLOWED_SIGNERS" -I "$SIGNER_IDENTITY" -n "$SIGNATURE_NAMESPACE" -s "$stage/manifest.sig" < "$stage/manifest" > "$ACTIVE_EVIDENCE/signature-verification.txt"
+  validate_manifest "$stage/manifest" "$commit" | tee -a "$ACTIVE_EVIDENCE/summary.log"
+
+  manifest="$stage/manifest"
+  expected_current=$(manifest_field "$manifest" expected_current)
+  source_sha256=$(manifest_field "$manifest" source_sha256)
+  built_sha256=$(manifest_field "$manifest" built_sha256)
+  build_id=$(manifest_field "$manifest" build_id)
+  esbuild_version=$(manifest_field "$manifest" esbuild_version)
+  source_archive="$stage/source.tar"
+  built_archive="$stage/built.tar.gz"
+  release="$RELEASE_ROOT/$commit"
+  [[ "$(readlink -f "$CURRENT_LINK")" == "$RELEASE_ROOT/$expected_current" ]]
+  [[ ! -e "$release" && ! -L "$release" ]]
+
+  copy_regular_input "$input_dir/source.tar" "$source_archive" "$source_sha256" > "$ACTIVE_EVIDENCE/source.sha256"
+  copy_regular_input "$input_dir/built.tar.gz" "$built_archive" "$built_sha256" > "$ACTIVE_EVIDENCE/built.sha256"
+  validate_archive "$source_archive" "$stage/source.executables" | tee -a "$ACTIVE_EVIDENCE/summary.log"
+  validate_archive "$built_archive" "$stage/built.executables" | tee -a "$ACTIVE_EVIDENCE/summary.log"
+
+  {
+    printf 'SOURCE_COMMIT=%s\n' "$commit"
+    printf 'CURRENT_BEFORE=%s\n' "$(readlink -f "$CURRENT_LINK")"
+    printf 'EXPECTED_CURRENT=%s\n' "$expected_current"
+    printf 'SOURCE_ARCHIVE_SHA256=%s\n' "$source_sha256"
+    printf 'BUILT_ARCHIVE_SHA256=%s\n' "$built_sha256"
+    printf 'BUILD_ID=%s\n' "$build_id"
+    printf 'DATABASE_MIGRATION=NOT_REQUIRED\n'
+    printf 'ENVIRONMENT_WRITE=NOT_REQUESTED\n'
+  } > "$ACTIVE_EVIDENCE/PREFLIGHT.txt"
+
+  log 'STAGE=RESTORE_POINT'
+  "$BACKUP_WRAPPER" > "$ACTIVE_EVIDENCE/backup-wrapper.log" 2>&1
+  grep -Fqx 'STATUS=SUCCEEDED' "$ACTIVE_EVIDENCE/backup-wrapper.log"
+  systemctl is-active --quiet "$SERVICE"
+  capture_health "$ACTIVE_EVIDENCE/after-backup-health.json" | tee -a "$ACTIVE_EVIDENCE/summary.log"
+  grep -E '^(BACKUP_PATH|RESTORE_POINT|STATUS)=' "$ACTIVE_EVIDENCE/backup-wrapper.log" > "$ACTIVE_EVIDENCE/restore-point.txt" || true
+
+  log 'STAGE=PREPARE_RELEASE'
+  install -d -o root -g "$SERVICE_GROUP" -m 0750 "$release"
+  tar --no-same-owner --no-same-permissions --delay-directory-restore -xf "$source_archive" -C "$release"
+  tar --no-same-owner --no-same-permissions --delay-directory-restore -xzf "$built_archive" -C "$release"
+  test -s "$release/.next/BUILD_ID"
+  [[ "$(cat "$release/.next/BUILD_ID")" == "$build_id" ]]
+  test -r "$release/node_modules/tsx/dist/cli.mjs"
+  test -r "$release/scripts/start-local-host.ts"
+  chown -hR root:"$SERVICE_GROUP" "$release"
+  find "$release" -xdev -type d -exec chmod 0750 {} +
+  find "$release" -xdev -type f -exec chmod 0640 {} +
+  repair_executable_permissions "$release" "$stage/source.executables" "$stage/built.executables" "$ACTIVE_EVIDENCE/executable-permissions.tsv" | tee -a "$ACTIVE_EVIDENCE/summary.log"
+  install -d -o "$SERVICE_USER" -g "$SERVICE_GROUP" -m 0770 "$release/.next/cache"
+  write_release_marker "$release" "$commit" "$build_id" "$esbuild_version"
+  verify_release "$commit" "$build_id" "$esbuild_version"
+
+  [[ "$(readlink -f "$CURRENT_LINK")" == "$RELEASE_ROOT/$expected_current" ]]
+  systemctl is-active --quiet "$SERVICE"
+  capture_health "$ACTIVE_EVIDENCE/final-precutover-health.json" | tee -a "$ACTIVE_EVIDENCE/summary.log"
+  confirmation_token=$(write_seal "$run_id" "$commit" "$expected_current" "$build_id" "$esbuild_version")
+  {
+    printf 'SOURCE_COMMIT=%s\n' "$commit"
+    printf 'EXPECTED_CURRENT=%s\n' "$expected_current"
+    printf 'RELEASE=%s\n' "$release"
+    printf 'BUILD_ID=%s\n' "$build_id"
+    printf 'DATABASE_MIGRATION=NOT_REQUIRED\n'
+    printf 'ENVIRONMENT_WRITE=NOT_REQUESTED\n'
+    printf 'RELEASE_MARKER=PASS\n'
+    printf 'SERVICE_ACCESS_PRECHECK=PASS\n'
+    printf 'CURRENT_AFTER=%s\n' "$(readlink -f "$CURRENT_LINK")"
+    printf 'CUTOVER=NOT_PERFORMED\n'
+    printf 'STATUS=PREPARED\n'
+  } > "$ACTIVE_EVIDENCE/PREPARED.result"
+  finalize_evidence
+  ACTIVE_EVIDENCE=''
+
+  printf 'PREPARED=YES\n'
+  printf 'RUN_ID=%s\n' "$run_id"
+  printf 'EVIDENCE=%s\n' "$EVIDENCE_ROOT/$run_id"
+  printf 'CURRENT=%s\n' "$(readlink -f "$CURRENT_LINK")"
+  printf 'CUTOVER=NOT_PERFORMED\n'
+  printf 'CUTOVER_CONFIRMATION_TOKEN=%s\n' "$confirmation_token"
+}
+
+cutover() {
+  local run_id=$1
+  local confirmation_token=$2
+  local seal
+  local commit
+  local expected_current
+  local release
+  local build_id
+  local esbuild_version
+  local expected_token_hash
+  local actual_token_hash
+  local cutover_run_id
+  local link_tmp
+
+  assert_run_id "$run_id"
+  [[ "$confirmation_token" =~ ^[0-9a-f]{32}$ ]] || die 'CUTOVER_CONFIRMATION_TOKEN_INVALID'
+  assert_operations_roots
+  seal="$SEAL_ROOT/$run_id.seal"
+  [[ -f "$seal" && ! -L "$seal" ]]
+  [[ "$(stat -c '%U:%G:%a' -- "$seal")" == 'root:root:600' ]]
+  commit=$(seal_field "$seal" source_commit)
+  expected_current=$(seal_field "$seal" expected_current)
+  release=$(seal_field "$seal" release)
+  build_id=$(seal_field "$seal" build_id)
+  esbuild_version=$(seal_field "$seal" esbuild_version)
+  expected_token_hash=$(seal_field "$seal" token_sha256)
+  assert_commit "$commit"
+  [[ "$expected_current" =~ ^[0-9a-f]{40}$ ]]
+  [[ "$release" == "$RELEASE_ROOT/$commit" ]]
+  [[ "$build_id" =~ ^[A-Za-z0-9_-]{1,128}$ ]]
+  [[ "$esbuild_version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]
+  [[ "$expected_token_hash" =~ ^[0-9a-f]{64}$ ]]
+  actual_token_hash=$(printf '%s' "$confirmation_token" | sha256sum | awk '{print $1}')
+  [[ "$actual_token_hash" == "$expected_token_hash" ]]
+
+  cutover_run_id="cutover-$(date -u +%Y%m%dT%H%M%SZ)-$$-$RANDOM"
+  make_evidence cutover "$cutover_run_id"
+  ACTIVE_COMMIT="$commit"
+  log 'STAGE=PREFLIGHT'
+  [[ "$(readlink -f "$CURRENT_LINK")" == "$RELEASE_ROOT/$expected_current" ]]
+  CURRENT_BEFORE=$(readlink -f "$CURRENT_LINK")
+  service_preflight "$ACTIVE_EVIDENCE/before-cutover-health.json"
+  verify_release "$commit" "$build_id" "$esbuild_version"
+
+  CUTOVER_STARTED=true
+  log 'STAGE=CUTOVER'
+  systemctl stop "$SERVICE"
+  link_tmp="$CURRENT_LINK.$cutover_run_id.new"
+  [[ ! -e "$link_tmp" && ! -L "$link_tmp" ]]
+  ln -s "$release" "$link_tmp"
+  mv -Tf -- "$link_tmp" "$CURRENT_LINK"
+  [[ "$(readlink -f "$CURRENT_LINK")" == "$release" ]]
+  systemctl start "$SERVICE"
+  systemctl is-active --quiet "$SERVICE"
+  capture_health "$ACTIVE_EVIDENCE/new-health.json" | tee -a "$ACTIVE_EVIDENCE/summary.log"
+  local student_temporary="$ACTIVE_EVIDENCE/student.html.tmp"
+  local student_status
+  student_status=$(curl -fsS --max-time 30 -o "$student_temporary" -w '%{http_code}' http://127.0.0.1:3100/student)
+  [[ "$student_status" == '200' ]]
+  mv -f -- "$student_temporary" "$ACTIVE_EVIDENCE/student.html"
+  printf 'STUDENT_HTTP_STATUS=%s\n' "$student_status" >> "$ACTIVE_EVIDENCE/summary.log"
+
+  {
+    printf 'SOURCE_COMMIT=%s\n' "$commit"
+    printf 'CURRENT_BEFORE=%s\n' "$CURRENT_BEFORE"
+    printf 'CURRENT_AFTER=%s\n' "$(readlink -f "$CURRENT_LINK")"
+    printf 'DATABASE_MIGRATION=NOT_REQUIRED\n'
+    printf 'ENVIRONMENT_WRITE=NOT_REQUESTED\n'
+    printf 'STUDENT_SMOKE=PASS\n'
+    printf 'ROLLBACK=NOT_NEEDED\n'
+    printf 'STATUS=SUCCEEDED\n'
+  } > "$ACTIVE_EVIDENCE/SUCCEEDED.result"
+  rm -f -- "$seal"
+  finalize_evidence
+  ACTIVE_EVIDENCE=''
+
+  printf 'CUTOVER=SUCCEEDED\n'
+  printf 'RUN_ID=%s\n' "$cutover_run_id"
+  printf 'EVIDENCE=%s\n' "$EVIDENCE_ROOT/$cutover_run_id"
+  printf 'CURRENT=%s\n' "$(readlink -f "$CURRENT_LINK")"
+  printf 'STUDENT_SMOKE=PASS\n'
+}
+
+backup() {
+  local run_id="backup-$(date -u +%Y%m%dT%H%M%SZ)-$$-$RANDOM"
+  assert_operations_roots
+  make_evidence backup "$run_id"
+  log 'STAGE=RESTORE_POINT'
+  service_preflight "$ACTIVE_EVIDENCE/before-backup-health.json"
+  "$BACKUP_WRAPPER" > "$ACTIVE_EVIDENCE/backup-wrapper.log" 2>&1
+  grep -Fqx 'STATUS=SUCCEEDED' "$ACTIVE_EVIDENCE/backup-wrapper.log"
+  systemctl is-active --quiet "$SERVICE"
+  capture_health "$ACTIVE_EVIDENCE/after-backup-health.json" | tee -a "$ACTIVE_EVIDENCE/summary.log"
+  grep -E '^(BACKUP_PATH|RESTORE_POINT|STATUS)=' "$ACTIVE_EVIDENCE/backup-wrapper.log" > "$ACTIVE_EVIDENCE/restore-point.txt" || true
+  {
+    printf 'STATUS=SUCCEEDED\n'
+    printf 'CURRENT=%s\n' "$(readlink -f "$CURRENT_LINK")"
+  } > "$ACTIVE_EVIDENCE/SUCCEEDED.result"
+  finalize_evidence
+  ACTIVE_EVIDENCE=''
+  printf 'BACKUP=SUCCEEDED\n'
+  printf 'RUN_ID=%s\n' "$run_id"
+  printf 'EVIDENCE=%s\n' "$EVIDENCE_ROOT/$run_id"
+}
+
+status() {
+  assert_operations_roots
+  [[ -L "$CURRENT_LINK" ]]
+  printf 'CURRENT=%s\n' "$(readlink -f "$CURRENT_LINK")"
+  systemctl is-active --quiet "$SERVICE"
+  printf 'SERVICE=ACTIVE\n'
+  [[ -f "$SERVICE_ENV" && ! -L "$SERVICE_ENV" ]]
+  runuser -u "$SERVICE_USER" -- test -r "$SERVICE_ENV"
+  printf 'SERVICE_ENV_READABLE_BY_LUMI=PASS\n'
+  status_health
+}
+
+main() {
+  assert_root
+  exec 9>"$LOCK_FILE"
+  flock -n 9 || die 'ANOTHER_LUMI_RELEASE_OPERATION_IS_RUNNING'
+
+  case "${1:-}" in
+    status)
+      [[ "$#" -eq 1 ]] || die 'STATUS_TAKES_NO_ARGUMENTS'
+      status
+      ;;
+    backup)
+      [[ "$#" -eq 1 ]] || die 'BACKUP_TAKES_NO_ARGUMENTS'
+      backup
+      ;;
+    prepare)
+      [[ "$#" -eq 2 ]] || die 'PREPARE_REQUIRES_COMMIT'
+      prepare "$2"
+      ;;
+    cutover)
+      [[ "$#" -eq 3 ]] || die 'CUTOVER_REQUIRES_RUN_ID_AND_TOKEN'
+      cutover "$2" "$3"
+      ;;
+    -h|--help|help)
+      usage
+      ;;
+    *)
+      usage >&2
+      exit 2
+      ;;
+  esac
+}
+
+main "$@"
