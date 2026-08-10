@@ -124,6 +124,7 @@ import {
 } from "./assistant-lab-interventions";
 import { isContinuationIntent } from "./continuation-intent";
 import { latestTextSnapshot } from "./latest-answer-snapshot";
+import { assistantMarkdownRehypePlugins } from "./markdown-code-blocks";
 import styles from "./assistant-lab.module.css";
 
 const welcomeSuggestions = [
@@ -1495,6 +1496,7 @@ function LabMarkdownResponse({
       isAnimating={isStreaming}
       lineNumbers={false}
       mode={isStreaming ? "streaming" : "static"}
+      rehypePlugins={assistantMarkdownRehypePlugins}
       translations={{
         copied: "已复制",
         copyCode: "复制",
