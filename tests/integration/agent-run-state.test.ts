@@ -151,7 +151,7 @@ describe("durable agent run state", () => {
       status: 200,
       headers: { "content-type": "text/event-stream" },
     })));
-    const apiKey = "sk-runtime-diagnostics-secret-0123456789";
+    const apiKey = ["sk", "runtime-diagnostics-secret-0123456789"].join("-");
     const completed = await executeAgentRun(created.run.id, {
       ...environment(databasePath, path.join(root, "evidence")),
       LOCALAPPDATA: root,

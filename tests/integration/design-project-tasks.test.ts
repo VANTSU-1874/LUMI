@@ -19,7 +19,7 @@ import { issueSession, SESSION_COOKIE_NAME } from "@/lib/auth/session";
 import { createDb } from "@/lib/db/client";
 import { runMigrations } from "@/lib/db/migrate";
 
-const SECRET = "design-task-session-secret-at-least-32-characters";
+const SECRET = "design-session-secret-at-least-32-characters";
 const cookie = (token: string) => `${SESSION_COOKIE_NAME}=${token}`;
 
 function request(url: string, token: string, method = "GET", body?: unknown) {
@@ -55,7 +55,7 @@ describe("design project tasks", () => {
     teacherToken = await issueSession({ userId: "t1", role: "TEACHER" }, SECRET);
     vi.stubEnv("DATABASE_PATH", databasePath);
     vi.stubEnv("SESSION_SECRET", SECRET);
-    vi.stubEnv("AUTH_PROXY_SECRET", "design-task-proxy-secret-at-least-32-characters");
+    vi.stubEnv("AUTH_PROXY_SECRET", "design-proxy-secret-at-least-32-characters");
     vi.stubEnv("AGENT_V2_ENABLED", "true");
   });
 

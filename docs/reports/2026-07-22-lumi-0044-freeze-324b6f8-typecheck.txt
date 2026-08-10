@@ -1,4 +1,0 @@
-command=node node_modules/typescript/bin/tsc --noEmit --pretty false
-exitCode=0
-durationSeconds=23.331
-stdout=empty

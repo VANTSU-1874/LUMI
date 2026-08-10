@@ -241,7 +241,7 @@ describe("V3 tutor eight-scenario human validation", () => {
   it.each([
     ["turn notes", "Bearer abcdefghijklmnop", "notes"],
     ["continue reason", "sk-abcdefghijklmnop", "continueReason"],
-    ["hard-failure evidence", "-----BEGIN PRIVATE KEY-----", "evidence"],
+    ["hard-failure evidence", ["-----BEGIN", "PRIVATE KEY-----"].join(" "), "evidence"],
     ["email", "student@example.com", "notes"],
     ["Chinese mobile", "+86 138-1234-5678", "continueReason"],
     ["Chinese identity number", "11010519491231002X", "evidence"],

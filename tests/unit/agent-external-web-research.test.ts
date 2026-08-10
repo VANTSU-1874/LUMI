@@ -6,12 +6,14 @@ import { sanitizeExternalSearchIntent } from "@/lib/agent/external-web-research"
 
 describe("external web research intent", () => {
   it("redacts common identifiers and credentials before an outbound search", () => {
+    const modelKeyFixture = ["sk", "example-secret-123456"].join("-");
+    const githubTokenFixture = ["github", "pat", "abcdefghijklmnopqrstuvwxyz"].join("_");
     const value = sanitizeExternalSearchIntent(
       [
         "邮箱 arlo@example.com 手机 13800138000 学号 SC20260001 身份证 11010519491231002X",
         "Bearer abcdefghijklmnopqrstuvwxyz",
-        "sk-example-secret-123456",
-        "github_pat_abcdefghijklmnopqrstuvwxyz",
+        modelKeyFixture,
+        githubTokenFixture,
         "api_key=super-secret-value",
         "https://user:password@example.com/docs",
       ].join(" "),

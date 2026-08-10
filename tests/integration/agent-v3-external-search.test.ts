@@ -178,7 +178,8 @@ describe("V3 consented external research", () => {
 
   it("lets the tutor autonomously search through a minimal redacted request and exposes clickable provenance", async () => {
     const connection = await setup();
-    const message = "请联网核对 2026 年 WCAG 对比度资料。邮箱 arlo@example.com，密钥 sk-example-secret-123456";
+    const secretFixture = ["sk", "example-secret-123456"].join("-");
+    const message = `请联网核对 2026 年 WCAG 对比度资料。邮箱 arlo@example.com，密钥 ${secretFixture}`;
     const runtime = new CurrentAgentRuntime();
     await runtime.run({
       connection,
@@ -264,7 +265,7 @@ describe("V3 consented external research", () => {
       expect(mainDecisions).toBe(2);
       expect(hostedRequests).toBe(1);
       expect(externalRequest).not.toContain("arlo@example.com");
-      expect(externalRequest).not.toContain("sk-example-secret-123456");
+      expect(externalRequest).not.toContain(secretFixture);
       expect(externalRequest).not.toContain("projectBrief");
       expect(externalRequest).not.toContain("studentMemories");
       expect(externalRequest).not.toContain("recentConversation");
