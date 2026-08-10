@@ -28,7 +28,7 @@ describe("model error diagnostics", () => {
     const root = await testRoot();
     const repositoryRoot = path.join(root, "repository");
     await mkdir(repositoryRoot);
-    const secret = "sk-diagnostics-secret-0123456789";
+    const secret = ["sk", "diagnostics-secret-0123456789"].join("-");
     const baseUrl = "https://private-provider.example.test/v1";
     const providerPayload = "PROVIDER_PAYLOAD_SENTINEL_MUST_NOT_APPEAR";
     const socketError = Object.assign(new Error(

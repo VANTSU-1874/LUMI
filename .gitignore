@@ -16,6 +16,7 @@
 /coverage
 /playwright-report/
 /test-results/
+/docs/reports/
 /.runtime/
 /.codex-runtime/
 /.playwright-cli/
