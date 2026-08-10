@@ -1,0 +1,435 @@
+{
+  "schemaVersion": 1,
+  "id": "lumi-t45-post-candidate-remediation-selector-acceptance-qrels",
+  "version": "2026-07-30.3",
+  "split": "POST_CANDIDATE_REMEDIATION_ACCEPTANCE",
+  "runtimeSuite": {
+    "id": "lumi-t45-post-candidate-remediation-selector-acceptance-runtime",
+    "version": "2026-07-30.3",
+    "suiteHash": "6aadd2b4612ace4c65d7d9176ad1628b28f65b91ba0208e7cd8cbc80a97002cd"
+  },
+  "corpusSnapshot": {
+    "path": "data/knowledge-v2/knowledge-corpus.v2.json",
+    "bundleHash": "82db90934afaffa3d227b6b0d11ab5efdb88009fd8b9274845567de4888079f8"
+  },
+  "capabilityInventory": {
+    "id": "lumi-t45-capability-inventory",
+    "inventoryHash": "fd199dfe6f49ce1249f20a04be580dc1b1b31fff2d831b88d4bd13e022082d67"
+  },
+  "cases": [
+    {
+      "caseId": "t45-candacc-book-system-direct",
+      "familyId": "frozen-t44-book-001-book-as-complete-system",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-52b9eb8db8f50e00cb2546b352d41387ea7bf64027cf0350e1122aabdef327bc",
+            "node-9fcf0c9e6499d489bfd24f1e0b01a802760d9c920864e002868b633287302880"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-3f4f667b597b1594df72929c766bf561f3b784bab29caa9e67d913372194227a"
+      ]
+    },
+    {
+      "caseId": "t45-candacc-book-system-compose",
+      "familyId": "frozen-t44-book-001-book-as-complete-system",
+      "multiClaim": true,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-05fceac1c5d3cef8be0a6d79164402bb20a51c6f2fc7bc6dcc7f9d7d8d5721ff",
+            "node-83ca491ca3b5721b5042b354a9372fd62d06e4cd669bd7aa27e975f29537587c"
+          ]
+        },
+        {
+          "groupId": "group-2",
+          "acceptableNodeIds": [
+            "node-3f4f667b597b1594df72929c766bf561f3b784bab29caa9e67d913372194227a",
+            "node-1652bcae2c61cc5520133d61ab00c20c215bf5424b5431fb117e10070394b364"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-bb47e02bd6c55198dfe2c2cbad21af6c85365e183c8261981987fada6f2490c1"
+      ]
+    },
+    {
+      "caseId": "t45-candacc-book-marks-direct",
+      "familyId": "frozen-t44-book-printer-marks",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-1f5b8546165f8fc8fa8e198d59599911bf9624ccefaa2abcc8c676ad1d4e316a",
+            "node-16e7dad079fd261f823849f5059eec9eb2dd9f7260835d85272a27e9026914d3"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-c817bd98f10a32d1fb191cccb250dd0923aff2c1a126c76e9b90ad4ab41cd39b"
+      ]
+    },
+    {
+      "caseId": "t45-candacc-book-marks-compose",
+      "familyId": "frozen-t44-book-printer-marks",
+      "multiClaim": true,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-1f5b8546165f8fc8fa8e198d59599911bf9624ccefaa2abcc8c676ad1d4e316a",
+            "node-21a59f368f1f2509fde4ca4608e793f02f98e8f7d23c9590a797cf1a2b32be9b"
+          ]
+        },
+        {
+          "groupId": "group-2",
+          "acceptableNodeIds": [
+            "node-16e7dad079fd261f823849f5059eec9eb2dd9f7260835d85272a27e9026914d3",
+            "node-003981cbe11ab8ac238e858d72e3b4887ebbbbdcfd4910f2a753d4ea0ee90840"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-c817bd98f10a32d1fb191cccb250dd0923aff2c1a126c76e9b90ad4ab41cd39b"
+      ]
+    },
+    {
+      "caseId": "t45-candacc-brand-small-direct",
+      "familyId": "frozen-t44-brandvi-001-assess-wordmark-fit",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-d92e3f3f71ccfadcc6a5512b82f14b636ac35d5e3bb4d6f1e57a18d5282bced5",
+            "node-a49cf60c7899950cdc7107ae1ffdd01f8792bcc24f4d1ea281e88ebf273ed5d9"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-bf0161b9d74485b764f1a213badacc848d5d069738ec7fb5f0321bd76ef06f51"
+      ]
+    },
+    {
+      "caseId": "t45-candacc-brand-small-compose",
+      "familyId": "frozen-t44-brandvi-001-assess-wordmark-fit",
+      "multiClaim": true,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-d92e3f3f71ccfadcc6a5512b82f14b636ac35d5e3bb4d6f1e57a18d5282bced5",
+            "node-53c80e95103fab6792d67fda8d31bb6a302ea96817c744d184f3da14f264be8a"
+          ]
+        },
+        {
+          "groupId": "group-2",
+          "acceptableNodeIds": [
+            "node-f610525180d34d088d7cee888b0c33cdebb37754a477a6845ab1aac8e9d329ea",
+            "node-4168b1c560cca4d5b0456c1e330c37ae0994f1d1c2e62dcffbc93ee9037eff70"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-bf0161b9d74485b764f1a213badacc848d5d069738ec7fb5f0321bd76ef06f51"
+      ]
+    },
+    {
+      "caseId": "t45-candacc-brand-tone-direct",
+      "familyId": "frozen-t44-brandvi-002-test-wordmark-tone-and-audience",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-c91a3b45d823885dcb9b2d30543e05c22fc85a79a6d2eb08354509ccab9ec605",
+            "node-d041cd4f202218fab5f50b42affd8b85836abc681698e89682cf652b6ad24fa6"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-ac8f4874a241ab12e7648238244a39233d78aaf0fc5ed69e7273e36f3499edb4"
+      ]
+    },
+    {
+      "caseId": "t45-candacc-brand-tone-compose",
+      "familyId": "frozen-t44-brandvi-002-test-wordmark-tone-and-audience",
+      "multiClaim": true,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-1dc5c9d8915391e73efb765e1a442506bce5a35a3facbc71a87e85a338211584",
+            "node-c6215e544eb276a4de9e0de482fe48b4c33b5904277bc1faff0eace072305ff6"
+          ]
+        },
+        {
+          "groupId": "group-2",
+          "acceptableNodeIds": [
+            "node-ac8f4874a241ab12e7648238244a39233d78aaf0fc5ed69e7273e36f3499edb4",
+            "node-cc743f296077853ac938b921ea070fca192b90f911fb3900a3a8afbc3048fb8b"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-d041cd4f202218fab5f50b42affd8b85836abc681698e89682cf652b6ad24fa6"
+      ]
+    },
+    {
+      "caseId": "t45-candacc-filter-direct",
+      "familyId": "frozen-t44-td-filter-chop",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-4b3336fdab4f31e4c5d6b6dce5f15f2345b718a8a99a42248c9557b875d029dd",
+            "node-88493984297f9e90d6c6de7fc3cb1243a68327d68598d52723037f2612bf19f8"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-fd1bdd7c54d9652910b302287c38ee4a19cbb8200ce345568a1ad343dde46d26"
+      ]
+    },
+    {
+      "caseId": "t45-candacc-filter-compose",
+      "familyId": "frozen-t44-td-filter-chop",
+      "multiClaim": true,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-fd405122137ccaa1ed7b476f7960cd00d81eca99ba789a6782fb001a80f07c4e"
+          ]
+        },
+        {
+          "groupId": "group-2",
+          "acceptableNodeIds": [
+            "node-4b3336fdab4f31e4c5d6b6dce5f15f2345b718a8a99a42248c9557b875d029dd",
+            "node-88493984297f9e90d6c6de7fc3cb1243a68327d68598d52723037f2612bf19f8"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-8235a6a58de626f43c3fc39c39731c0d4b911f2a529301a1024cff71e0b0ba04"
+      ]
+    },
+    {
+      "caseId": "t45-candacc-feedback-direct",
+      "familyId": "frozen-t44-td-feedback-top",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-50f45bac3e08ec7ce92b95849c5cb5df88d8395e8277000ff9275c38f0a7b62a",
+            "node-99211ca197677b832758ff5d3525f4c26a2fb95f083a706bc5298bd07ce0f650"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-c0f933c7e138ea32be3e32ffabb559ff7e81b6c5309deca1a433f20ac579c6d3"
+      ]
+    },
+    {
+      "caseId": "t45-candacc-feedback-compose",
+      "familyId": "frozen-t44-td-feedback-top",
+      "multiClaim": true,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-50f45bac3e08ec7ce92b95849c5cb5df88d8395e8277000ff9275c38f0a7b62a",
+            "node-4c3aa30fe45e3ec4c6315e8fb2bedda2b54ed1706670bbd6b925788a3b7d8c8a"
+          ]
+        },
+        {
+          "groupId": "group-2",
+          "acceptableNodeIds": [
+            "node-c0f933c7e138ea32be3e32ffabb559ff7e81b6c5309deca1a433f20ac579c6d3",
+            "node-4d618d05591795a383ae63e15693e9b0e70f112a2e8ace97cfb69d9fdf94a0ac"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-99211ca197677b832758ff5d3525f4c26a2fb95f083a706bc5298bd07ce0f650"
+      ]
+    },
+    {
+      "caseId": "t45-candacc-contrast-direct",
+      "familyId": "frozen-t44-design-text-contrast",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-3583ad6eda1085338af99694850f980f06fcf70fe1f1f3feb9578388156b9fbf",
+            "node-eb992744ee78b17349d7fcc220c9f6500eb45057cd4aa2f94d3ab986ef034df5"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-1e38c4e83650e218554c9a0b7e5272724e7644632e7f263235f5cabb61ef0e63"
+      ]
+    },
+    {
+      "caseId": "t45-candacc-contrast-compose",
+      "familyId": "frozen-t44-design-text-contrast",
+      "multiClaim": true,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-1e38c4e83650e218554c9a0b7e5272724e7644632e7f263235f5cabb61ef0e63",
+            "node-8ffc9883442bacd9da1d4505635e27c4c0e2ca4c13ffd6698e1f33b04c2b1465"
+          ]
+        },
+        {
+          "groupId": "group-2",
+          "acceptableNodeIds": [
+            "node-bd29ce7ccde757b60bb70ee466392bb8ee5c2fe281ceb302e858b4c85d5348b3",
+            "node-eb992744ee78b17349d7fcc220c9f6500eb45057cd4aa2f94d3ab986ef034df5"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-3583ad6eda1085338af99694850f980f06fcf70fe1f1f3feb9578388156b9fbf"
+      ]
+    },
+    {
+      "caseId": "t45-candacc-illustrator-direct",
+      "familyId": "frozen-t44-illustrator-001-grid-guides-and-format-reuse",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-19605568bbc7fa2cc9490b46830581a8580bc8a2c615c2cdda2593e51b84da2b",
+            "node-09aeaa55580eaf0a2033635bb43cae4e68b1290238c38bbe019dcd7e221224de"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-b6c1b01fd4424a4a1f1c9ab244a8d0e4afa7bbe3838947d06a59a925a07e3a99"
+      ]
+    },
+    {
+      "caseId": "t45-candacc-illustrator-compose",
+      "familyId": "frozen-t44-illustrator-001-grid-guides-and-format-reuse",
+      "multiClaim": true,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-19605568bbc7fa2cc9490b46830581a8580bc8a2c615c2cdda2593e51b84da2b",
+            "node-09aeaa55580eaf0a2033635bb43cae4e68b1290238c38bbe019dcd7e221224de"
+          ]
+        },
+        {
+          "groupId": "group-2",
+          "acceptableNodeIds": [
+            "node-259130c752969942fd45ffc0e67ff0edc050a01237395d9bd09e7f5ca9ef367c",
+            "node-e8510cb54c38a55c3e210abd9cae3cff3388e8e4a1b3d7a77d51fe4602461ffd",
+            "node-71e86fabc935c83e58cdaf0f59eb4663635a97c9e75bd24bb9a5bcda8448827a"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-b6c1b01fd4424a4a1f1c9ab244a8d0e4afa7bbe3838947d06a59a925a07e3a99"
+      ]
+    },
+    {
+      "caseId": "t45-candacc-international-direct",
+      "familyId": "frozen-t44-layout-010-international-style-fit",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-50a825a48e5ea10895b62b4ecfa67f2c5f4922200f0f6e9c0c35eff76e221d4e",
+            "node-df2ff73acde93a3a565b69683b4a9f842defc437f22682f3defdd7f136769f4d"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-0b2164f4cf13c18cb4792fe71caa536f99db810ad96b796ce88cadc5d0398ec9"
+      ]
+    },
+    {
+      "caseId": "t45-candacc-international-compose",
+      "familyId": "frozen-t44-layout-010-international-style-fit",
+      "multiClaim": true,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-46658bebb37404e65c2586fe1fcbb8954651659dd0a5d7010a913b712c112f70",
+            "node-efe90d986156d84e3df9a6b5f4d277e72e1e6a461063c3f79ac132d918a5f624",
+            "node-ad233b896ef5d03f2a8f8042808f9ef281f5e30d6906345e42a778c054bee3ef"
+          ]
+        },
+        {
+          "groupId": "group-2",
+          "acceptableNodeIds": [
+            "node-597b7b8d7f66d7827ba6a6e158107066569af0384f1adf1ace5206b371671f59",
+            "node-d6d3f6918713edbd99b6424adabb497b483fccc3c53464b3d0fa96bfdfb53ed9",
+            "node-96e8eaac62715afdb1a58bdbac724a14c1c0c7415f0a5dd52c68f72a2770a3dc"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-0b2164f4cf13c18cb4792fe71caa536f99db810ad96b796ce88cadc5d0398ec9"
+      ]
+    },
+    {
+      "caseId": "t45-candacc-grid-direct",
+      "familyId": "frozen-t44-layout-040-six-step-grid-layout-check",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-551b331efa891175af50ab4454d0bd15e8a10161af3b563aeb69f3047313f73f",
+            "node-3c9f96f39388c7515e0045ac6c90f67e186711e3df9c4d4eccf3227ea10aadc4"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-ca1b6a50bf057070de101ec4084d2cc0809b43c564d7beb5e10847579f3de17e"
+      ]
+    },
+    {
+      "caseId": "t45-candacc-grid-compose",
+      "familyId": "frozen-t44-layout-040-six-step-grid-layout-check",
+      "multiClaim": true,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-1cabe4b009e949d1632690f1903568c9eaee168587ee4a30619c0b7b97e66cfa",
+            "node-f4a9f3179e9201908e9517eace22ba9e2701e9f6a130ef2b3b2cca48f0b8d2b8"
+          ]
+        },
+        {
+          "groupId": "group-2",
+          "acceptableNodeIds": [
+            "node-ca1b6a50bf057070de101ec4084d2cc0809b43c564d7beb5e10847579f3de17e",
+            "node-08fa9d071472ebe13c5fc1896c941684243d6a7270f75da066cbbd7429cd0963",
+            "node-7fdfa120816b7aa61552b8bbc324760c94117cd8239a229332cbde592c69d57b"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-5acdcd42edd68f593ad5c97c721c493be53959547257cf9d23de96da8c687405"
+      ]
+    }
+  ],
+  "suiteHash": "16cd6b9aa9edd1180ab512d4fe1a224df46dcebd5ee16f9066c09b2c68cb17fe"
+}

@@ -1,0 +1,2735 @@
+{
+  "schemaVersion": 1,
+  "suiteVersion": "2026-07-28.1",
+  "suiteId": "T43-EVIDENCE-ADEQUACY-DEV",
+  "split": "DEV",
+  "splitRole": "MODEL_DEVELOPMENT",
+  "corpusSnapshot": {
+    "path": "data/knowledge-v2/knowledge-corpus.v2.json",
+    "bundleHash": "82db90934afaffa3d227b6b0d11ab5efdb88009fd8b9274845567de4888079f8"
+  },
+  "contract": {
+    "mode": "TEXT_TO_TEXT",
+    "caseCount": 100,
+    "coursePackCount": 5,
+    "casesPerCoursePack": 20,
+    "answerablePerCoursePack": 10,
+    "noAnswerPerCoursePack": 10,
+    "pairCount": 30,
+    "pairedCaseCount": 60,
+    "pairsPerCoursePack": 6,
+    "singletonCaseCount": 40,
+    "singletonsPerCoursePack": 8,
+    "providerQueriesPerArm": 90,
+    "expectedProviderCallsPerArm": 180,
+    "preRetrievalSkipsPerArm": 10,
+    "requiredEvidenceGroupSemantics": "ALL_GROUPS_REQUIRED_ANY_NODE_WITHIN_GROUP",
+    "runtimeFields": [
+      "mode",
+      "coursePackId",
+      "coursePackVersion",
+      "question"
+    ],
+    "scoringFields": [
+      "caseId",
+      "familyId",
+      "clusterId",
+      "pairId",
+      "pairRole",
+      "pairDeltaKind",
+      "stratum",
+      "expectation",
+      "reasonClass",
+      "executionClass",
+      "targetObjectIds",
+      "requiredEvidenceGroups"
+    ]
+  },
+  "reuseManifest": [
+    {
+      "objectId": "design-double-diamond",
+      "coursePackId": "general-design",
+      "caseCount": 2,
+      "policy": "REUSE_OBJECT_WITH_DISTINCT_EVIDENCE_INTENT_OPERATION"
+    },
+    {
+      "objectId": "brandvi-001-assess-wordmark-fit",
+      "coursePackId": "brand-vi-design",
+      "caseCount": 5,
+      "policy": "REUSE_OBJECT_WITH_DISTINCT_EVIDENCE_INTENT_OPERATION"
+    },
+    {
+      "objectId": "brandvi-002-test-wordmark-tone-and-audience",
+      "coursePackId": "brand-vi-design",
+      "caseCount": 5,
+      "policy": "REUSE_OBJECT_WITH_DISTINCT_EVIDENCE_INTENT_OPERATION"
+    }
+  ],
+  "priorIntentOverlapManifest": [
+    {
+      "caseId": "t43-dev-brand-vi-p1a",
+      "coursePackId": "brand-vi-design",
+      "priorSuiteCaseIds": [
+        "t41-dev-brand-control-tone-variables",
+        "t42-recall-dev-brand-answerable-contextual-tone"
+      ],
+      "requiredEvidenceNodeIds": [
+        "node-bf0161b9d74485b764f1a213badacc848d5d069738ec7fb5f0321bd76ef06f51"
+      ],
+      "distinctObligationId": "infer-wordmark-status-claim-needs-context-test",
+      "policy": "DECLARED_SMALL_PACK_PRIOR_DOMAIN_CONTROL_WITH_DISTINCT_NODE_AND_OPERATION"
+    },
+    {
+      "caseId": "t43-dev-brand-vi-p1b",
+      "coursePackId": "brand-vi-design",
+      "priorSuiteCaseIds": [
+        "t41-dev-brand-control-isolate-variable"
+      ],
+      "requiredEvidenceNodeIds": [
+        "node-07b85210e0070fe4e279088598b05374d884edcc79607884ab7b34a9f51c8ece"
+      ],
+      "distinctObligationId": "remove-color-image-cues-before-recognition-audit",
+      "policy": "DECLARED_SMALL_PACK_PRIOR_DOMAIN_CONTROL_WITH_DISTINCT_NODE_AND_OPERATION"
+    },
+    {
+      "caseId": "t43-dev-brand-vi-p2a",
+      "coursePackId": "brand-vi-design",
+      "priorSuiteCaseIds": [
+        "t42-recall-dev-brand-answerable-application-variants"
+      ],
+      "requiredEvidenceNodeIds": [
+        "node-d92e3f3f71ccfadcc6a5512b82f14b636ac35d5e3bb4d6f1e57a18d5282bced5"
+      ],
+      "distinctObligationId": "degraded-output-wordmark-robustness-check",
+      "policy": "DECLARED_SMALL_PACK_PRIOR_DOMAIN_CONTROL_WITH_DISTINCT_NODE_AND_OPERATION"
+    },
+    {
+      "caseId": "t43-dev-brand-vi-p2b",
+      "coursePackId": "brand-vi-design",
+      "priorSuiteCaseIds": [
+        "t41-dev-brand-control-tone-variables",
+        "t41-dev-brand-control-isolate-variable"
+      ],
+      "requiredEvidenceNodeIds": [
+        "node-c6215e544eb276a4de9e0de482fe48b4c33b5904277bc1faff0eace072305ff6"
+      ],
+      "distinctObligationId": "inventory-formal-differences-without-preference-score",
+      "policy": "DECLARED_SMALL_PACK_PRIOR_DOMAIN_CONTROL_WITH_DISTINCT_NODE_AND_OPERATION"
+    },
+    {
+      "caseId": "t43-dev-brand-vi-p3a",
+      "coursePackId": "brand-vi-design",
+      "priorSuiteCaseIds": [
+        "t41-dev-brand-control-audience-task",
+        "t41-dev-brand-control-tone-variables"
+      ],
+      "requiredEvidenceNodeIds": [
+        "node-5627ee319393fc0c4f79ea46bdd1499a7bba90764ef3db919007639b54889653",
+        "node-c5f64013dfe50127b8492bb33ef8c2960563958995e13b58b098f58b4ca1b9dc"
+      ],
+      "distinctObligationId": "sequence-recognition-goal-before-form-feature-evidence",
+      "policy": "DECLARED_SMALL_PACK_PRIOR_DOMAIN_CONTROL_WITH_DISTINCT_NODE_AND_OPERATION"
+    },
+    {
+      "caseId": "t43-dev-brand-vi-p3b",
+      "coursePackId": "brand-vi-design",
+      "priorSuiteCaseIds": [
+        "t41-dev-brand-control-audience-task",
+        "t42-recall-dev-brand-answerable-behavior-records"
+      ],
+      "requiredEvidenceNodeIds": [
+        "node-a13e4956089bcdeb9b3592b2be7d2cb78440ec04589aa520eecaeaab6a5853a4",
+        "node-cc743f296077853ac938b921ea070fca192b90f911fb3900a3a8afbc3048fb8b"
+      ],
+      "distinctObligationId": "stage-feature-description-before-contact-point-identification",
+      "policy": "DECLARED_SMALL_PACK_PRIOR_DOMAIN_CONTROL_WITH_DISTINCT_NODE_AND_OPERATION"
+    },
+    {
+      "caseId": "t43-dev-brand-vi-p4a",
+      "coursePackId": "brand-vi-design",
+      "priorSuiteCaseIds": [
+        "t41-dev-brand-control-isolate-variable",
+        "t42-recall-dev-brand-answerable-application-variants"
+      ],
+      "requiredEvidenceNodeIds": [
+        "node-4168b1c560cca4d5b0456c1e330c37ae0994f1d1c2e62dcffbc93ee9037eff70"
+      ],
+      "distinctObligationId": "compare-monochrome-component-systems-in-matched-frames",
+      "policy": "DECLARED_SMALL_PACK_PRIOR_DOMAIN_CONTROL_WITH_DISTINCT_NODE_AND_OPERATION"
+    },
+    {
+      "caseId": "t43-dev-brand-vi-p4b",
+      "coursePackId": "brand-vi-design",
+      "priorSuiteCaseIds": [
+        "t41-dev-brand-control-tone-variables",
+        "t41-dev-brand-control-audience-task"
+      ],
+      "requiredEvidenceNodeIds": [
+        "node-c91a3b45d823885dcb9b2d30543e05c22fc85a79a6d2eb08354509ccab9ec605"
+      ],
+      "distinctObligationId": "bind-vague-positioning-claim-to-contact-point-task",
+      "policy": "DECLARED_SMALL_PACK_PRIOR_DOMAIN_CONTROL_WITH_DISTINCT_NODE_AND_OPERATION"
+    },
+    {
+      "caseId": "t43-dev-brand-vi-p5a",
+      "coursePackId": "brand-vi-design",
+      "priorSuiteCaseIds": [
+        "t42-recall-dev-brand-answerable-name-legibility",
+        "t42-recall-dev-brand-answerable-adjacent-confusion",
+        "t42-recall-dev-brand-answerable-behavior-records"
+      ],
+      "requiredEvidenceNodeIds": [
+        "node-53c80e95103fab6792d67fda8d31bb6a302ea96817c744d184f3da14f264be8a"
+      ],
+      "distinctObligationId": "capture-actual-size-confusion-locations-as-evidence",
+      "policy": "DECLARED_SMALL_PACK_PRIOR_DOMAIN_CONTROL_WITH_DISTINCT_NODE_AND_OPERATION"
+    },
+    {
+      "caseId": "t43-dev-brand-vi-p5b",
+      "coursePackId": "brand-vi-design",
+      "priorSuiteCaseIds": [
+        "t41-dev-brand-control-unfamiliar-audience"
+      ],
+      "requiredEvidenceNodeIds": [
+        "node-ac8f4874a241ab12e7648238244a39233d78aaf0fc5ed69e7273e36f3499edb4"
+      ],
+      "distinctObligationId": "stratify-testers-by-brand-familiarity",
+      "policy": "DECLARED_SMALL_PACK_PRIOR_DOMAIN_CONTROL_WITH_DISTINCT_NODE_AND_OPERATION"
+    }
+  ],
+  "cases": [
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "general-design",
+        "coursePackVersion": "1",
+        "question": "正文对比度算出 4.49 比 1，我能不能四舍五入，按 4.5 比 1 算通过？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-general-p1a",
+        "familyId": "t43-family-general-rounded-text-contrast-remediation",
+        "clusterId": "t43-cluster-general-rounded-text-contrast-remediation",
+        "pairId": "t43-pair-general-01",
+        "pairRole": "ANSWERABLE",
+        "pairDeltaKind": "SUPPORTED_TO_UNSUPPORTED_OPERATION",
+        "stratum": "ANSWERABLE_SINGLE_PRIMARY_DIRECT",
+        "expectation": "ANSWERABLE",
+        "reasonClass": "CORPUS_SUPPORTED",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [
+          "design-text-contrast"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-bd29ce7ccde757b60bb70ee466392bb8ee5c2fe281ceb302e858b4c85d5348b3"
+          ]
+        ]
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "general-design",
+        "coursePackVersion": "1",
+        "question": "页面上有灰色装饰线和一个停用按钮，检查非文字对比时，它们都必须达到 3 比 1 吗？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-general-p1b",
+        "familyId": "t43-family-general-nontext-contrast-exemption-classification",
+        "clusterId": "t43-cluster-general-nontext-contrast-exemption-classification",
+        "pairId": null,
+        "pairRole": null,
+        "pairDeltaKind": null,
+        "stratum": "ANSWERABLE_SINGLE_PRIMARY_DIRECT",
+        "expectation": "ANSWERABLE",
+        "reasonClass": "CORPUS_SUPPORTED",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [
+          "design-nontext-contrast"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-76d812825302b28f286fe8503071c8b5ea00840dcfdd22dd7211f2f623a84d0f"
+          ]
+        ]
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "general-design",
+        "coursePackVersion": "1",
+        "question": "我用了三组颜色，可还没想清它们是在装饰、分层还是报错，检查前先要说清什么？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-general-p2a",
+        "familyId": "t43-family-general-color-role-classification-specific-values",
+        "clusterId": "t43-cluster-general-color-role-classification-specific-values",
+        "pairId": "t43-pair-general-02",
+        "pairRole": "ANSWERABLE",
+        "pairDeltaKind": "SUPPORTED_TO_UNSUPPORTED_DETAIL",
+        "stratum": "ANSWERABLE_PARAPHRASE_ALIAS",
+        "expectation": "ANSWERABLE",
+        "reasonClass": "CORPUS_SUPPORTED",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [
+          "design-color-redundancy"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-bf9fdcb01a65f140c10afc64a46692993e977c4fbd8759dd14a13db549ab16b8"
+          ]
+        ]
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "general-design",
+        "coursePackVersion": "1",
+        "question": "规范里的行距、段距和字距数值，是不是要直接设成所有正文的固定排版样式？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-general-p2b",
+        "familyId": "t43-family-general-spacing-values-as-resilience-test",
+        "clusterId": "t43-cluster-general-spacing-values-as-resilience-test",
+        "pairId": null,
+        "pairRole": null,
+        "pairDeltaKind": null,
+        "stratum": "ANSWERABLE_PARAPHRASE_ALIAS",
+        "expectation": "ANSWERABLE",
+        "reasonClass": "CORPUS_SUPPORTED",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [
+          "design-text-spacing"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-fc680db0ac0ad9d86796b9e27f88b7a8afe61dc593281dc69a080d972bcf6f2f"
+          ]
+        ]
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "general-design",
+        "coursePackVersion": "1",
+        "question": "我们已经聊了好几轮，项目简报里该逐步记下哪些内容？为什么不用一开始就填完一张大表？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-general-p3a",
+        "familyId": "t43-family-general-incremental-brief-live-project-state",
+        "clusterId": "t43-cluster-general-incremental-brief-live-project-state",
+        "pairId": "t43-pair-general-03",
+        "pairRole": "ANSWERABLE",
+        "pairDeltaKind": "STATIC_GUIDANCE_TO_LIVE_EXTERNAL_FACT",
+        "stratum": "ANSWERABLE_MULTI_PRIMARY_COMPOSITION",
+        "expectation": "ANSWERABLE",
+        "reasonClass": "CORPUS_SUPPORTED",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [
+          "design-project-brief"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-39bb7d94faddd0431a7df1858fb2e824977dbef012ffaf68c4131771c31af5f2"
+          ],
+          [
+            "node-ff2b21118f39f98fb795528bad30c24c77d7291a80636a0768b7e75d7df93d48"
+          ]
+        ]
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "general-design",
+        "coursePackVersion": "1",
+        "question": "做小样前，怎样先写出最危险的假设和可观察指标，免得测完也不知道结论？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-general-p3b",
+        "familyId": "t43-family-general-hypothesis-and-observation-plan",
+        "clusterId": "t43-cluster-general-hypothesis-and-observation-plan",
+        "pairId": null,
+        "pairRole": null,
+        "pairDeltaKind": null,
+        "stratum": "ANSWERABLE_MULTI_PRIMARY_COMPOSITION",
+        "expectation": "ANSWERABLE",
+        "reasonClass": "CORPUS_SUPPORTED",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [
+          "design-prototype-test"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-754692f4157073a2e70b09ec999066f6264a1ec50131a6cf6ec86a6e7642b4f2"
+          ],
+          [
+            "node-a16b43143b54d081c67d86ca166ef6fd1474c369e0455d52d87bbc0ff3c486fc"
+          ]
+        ]
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "general-design",
+        "coursePackVersion": "1",
+        "question": "提交进度有动画，但屏幕阅读器一点提示都没有。我还要检查状态消息有没有合适的角色或属性吗？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-general-p4a",
+        "familyId": "t43-family-general-status-record-cross-pack",
+        "clusterId": "t43-cluster-general-status-record-cross-pack",
+        "pairId": "t43-pair-general-04",
+        "pairRole": "ANSWERABLE",
+        "pairDeltaKind": "IN_PACK_SUPPORT_TO_OTHER_PACK_SCOPE",
+        "stratum": "ANSWERABLE_IN_PACK_HARD_DISTRACTOR",
+        "expectation": "ANSWERABLE",
+        "reasonClass": "CORPUS_SUPPORTED",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [
+          "design-status-feedback"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-600037b9367d397b2087c18f1c96728dd0734fc937634551647620df308fca56"
+          ]
+        ]
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "general-design",
+        "coursePackVersion": "1",
+        "question": "我对使用者痛点只有猜测，在开始想方案前，发现阶段该先接触谁来验证？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-general-p4b",
+        "familyId": "t43-family-general-discover-contact-affected-people",
+        "clusterId": "t43-cluster-general-discover-contact-affected-people",
+        "pairId": null,
+        "pairRole": null,
+        "pairDeltaKind": null,
+        "stratum": "ANSWERABLE_IN_PACK_HARD_DISTRACTOR",
+        "expectation": "ANSWERABLE",
+        "reasonClass": "CORPUS_SUPPORTED",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [
+          "design-double-diamond"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-28e557f3c3b64347c6cfafbf5f91f261cecaf3cea4c5be0fde34205636671001"
+          ]
+        ]
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "general-design",
+        "coursePackVersion": "1",
+        "question": "系列海报在 Illustrator 里复用正文样式时，除了复制外观，还要留下哪些文字参数？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-general-p5a",
+        "familyId": "t43-family-general-illustrator-text-parameter-universal-recipe",
+        "clusterId": "t43-cluster-general-illustrator-text-parameter-universal-recipe",
+        "pairId": "t43-pair-general-05",
+        "pairRole": "ANSWERABLE",
+        "pairDeltaKind": "SUPPORTED_CONCEPT_TO_CORPUS_GAP",
+        "stratum": "ANSWERABLE_CROSS_PACK_TERM_OVERLAP",
+        "expectation": "ANSWERABLE",
+        "reasonClass": "CORPUS_SUPPORTED",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [
+          "illustrator-001-grid-guides-and-format-reuse"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-259130c752969942fd45ffc0e67ff0edc050a01237395d9bd09e7f5ca9ef367c"
+          ]
+        ]
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "general-design",
+        "coursePackVersion": "1",
+        "question": "方案进入交付验证后，小范围测试怎样帮助我淘汰不可行方向并改进留下的方案？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-general-p5b",
+        "familyId": "t43-family-general-deliver-test-execution",
+        "clusterId": "t43-cluster-general-deliver-test-execution",
+        "pairId": "t43-pair-general-06",
+        "pairRole": "ANSWERABLE",
+        "pairDeltaKind": "SUPPORTED_TO_UNSUPPORTED_OPERATION_VARIANT",
+        "stratum": "ANSWERABLE_CROSS_PACK_TERM_OVERLAP",
+        "expectation": "ANSWERABLE",
+        "reasonClass": "CORPUS_SUPPORTED",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [
+          "design-double-diamond"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-5a5d0ef237858b75d84344a06225a7bd7bbda618f4d482a5e450163bf199bd44"
+          ]
+        ]
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "general-design",
+        "coursePackVersion": "1",
+        "question": "这段正文是 4.49 比 1，请直接替我打开设计文件，把所有颜色自动改到达标并导出成品。"
+      },
+      "scoring": {
+        "caseId": "t43-dev-general-n1a",
+        "familyId": "t43-family-general-rounded-text-contrast-remediation",
+        "clusterId": "t43-cluster-general-rounded-text-contrast-remediation",
+        "pairId": "t43-pair-general-01",
+        "pairRole": "NO_ANSWER",
+        "pairDeltaKind": "SUPPORTED_TO_UNSUPPORTED_OPERATION",
+        "stratum": "NO_ANSWER_ENTITY_OPERATION_GAP",
+        "expectation": "NO_ANSWER",
+        "reasonClass": "UNSUPPORTED_OPERATION",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [],
+        "requiredEvidenceGroups": []
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "general-design",
+        "coursePackVersion": "1",
+        "question": "请替我在线招募用户、跑完交付测试，并自动淘汰不合格方案。"
+      },
+      "scoring": {
+        "caseId": "t43-dev-general-n1b",
+        "familyId": "t43-family-general-deliver-test-execution",
+        "clusterId": "t43-cluster-general-deliver-test-execution",
+        "pairId": "t43-pair-general-06",
+        "pairRole": "NO_ANSWER",
+        "pairDeltaKind": "SUPPORTED_TO_UNSUPPORTED_OPERATION_VARIANT",
+        "stratum": "NO_ANSWER_ENTITY_OPERATION_GAP",
+        "expectation": "NO_ANSWER",
+        "reasonClass": "UNSUPPORTED_OPERATION",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [],
+        "requiredEvidenceGroups": []
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "general-design",
+        "coursePackVersion": "1",
+        "question": "这三组颜色分别该用哪三个十六进制色值，才能同时装饰、分层又表示错误？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-general-n2a",
+        "familyId": "t43-family-general-color-role-classification-specific-values",
+        "clusterId": "t43-cluster-general-color-role-classification-specific-values",
+        "pairId": "t43-pair-general-02",
+        "pairRole": "NO_ANSWER",
+        "pairDeltaKind": "SUPPORTED_TO_UNSUPPORTED_DETAIL",
+        "stratum": "NO_ANSWER_PARAMETER_CODE_STEP_GAP",
+        "expectation": "NO_ANSWER",
+        "reasonClass": "UNSUPPORTED_DETAIL",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [],
+        "requiredEvidenceGroups": []
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "general-design",
+        "coursePackVersion": "1",
+        "question": "我没上传界面截图，你能直接算出停用按钮边框和背景的精确对比度吗？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-general-n2b",
+        "familyId": "t43-family-general-nontext-screenshot-exact-ratio",
+        "clusterId": "t43-cluster-general-nontext-screenshot-exact-ratio",
+        "pairId": null,
+        "pairRole": null,
+        "pairDeltaKind": null,
+        "stratum": "NO_ANSWER_PARAMETER_CODE_STEP_GAP",
+        "expectation": "NO_ANSWER",
+        "reasonClass": "UNSUPPORTED_DETAIL",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [],
+        "requiredEvidenceGroups": []
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "general-design",
+        "coursePackVersion": "1",
+        "question": "请实时查出客户今天刚改的预算、截止日期和媒介要求，直接补进这份项目简报。"
+      },
+      "scoring": {
+        "caseId": "t43-dev-general-n3a",
+        "familyId": "t43-family-general-incremental-brief-live-project-state",
+        "clusterId": "t43-cluster-general-incremental-brief-live-project-state",
+        "pairId": "t43-pair-general-03",
+        "pairRole": "NO_ANSWER",
+        "pairDeltaKind": "STATIC_GUIDANCE_TO_LIVE_EXTERNAL_FACT",
+        "stratum": "NO_ANSWER_LIVE_EXTERNAL_FACT",
+        "expectation": "NO_ANSWER",
+        "reasonClass": "EXTERNAL_VERIFICATION_REQUIRED",
+        "executionClass": "PRE_RETRIEVAL_EMPTY",
+        "targetObjectIds": [],
+        "requiredEvidenceGroups": []
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "general-design",
+        "coursePackVersion": "1",
+        "question": "Design Council 官网今天有没有更新双钻的阶段名称或定义？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-general-n3b",
+        "familyId": "t43-family-general-live-double-diamond-definition",
+        "clusterId": "t43-cluster-general-live-double-diamond-definition",
+        "pairId": null,
+        "pairRole": null,
+        "pairDeltaKind": null,
+        "stratum": "NO_ANSWER_LIVE_EXTERNAL_FACT",
+        "expectation": "NO_ANSWER",
+        "reasonClass": "EXTERNAL_VERIFICATION_REQUIRED",
+        "executionClass": "PRE_RETRIEVAL_EMPTY",
+        "targetObjectIds": [],
+        "requiredEvidenceGroups": []
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "general-design",
+        "coursePackVersion": "1",
+        "question": "我还想把这条网页进度状态印进项目过程册，Slug 区该写哪些作业说明和页面信息？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-general-n4a",
+        "familyId": "t43-family-general-status-record-cross-pack",
+        "clusterId": "t43-cluster-general-status-record-cross-pack",
+        "pairId": "t43-pair-general-04",
+        "pairRole": "NO_ANSWER",
+        "pairDeltaKind": "IN_PACK_SUPPORT_TO_OTHER_PACK_SCOPE",
+        "stratum": "NO_ANSWER_OTHER_PACK_NEIGHBOR",
+        "expectation": "NO_ANSWER",
+        "reasonClass": "OUT_OF_PACK_SCOPE",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [],
+        "requiredEvidenceGroups": []
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "general-design",
+        "coursePackVersion": "1",
+        "question": "这段网页文字拿到版式课做局部字距复核时，应该先标出哪些真正需要调整的字符？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-general-n4b",
+        "familyId": "t43-family-general-spacing-to-layout-grid",
+        "clusterId": "t43-cluster-general-spacing-to-layout-grid",
+        "pairId": null,
+        "pairRole": null,
+        "pairDeltaKind": null,
+        "stratum": "NO_ANSWER_OTHER_PACK_NEIGHBOR",
+        "expectation": "NO_ANSWER",
+        "reasonClass": "OUT_OF_PACK_SCOPE",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [],
+        "requiredEvidenceGroups": []
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "general-design",
+        "coursePackVersion": "1",
+        "question": "系列海报的标题、正文、注释各用什么固定字号、行距和字距，才能保证所有项目都最好看？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-general-n5a",
+        "familyId": "t43-family-general-illustrator-text-parameter-universal-recipe",
+        "clusterId": "t43-cluster-general-illustrator-text-parameter-universal-recipe",
+        "pairId": "t43-pair-general-05",
+        "pairRole": "NO_ANSWER",
+        "pairDeltaKind": "SUPPORTED_CONCEPT_TO_CORPUS_GAP",
+        "stratum": "NO_ANSWER_CORPUS_GAP_LEXICAL_OVERLAP",
+        "expectation": "NO_ANSWER",
+        "reasonClass": "CORPUS_CONTENT_GAP",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [],
+        "requiredEvidenceGroups": []
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "general-design",
+        "coursePackVersion": "1",
+        "question": "任何设计项目是不是都固定做三个原型、测试五个人就足够？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-general-n5b",
+        "familyId": "t43-family-general-universal-prototype-count",
+        "clusterId": "t43-cluster-general-universal-prototype-count",
+        "pairId": null,
+        "pairRole": null,
+        "pairDeltaKind": null,
+        "stratum": "NO_ANSWER_CORPUS_GAP_LEXICAL_OVERLAP",
+        "expectation": "NO_ANSWER",
+        "reasonClass": "CORPUS_CONTENT_GAP",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [],
+        "requiredEvidenceGroups": []
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "digital-interaction",
+        "coursePackVersion": "1",
+        "question": "做方向二参赛材料时，除了成品图，还要准备哪些能证明过程和交互的材料？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-digital-interaction-p1a",
+        "familyId": "t43-family-digital-interaction-competition-evidence-auto-submission",
+        "clusterId": "t43-cluster-digital-interaction-competition-evidence-auto-submission",
+        "pairId": "t43-pair-digital-interaction-01",
+        "pairRole": "ANSWERABLE",
+        "pairDeltaKind": "SUPPORTED_TO_UNSUPPORTED_OPERATION",
+        "stratum": "ANSWERABLE_SINGLE_PRIMARY_DIRECT",
+        "expectation": "ANSWERABLE",
+        "reasonClass": "CORPUS_SUPPORTED",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [
+          "competition-direction-two-evidence"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-7ed0d79acb7b0e0069f5759b75adf47f15dac579285c7bd68dbb8f1018dafb99"
+          ]
+        ]
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "digital-interaction",
+        "coursePackVersion": "1",
+        "question": "DigiShow 的信号表里，接口、设备和信号这三类东西分别是在记录什么？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-digital-interaction-p1b",
+        "familyId": "t43-family-digital-interaction-digishow-signal-entity-types",
+        "clusterId": "t43-cluster-digital-interaction-digishow-signal-entity-types",
+        "pairId": null,
+        "pairRole": null,
+        "pairDeltaKind": null,
+        "stratum": "ANSWERABLE_SINGLE_PRIMARY_DIRECT",
+        "expectation": "ANSWERABLE",
+        "reasonClass": "CORPUS_SUPPORTED",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [
+          "digishow-signals"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-ffc80818202c30b2a9b6f5c67e76238293894e43a32db7d7468434685c6a5ae9"
+          ]
+        ]
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "digital-interaction",
+        "coursePackVersion": "1",
+        "question": "一个互动方案别只写“感应后亮起来”，要补成哪几段关系才说得清？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-digital-interaction-p2a",
+        "familyId": "t43-family-digital-interaction-six-part-interaction-professional-ratio",
+        "clusterId": "t43-cluster-digital-interaction-six-part-interaction-professional-ratio",
+        "pairId": "t43-pair-digital-interaction-02",
+        "pairRole": "ANSWERABLE",
+        "pairDeltaKind": "SUPPORTED_TO_UNSUPPORTED_DETAIL",
+        "stratum": "ANSWERABLE_PARAPHRASE_ALIAS",
+        "expectation": "ANSWERABLE",
+        "reasonClass": "CORPUS_SUPPORTED",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [
+          "course-principles"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-5c1503ee863462a32fecf3de0c696f5d53579bc523fa5cbcc40ca64f92ca5692"
+          ]
+        ]
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "digital-interaction",
+        "coursePackVersion": "1",
+        "question": "我的互动描述只有“观众靠近会变化”。怎样把触发前后的动作和反馈补成一段说得清的过程？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-digital-interaction-p2b",
+        "familyId": "t43-family-digital-interaction-behavior-sequence-clarification",
+        "clusterId": "t43-cluster-digital-interaction-behavior-sequence-clarification",
+        "pairId": null,
+        "pairRole": null,
+        "pairDeltaKind": null,
+        "stratum": "ANSWERABLE_PARAPHRASE_ALIAS",
+        "expectation": "ANSWERABLE",
+        "reasonClass": "CORPUS_SUPPORTED",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [
+          "dicd-002-interaction-scheme-six-clarifications"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-3f33b03f74abf5295df4565c8d1915c7f66f72034e1538f9208185b4705d11af"
+          ]
+        ]
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "digital-interaction",
+        "coursePackVersion": "1",
+        "question": "我想把距离感应改成声音输入做迁移练习。怎样才能只改一两项，并确认新输入真的生效？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-digital-interaction-p3a",
+        "familyId": "t43-family-digital-interaction-controlled-input-transfer-live-state",
+        "clusterId": "t43-cluster-digital-interaction-controlled-input-transfer-live-state",
+        "pairId": "t43-pair-digital-interaction-03",
+        "pairRole": "ANSWERABLE",
+        "pairDeltaKind": "STATIC_GUIDANCE_TO_LIVE_EXTERNAL_FACT",
+        "stratum": "ANSWERABLE_MULTI_PRIMARY_COMPOSITION",
+        "expectation": "ANSWERABLE",
+        "reasonClass": "CORPUS_SUPPORTED",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [
+          "dicd-004-change-one-condition-for-transfer"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-16c17704eb26e8043ec8b9799ea245b0370e141dbdc811b31158efed84e4018f"
+          ],
+          [
+            "node-9693d40c880394491e23010a2e5d42b3eed3fca0e52cf20cb18355be264753eb"
+          ]
+        ]
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "digital-interaction",
+        "coursePackVersion": "1",
+        "question": "比较主版和备份版的 TouchDesigner 工程时，怎样先列出结构差异，又避免把差异直接当成效果原因？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-digital-interaction-p3b",
+        "familyId": "t43-family-digital-interaction-version-structure-without-causal-claim",
+        "clusterId": "t43-cluster-digital-interaction-version-structure-without-causal-claim",
+        "pairId": null,
+        "pairRole": null,
+        "pairDeltaKind": null,
+        "stratum": "ANSWERABLE_MULTI_PRIMARY_COMPOSITION",
+        "expectation": "ANSWERABLE",
+        "reasonClass": "CORPUS_SUPPORTED",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [
+          "td-case-version-comparison"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-72b608aa12827590df6308d1cb04b0397f0c452cf93c0776a069fec9a9ebd149"
+          ],
+          [
+            "node-7030e41e7f25ac74c1478fbefd7108eb22202ece4316c2b6c0179ac17f51895a"
+          ]
+        ]
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "digital-interaction",
+        "coursePackVersion": "1",
+        "question": "DigiShow 已经有接收数值，可 TouchDesigner 画面不动。我是不是该先查目标参数有没有引用对，Override 有没有盖住它？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-digital-interaction-p4a",
+        "familyId": "t43-family-digital-interaction-signal-chain-fault-record-cross-pack",
+        "clusterId": "t43-cluster-digital-interaction-signal-chain-fault-record-cross-pack",
+        "pairId": "t43-pair-digital-interaction-04",
+        "pairRole": "ANSWERABLE",
+        "pairDeltaKind": "IN_PACK_SUPPORT_TO_OTHER_PACK_SCOPE",
+        "stratum": "ANSWERABLE_IN_PACK_HARD_DISTRACTOR",
+        "expectation": "ANSWERABLE",
+        "reasonClass": "CORPUS_SUPPORTED",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [
+          "dicd-001-signal-chain-troubleshooting"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-4ce6b297751881a594b946aa74296f2cb9846f0d0f96d6ee99f277f5599c63b4"
+          ]
+        ]
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "digital-interaction",
+        "coursePackVersion": "1",
+        "question": "OSC In 刚收到过数据，后来通道一直是零，接收端哪个开关值得先查？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-digital-interaction-p4b",
+        "familyId": "t43-family-digital-interaction-osc-in-active-receiver",
+        "clusterId": "t43-cluster-digital-interaction-osc-in-active-receiver",
+        "pairId": null,
+        "pairRole": null,
+        "pairDeltaKind": null,
+        "stratum": "ANSWERABLE_IN_PACK_HARD_DISTRACTOR",
+        "expectation": "ANSWERABLE",
+        "reasonClass": "CORPUS_SUPPORTED",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [
+          "touchdesigner-osc-troubleshooting"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-90e878109a05b2d27be073a58e7651a2c8578d08fd96a6d8a8685302b5fc73c3"
+          ]
+        ]
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "digital-interaction",
+        "coursePackVersion": "1",
+        "question": "我在 TouchDesigner 里分不清 CHOP 和 TOP，声音数值控制画面时两类算子各管哪种数据？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-digital-interaction-p5a",
+        "familyId": "t43-family-digital-interaction-chop-top-professional-ratio",
+        "clusterId": "t43-cluster-digital-interaction-chop-top-professional-ratio",
+        "pairId": "t43-pair-digital-interaction-05",
+        "pairRole": "ANSWERABLE",
+        "pairDeltaKind": "SUPPORTED_CONCEPT_TO_CORPUS_GAP",
+        "stratum": "ANSWERABLE_CROSS_PACK_TERM_OVERLAP",
+        "expectation": "ANSWERABLE",
+        "reasonClass": "CORPUS_SUPPORTED",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [
+          "touchdesigner-foundations"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-7e7715684768d8ece3a8a6c817aabc1c81f43def27b84bcc30184b41992d6070"
+          ],
+          [
+            "node-d97bcce4a63d50642c91e02c64b92be29fd44dc16b78c6f9c4657be364c2c417"
+          ]
+        ]
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "digital-interaction",
+        "coursePackVersion": "1",
+        "question": "GLSL TOP 编译失败时，为什么应先看 Info DAT 的第一条错误，而不是一口气改完整段代码？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-digital-interaction-p5b",
+        "familyId": "t43-family-digital-interaction-glsl-diagnosis-auto-deployment",
+        "clusterId": "t43-cluster-digital-interaction-glsl-diagnosis-auto-deployment",
+        "pairId": "t43-pair-digital-interaction-06",
+        "pairRole": "ANSWERABLE",
+        "pairDeltaKind": "SUPPORTED_TO_UNSUPPORTED_OPERATION_VARIANT",
+        "stratum": "ANSWERABLE_CROSS_PACK_TERM_OVERLAP",
+        "expectation": "ANSWERABLE",
+        "reasonClass": "CORPUS_SUPPORTED",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [
+          "td-glsl-top"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-0da16c9324e0f38bf6ac640c46d587b3218f01b67033d51ae17e3583fbd8d650"
+          ]
+        ]
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "digital-interaction",
+        "coursePackVersion": "1",
+        "question": "请替我把参赛交互演示自动拍摄、剪辑并上传提交。"
+      },
+      "scoring": {
+        "caseId": "t43-dev-digital-interaction-n1a",
+        "familyId": "t43-family-digital-interaction-competition-evidence-auto-submission",
+        "clusterId": "t43-cluster-digital-interaction-competition-evidence-auto-submission",
+        "pairId": "t43-pair-digital-interaction-01",
+        "pairRole": "NO_ANSWER",
+        "pairDeltaKind": "SUPPORTED_TO_UNSUPPORTED_OPERATION",
+        "stratum": "NO_ANSWER_ENTITY_OPERATION_GAP",
+        "expectation": "NO_ANSWER",
+        "reasonClass": "UNSUPPORTED_OPERATION",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [],
+        "requiredEvidenceGroups": []
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "digital-interaction",
+        "coursePackVersion": "1",
+        "question": "看到 Info DAT 的第一条错误后，请直接替我生成完整着色器，修好当前工程并部署。"
+      },
+      "scoring": {
+        "caseId": "t43-dev-digital-interaction-n1b",
+        "familyId": "t43-family-digital-interaction-glsl-diagnosis-auto-deployment",
+        "clusterId": "t43-cluster-digital-interaction-glsl-diagnosis-auto-deployment",
+        "pairId": "t43-pair-digital-interaction-06",
+        "pairRole": "NO_ANSWER",
+        "pairDeltaKind": "SUPPORTED_TO_UNSUPPORTED_OPERATION_VARIANT",
+        "stratum": "NO_ANSWER_ENTITY_OPERATION_GAP",
+        "expectation": "NO_ANSWER",
+        "reasonClass": "UNSUPPORTED_OPERATION",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [],
+        "requiredEvidenceGroups": []
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "digital-interaction",
+        "coursePackVersion": "1",
+        "question": "现场方案资料都没给，文化意图、输入、映射和反馈这几段各该填什么精确内容？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-digital-interaction-n2a",
+        "familyId": "t43-family-digital-interaction-six-part-interaction-professional-ratio",
+        "clusterId": "t43-cluster-digital-interaction-six-part-interaction-professional-ratio",
+        "pairId": "t43-pair-digital-interaction-02",
+        "pairRole": "NO_ANSWER",
+        "pairDeltaKind": "SUPPORTED_TO_UNSUPPORTED_DETAIL",
+        "stratum": "NO_ANSWER_PARAMETER_CODE_STEP_GAP",
+        "expectation": "NO_ANSWER",
+        "reasonClass": "UNSUPPORTED_DETAIL",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [],
+        "requiredEvidenceGroups": []
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "digital-interaction",
+        "coursePackVersion": "1",
+        "question": "我没上传这个 .toe 文件，你能直接告诉我 OSC In 节点现在在哪个网络路径吗？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-digital-interaction-n2b",
+        "familyId": "t43-family-digital-interaction-unseen-toe-osc-path",
+        "clusterId": "t43-cluster-digital-interaction-unseen-toe-osc-path",
+        "pairId": null,
+        "pairRole": null,
+        "pairDeltaKind": null,
+        "stratum": "NO_ANSWER_PARAMETER_CODE_STEP_GAP",
+        "expectation": "NO_ANSWER",
+        "reasonClass": "UNSUPPORTED_DETAIL",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [],
+        "requiredEvidenceGroups": []
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "digital-interaction",
+        "coursePackVersion": "1",
+        "question": "请实时读取展厅此刻的麦克风强度，并告诉我声音输入是否已经生效。"
+      },
+      "scoring": {
+        "caseId": "t43-dev-digital-interaction-n3a",
+        "familyId": "t43-family-digital-interaction-controlled-input-transfer-live-state",
+        "clusterId": "t43-cluster-digital-interaction-controlled-input-transfer-live-state",
+        "pairId": "t43-pair-digital-interaction-03",
+        "pairRole": "NO_ANSWER",
+        "pairDeltaKind": "STATIC_GUIDANCE_TO_LIVE_EXTERNAL_FACT",
+        "stratum": "NO_ANSWER_LIVE_EXTERNAL_FACT",
+        "expectation": "NO_ANSWER",
+        "reasonClass": "EXTERNAL_VERIFICATION_REQUIRED",
+        "executionClass": "PRE_RETRIEVAL_EMPTY",
+        "targetObjectIds": [],
+        "requiredEvidenceGroups": []
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "digital-interaction",
+        "coursePackVersion": "1",
+        "question": "DigiShow 官网今天提供的最新版安装包版本号是多少，下载页是哪天更新的？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-digital-interaction-n3b",
+        "familyId": "t43-family-digital-interaction-live-digishow-release-download",
+        "clusterId": "t43-cluster-digital-interaction-live-digishow-release-download",
+        "pairId": null,
+        "pairRole": null,
+        "pairDeltaKind": null,
+        "stratum": "NO_ANSWER_LIVE_EXTERNAL_FACT",
+        "expectation": "NO_ANSWER",
+        "reasonClass": "EXTERNAL_VERIFICATION_REQUIRED",
+        "executionClass": "PRE_RETRIEVAL_EMPTY",
+        "targetObjectIds": [],
+        "requiredEvidenceGroups": []
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "digital-interaction",
+        "coursePackVersion": "1",
+        "question": "同一张 DigiShow 到 TouchDesigner 的故障截图，拿到版式课做数字拼贴分析时，材料、关系、媒介和观者四列该怎么填？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-digital-interaction-n4a",
+        "familyId": "t43-family-digital-interaction-signal-chain-fault-record-cross-pack",
+        "clusterId": "t43-cluster-digital-interaction-signal-chain-fault-record-cross-pack",
+        "pairId": "t43-pair-digital-interaction-04",
+        "pairRole": "NO_ANSWER",
+        "pairDeltaKind": "IN_PACK_SUPPORT_TO_OTHER_PACK_SCOPE",
+        "stratum": "NO_ANSWER_OTHER_PACK_NEIGHBOR",
+        "expectation": "NO_ANSWER",
+        "reasonClass": "OUT_OF_PACK_SCOPE",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [],
+        "requiredEvidenceGroups": []
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "digital-interaction",
+        "coursePackVersion": "1",
+        "question": "给这个互动装置配一本八页说明册时，页码和书脊应该怎么排？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-digital-interaction-n4b",
+        "familyId": "t43-family-digital-interaction-interactive-installation-booklet",
+        "clusterId": "t43-cluster-digital-interaction-interactive-installation-booklet",
+        "pairId": null,
+        "pairRole": null,
+        "pairDeltaKind": null,
+        "stratum": "NO_ANSWER_OTHER_PACK_NEIGHBOR",
+        "expectation": "NO_ANSWER",
+        "reasonClass": "OUT_OF_PACK_SCOPE",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [],
+        "requiredEvidenceGroups": []
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "digital-interaction",
+        "coursePackVersion": "1",
+        "question": "CHOP 和 TOP 的节点各占多大比例，才算一个专业的互动工程？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-digital-interaction-n5a",
+        "familyId": "t43-family-digital-interaction-chop-top-professional-ratio",
+        "clusterId": "t43-cluster-digital-interaction-chop-top-professional-ratio",
+        "pairId": "t43-pair-digital-interaction-05",
+        "pairRole": "NO_ANSWER",
+        "pairDeltaKind": "SUPPORTED_CONCEPT_TO_CORPUS_GAP",
+        "stratum": "NO_ANSWER_CORPUS_GAP_LEXICAL_OVERLAP",
+        "expectation": "NO_ANSWER",
+        "reasonClass": "CORPUS_CONTENT_GAP",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [],
+        "requiredEvidenceGroups": []
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "digital-interaction",
+        "coursePackVersion": "1",
+        "question": "Filter Width 有没有一个对所有传感器都最跟手又不抖的固定值？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-digital-interaction-n5b",
+        "familyId": "t43-family-digital-interaction-universal-filter-width",
+        "clusterId": "t43-cluster-digital-interaction-universal-filter-width",
+        "pairId": null,
+        "pairRole": null,
+        "pairDeltaKind": null,
+        "stratum": "NO_ANSWER_CORPUS_GAP_LEXICAL_OVERLAP",
+        "expectation": "NO_ANSWER",
+        "reasonClass": "CORPUS_CONTENT_GAP",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [],
+        "requiredEvidenceGroups": []
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "book-design",
+        "coursePackVersion": "1",
+        "question": "InDesign 里的 Kerning 和 Tracking 数值为什么会跟字号一起变化，它们用的是什么相对单位？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-book-p1a",
+        "familyId": "t43-family-book-relative-kerning-unit-auto-edit",
+        "clusterId": "t43-cluster-book-relative-kerning-unit-auto-edit",
+        "pairId": "t43-pair-book-01",
+        "pairRole": "ANSWERABLE",
+        "pairDeltaKind": "SUPPORTED_TO_UNSUPPORTED_OPERATION",
+        "stratum": "ANSWERABLE_SINGLE_PRIMARY_DIRECT",
+        "expectation": "ANSWERABLE",
+        "reasonClass": "CORPUS_SUPPORTED",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [
+          "book-kerning-tracking"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-b1a5c87d13a1fd6f28a869380508770783f6d6dea49164a82fcc19890fee8d91"
+          ]
+        ]
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "book-design",
+        "coursePackVersion": "1",
+        "question": "出血区旁边的 Slug 是拿来放什么，为什么成品裁切后不会保留？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-book-p1b",
+        "familyId": "t43-family-book-slug-purpose",
+        "clusterId": "t43-cluster-book-slug-purpose",
+        "pairId": null,
+        "pairRole": null,
+        "pairDeltaKind": null,
+        "stratum": "ANSWERABLE_SINGLE_PRIMARY_DIRECT",
+        "expectation": "ANSWERABLE",
+        "reasonClass": "CORPUS_SUPPORTED",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [
+          "book-bleed-output"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-2fa5f4ef876be38a49ad0ddfc12bbc93fe2a7dd444dcc5f3a5fc314ff8c4db4e"
+          ]
+        ]
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "book-design",
+        "coursePackVersion": "1",
+        "question": "纸张、装订和加工不能只列效果，我该怎样说明它们真的支持阅读、内容或耐用性？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-book-p2a",
+        "familyId": "t43-family-book-material-function-unseen-specification",
+        "clusterId": "t43-cluster-book-material-function-unseen-specification",
+        "pairId": "t43-pair-book-02",
+        "pairRole": "ANSWERABLE",
+        "pairDeltaKind": "SUPPORTED_TO_UNSUPPORTED_DETAIL",
+        "stratum": "ANSWERABLE_PARAPHRASE_ALIAS",
+        "expectation": "ANSWERABLE",
+        "reasonClass": "CORPUS_SUPPORTED",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [
+          "book-001-book-as-complete-system"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-3f4f667b597b1594df72929c766bf561f3b784bab29caa9e67d913372194227a"
+          ]
+        ]
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "book-design",
+        "coursePackVersion": "1",
+        "question": "八页小册子排完后，怎样用一个三十秒找信息任务检查页序，而不是只听自己解释？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-book-p2b",
+        "familyId": "t43-family-book-thirty-second-page-order-test",
+        "clusterId": "t43-cluster-book-thirty-second-page-order-test",
+        "pairId": null,
+        "pairRole": null,
+        "pairDeltaKind": null,
+        "stratum": "ANSWERABLE_PARAPHRASE_ALIAS",
+        "expectation": "ANSWERABLE",
+        "reasonClass": "CORPUS_SUPPORTED",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [
+          "information-hierarchy"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-7697a9a665271e3a99a8f43a7806f2f3530ead12c73440150e88b74b4a6612a1"
+          ]
+        ]
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "book-design",
+        "coursePackVersion": "1",
+        "question": "调 Document Grid 的主网格和细分时，怎样比较前后阅读顺序，避免只是吸附得更密？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-book-p3a",
+        "familyId": "t43-family-book-document-grid-live-menu",
+        "clusterId": "t43-cluster-book-document-grid-live-menu",
+        "pairId": "t43-pair-book-03",
+        "pairRole": "ANSWERABLE",
+        "pairDeltaKind": "STATIC_GUIDANCE_TO_LIVE_EXTERNAL_FACT",
+        "stratum": "ANSWERABLE_MULTI_PRIMARY_COMPOSITION",
+        "expectation": "ANSWERABLE",
+        "reasonClass": "CORPUS_SUPPORTED",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [
+          "book-document-grid"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-c36ebe5c1afc75e2028d0c5c09f6dc5cb9cf7591d2ba57ea469958c4b448b383"
+          ],
+          [
+            "node-59c28dabc2e12350f781e31bc65690c00187a39a7c66ef1971a73839033b4f1c"
+          ]
+        ]
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "book-design",
+        "coursePackVersion": "1",
+        "question": "我改了 Layout Grid 的字号和行数，还要不要检查页面尺寸能不能被网格单元整除，以及 Margins and Columns 会不会跟着变？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-book-p3b",
+        "familyId": "t43-family-book-layout-grid-divisibility-and-coupling",
+        "clusterId": "t43-cluster-book-layout-grid-divisibility-and-coupling",
+        "pairId": null,
+        "pairRole": null,
+        "pairDeltaKind": null,
+        "stratum": "ANSWERABLE_MULTI_PRIMARY_COMPOSITION",
+        "expectation": "ANSWERABLE",
+        "reasonClass": "CORPUS_SUPPORTED",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [
+          "book-layout-grid"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-7b5839b47288cb8abc3ab40bc4f778efb8614eae89d1ec754c58ed614f08ae16"
+          ],
+          [
+            "node-ae672ab8a93a9a46c92ca6e9274b15425bddfbd4952beafad82be54abd2a8c80"
+          ]
+        ]
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "book-design",
+        "coursePackVersion": "1",
+        "question": "版面里的链接图预览还在，为什么导出时仍要能找到独立的原文件？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-book-p4a",
+        "familyId": "t43-family-book-linked-source-to-live-texture",
+        "clusterId": "t43-cluster-book-linked-source-to-live-texture",
+        "pairId": "t43-pair-book-04",
+        "pairRole": "ANSWERABLE",
+        "pairDeltaKind": "IN_PACK_SUPPORT_TO_OTHER_PACK_SCOPE",
+        "stratum": "ANSWERABLE_IN_PACK_HARD_DISTRACTOR",
+        "expectation": "ANSWERABLE",
+        "reasonClass": "CORPUS_SUPPORTED",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [
+          "book-linked-assets"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-a0740bf707218a8e1fc771cf1723e185ea4b81eaa526bf11418beee06195be5a"
+          ]
+        ]
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "book-design",
+        "coursePackVersion": "1",
+        "question": "导出商业印刷 PDF 前，为什么要先留好出血和辅助信息空间，再决定放哪些标记？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-book-p4b",
+        "familyId": "t43-family-book-printer-mark-space-order",
+        "clusterId": "t43-cluster-book-printer-mark-space-order",
+        "pairId": null,
+        "pairRole": null,
+        "pairDeltaKind": null,
+        "stratum": "ANSWERABLE_IN_PACK_HARD_DISTRACTOR",
+        "expectation": "ANSWERABLE",
+        "reasonClass": "CORPUS_SUPPORTED",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [
+          "book-printer-marks"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-16e7dad079fd261f823849f5059eec9eb2dd9f7260835d85272a27e9026914d3"
+          ]
+        ]
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "book-design",
+        "coursePackVersion": "1",
+        "question": "我改了网格后觉得更顺，怎样保留只改一个变量的前后版，作为可复核证据？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-book-p5a",
+        "familyId": "t43-family-book-single-variable-layout-evidence",
+        "clusterId": "t43-cluster-book-single-variable-layout-evidence",
+        "pairId": "t43-pair-book-05",
+        "pairRole": "ANSWERABLE",
+        "pairDeltaKind": "SUPPORTED_CONCEPT_TO_CORPUS_GAP",
+        "stratum": "ANSWERABLE_CROSS_PACK_TERM_OVERLAP",
+        "expectation": "ANSWERABLE",
+        "reasonClass": "CORPUS_SUPPORTED",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [
+          "layout-evidence"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-33c1bd0340d0f68a3ade07a697e84dd5e2c57625a53bc0138fb3dcd776fcb7c8"
+          ]
+        ]
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "book-design",
+        "coursePackVersion": "1",
+        "question": "只有八页的编排练习，为什么还要先写清读者和阅读情境，再建立信息顺序？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-book-p5b",
+        "familyId": "t43-family-book-eight-page-boundary-auto-layout",
+        "clusterId": "t43-cluster-book-eight-page-boundary-auto-layout",
+        "pairId": "t43-pair-book-06",
+        "pairRole": "ANSWERABLE",
+        "pairDeltaKind": "SUPPORTED_TO_UNSUPPORTED_OPERATION_VARIANT",
+        "stratum": "ANSWERABLE_CROSS_PACK_TERM_OVERLAP",
+        "expectation": "ANSWERABLE",
+        "reasonClass": "CORPUS_SUPPORTED",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [
+          "book-design-principles"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-4bd21d11b1cb22e92d55325c04e05d27e321df5b9766f945c42e217a0662b65b"
+          ]
+        ]
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "book-design",
+        "coursePackVersion": "1",
+        "question": "请直接替我打开未上传的 InDesign 文件，把全书字偶距自动修完并导出 PDF。"
+      },
+      "scoring": {
+        "caseId": "t43-dev-book-n1a",
+        "familyId": "t43-family-book-relative-kerning-unit-auto-edit",
+        "clusterId": "t43-cluster-book-relative-kerning-unit-auto-edit",
+        "pairId": "t43-pair-book-01",
+        "pairRole": "NO_ANSWER",
+        "pairDeltaKind": "SUPPORTED_TO_UNSUPPORTED_OPERATION",
+        "stratum": "NO_ANSWER_ENTITY_OPERATION_GAP",
+        "expectation": "NO_ANSWER",
+        "reasonClass": "UNSUPPORTED_OPERATION",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [],
+        "requiredEvidenceGroups": []
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "book-design",
+        "coursePackVersion": "1",
+        "question": "请根据八页文案自动生成整本可印刷版式、配图并交付源文件。"
+      },
+      "scoring": {
+        "caseId": "t43-dev-book-n1b",
+        "familyId": "t43-family-book-eight-page-boundary-auto-layout",
+        "clusterId": "t43-cluster-book-eight-page-boundary-auto-layout",
+        "pairId": "t43-pair-book-06",
+        "pairRole": "NO_ANSWER",
+        "pairDeltaKind": "SUPPORTED_TO_UNSUPPORTED_OPERATION_VARIANT",
+        "stratum": "NO_ANSWER_ENTITY_OPERATION_GAP",
+        "expectation": "NO_ANSWER",
+        "reasonClass": "UNSUPPORTED_OPERATION",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [],
+        "requiredEvidenceGroups": []
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "book-design",
+        "coursePackVersion": "1",
+        "question": "我连封面都没提供，你能准确说出这本书用了什么纸、什么装订和什么加工吗？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-book-n2a",
+        "familyId": "t43-family-book-material-function-unseen-specification",
+        "clusterId": "t43-cluster-book-material-function-unseen-specification",
+        "pairId": "t43-pair-book-02",
+        "pairRole": "NO_ANSWER",
+        "pairDeltaKind": "SUPPORTED_TO_UNSUPPORTED_DETAIL",
+        "stratum": "NO_ANSWER_PARAMETER_CODE_STEP_GAP",
+        "expectation": "NO_ANSWER",
+        "reasonClass": "UNSUPPORTED_DETAIL",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [],
+        "requiredEvidenceGroups": []
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "book-design",
+        "coursePackVersion": "1",
+        "question": "印厂要求没给，裁切标记偏移和色条位置各填多少毫米？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-book-n2b",
+        "familyId": "t43-family-book-unknown-printer-mark-offset",
+        "clusterId": "t43-cluster-book-unknown-printer-mark-offset",
+        "pairId": null,
+        "pairRole": null,
+        "pairDeltaKind": null,
+        "stratum": "NO_ANSWER_PARAMETER_CODE_STEP_GAP",
+        "expectation": "NO_ANSWER",
+        "reasonClass": "UNSUPPORTED_DETAIL",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [],
+        "requiredEvidenceGroups": []
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "book-design",
+        "coursePackVersion": "1",
+        "question": "请实时查一下，Adobe 最新版 InDesign 的 Document Grid 菜单位置今天有没有变化。"
+      },
+      "scoring": {
+        "caseId": "t43-dev-book-n3a",
+        "familyId": "t43-family-book-document-grid-live-menu",
+        "clusterId": "t43-cluster-book-document-grid-live-menu",
+        "pairId": "t43-pair-book-03",
+        "pairRole": "NO_ANSWER",
+        "pairDeltaKind": "STATIC_GUIDANCE_TO_LIVE_EXTERNAL_FACT",
+        "stratum": "NO_ANSWER_LIVE_EXTERNAL_FACT",
+        "expectation": "NO_ANSWER",
+        "reasonClass": "EXTERNAL_VERIFICATION_REQUIRED",
+        "executionClass": "PRE_RETRIEVAL_EMPTY",
+        "targetObjectIds": [],
+        "requiredEvidenceGroups": []
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "book-design",
+        "coursePackVersion": "1",
+        "question": "请实时查国家图书馆当前目录：《平面设计中的网格系统》最新收录的是哪个版本，索书号是什么？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-book-n3b",
+        "familyId": "t43-family-book-live-library-grid-systems-edition",
+        "clusterId": "t43-cluster-book-live-library-grid-systems-edition",
+        "pairId": null,
+        "pairRole": null,
+        "pairDeltaKind": null,
+        "stratum": "NO_ANSWER_LIVE_EXTERNAL_FACT",
+        "expectation": "NO_ANSWER",
+        "reasonClass": "EXTERNAL_VERIFICATION_REQUIRED",
+        "executionClass": "PRE_RETRIEVAL_EMPTY",
+        "targetObjectIds": [],
+        "requiredEvidenceGroups": []
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "book-design",
+        "coursePackVersion": "1",
+        "question": "把这张 InDesign 链接图接进 TouchDesigner 做实时纹理更新，节点该怎么连？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-book-n4a",
+        "familyId": "t43-family-book-linked-source-to-live-texture",
+        "clusterId": "t43-cluster-book-linked-source-to-live-texture",
+        "pairId": "t43-pair-book-04",
+        "pairRole": "NO_ANSWER",
+        "pairDeltaKind": "IN_PACK_SUPPORT_TO_OTHER_PACK_SCOPE",
+        "stratum": "NO_ANSWER_OTHER_PACK_NEIGHBOR",
+        "expectation": "NO_ANSWER",
+        "reasonClass": "OUT_OF_PACK_SCOPE",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [],
+        "requiredEvidenceGroups": []
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "book-design",
+        "coursePackVersion": "1",
+        "question": "我想研究这本书里的纸张肌理怎样从拓印变成数字模拟，这段变化该按哪四层证据来整理？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-book-n4b",
+        "familyId": "t43-family-book-tactile-texture-history-neighbor",
+        "clusterId": "t43-cluster-book-tactile-texture-history-neighbor",
+        "pairId": null,
+        "pairRole": null,
+        "pairDeltaKind": null,
+        "stratum": "NO_ANSWER_OTHER_PACK_NEIGHBOR",
+        "expectation": "NO_ANSWER",
+        "reasonClass": "OUT_OF_PACK_SCOPE",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [],
+        "requiredEvidenceGroups": []
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "book-design",
+        "coursePackVersion": "1",
+        "question": "同样这组只改一个变量的前后版，能不能只看截图就定出适用于所有读者的固定阅读秒数合格线？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-book-n5a",
+        "familyId": "t43-family-book-single-variable-layout-evidence",
+        "clusterId": "t43-cluster-book-single-variable-layout-evidence",
+        "pairId": "t43-pair-book-05",
+        "pairRole": "NO_ANSWER",
+        "pairDeltaKind": "SUPPORTED_CONCEPT_TO_CORPUS_GAP",
+        "stratum": "NO_ANSWER_CORPUS_GAP_LEXICAL_OVERLAP",
+        "expectation": "NO_ANSWER",
+        "reasonClass": "CORPUS_CONTENT_GAP",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [],
+        "requiredEvidenceGroups": []
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "book-design",
+        "coursePackVersion": "1",
+        "question": "Tracking 统一设成多少就能让所有中文正文都达到最佳阅读节奏？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-book-n5b",
+        "familyId": "t43-family-book-universal-chinese-tracking",
+        "clusterId": "t43-cluster-book-universal-chinese-tracking",
+        "pairId": null,
+        "pairRole": null,
+        "pairDeltaKind": null,
+        "stratum": "NO_ANSWER_CORPUS_GAP_LEXICAL_OVERLAP",
+        "expectation": "NO_ANSWER",
+        "reasonClass": "CORPUS_CONTENT_GAP",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [],
+        "requiredEvidenceGroups": []
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "layout-design",
+        "coursePackVersion": "1",
+        "question": "每组信息单看都对齐了，可读起来视线还是一直跳。我该在图上找哪些本应共享却没有共享的对齐线？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-layout-p1a",
+        "familyId": "t43-family-layout-alignment-jump-auto-reflow",
+        "clusterId": "t43-cluster-layout-alignment-jump-auto-reflow",
+        "pairId": "t43-pair-layout-01",
+        "pairRole": "ANSWERABLE",
+        "pairDeltaKind": "SUPPORTED_TO_UNSUPPORTED_OPERATION",
+        "stratum": "ANSWERABLE_SINGLE_PRIMARY_DIRECT",
+        "expectation": "ANSWERABLE",
+        "reasonClass": "CORPUS_SUPPORTED",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [
+          "layout-001-grid-and-hierarchy"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-02fbbd4d25bbe2eeb47d2d0e7a72e154f6c2c9adcf23d82a71385898957fea74"
+          ]
+        ]
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "layout-design",
+        "coursePackVersion": "1",
+        "question": "标题里只有几个字符节奏不稳，我是不是该给整段统一加字距，还是先标出局部？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-layout-p1b",
+        "familyId": "t43-family-layout-local-character-spacing",
+        "clusterId": "t43-cluster-layout-local-character-spacing",
+        "pairId": null,
+        "pairRole": null,
+        "pairDeltaKind": null,
+        "stratum": "ANSWERABLE_SINGLE_PRIMARY_DIRECT",
+        "expectation": "ANSWERABLE",
+        "reasonClass": "CORPUS_SUPPORTED",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [
+          "layout-043-refine-spacing-weight-and-text-hierarchy"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-3db878dd66471da99d4ba61e44bd0b48c77d6a983c8b3135c317376a1813370b"
+          ]
+        ]
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "layout-design",
+        "coursePackVersion": "1",
+        "question": "比较手工拼贴和数字拼贴时，我该怎样用材料、关系、媒介和观者四列来记，而不是只比软件？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-layout-p2a",
+        "familyId": "t43-family-layout-collage-four-column-layer-values",
+        "clusterId": "t43-cluster-layout-collage-four-column-layer-values",
+        "pairId": "t43-pair-layout-02",
+        "pairRole": "ANSWERABLE",
+        "pairDeltaKind": "SUPPORTED_TO_UNSUPPORTED_DETAIL",
+        "stratum": "ANSWERABLE_PARAPHRASE_ALIAS",
+        "expectation": "ANSWERABLE",
+        "reasonClass": "CORPUS_SUPPORTED",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [
+          "layout-015-collage-style-history"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-b7c859ae9da51576eafd4b96dc2ff62ba2f18f670797dd0b56d5da930223b8d4"
+          ]
+        ]
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "layout-design",
+        "coursePackVersion": "1",
+        "question": "同一张纸的质感想比较拓印、扫描和数字笔刷，应该观察哪些边缘、重复和偶然差异？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-layout-p2b",
+        "familyId": "t43-family-layout-three-method-texture-comparison",
+        "clusterId": "t43-cluster-layout-three-method-texture-comparison",
+        "pairId": null,
+        "pairRole": null,
+        "pairDeltaKind": null,
+        "stratum": "ANSWERABLE_PARAPHRASE_ALIAS",
+        "expectation": "ANSWERABLE",
+        "reasonClass": "CORPUS_SUPPORTED",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [
+          "layout-023-tactile-texture-style-history"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-82d5ef481d5bb139219580ebd5e9b5982b33b99fcd48fb185bfe4ebd087ab790"
+          ]
+        ]
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "layout-design",
+        "coursePackVersion": "1",
+        "question": "我在写国际主义设计史。怎样把四个待核验阶段放进一张表，分开写形式变化、出处和还没证实的问题？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-layout-p3a",
+        "familyId": "t43-family-layout-international-style-live-share",
+        "clusterId": "t43-cluster-layout-international-style-live-share",
+        "pairId": "t43-pair-layout-03",
+        "pairRole": "ANSWERABLE",
+        "pairDeltaKind": "STATIC_GUIDANCE_TO_LIVE_EXTERNAL_FACT",
+        "stratum": "ANSWERABLE_MULTI_PRIMARY_COMPOSITION",
+        "expectation": "ANSWERABLE",
+        "reasonClass": "CORPUS_SUPPORTED",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [
+          "layout-011-international-style-history"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-ec040f68295c1e61d32c6edc7a7aa08940d3f54c7b25c805710f6fccb6708229"
+          ],
+          [
+            "node-926d968079b49abc16dfc3b31f3dfebeb219a69eecffe58bad296b727e162ce8"
+          ]
+        ]
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "layout-design",
+        "coursePackVersion": "1",
+        "question": "我想补网格知识，选设计书时怎样先按学习问题筛，再核版本、版权页和目录？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-layout-p3b",
+        "familyId": "t43-family-layout-question-led-book-selection",
+        "clusterId": "t43-cluster-layout-question-led-book-selection",
+        "pairId": null,
+        "pairRole": null,
+        "pairDeltaKind": null,
+        "stratum": "ANSWERABLE_MULTI_PRIMARY_COMPOSITION",
+        "expectation": "ANSWERABLE",
+        "reasonClass": "CORPUS_SUPPORTED",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [
+          "layout-050-select-design-books-by-learning-question"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-4a80ed7ffaf366945bb557aa83a59057d6d37926177733c47d770d09161f8dd3"
+          ],
+          [
+            "node-ac2d2b8dc73f4f3315bf855e0798ce025c1dc51f093126c43e0a66f81c1fe691"
+          ]
+        ]
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "layout-design",
+        "coursePackVersion": "1",
+        "question": "拿音乐传单和数字海报比较酸性视觉时，先只看哪三项，才不会一上来就凭特效定风格？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-layout-p4a",
+        "familyId": "t43-family-layout-acid-poster-analysis-cross-pack",
+        "clusterId": "t43-cluster-layout-acid-poster-analysis-cross-pack",
+        "pairId": "t43-pair-layout-04",
+        "pairRole": "ANSWERABLE",
+        "pairDeltaKind": "IN_PACK_SUPPORT_TO_OTHER_PACK_SCOPE",
+        "stratum": "ANSWERABLE_IN_PACK_HARD_DISTRACTOR",
+        "expectation": "ANSWERABLE",
+        "reasonClass": "CORPUS_SUPPORTED",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [
+          "layout-013-acid-style-history"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-26e8c69be3970e5b46b2ebd478c3cd224a082c4fe21fb7401d0b6b886ff4f9d6"
+          ]
+        ]
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "layout-design",
+        "coursePackVersion": "1",
+        "question": "我在研究“新丑”，怎么按“日常原型—设计转译—保留功能”三步来拆，避免最后只剩一句“故意做丑”？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-layout-p4b",
+        "familyId": "t43-family-layout-new-ugly-three-stage-analysis",
+        "clusterId": "t43-cluster-layout-new-ugly-three-stage-analysis",
+        "pairId": null,
+        "pairRole": null,
+        "pairDeltaKind": null,
+        "stratum": "ANSWERABLE_IN_PACK_HARD_DISTRACTOR",
+        "expectation": "ANSWERABLE",
+        "reasonClass": "CORPUS_SUPPORTED",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [
+          "layout-017-new-ugly-style-history"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-67e20eed1d3b8c34c0904a93bcb9f698050a161eaee51c2adaeacedcb3c95d23"
+          ]
+        ]
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "layout-design",
+        "coursePackVersion": "1",
+        "question": "把传统元素用到当代版式时，怎样先提取结构关系，再用基本图形重画，而不是直接贴符号？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-layout-p5a",
+        "familyId": "t43-family-layout-neo-chinese-authenticity-formula",
+        "clusterId": "t43-cluster-layout-neo-chinese-authenticity-formula",
+        "pairId": "t43-pair-layout-05",
+        "pairRole": "ANSWERABLE",
+        "pairDeltaKind": "SUPPORTED_CONCEPT_TO_CORPUS_GAP",
+        "stratum": "ANSWERABLE_CROSS_PACK_TERM_OVERLAP",
+        "expectation": "ANSWERABLE",
+        "reasonClass": "CORPUS_SUPPORTED",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [
+          "layout-018-neo-chinese-style-fit"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-13e63975de445d6acea39affc40222101cd0c2755b499ab893c809c212e2898b"
+          ]
+        ]
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "layout-design",
+        "coursePackVersion": "1",
+        "question": "一款字体做标题很醒目，为什么不能直接拿去排长正文，还要另外测哪些阅读条件？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-layout-p5b",
+        "familyId": "t43-family-layout-display-type-auto-replacement",
+        "clusterId": "t43-cluster-layout-display-type-auto-replacement",
+        "pairId": "t43-pair-layout-06",
+        "pairRole": "ANSWERABLE",
+        "pairDeltaKind": "SUPPORTED_TO_UNSUPPORTED_OPERATION_VARIANT",
+        "stratum": "ANSWERABLE_CROSS_PACK_TERM_OVERLAP",
+        "expectation": "ANSWERABLE",
+        "reasonClass": "CORPUS_SUPPORTED",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [
+          "layout-032-select-type-for-audience-purpose-and-medium"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-0ff3eee9444eb616430f3c6af28959cd113838177c3781198ab6bf1e85b8ce48"
+          ]
+        ]
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "layout-design",
+        "coursePackVersion": "1",
+        "question": "请直接打开我没上传的版面，把所有对齐关系自动重排到不跳视线，并导出源文件。"
+      },
+      "scoring": {
+        "caseId": "t43-dev-layout-n1a",
+        "familyId": "t43-family-layout-alignment-jump-auto-reflow",
+        "clusterId": "t43-cluster-layout-alignment-jump-auto-reflow",
+        "pairId": "t43-pair-layout-01",
+        "pairRole": "NO_ANSWER",
+        "pairDeltaKind": "SUPPORTED_TO_UNSUPPORTED_OPERATION",
+        "stratum": "NO_ANSWER_ENTITY_OPERATION_GAP",
+        "expectation": "NO_ANSWER",
+        "reasonClass": "UNSUPPORTED_OPERATION",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [],
+        "requiredEvidenceGroups": []
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "layout-design",
+        "coursePackVersion": "1",
+        "question": "请扫描我电脑全部字体，自动删掉不适合正文的字库并替换整份文件。"
+      },
+      "scoring": {
+        "caseId": "t43-dev-layout-n1b",
+        "familyId": "t43-family-layout-display-type-auto-replacement",
+        "clusterId": "t43-cluster-layout-display-type-auto-replacement",
+        "pairId": "t43-pair-layout-06",
+        "pairRole": "NO_ANSWER",
+        "pairDeltaKind": "SUPPORTED_TO_UNSUPPORTED_OPERATION_VARIANT",
+        "stratum": "NO_ANSWER_ENTITY_OPERATION_GAP",
+        "expectation": "NO_ANSWER",
+        "reasonClass": "UNSUPPORTED_OPERATION",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [],
+        "requiredEvidenceGroups": []
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "layout-design",
+        "coursePackVersion": "1",
+        "question": "要继续做这组手工与数字拼贴对照，可我没提供图层文件。你能直接说出数字版每个蒙版和图层的准确不透明度吗？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-layout-n2a",
+        "familyId": "t43-family-layout-collage-four-column-layer-values",
+        "clusterId": "t43-cluster-layout-collage-four-column-layer-values",
+        "pairId": "t43-pair-layout-02",
+        "pairRole": "NO_ANSWER",
+        "pairDeltaKind": "SUPPORTED_TO_UNSUPPORTED_DETAIL",
+        "stratum": "NO_ANSWER_PARAMETER_CODE_STEP_GAP",
+        "expectation": "NO_ANSWER",
+        "reasonClass": "UNSUPPORTED_DETAIL",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [],
+        "requiredEvidenceGroups": []
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "layout-design",
+        "coursePackVersion": "1",
+        "question": "字体、字号和语言都没说，这段标题字距到底应该填多少？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-layout-n2b",
+        "familyId": "t43-family-layout-unknown-title-tracking-value",
+        "clusterId": "t43-cluster-layout-unknown-title-tracking-value",
+        "pairId": null,
+        "pairRole": null,
+        "pairDeltaKind": null,
+        "stratum": "NO_ANSWER_PARAMETER_CODE_STEP_GAP",
+        "expectation": "NO_ANSWER",
+        "reasonClass": "UNSUPPORTED_DETAIL",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [],
+        "requiredEvidenceGroups": []
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "layout-design",
+        "coursePackVersion": "1",
+        "question": "请实时统计本月国际主义风格在全球设计平台的使用占比和排名。"
+      },
+      "scoring": {
+        "caseId": "t43-dev-layout-n3a",
+        "familyId": "t43-family-layout-international-style-live-share",
+        "clusterId": "t43-cluster-layout-international-style-live-share",
+        "pairId": "t43-pair-layout-03",
+        "pairRole": "NO_ANSWER",
+        "pairDeltaKind": "STATIC_GUIDANCE_TO_LIVE_EXTERNAL_FACT",
+        "stratum": "NO_ANSWER_LIVE_EXTERNAL_FACT",
+        "expectation": "NO_ANSWER",
+        "reasonClass": "EXTERNAL_VERIFICATION_REQUIRED",
+        "executionClass": "PRE_RETRIEVAL_EMPTY",
+        "targetObjectIds": [],
+        "requiredEvidenceGroups": []
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "layout-design",
+        "coursePackVersion": "1",
+        "question": "请实时查这个月三家设计媒体公布的数字拼贴热度榜，并告诉我第一名。"
+      },
+      "scoring": {
+        "caseId": "t43-dev-layout-n3b",
+        "familyId": "t43-family-layout-live-collage-trend-ranking",
+        "clusterId": "t43-cluster-layout-live-collage-trend-ranking",
+        "pairId": null,
+        "pairRole": null,
+        "pairDeltaKind": null,
+        "stratum": "NO_ANSWER_LIVE_EXTERNAL_FACT",
+        "expectation": "NO_ANSWER",
+        "reasonClass": "EXTERNAL_VERIFICATION_REQUIRED",
+        "executionClass": "PRE_RETRIEVAL_EMPTY",
+        "targetObjectIds": [],
+        "requiredEvidenceGroups": []
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "layout-design",
+        "coursePackVersion": "1",
+        "question": "同一张酸性海报要改成书籍内页时，InDesign 里的 Kerning 数值为什么会随字号变化，用的是什么相对单位？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-layout-n4a",
+        "familyId": "t43-family-layout-acid-poster-analysis-cross-pack",
+        "clusterId": "t43-cluster-layout-acid-poster-analysis-cross-pack",
+        "pairId": "t43-pair-layout-04",
+        "pairRole": "NO_ANSWER",
+        "pairDeltaKind": "IN_PACK_SUPPORT_TO_OTHER_PACK_SCOPE",
+        "stratum": "NO_ANSWER_OTHER_PACK_NEIGHBOR",
+        "expectation": "NO_ANSWER",
+        "reasonClass": "OUT_OF_PACK_SCOPE",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [],
+        "requiredEvidenceGroups": []
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "layout-design",
+        "coursePackVersion": "1",
+        "question": "这张海报要装订成书，Slug 区应该放哪些作业说明和色条？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-layout-n4b",
+        "familyId": "t43-family-layout-poster-to-book-slug",
+        "clusterId": "t43-cluster-layout-poster-to-book-slug",
+        "pairId": null,
+        "pairRole": null,
+        "pairDeltaKind": null,
+        "stratum": "NO_ANSWER_OTHER_PACK_NEIGHBOR",
+        "expectation": "NO_ANSWER",
+        "reasonClass": "OUT_OF_PACK_SCOPE",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [],
+        "requiredEvidenceGroups": []
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "layout-design",
+        "coursePackVersion": "1",
+        "question": "对这个按结构关系重画的新中式小样，能不能用一条固定公式自动判定它的“文化真实性”？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-layout-n5a",
+        "familyId": "t43-family-layout-neo-chinese-authenticity-formula",
+        "clusterId": "t43-cluster-layout-neo-chinese-authenticity-formula",
+        "pairId": "t43-pair-layout-05",
+        "pairRole": "NO_ANSWER",
+        "pairDeltaKind": "SUPPORTED_CONCEPT_TO_CORPUS_GAP",
+        "stratum": "NO_ANSWER_CORPUS_GAP_LEXICAL_OVERLAP",
+        "expectation": "NO_ANSWER",
+        "reasonClass": "CORPUS_CONTENT_GAP",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [],
+        "requiredEvidenceGroups": []
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "layout-design",
+        "coursePackVersion": "1",
+        "question": "只看到粗糙纸纹，能不能确定所有读者都会产生焦虑，并给出统一心理结论？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-layout-n5b",
+        "familyId": "t43-family-layout-texture-universal-emotion",
+        "clusterId": "t43-cluster-layout-texture-universal-emotion",
+        "pairId": null,
+        "pairRole": null,
+        "pairDeltaKind": null,
+        "stratum": "NO_ANSWER_CORPUS_GAP_LEXICAL_OVERLAP",
+        "expectation": "NO_ANSWER",
+        "reasonClass": "CORPUS_CONTENT_GAP",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [],
+        "requiredEvidenceGroups": []
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "brand-vi-design",
+        "coursePackVersion": "1",
+        "question": "只把品牌名换成细无衬线字，就能直接证明它更高端、更现代吗？还缺什么验证？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-brand-vi-p1a",
+        "familyId": "t43-family-brand-vi-pure-type-status-claim-auto-redesign",
+        "clusterId": "t43-cluster-brand-vi-pure-type-status-claim-auto-redesign",
+        "pairId": "t43-pair-brand-vi-01",
+        "pairRole": "ANSWERABLE",
+        "pairDeltaKind": "SUPPORTED_TO_UNSUPPORTED_OPERATION",
+        "stratum": "ANSWERABLE_SINGLE_PRIMARY_DIRECT",
+        "expectation": "ANSWERABLE",
+        "reasonClass": "CORPUS_SUPPORTED",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [
+          "brandvi-001-assess-wordmark-fit"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-bf0161b9d74485b764f1a213badacc848d5d069738ec7fb5f0321bd76ef06f51"
+          ]
+        ]
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "brand-vi-design",
+        "coursePackVersion": "1",
+        "question": "把配色和产品图都拿掉以后，我该看字标本身还留下哪些可以辨认的特征？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-brand-vi-p1b",
+        "familyId": "t43-family-brand-vi-remove-nonwordmark-cues",
+        "clusterId": "t43-cluster-brand-vi-remove-nonwordmark-cues",
+        "pairId": null,
+        "pairRole": null,
+        "pairDeltaKind": null,
+        "stratum": "ANSWERABLE_SINGLE_PRIMARY_DIRECT",
+        "expectation": "ANSWERABLE",
+        "reasonClass": "CORPUS_SUPPORTED",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [
+          "brandvi-002-test-wordmark-tone-and-audience"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-07b85210e0070fe4e279088598b05374d884edcc79607884ab7b34a9f51c8ece"
+          ]
+        ]
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "brand-vi-design",
+        "coursePackVersion": "1",
+        "question": "字标在大屏上很精致，缩小、改单色或用低质量设备输出后，应该从哪些方面重新检查？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-brand-vi-p2a",
+        "familyId": "t43-family-brand-vi-degraded-output-exact-production-limit",
+        "clusterId": "t43-cluster-brand-vi-degraded-output-exact-production-limit",
+        "pairId": "t43-pair-brand-vi-02",
+        "pairRole": "ANSWERABLE",
+        "pairDeltaKind": "SUPPORTED_TO_UNSUPPORTED_DETAIL",
+        "stratum": "ANSWERABLE_PARAPHRASE_ALIAS",
+        "expectation": "ANSWERABLE",
+        "reasonClass": "CORPUS_SUPPORTED",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [
+          "brandvi-001-assess-wordmark-fit"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-d92e3f3f71ccfadcc6a5512b82f14b636ac35d5e3bb4d6f1e57a18d5282bced5"
+          ]
+        ]
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "brand-vi-design",
+        "coursePackVersion": "1",
+        "question": "两套字标差别说不清，怎样做一张只记录笔画、结构、比例、间距和细节的对照表？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-brand-vi-p2b",
+        "familyId": "t43-family-brand-vi-formal-variable-inventory",
+        "clusterId": "t43-cluster-brand-vi-formal-variable-inventory",
+        "pairId": null,
+        "pairRole": null,
+        "pairDeltaKind": null,
+        "stratum": "ANSWERABLE_PARAPHRASE_ALIAS",
+        "expectation": "ANSWERABLE",
+        "reasonClass": "CORPUS_SUPPORTED",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [
+          "brandvi-002-test-wordmark-tone-and-audience"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-c6215e544eb276a4de9e0de482fe48b4c33b5904277bc1faff0eace072305ff6"
+          ]
+        ]
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "brand-vi-design",
+        "coursePackVersion": "1",
+        "question": "我得先决定：远处的人是要记住品牌名，还是先认出图形。定了这个目标后，怎么用笔画、比例和空间来判断字标能不能做到？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-brand-vi-p3a",
+        "familyId": "t43-family-brand-vi-recognition-goal-and-form-evidence-live-result",
+        "clusterId": "t43-cluster-brand-vi-recognition-goal-and-form-evidence-live-result",
+        "pairId": "t43-pair-brand-vi-03",
+        "pairRole": "ANSWERABLE",
+        "pairDeltaKind": "STATIC_GUIDANCE_TO_LIVE_EXTERNAL_FACT",
+        "stratum": "ANSWERABLE_MULTI_PRIMARY_COMPOSITION",
+        "expectation": "ANSWERABLE",
+        "reasonClass": "CORPUS_SUPPORTED",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [
+          "brandvi-001-assess-wordmark-fit"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-5627ee319393fc0c4f79ea46bdd1499a7bba90764ef3db919007639b54889653"
+          ],
+          [
+            "node-c5f64013dfe50127b8492bb33ef8c2960563958995e13b58b098f58b4ca1b9dc"
+          ]
+        ]
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "brand-vi-design",
+        "coursePackVersion": "1",
+        "question": "把两版字标放在同一个包装正面上测试时，是不是该先让人描述看到的特征，再让他认名称或类别？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-brand-vi-p3b",
+        "familyId": "t43-family-brand-vi-staged-contact-point-task",
+        "clusterId": "t43-cluster-brand-vi-staged-contact-point-task",
+        "pairId": null,
+        "pairRole": null,
+        "pairDeltaKind": null,
+        "stratum": "ANSWERABLE_MULTI_PRIMARY_COMPOSITION",
+        "expectation": "ANSWERABLE",
+        "reasonClass": "CORPUS_SUPPORTED",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [
+          "brandvi-002-test-wordmark-tone-and-audience"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-a13e4956089bcdeb9b3592b2be7d2cb78440ec04589aa520eecaeaab6a5853a4"
+          ],
+          [
+            "node-cc743f296077853ac938b921ea070fca192b90f911fb3900a3a8afbc3048fb8b"
+          ]
+        ]
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "brand-vi-design",
+        "coursePackVersion": "1",
+        "question": "想比较纯字标和图文组合，我为什么要先做成黑白低保真稿，再把两版放进同样的三个应用场景？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-brand-vi-p4a",
+        "familyId": "t43-family-brand-vi-matched-wordmark-variants-cross-pack",
+        "clusterId": "t43-cluster-brand-vi-matched-wordmark-variants-cross-pack",
+        "pairId": "t43-pair-brand-vi-04",
+        "pairRole": "ANSWERABLE",
+        "pairDeltaKind": "IN_PACK_SUPPORT_TO_OTHER_PACK_SCOPE",
+        "stratum": "ANSWERABLE_IN_PACK_HARD_DISTRACTOR",
+        "expectation": "ANSWERABLE",
+        "reasonClass": "CORPUS_SUPPORTED",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [
+          "brandvi-001-assess-wordmark-fit"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-4168b1c560cca4d5b0456c1e330c37ae0994f1d1c2e62dcffbc93ee9037eff70"
+          ]
+        ]
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "brand-vi-design",
+        "coursePackVersion": "1",
+        "question": "团队说方案“有文化”，我该怎样先把这个判断落到具体接触点任务，而不是马上选字体？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-brand-vi-p4b",
+        "familyId": "t43-family-brand-vi-touchpoint-task-before-style-verdict",
+        "clusterId": "t43-cluster-brand-vi-touchpoint-task-before-style-verdict",
+        "pairId": null,
+        "pairRole": null,
+        "pairDeltaKind": null,
+        "stratum": "ANSWERABLE_IN_PACK_HARD_DISTRACTOR",
+        "expectation": "ANSWERABLE",
+        "reasonClass": "CORPUS_SUPPORTED",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [
+          "brandvi-002-test-wordmark-tone-and-audience"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-c91a3b45d823885dcb9b2d30543e05c22fc85a79a6d2eb08354509ccab9ec605"
+          ]
+        ]
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "brand-vi-design",
+        "coursePackVersion": "1",
+        "question": "字标缩到实际尺寸后，除了让人读名字，我还该怎么记下混淆的位置并留下截图证据？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-brand-vi-p5a",
+        "familyId": "t43-family-brand-vi-actual-size-record-to-long-term-prediction",
+        "clusterId": "t43-cluster-brand-vi-actual-size-record-to-long-term-prediction",
+        "pairId": "t43-pair-brand-vi-05",
+        "pairRole": "ANSWERABLE",
+        "pairDeltaKind": "SUPPORTED_CONCEPT_TO_CORPUS_GAP",
+        "stratum": "ANSWERABLE_CROSS_PACK_TERM_OVERLAP",
+        "expectation": "ANSWERABLE",
+        "reasonClass": "CORPUS_SUPPORTED",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [
+          "brandvi-001-assess-wordmark-fit"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-53c80e95103fab6792d67fda8d31bb6a302ea96817c744d184f3da14f264be8a"
+          ]
+        ]
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "brand-vi-design",
+        "coursePackVersion": "1",
+        "question": "招募字标测试者时，为什么要把熟悉品牌的人和陌生人分组比较误读，而不能混在一起？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-brand-vi-p5b",
+        "familyId": "t43-family-brand-vi-familiarity-stratification-auto-recruitment",
+        "clusterId": "t43-cluster-brand-vi-familiarity-stratification-auto-recruitment",
+        "pairId": "t43-pair-brand-vi-06",
+        "pairRole": "ANSWERABLE",
+        "pairDeltaKind": "SUPPORTED_TO_UNSUPPORTED_OPERATION_VARIANT",
+        "stratum": "ANSWERABLE_CROSS_PACK_TERM_OVERLAP",
+        "expectation": "ANSWERABLE",
+        "reasonClass": "CORPUS_SUPPORTED",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [
+          "brandvi-002-test-wordmark-tone-and-audience"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-ac8f4874a241ab12e7648238244a39233d78aaf0fc5ed69e7273e36f3499edb4"
+          ]
+        ]
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "brand-vi-design",
+        "coursePackVersion": "1",
+        "question": "请直接把我没上传的字标改成“高端现代版”，生成矢量源文件并替我定稿。"
+      },
+      "scoring": {
+        "caseId": "t43-dev-brand-vi-n1a",
+        "familyId": "t43-family-brand-vi-pure-type-status-claim-auto-redesign",
+        "clusterId": "t43-cluster-brand-vi-pure-type-status-claim-auto-redesign",
+        "pairId": "t43-pair-brand-vi-01",
+        "pairRole": "NO_ANSWER",
+        "pairDeltaKind": "SUPPORTED_TO_UNSUPPORTED_OPERATION",
+        "stratum": "NO_ANSWER_ENTITY_OPERATION_GAP",
+        "expectation": "NO_ANSWER",
+        "reasonClass": "UNSUPPORTED_OPERATION",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [],
+        "requiredEvidenceGroups": []
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "brand-vi-design",
+        "coursePackVersion": "1",
+        "question": "按这套熟悉者和陌生人分组方案，请替我在线招募两组用户、跑完整轮测试并收回结果。"
+      },
+      "scoring": {
+        "caseId": "t43-dev-brand-vi-n1b",
+        "familyId": "t43-family-brand-vi-familiarity-stratification-auto-recruitment",
+        "clusterId": "t43-cluster-brand-vi-familiarity-stratification-auto-recruitment",
+        "pairId": "t43-pair-brand-vi-06",
+        "pairRole": "NO_ANSWER",
+        "pairDeltaKind": "SUPPORTED_TO_UNSUPPORTED_OPERATION_VARIANT",
+        "stratum": "NO_ANSWER_ENTITY_OPERATION_GAP",
+        "expectation": "NO_ANSWER",
+        "reasonClass": "UNSUPPORTED_OPERATION",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [],
+        "requiredEvidenceGroups": []
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "brand-vi-design",
+        "coursePackVersion": "1",
+        "question": "热敏标签的机型和材料都没给，你能直接告诉我这个字标最小能做多大、最细线条该是多少吗？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-brand-vi-n2a",
+        "familyId": "t43-family-brand-vi-degraded-output-exact-production-limit",
+        "clusterId": "t43-cluster-brand-vi-degraded-output-exact-production-limit",
+        "pairId": "t43-pair-brand-vi-02",
+        "pairRole": "NO_ANSWER",
+        "pairDeltaKind": "SUPPORTED_TO_UNSUPPORTED_DETAIL",
+        "stratum": "NO_ANSWER_PARAMETER_CODE_STEP_GAP",
+        "expectation": "NO_ANSWER",
+        "reasonClass": "UNSUPPORTED_DETAIL",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [],
+        "requiredEvidenceGroups": []
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "brand-vi-design",
+        "coursePackVersion": "1",
+        "question": "烫银工艺和纸张都没给，这个字标的最小安全线宽到底是多少毫米？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-brand-vi-n2b",
+        "familyId": "t43-family-brand-vi-unknown-foil-minimum-line",
+        "clusterId": "t43-cluster-brand-vi-unknown-foil-minimum-line",
+        "pairId": null,
+        "pairRole": null,
+        "pairDeltaKind": null,
+        "stratum": "NO_ANSWER_PARAMETER_CODE_STEP_GAP",
+        "expectation": "NO_ANSWER",
+        "reasonClass": "UNSUPPORTED_DETAIL",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [],
+        "requiredEvidenceGroups": []
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "brand-vi-design",
+        "coursePackVersion": "1",
+        "question": "你能实时告诉我，今天门店顾客在十米外是先认出名字还是图形吗？把当前统计也给我。"
+      },
+      "scoring": {
+        "caseId": "t43-dev-brand-vi-n3a",
+        "familyId": "t43-family-brand-vi-recognition-goal-and-form-evidence-live-result",
+        "clusterId": "t43-cluster-brand-vi-recognition-goal-and-form-evidence-live-result",
+        "pairId": "t43-pair-brand-vi-03",
+        "pairRole": "NO_ANSWER",
+        "pairDeltaKind": "STATIC_GUIDANCE_TO_LIVE_EXTERNAL_FACT",
+        "stratum": "NO_ANSWER_LIVE_EXTERNAL_FACT",
+        "expectation": "NO_ANSWER",
+        "reasonClass": "EXTERNAL_VERIFICATION_REQUIRED",
+        "executionClass": "PRE_RETRIEVAL_EMPTY",
+        "targetObjectIds": [],
+        "requiredEvidenceGroups": []
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "brand-vi-design",
+        "coursePackVersion": "1",
+        "question": "请实时告诉我这家竞品今天刚换的字标，以及顾客最新识别率。"
+      },
+      "scoring": {
+        "caseId": "t43-dev-brand-vi-n3b",
+        "familyId": "t43-family-brand-vi-live-competitor-wordmark-recognition",
+        "clusterId": "t43-cluster-brand-vi-live-competitor-wordmark-recognition",
+        "pairId": null,
+        "pairRole": null,
+        "pairDeltaKind": null,
+        "stratum": "NO_ANSWER_LIVE_EXTERNAL_FACT",
+        "expectation": "NO_ANSWER",
+        "reasonClass": "EXTERNAL_VERIFICATION_REQUIRED",
+        "executionClass": "PRE_RETRIEVAL_EMPTY",
+        "targetObjectIds": [],
+        "requiredEvidenceGroups": []
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "brand-vi-design",
+        "coursePackVersion": "1",
+        "question": "如果把同样两版黑白低保真字标分别做成拓印、扫描和数字笔刷质感，版式课要比较哪些边缘、重复和偶然差异？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-brand-vi-n4a",
+        "familyId": "t43-family-brand-vi-matched-wordmark-variants-cross-pack",
+        "clusterId": "t43-cluster-brand-vi-matched-wordmark-variants-cross-pack",
+        "pairId": "t43-pair-brand-vi-04",
+        "pairRole": "NO_ANSWER",
+        "pairDeltaKind": "IN_PACK_SUPPORT_TO_OTHER_PACK_SCOPE",
+        "stratum": "NO_ANSWER_OTHER_PACK_NEIGHBOR",
+        "expectation": "NO_ANSWER",
+        "reasonClass": "OUT_OF_PACK_SCOPE",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [],
+        "requiredEvidenceGroups": []
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "brand-vi-design",
+        "coursePackVersion": "1",
+        "question": "我想用这个字标分析“新丑”，怎么按日常原型、设计转译和保留功能三步来写证据？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-brand-vi-n4b",
+        "familyId": "t43-family-brand-vi-wordmark-new-ugly-history",
+        "clusterId": "t43-cluster-brand-vi-wordmark-new-ugly-history",
+        "pairId": null,
+        "pairRole": null,
+        "pairDeltaKind": null,
+        "stratum": "NO_ANSWER_OTHER_PACK_NEIGHBOR",
+        "expectation": "NO_ANSWER",
+        "reasonClass": "OUT_OF_PACK_SCOPE",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [],
+        "requiredEvidenceGroups": []
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "brand-vi-design",
+        "coursePackVersion": "1",
+        "question": "只看一次实际尺寸截图，能不能精确预测顾客半年后记住品牌名的比例？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-brand-vi-n5a",
+        "familyId": "t43-family-brand-vi-actual-size-record-to-long-term-prediction",
+        "clusterId": "t43-cluster-brand-vi-actual-size-record-to-long-term-prediction",
+        "pairId": "t43-pair-brand-vi-05",
+        "pairRole": "NO_ANSWER",
+        "pairDeltaKind": "SUPPORTED_CONCEPT_TO_CORPUS_GAP",
+        "stratum": "NO_ANSWER_CORPUS_GAP_LEXICAL_OVERLAP",
+        "expectation": "NO_ANSWER",
+        "reasonClass": "CORPUS_CONTENT_GAP",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [],
+        "requiredEvidenceGroups": []
+      }
+    },
+    {
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "brand-vi-design",
+        "coursePackVersion": "1",
+        "question": "字标圆角统一设成某个比例，就能保证所有受众都觉得亲和吗？"
+      },
+      "scoring": {
+        "caseId": "t43-dev-brand-vi-n5b",
+        "familyId": "t43-family-brand-vi-universal-friendly-corner-ratio",
+        "clusterId": "t43-cluster-brand-vi-universal-friendly-corner-ratio",
+        "pairId": null,
+        "pairRole": null,
+        "pairDeltaKind": null,
+        "stratum": "NO_ANSWER_CORPUS_GAP_LEXICAL_OVERLAP",
+        "expectation": "NO_ANSWER",
+        "reasonClass": "CORPUS_CONTENT_GAP",
+        "executionClass": "HEALTHY_SCOPED_TTT",
+        "targetObjectIds": [],
+        "requiredEvidenceGroups": []
+      }
+    }
+  ]
+}

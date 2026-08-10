@@ -1,0 +1,193 @@
+{
+  "schemaVersion": 1,
+  "id": "lumi-t45-capability-calibration-runtime",
+  "version": "2026-07-29.1",
+  "split": "CALIBRATION",
+  "corpusSnapshot": {
+    "path": "data/knowledge-v2/knowledge-corpus.v2.json",
+    "bundleHash": "82db90934afaffa3d227b6b0d11ab5efdb88009fd8b9274845567de4888079f8"
+  },
+  "cases": [
+    {
+      "caseId": "t45-cal-book-microtask-direct",
+      "familyId": "book-microtask-principles",
+      "stratum": "DIRECT_PARAPHRASE",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "book-design",
+      "coursePackVersion": "1",
+      "question": "我这个小册子总是先排了再返工，开排之前最该先想清什么？"
+    },
+    {
+      "caseId": "t45-cal-book-microtask-compose",
+      "familyId": "book-microtask-principles",
+      "stratum": "COMPOSITION_HARD_DISTRACTOR",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "book-design",
+      "coursePackVersion": "1",
+      "question": "老师限定八页，我已经知道读者是谁了，接下来怎么把信息任务和页间顺序做出来？"
+    },
+    {
+      "caseId": "t45-cal-competition-direct",
+      "familyId": "competition-direction-two-evidence",
+      "stratum": "DIRECT_PARAPHRASE",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "digital-interaction",
+      "coursePackVersion": "1",
+      "question": "方向二最后到底要交哪几样东西，别让我漏文件？"
+    },
+    {
+      "caseId": "t45-cal-competition-compose",
+      "familyId": "competition-direction-two-evidence",
+      "stratum": "COMPOSITION_HARD_DISTRACTOR",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "digital-interaction",
+      "coursePackVersion": "1",
+      "question": "我已经知道要交报告和视频了，汇报时怎么把功能对到评分关注点，别只讲功能多？主要评分维度又有哪些？"
+    },
+    {
+      "caseId": "t45-cal-digishow-workflow-direct",
+      "familyId": "digishow-touchdesigner-workflow",
+      "stratum": "DIRECT_PARAPHRASE",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "digital-interaction",
+      "coursePackVersion": "1",
+      "question": "我现在不知道是创意没想清，还是数据没进 TD，应该先怎么判断是哪类问题？"
+    },
+    {
+      "caseId": "t45-cal-digishow-workflow-compose",
+      "familyId": "digishow-touchdesigner-workflow",
+      "stratum": "COMPOSITION_HARD_DISTRACTOR",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "digital-interaction",
+      "coursePackVersion": "1",
+      "question": "DigiShow 里数值在跳，TD 画面还是不动。我下一步要拿什么证据查哪一环，怎么避免越改越乱？"
+    },
+    {
+      "caseId": "t45-cal-td-version-direct",
+      "familyId": "td-case-version-comparison",
+      "stratum": "DIRECT_PARAPHRASE",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "digital-interaction",
+      "coursePackVersion": "1",
+      "question": "我有两个 TD 工程版本，想找出到底改了哪里，第一步从哪儿对？"
+    },
+    {
+      "caseId": "t45-cal-td-version-compose",
+      "familyId": "td-case-version-comparison",
+      "stratum": "COMPOSITION_HARD_DISTRACTOR",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "digital-interaction",
+      "coursePackVersion": "1",
+      "question": "节点差异表已经出来了，我能直接说这次修改让效果变好吗？还应该怎么验证它实际起了什么作用？"
+    },
+    {
+      "caseId": "t45-cal-osc-direct",
+      "familyId": "osc-input-troubleshooting",
+      "stratum": "DIRECT_PARAPHRASE",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "digital-interaction",
+      "coursePackVersion": "1",
+      "question": "OSC 发着呢，TD 这边没反应，我先核对什么最省事？"
+    },
+    {
+      "caseId": "t45-cal-osc-compose",
+      "familyId": "osc-input-troubleshooting",
+      "stratum": "COMPOSITION_HARD_DISTRACTOR",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "digital-interaction",
+      "coursePackVersion": "1",
+      "question": "发送和监听端口已经核对一致，但还是没数据，接收节点里还要分哪两项看？"
+    },
+    {
+      "caseId": "t45-cal-international-direct",
+      "familyId": "international-style-history",
+      "stratum": "DIRECT_PARAPHRASE",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "layout-design",
+      "coursePackVersion": "1",
+      "question": "我看到现在很多界面也用网格，就能说它们都是国际主义风格一路传下来的吗？"
+    },
+    {
+      "caseId": "t45-cal-international-compose",
+      "familyId": "international-style-history",
+      "stratum": "COMPOSITION_HARD_DISTRACTOR",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "layout-design",
+      "coursePackVersion": "1",
+      "question": "我在写国际主义风格这段历史，既想讲代表人物和年代，又想连到自己的版式，怎么避免拿几张看着像的图就当证据？"
+    },
+    {
+      "caseId": "t45-cal-acid-direct",
+      "familyId": "acid-style-history",
+      "stratum": "DIRECT_PARAPHRASE",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "layout-design",
+      "coursePackVersion": "1",
+      "question": "我用了荧光渐变和液态金属，就可以直接说这是酸性风吗？"
+    },
+    {
+      "caseId": "t45-cal-acid-compose",
+      "familyId": "acid-style-history",
+      "stratum": "COMPOSITION_HARD_DISTRACTOR",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "layout-design",
+      "coursePackVersion": "1",
+      "question": "我想把六十年代迷幻、九十年代音乐传单和现在数字视觉串起来，怎么写才不会把它们说成一回事？"
+    },
+    {
+      "caseId": "t45-cal-collage-direct",
+      "familyId": "collage-style-history",
+      "stratum": "DIRECT_PARAPHRASE",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "layout-design",
+      "coursePackVersion": "1",
+      "question": "作品放在屏幕上展示，就能算互动拼贴了吗？"
+    },
+    {
+      "caseId": "t45-cal-collage-compose",
+      "familyId": "collage-style-history",
+      "stratum": "COMPOSITION_HARD_DISTRACTOR",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "layout-design",
+      "coursePackVersion": "1",
+      "question": "我想比较手工拼贴和电脑拼贴，不能只说工具变了的话，应该比哪些关系？"
+    },
+    {
+      "caseId": "t45-cal-neo-chinese-direct",
+      "familyId": "neo-chinese-style-history",
+      "stratum": "DIRECT_PARAPHRASE",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "layout-design",
+      "coursePackVersion": "1",
+      "question": "我把传统纹样做成扁平矢量，就算完成新中式的文化转译了吗？"
+    },
+    {
+      "caseId": "t45-cal-neo-chinese-compose",
+      "familyId": "neo-chinese-style-history",
+      "stratum": "COMPOSITION_HARD_DISTRACTOR",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "layout-design",
+      "coursePackVersion": "1",
+      "question": "我不想只是贴几个传统符号，怎么做小样看出直接搬用、提炼和系统应用的区别，还要怎么判断“传统精神”不是空话？"
+    },
+    {
+      "caseId": "t45-cal-reference-direct",
+      "familyId": "reference-resource-selection",
+      "stratum": "DIRECT_PARAPHRASE",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "layout-design",
+      "coursePackVersion": "1",
+      "question": "我收藏了一堆好看的图，现在越看越乱，应该先按什么来筛？"
+    },
+    {
+      "caseId": "t45-cal-reference-compose",
+      "familyId": "reference-resource-selection",
+      "stratum": "COMPOSITION_HARD_DISTRACTOR",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "layout-design",
+      "coursePackVersion": "1",
+      "question": "这张参考图我想拿来学配色和纹理，除了存图片还该记什么，怎么避免照搬以后说不清来源和使用条件？"
+    }
+  ],
+  "suiteHash": "1fad892a86567519fba5d86358091160873cb2baff1bc1be5d01db8cf42d456b"
+}

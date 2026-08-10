@@ -1,0 +1,416 @@
+{
+  "schemaVersion": 1,
+  "id": "lumi-t45-capability-validation-qrels",
+  "version": "2026-07-29.1",
+  "split": "VALIDATION",
+  "runtimeSuite": {
+    "id": "lumi-t45-capability-validation-runtime",
+    "version": "2026-07-29.1",
+    "suiteHash": "e3a7f38cb76d402cbcac2a5d8e362b6c5536fe0c75f35c631769914a658e807b"
+  },
+  "corpusSnapshot": {
+    "path": "data/knowledge-v2/knowledge-corpus.v2.json",
+    "bundleHash": "82db90934afaffa3d227b6b0d11ab5efdb88009fd8b9274845567de4888079f8"
+  },
+  "capabilityInventory": {
+    "id": "lumi-t45-capability-inventory",
+    "inventoryHash": "fd199dfe6f49ce1249f20a04be580dc1b1b31fff2d831b88d4bd13e022082d67"
+  },
+  "cases": [
+    {
+      "caseId": "t45-val-reading-evidence-direct",
+      "familyId": "book-layout-reading-evidence",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-33c1bd0340d0f68a3ade07a697e84dd5e2c57625a53bc0138fb3dcd776fcb7c8"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-ca56bdcc266319f22f6821f5f55b921cf7f5d5504206fb83afd02401cc500348"
+      ]
+    },
+    {
+      "caseId": "t45-val-reading-evidence-compose",
+      "familyId": "book-layout-reading-evidence",
+      "multiClaim": true,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-00ebfafeaabbc8a8e2bf3015e3d606bda24e2f05e949c020e9bcbd41e7db7504"
+          ]
+        },
+        {
+          "groupId": "group-2",
+          "acceptableNodeIds": [
+            "node-ca56bdcc266319f22f6821f5f55b921cf7f5d5504206fb83afd02401cc500348",
+            "node-9df299c19aa9e47c56d3c7a490499216ce619916efa0815d224085067e22274a"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-33c1bd0340d0f68a3ade07a697e84dd5e2c57625a53bc0138fb3dcd776fcb7c8"
+      ]
+    },
+    {
+      "caseId": "t45-val-glsl-direct",
+      "familyId": "td-glsl-output-debugging",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-0da16c9324e0f38bf6ac640c46d587b3218f01b67033d51ae17e3583fbd8d650",
+            "node-acf85c5f5aa1057a5da3b395cd51a776dfd22feef390ef2fec5e16daf5a782c8"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-6f33cb5876413ca65774008ed2151d83fe56f6cec667af81ecbd726b67e7c98a"
+      ]
+    },
+    {
+      "caseId": "t45-val-glsl-compose",
+      "familyId": "td-glsl-output-debugging",
+      "multiClaim": true,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-471becdcbf69ea342b0f350c3cab3b594470169c2d3560ab66c66f5484e79474"
+          ]
+        },
+        {
+          "groupId": "group-2",
+          "acceptableNodeIds": [
+            "node-b74a8808676daac2aa088f63e9a0378606ae84fdfda43a2bd3ff4ab07cd6c10e"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-6f33cb5876413ca65774008ed2151d83fe56f6cec667af81ecbd726b67e7c98a"
+      ]
+    },
+    {
+      "caseId": "t45-val-math-direct",
+      "familyId": "td-math-channel-mapping",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-bbdfb4137caad4eb121b01833daa97607cb1cad9d2dcc4c88ca202f5e327e63d"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-faf24cb480c17e0b2556cc0e653fecfdb2fa9a2a208e7df685567461bfd4b951"
+      ]
+    },
+    {
+      "caseId": "t45-val-math-compose",
+      "familyId": "td-math-channel-mapping",
+      "multiClaim": true,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-faf24cb480c17e0b2556cc0e653fecfdb2fa9a2a208e7df685567461bfd4b951"
+          ]
+        },
+        {
+          "groupId": "group-2",
+          "acceptableNodeIds": [
+            "node-8be273d4fb47420a49fb130f1610b7bd90c477abfa5c809c734aeffc7fa50c12",
+            "node-454a163cc2d1e376fc00911119a567cf772cd869da16e9916544ccc041b55d01"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-bbdfb4137caad4eb121b01833daa97607cb1cad9d2dcc4c88ca202f5e327e63d"
+      ]
+    },
+    {
+      "caseId": "t45-val-null-direct",
+      "familyId": "td-null-stable-reference",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-0331ebc2c6ab74915f1fdc08dcca0be7f5885c205e186a94a0192b33a0895848"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-41c316324ff89c2db0c953ea0aa892c8b859b391baaf5b6b7064f0341c9409b6"
+      ]
+    },
+    {
+      "caseId": "t45-val-null-compose",
+      "familyId": "td-null-stable-reference",
+      "multiClaim": true,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-e64c502b665b7e50dc9da5c3ffebd75cfccc3e2ef9fa3904942bcd11c4bc372c"
+          ]
+        },
+        {
+          "groupId": "group-2",
+          "acceptableNodeIds": [
+            "node-87d0537f3d9ff93165d53a8fe83072f074eeb72074e0c425af97691cefe0688f"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-41c316324ff89c2db0c953ea0aa892c8b859b391baaf5b6b7064f0341c9409b6"
+      ]
+    },
+    {
+      "caseId": "t45-val-new-ugly-direct",
+      "familyId": "new-ugly-style",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-89140f6b6698c15aa09702029b64685b1d9bbd6cc09c9bd0f1c67aa16f579b92",
+            "node-e7f80a722eab8bfb45f34f384c1abec2a15b17598b4be4a5a9d0057289e5b706"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-4592a881af3ee72150debd38369a9dca91e7d56ee9a3ec7d4202b1ffcf3710c5"
+      ]
+    },
+    {
+      "caseId": "t45-val-new-ugly-compose",
+      "familyId": "new-ugly-style",
+      "multiClaim": true,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-ed3c7f1e80e61065ec69a0b9f0e0368b76a9d8d1ffda409ec4613444a2bbbba4"
+          ]
+        },
+        {
+          "groupId": "group-2",
+          "acceptableNodeIds": [
+            "node-dc4669f0ddc8dd17a5f5bf5b2d9661d9bcfe07eb5dd25f6df582db22938a458b"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-fe67eb8a96d03334788f3ecb14e55d469826254c5a031ddc5ab6fb228024c212"
+      ]
+    },
+    {
+      "caseId": "t45-val-tactile-direct",
+      "familyId": "tactile-texture",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-ccea499b8212bd9154057ce439bebd7c68de69d63393586bb7ebe028e7a2093b",
+            "node-bc4eaca769f380bed156dc7ecab45cdacafd344b6689d61cf52cec90bc6656a3"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-38e10c7f824c97a63fe12197a64c047e098876203a26a944fe3b5260a34036cc"
+      ]
+    },
+    {
+      "caseId": "t45-val-tactile-compose",
+      "familyId": "tactile-texture",
+      "multiClaim": true,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-6e963a2c176781138c10a4aa8db4cbf971eb029d9e85ae495a94267efd98e21c",
+            "node-f3a7656ee46619db7739aa2a1b31cf45b21dff22a571a0dd84a76fd6082ef8ba"
+          ]
+        },
+        {
+          "groupId": "group-2",
+          "acceptableNodeIds": [
+            "node-5018c920074c16dca516bb5776fc2aab3727a5ab39513a2a849c7db4731dca19",
+            "node-02e2683b05ba50c6e7cab2fd7fabe5ee8ac6aa170de75e3d0d5d717e84ff1874"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-45b96b301828d2beb41315b4f18f989cfb7e5a1202655aeb2ef0fb28bb00552a"
+      ]
+    },
+    {
+      "caseId": "t45-val-retro-direct",
+      "familyId": "retro-futurism",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-ac42918c125954ae83e03f95ee56b6bcbe192d36dbca345664aab699075b4cd9",
+            "node-0e03b3d5e32da6c6c79683d0411a298ea22be3d43132e5fd8cc7cc0afadd5542"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-bc33d011294fc69a5348d47c813843d5c7104e0c00baf0217a414fdf76e06c8c"
+      ]
+    },
+    {
+      "caseId": "t45-val-retro-compose",
+      "familyId": "retro-futurism",
+      "multiClaim": true,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-1a0694843317ac1fd5a486ee022c3bab017c734db055febbe830ded686d44d04"
+          ]
+        },
+        {
+          "groupId": "group-2",
+          "acceptableNodeIds": [
+            "node-7a4cae02218014943e175db010edbc1784e0d9bd43d9b14b61c4020023139a5a"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-ac42918c125954ae83e03f95ee56b6bcbe192d36dbca345664aab699075b4cd9"
+      ]
+    },
+    {
+      "caseId": "t45-val-font-context-direct",
+      "familyId": "font-selection-context",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-7c30acae611d11e136676b9c75e1e5344e2a5e927de15b08df63b241cea219b3",
+            "node-befe722ec548b6ee278b2f5e2ce3abf83fd060faf37bc59e99a0adf01bdaf53a"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-ea069e9514918e37a45404267b4c3107f80926f5aa61ae26b53e57d88f6c89ba"
+      ]
+    },
+    {
+      "caseId": "t45-val-font-context-compose",
+      "familyId": "font-selection-context",
+      "multiClaim": true,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-0ff3eee9444eb616430f3c6af28959cd113838177c3781198ab6bf1e85b8ce48"
+          ]
+        },
+        {
+          "groupId": "group-2",
+          "acceptableNodeIds": [
+            "node-e598b68998541618c059891111a885b3ab4367a7a5b634ed57878b7dc472987a",
+            "node-bdd41f999f0a9548b8c06c7abc433ff7edf9e13daf9659f349f52af74d8319ba"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-365f7f830409f19fd8535a595d274b9dd462bae848363e040dd1c88b4f5dc94b"
+      ]
+    },
+    {
+      "caseId": "t45-val-type-image-color-direct",
+      "familyId": "type-image-color-coordination",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-ca95648ea5e9591cb6dc93ccfbbe4ad59dc8761a26f41b571b421ebe6ff473fc",
+            "node-177885afa2379c8542b83d4bc03e88ad6e58e00ad80d3f68ef06c8f1ccbf32a9"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-8459343d667ba40a08536ba28e9f8128353ea7977f0d9e7bda5cdb6c3032eed5"
+      ]
+    },
+    {
+      "caseId": "t45-val-type-image-color-compose",
+      "familyId": "type-image-color-coordination",
+      "multiClaim": true,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-5e10d1f2b517df78a783dc0648d93d9c54879b8e95b10ff489a406359a5a627a",
+            "node-6f30c8b0dc7a20c95923a62188b470d205e48fbee29c24afaff5ddced7bdefdf"
+          ]
+        },
+        {
+          "groupId": "group-2",
+          "acceptableNodeIds": [
+            "node-cd8057aa7db8b8f89c7a498fca8022ac6aa13022614b677885840987acbaff3c"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-818d62b763bb877084fbb514f77a0d50026eb05a553df6d512f069afcb68a452"
+      ]
+    },
+    {
+      "caseId": "t45-val-type-hierarchy-direct",
+      "familyId": "type-hierarchy-refinement",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-ef06b3dffbcd673dbb568f3271b51380f6aefc0a9ea0b8a044a193c81c303288"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-3db878dd66471da99d4ba61e44bd0b48c77d6a983c8b3135c317376a1813370b"
+      ]
+    },
+    {
+      "caseId": "t45-val-type-hierarchy-compose",
+      "familyId": "type-hierarchy-refinement",
+      "multiClaim": true,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-786e9980a3bda60712c984a6cf99b2b2ebe6d8a6c2e3d12cbb6581ff7ce57ec6",
+            "node-0b2f4a9b3d3c685b61be1e33894f5c2498f95470c2acb4522c636e9aabdc43b9"
+          ]
+        },
+        {
+          "groupId": "group-2",
+          "acceptableNodeIds": [
+            "node-cd2a51d471d0726f1e54a17ab8038d2075b8019fd36264b61dba174971ec28db",
+            "node-97b4a2ac7883e7715a262c672eb14e15aafa46d4fef7d888a3a899ae86f35f90"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-37f742d8339552189fded4e8b441c01dd99a7e37b61b19d9911c985ca43b7b67"
+      ]
+    }
+  ],
+  "suiteHash": "77f1a60c4ed30020011dfe0a3e5e03faa00aded2bcae64f867f9c4c4205ff38c"
+}

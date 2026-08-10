@@ -1,0 +1,648 @@
+{
+  "schemaVersion": 1,
+  "suiteVersion": "2026-07-28.1",
+  "split": "DEV",
+  "splitRole": "MODEL_DEVELOPMENT",
+  "cases": [
+    {
+      "id": "t41-dev-general-cross-dmx",
+      "category": "OTHER_COURSE_EXCLUSIVE",
+      "familyId": "dev-signal-interface-scope",
+      "coursePackId": "general-design",
+      "question": "DigiShow 里 DMX 灯光通道有数值，可灯还是不亮，下一步该查哪一端？",
+      "expectation": "NO_ANSWER",
+      "targetObjectIds": [],
+      "reasonClass": "COURSE_SCOPE_MISMATCH"
+    },
+    {
+      "id": "t41-dev-general-cross-links",
+      "category": "OTHER_COURSE_EXCLUSIVE",
+      "familyId": "dev-book-production-scope",
+      "coursePackId": "general-design",
+      "question": "InDesign 的链接面板报黄色警告，怎么判断到底是丢图还是有效分辨率不够？",
+      "expectation": "NO_ANSWER",
+      "targetObjectIds": [],
+      "reasonClass": "COURSE_SCOPE_MISMATCH"
+    },
+    {
+      "id": "t41-dev-general-tool-content-aware",
+      "category": "PRODUCT_SCOPE_CORPUS_GAP",
+      "familyId": "dev-content-aware-gap",
+      "coursePackId": "general-design",
+      "question": "Photoshop 的内容识别填充总把旁边的人也补进去，我该怎么限制采样区域？",
+      "expectation": "NO_ANSWER",
+      "targetObjectIds": [],
+      "reasonClass": "OBJECT_NOT_IN_CORPUS"
+    },
+    {
+      "id": "t41-dev-general-tool-lumetri-scopes",
+      "category": "PRODUCT_SCOPE_CORPUS_GAP",
+      "familyId": "dev-lumetri-gap",
+      "coursePackId": "general-design",
+      "question": "Premiere 里两段采访颜色对不上，怎么用 Lumetri Scopes 把肤色和曝光先匹配起来？",
+      "expectation": "NO_ANSWER",
+      "targetObjectIds": [],
+      "reasonClass": "OBJECT_NOT_IN_CORPUS"
+    },
+    {
+      "id": "t41-dev-general-operation-focus-trap",
+      "category": "SAME_COURSE_OPERATION_GAP",
+      "familyId": "dev-focus-trap-gap",
+      "coursePackId": "general-design",
+      "question": "网页弹窗怎么用 JavaScript 做键盘焦点陷阱，还要让 Esc 关闭后回到原按钮？",
+      "expectation": "NO_ANSWER",
+      "targetObjectIds": [],
+      "reasonClass": "PROCEDURE_NOT_IN_CORPUS"
+    },
+    {
+      "id": "t41-dev-general-operation-five-second-test",
+      "category": "SAME_COURSE_OPERATION_GAP",
+      "familyId": "dev-five-second-test-gap",
+      "coursePackId": "general-design",
+      "question": "我想做五秒首屏记忆实验，招几个人、随机怎么分组、统计表具体怎么算？",
+      "expectation": "NO_ANSWER",
+      "targetObjectIds": [],
+      "reasonClass": "PROCEDURE_NOT_IN_CORPUS"
+    },
+    {
+      "id": "t41-dev-general-external-adobe-plan",
+      "category": "EXTERNAL_VERIFICATION_REQUIRED",
+      "familyId": "dev-adobe-plan-live",
+      "coursePackId": "general-design",
+      "question": "Adobe Creative Cloud 学生套餐这个月在中国区实际要付多少钱，续费会不会涨？",
+      "expectation": "NO_ANSWER",
+      "targetObjectIds": [],
+      "reasonClass": "NON_STATIC_EXTERNAL_FACT"
+    },
+    {
+      "id": "t41-dev-general-external-canva-teams",
+      "category": "EXTERNAL_VERIFICATION_REQUIRED",
+      "familyId": "dev-canva-teams-live",
+      "coursePackId": "general-design",
+      "question": "Canva Teams 今天按五个人开通是多少钱，教育版资格现在怎么审核？",
+      "expectation": "NO_ANSWER",
+      "targetObjectIds": [],
+      "reasonClass": "NON_STATIC_EXTERNAL_FACT"
+    },
+    {
+      "id": "t41-dev-general-control-brief",
+      "category": "ANSWERABLE_CONTROL",
+      "familyId": "dev-brief-control",
+      "coursePackId": "general-design",
+      "question": "我只会说想让海报“更有力量”，又不知道该补什么，你能先帮我把下一步问清楚吗？",
+      "expectation": "ANSWERABLE",
+      "targetObjectIds": [
+        "design-project-brief"
+      ],
+      "reasonClass": "TARGET_OBJECT_PRESENT"
+    },
+    {
+      "id": "t41-dev-general-control-prototype",
+      "category": "ANSWERABLE_CONTROL",
+      "familyId": "dev-design-process-scope",
+      "coursePackId": "general-design",
+      "question": "界面方向还没定，我不想先做整套，怎么弄个最小东西试出入口好不好找？",
+      "expectation": "ANSWERABLE",
+      "targetObjectIds": [
+        "design-prototype-test"
+      ],
+      "reasonClass": "TARGET_OBJECT_PRESENT"
+    },
+    {
+      "id": "t41-dev-general-control-nontext",
+      "category": "ANSWERABLE_CONTROL",
+      "familyId": "dev-nontext-control",
+      "coursePackId": "general-design",
+      "question": "输入框边太淡了，正文倒是看得清，我该量哪两块颜色？",
+      "expectation": "ANSWERABLE",
+      "targetObjectIds": [
+        "design-nontext-contrast"
+      ],
+      "reasonClass": "TARGET_OBJECT_PRESENT"
+    },
+    {
+      "id": "t41-dev-general-control-status",
+      "category": "ANSWERABLE_CONTROL",
+      "familyId": "dev-status-scope",
+      "coursePackId": "general-design",
+      "question": "我点提交以后页面啥也不说，同学老以为没点上，状态提示该交代什么？",
+      "expectation": "ANSWERABLE",
+      "targetObjectIds": [
+        "design-status-feedback"
+      ],
+      "reasonClass": "TARGET_OBJECT_PRESENT"
+    },
+    {
+      "id": "t41-dev-digital-cross-acid",
+      "category": "OTHER_COURSE_EXCLUSIVE",
+      "familyId": "dev-acid-scope",
+      "coursePackId": "digital-interaction",
+      "question": "我想在互动装置课里做酸性海报效果，怎么控制荧光色和失真不把文字弄没？",
+      "expectation": "NO_ANSWER",
+      "targetObjectIds": [],
+      "reasonClass": "COURSE_SCOPE_MISMATCH"
+    },
+    {
+      "id": "t41-dev-digital-cross-printer-marks",
+      "category": "OTHER_COURSE_EXCLUSIVE",
+      "familyId": "dev-book-production-scope",
+      "coursePackId": "digital-interaction",
+      "question": "TouchDesigner 画面最后要拿去商业印刷，InDesign 里套准标记、色条和页面信息该勾哪些？",
+      "expectation": "NO_ANSWER",
+      "targetObjectIds": [],
+      "reasonClass": "COURSE_SCOPE_MISMATCH"
+    },
+    {
+      "id": "t41-dev-digital-tool-essential-sound",
+      "category": "PRODUCT_SCOPE_CORPUS_GAP",
+      "familyId": "dev-essential-sound-gap",
+      "coursePackId": "digital-interaction",
+      "question": "Premiere 里采访音量忽大忽小，Essential Sound 面板的自动匹配和响度目标怎么设？",
+      "expectation": "NO_ANSWER",
+      "targetObjectIds": [],
+      "reasonClass": "OBJECT_NOT_IN_CORPUS"
+    },
+    {
+      "id": "t41-dev-digital-tool-geometry-nodes",
+      "category": "PRODUCT_SCOPE_CORPUS_GAP",
+      "familyId": "dev-geometry-nodes-gap",
+      "coursePackId": "digital-interaction",
+      "question": "Blender 的 Geometry Nodes 里，怎么按曲线长度重复实例还保持朝向？",
+      "expectation": "NO_ANSWER",
+      "targetObjectIds": [],
+      "reasonClass": "OBJECT_NOT_IN_CORPUS"
+    },
+    {
+      "id": "t41-dev-digital-operation-movie-file-out",
+      "category": "SAME_COURSE_OPERATION_GAP",
+      "familyId": "dev-movie-file-out-gap",
+      "coursePackId": "digital-interaction",
+      "question": "TouchDesigner 用 Movie File Out TOP 录一小时，H.264 码率、分段和掉帧检测具体怎么配？",
+      "expectation": "NO_ANSWER",
+      "targetObjectIds": [],
+      "reasonClass": "PROCEDURE_NOT_IN_CORPUS"
+    },
+    {
+      "id": "t41-dev-digital-operation-instancing",
+      "category": "SAME_COURSE_OPERATION_GAP",
+      "familyId": "dev-gpu-instancing-gap",
+      "coursePackId": "digital-interaction",
+      "question": "TouchDesigner 给 Geo COMP 做 GPU instancing，Table DAT 每列该怎么绑到平移、旋转和缩放？",
+      "expectation": "NO_ANSWER",
+      "targetObjectIds": [],
+      "reasonClass": "PROCEDURE_NOT_IN_CORPUS"
+    },
+    {
+      "id": "t41-dev-digital-external-commercial-license",
+      "category": "EXTERNAL_VERIFICATION_REQUIRED",
+      "familyId": "dev-derivative-license-live",
+      "coursePackId": "digital-interaction",
+      "question": "Derivative 现在的 Commercial 许可证买一套多少钱，升级到下一大版本要不要再付费？",
+      "expectation": "NO_ANSWER",
+      "targetObjectIds": [],
+      "reasonClass": "NON_STATIC_EXTERNAL_FACT"
+    },
+    {
+      "id": "t41-dev-digital-external-usb-driver",
+      "category": "EXTERNAL_VERIFICATION_REQUIRED",
+      "familyId": "dev-usb-driver-live",
+      "coursePackId": "digital-interaction",
+      "question": "我手里的这块新款 USB 传感器，DigiShow 今天有没有官方驱动、支持到哪个固件版本？",
+      "expectation": "NO_ANSWER",
+      "targetObjectIds": [],
+      "reasonClass": "NON_STATIC_EXTERNAL_FACT"
+    },
+    {
+      "id": "t41-dev-digital-control-audio-chain",
+      "category": "ANSWERABLE_CONTROL",
+      "familyId": "dev-audio-chain-control",
+      "coursePackId": "digital-interaction",
+      "question": "声音已经进来了，我想先搭一条最短的链让一个参数跟着动，节点顺序怎么理？",
+      "expectation": "ANSWERABLE",
+      "targetObjectIds": [
+        "audio-reactive-visual"
+      ],
+      "reasonClass": "TARGET_OBJECT_PRESENT"
+    },
+    {
+      "id": "t41-dev-digital-control-osc-out",
+      "category": "ANSWERABLE_CONTROL",
+      "familyId": "dev-osc-scope",
+      "coursePackId": "digital-interaction",
+      "question": "发送端数值在跳，可另一台电脑没收到，我先看 Active、地址还是端口？",
+      "expectation": "ANSWERABLE",
+      "targetObjectIds": [
+        "osc-out-chop"
+      ],
+      "reasonClass": "TARGET_OBJECT_PRESENT"
+    },
+    {
+      "id": "t41-dev-digital-control-analyze",
+      "category": "ANSWERABLE_CONTROL",
+      "familyId": "dev-analyze-control",
+      "coursePackId": "digital-interaction",
+      "question": "一长串声音波形我只想得到一个能控制亮度的强弱值，Analyze 里该按什么思路选函数？",
+      "expectation": "ANSWERABLE",
+      "targetObjectIds": [
+        "td-analyze-chop"
+      ],
+      "reasonClass": "TARGET_OBJECT_PRESENT"
+    },
+    {
+      "id": "t41-dev-digital-control-interface",
+      "category": "ANSWERABLE_CONTROL",
+      "familyId": "dev-signal-interface-scope",
+      "coursePackId": "digital-interaction",
+      "question": "设备刚插上，我不想一上来就做复杂映射，怎么先证明 DigiShow 真的收到原始信号？",
+      "expectation": "ANSWERABLE",
+      "targetObjectIds": [
+        "digishow-interface-workflow"
+      ],
+      "reasonClass": "TARGET_OBJECT_PRESENT"
+    },
+    {
+      "id": "t41-dev-book-cross-status",
+      "category": "OTHER_COURSE_EXCLUSIVE",
+      "familyId": "dev-status-scope",
+      "coursePackId": "book-design",
+      "question": "书籍课做电子阅读器原型，点了收藏没反应提示，这种操作状态应该怎么让人看见又不抢焦点？",
+      "expectation": "NO_ANSWER",
+      "targetObjectIds": [],
+      "reasonClass": "COURSE_SCOPE_MISMATCH"
+    },
+    {
+      "id": "t41-dev-book-cross-collage",
+      "category": "OTHER_COURSE_EXCLUSIVE",
+      "familyId": "dev-collage-scope",
+      "coursePackId": "book-design",
+      "question": "我把几张旧照片拼进书封，想靠遮挡讲出冲突，不想只是堆素材，该先看什么关系？",
+      "expectation": "NO_ANSWER",
+      "targetObjectIds": [],
+      "reasonClass": "COURSE_SCOPE_MISMATCH"
+    },
+    {
+      "id": "t41-dev-book-tool-puppet-warp",
+      "category": "PRODUCT_SCOPE_CORPUS_GAP",
+      "familyId": "dev-puppet-warp-gap",
+      "coursePackId": "book-design",
+      "question": "Photoshop 用 Puppet Warp 把扫描的人物姿势稍微改掉，固定点和网格密度怎么放？",
+      "expectation": "NO_ANSWER",
+      "targetObjectIds": [],
+      "reasonClass": "OBJECT_NOT_IN_CORPUS"
+    },
+    {
+      "id": "t41-dev-book-tool-blend",
+      "category": "PRODUCT_SCOPE_CORPUS_GAP",
+      "familyId": "dev-blend-tool-gap",
+      "coursePackId": "book-design",
+      "question": "Illustrator 里用 Blend Tool 做一排连续书脊图形，指定步数和替换路径怎么操作？",
+      "expectation": "NO_ANSWER",
+      "targetObjectIds": [],
+      "reasonClass": "OBJECT_NOT_IN_CORPUS"
+    },
+    {
+      "id": "t41-dev-book-operation-toc",
+      "category": "SAME_COURSE_OPERATION_GAP",
+      "familyId": "dev-toc-gap",
+      "coursePackId": "book-design",
+      "question": "InDesign 自动目录怎么用段落样式抓三级标题，还要让页码更新后不乱？",
+      "expectation": "NO_ANSWER",
+      "targetObjectIds": [],
+      "reasonClass": "PROCEDURE_NOT_IN_CORPUS"
+    },
+    {
+      "id": "t41-dev-book-operation-data-merge",
+      "category": "SAME_COURSE_OPERATION_GAP",
+      "familyId": "dev-data-merge-gap",
+      "coursePackId": "book-design",
+      "question": "InDesign Data Merge 把 Excel 里的书名和封面批量套进目录页，图片路径字段怎么写？",
+      "expectation": "NO_ANSWER",
+      "targetObjectIds": [],
+      "reasonClass": "PROCEDURE_NOT_IN_CORPUS"
+    },
+    {
+      "id": "t41-dev-book-external-paper-stock",
+      "category": "EXTERNAL_VERIFICATION_REQUIRED",
+      "familyId": "dev-paper-stock-live",
+      "coursePackId": "book-design",
+      "question": "我们附近印厂这周有没有 120 克米白书纸现货，最低多少本才给开机？",
+      "expectation": "NO_ANSWER",
+      "targetObjectIds": [],
+      "reasonClass": "NON_STATIC_EXTERNAL_FACT"
+    },
+    {
+      "id": "t41-dev-book-external-rush-quote",
+      "category": "EXTERNAL_VERIFICATION_REQUIRED",
+      "familyId": "dev-rush-quote-live",
+      "coursePackId": "book-design",
+      "question": "这本样书周五前必须寄到，哪家数码快印今天报价最低、能不能保证到货？",
+      "expectation": "NO_ANSWER",
+      "targetObjectIds": [],
+      "reasonClass": "NON_STATIC_EXTERNAL_FACT"
+    },
+    {
+      "id": "t41-dev-book-control-document-grid",
+      "category": "ANSWERABLE_CONTROL",
+      "familyId": "dev-grid-scope",
+      "coursePackId": "book-design",
+      "question": "我开了 Document Grid 以后每个东西都吸过去，版面反而很死，这个网格到底该拿来管什么？",
+      "expectation": "ANSWERABLE",
+      "targetObjectIds": [
+        "book-document-grid"
+      ],
+      "reasonClass": "TARGET_OBJECT_PRESENT"
+    },
+    {
+      "id": "t41-dev-book-control-kerning",
+      "category": "ANSWERABLE_CONTROL",
+      "familyId": "dev-kerning-control",
+      "coursePackId": "book-design",
+      "question": "标题里只有两个字挤，整行又有点松，我该调字偶还是整段字距？",
+      "expectation": "ANSWERABLE",
+      "targetObjectIds": [
+        "book-kerning-tracking"
+      ],
+      "reasonClass": "TARGET_OBJECT_PRESENT"
+    },
+    {
+      "id": "t41-dev-book-control-links",
+      "category": "ANSWERABLE_CONTROL",
+      "familyId": "dev-book-production-scope",
+      "coursePackId": "book-design",
+      "question": "版面里图片看着挺清楚，导出的 PDF 却糊了，Links 面板该查哪几项？",
+      "expectation": "ANSWERABLE",
+      "targetObjectIds": [
+        "book-linked-assets"
+      ],
+      "reasonClass": "TARGET_OBJECT_PRESENT"
+    },
+    {
+      "id": "t41-dev-book-control-hierarchy",
+      "category": "ANSWERABLE_CONTROL",
+      "familyId": "dev-hierarchy-control",
+      "coursePackId": "book-design",
+      "question": "八页小册子内容太多，我怎么先分出必读和选读，再安排读者往后翻？",
+      "expectation": "ANSWERABLE",
+      "targetObjectIds": [
+        "information-hierarchy"
+      ],
+      "reasonClass": "TARGET_OBJECT_PRESENT"
+    },
+    {
+      "id": "t41-dev-layout-cross-osc-out",
+      "category": "OTHER_COURSE_EXCLUSIVE",
+      "familyId": "dev-osc-scope",
+      "coursePackId": "layout-design",
+      "question": "OSC Out 那边有通道在动，但局域网另一台机子没收到，我在发送端要核对哪几个设置？",
+      "expectation": "NO_ANSWER",
+      "targetObjectIds": [],
+      "reasonClass": "COURSE_SCOPE_MISMATCH"
+    },
+    {
+      "id": "t41-dev-layout-cross-layout-grid",
+      "category": "OTHER_COURSE_EXCLUSIVE",
+      "familyId": "dev-grid-scope",
+      "coursePackId": "layout-design",
+      "question": "我在版式课的长页面里想用 InDesign Layout Grid 管每行字数和栏数，字号行距怎么互相算？",
+      "expectation": "NO_ANSWER",
+      "targetObjectIds": [],
+      "reasonClass": "COURSE_SCOPE_MISMATCH"
+    },
+    {
+      "id": "t41-dev-layout-tool-auto-layout-wrap",
+      "category": "PRODUCT_SCOPE_CORPUS_GAP",
+      "familyId": "dev-auto-layout-gap",
+      "coursePackId": "layout-design",
+      "question": "Figma 做海报模板时，Auto Layout 的 Wrap 怎么让不同长度标题自动换行又不挤日期？",
+      "expectation": "NO_ANSWER",
+      "targetObjectIds": [],
+      "reasonClass": "OBJECT_NOT_IN_CORPUS"
+    },
+    {
+      "id": "t41-dev-layout-tool-displacement-map",
+      "category": "PRODUCT_SCOPE_CORPUS_GAP",
+      "familyId": "dev-displacement-gap",
+      "coursePackId": "layout-design",
+      "question": "Photoshop 用置换贴图把标题压进纸纹里，灰度图、位移数值和边缘处理怎么设？",
+      "expectation": "NO_ANSWER",
+      "targetObjectIds": [],
+      "reasonClass": "OBJECT_NOT_IN_CORPUS"
+    },
+    {
+      "id": "t41-dev-layout-operation-master-page",
+      "category": "SAME_COURSE_OPERATION_GAP",
+      "familyId": "dev-master-page-gap",
+      "coursePackId": "layout-design",
+      "question": "Affinity Publisher 用母版批量放页码，遇到章节首页想隐藏时具体怎么覆盖？",
+      "expectation": "NO_ANSWER",
+      "targetObjectIds": [],
+      "reasonClass": "PROCEDURE_NOT_IN_CORPUS"
+    },
+    {
+      "id": "t41-dev-layout-operation-envelope-distort",
+      "category": "SAME_COURSE_OPERATION_GAP",
+      "familyId": "dev-envelope-distort-gap",
+      "coursePackId": "layout-design",
+      "question": "Illustrator 的 Envelope Distort 想让一整段字沿弧面变形，怎么保留可编辑文字并控制网格？",
+      "expectation": "NO_ANSWER",
+      "targetObjectIds": [],
+      "reasonClass": "PROCEDURE_NOT_IN_CORPUS"
+    },
+    {
+      "id": "t41-dev-layout-external-pantone",
+      "category": "EXTERNAL_VERIFICATION_REQUIRED",
+      "familyId": "dev-pantone-live",
+      "coursePackId": "layout-design",
+      "question": "Pantone 今年刚公布的年度色具体编号是什么，官方配套色值有没有更新？",
+      "expectation": "NO_ANSWER",
+      "targetObjectIds": [],
+      "reasonClass": "NON_STATIC_EXTERNAL_FACT"
+    },
+    {
+      "id": "t41-dev-layout-external-tdc",
+      "category": "EXTERNAL_VERIFICATION_REQUIRED",
+      "familyId": "dev-tdc-live",
+      "coursePackId": "layout-design",
+      "question": "Type Directors Club 这一届学生作品征集现在截止到哪天，四川学生要交多少报名费？",
+      "expectation": "NO_ANSWER",
+      "targetObjectIds": [],
+      "reasonClass": "NON_STATIC_EXTERNAL_FACT"
+    },
+    {
+      "id": "t41-dev-layout-control-acid",
+      "category": "ANSWERABLE_CONTROL",
+      "familyId": "dev-acid-scope",
+      "coursePackId": "layout-design",
+      "question": "我把霓虹、故障和金属全叠了，字已经看不清，酸性效果该先减哪一种？",
+      "expectation": "ANSWERABLE",
+      "targetObjectIds": [
+        "layout-012-acid-style-fit"
+      ],
+      "reasonClass": "TARGET_OBJECT_PRESENT"
+    },
+    {
+      "id": "t41-dev-layout-control-collage",
+      "category": "ANSWERABLE_CONTROL",
+      "familyId": "dev-collage-scope",
+      "coursePackId": "layout-design",
+      "question": "素材越贴越多还是像剪贴本，我怎么判断哪张是主体、哪张只负责反差？",
+      "expectation": "ANSWERABLE",
+      "targetObjectIds": [
+        "layout-014-collage-style-fit"
+      ],
+      "reasonClass": "TARGET_OBJECT_PRESENT"
+    },
+    {
+      "id": "t41-dev-layout-control-evidence",
+      "category": "ANSWERABLE_CONTROL",
+      "familyId": "dev-layout-evidence-control",
+      "coursePackId": "layout-design",
+      "question": "老师只说我的版面“不稳”，我能用什么截图证据查层级、对齐和平衡？",
+      "expectation": "ANSWERABLE",
+      "targetObjectIds": [
+        "layout-041-review-layout-with-observable-evidence"
+      ],
+      "reasonClass": "TARGET_OBJECT_PRESENT"
+    },
+    {
+      "id": "t41-dev-layout-control-resources",
+      "category": "ANSWERABLE_CONTROL",
+      "familyId": "dev-resource-selection-control",
+      "coursePackId": "layout-design",
+      "question": "我收藏了一堆参考图还是不会用，收一张图时到底该记哪些东西？",
+      "expectation": "ANSWERABLE",
+      "targetObjectIds": [
+        "layout-051-select-reference-resources-by-task"
+      ],
+      "reasonClass": "TARGET_OBJECT_PRESENT"
+    },
+    {
+      "id": "t41-dev-brand-cross-double-diamond",
+      "category": "OTHER_COURSE_EXCLUSIVE",
+      "familyId": "dev-design-process-scope",
+      "coursePackId": "brand-vi-design",
+      "question": "品牌课想用双钻梳理项目，我现在还在找问题阶段，下一步怎么把假设变成能验证的问题？",
+      "expectation": "NO_ANSWER",
+      "targetObjectIds": [],
+      "reasonClass": "COURSE_SCOPE_MISMATCH"
+    },
+    {
+      "id": "t41-dev-brand-cross-midi",
+      "category": "OTHER_COURSE_EXCLUSIVE",
+      "familyId": "dev-signal-interface-scope",
+      "coursePackId": "brand-vi-design",
+      "question": "门店互动灯要接 MIDI 控制，我分不清 Note 和 CC，想先让一个输入带一个灯，该怎么试？",
+      "expectation": "NO_ANSWER",
+      "targetObjectIds": [],
+      "reasonClass": "COURSE_SCOPE_MISMATCH"
+    },
+    {
+      "id": "t41-dev-brand-tool-image-trace",
+      "category": "PRODUCT_SCOPE_CORPUS_GAP",
+      "familyId": "dev-image-trace-gap",
+      "coursePackId": "brand-vi-design",
+      "question": "Illustrator 里用 Image Trace 把手绘标志转成矢量，怎样减锚点又保住轮廓特征？",
+      "expectation": "NO_ANSWER",
+      "targetObjectIds": [],
+      "reasonClass": "OBJECT_NOT_IN_CORPUS"
+    },
+    {
+      "id": "t41-dev-brand-tool-uv-unwrap",
+      "category": "PRODUCT_SCOPE_CORPUS_GAP",
+      "familyId": "dev-uv-unwrap-gap",
+      "coursePackId": "brand-vi-design",
+      "question": "Blender 给品牌吉祥物做 UV 展开时，接缝放哪儿才不把正面图案切开？",
+      "expectation": "NO_ANSWER",
+      "targetObjectIds": [],
+      "reasonClass": "OBJECT_NOT_IN_CORPUS"
+    },
+    {
+      "id": "t41-dev-brand-operation-clear-space",
+      "category": "SAME_COURSE_OPERATION_GAP",
+      "familyId": "dev-clear-space-gap",
+      "coursePackId": "brand-vi-design",
+      "question": "VI 手册里的标志安全区想按字标高度定比例，测量基准、最小值和例外页具体怎么写？",
+      "expectation": "NO_ANSWER",
+      "targetObjectIds": [],
+      "reasonClass": "PROCEDURE_NOT_IN_CORPUS"
+    },
+    {
+      "id": "t41-dev-brand-operation-spot-color",
+      "category": "SAME_COURSE_OPERATION_GAP",
+      "familyId": "dev-spot-color-gap",
+      "coursePackId": "brand-vi-design",
+      "question": "品牌专色要在 Illustrator 里建 Spot Color 并导出印刷 PDF，色板和分色预览怎么一步步核对？",
+      "expectation": "NO_ANSWER",
+      "targetObjectIds": [],
+      "reasonClass": "PROCEDURE_NOT_IN_CORPUS"
+    },
+    {
+      "id": "t41-dev-brand-external-domain",
+      "category": "EXTERNAL_VERIFICATION_REQUIRED",
+      "familyId": "dev-domain-live",
+      "coursePackId": "brand-vi-design",
+      "question": "这个品牌名对应的 .com 域名今天还能不能注册，国内续费和赎回价格各是多少？",
+      "expectation": "NO_ANSWER",
+      "targetObjectIds": [],
+      "reasonClass": "NON_STATIC_EXTERNAL_FACT"
+    },
+    {
+      "id": "t41-dev-brand-external-food-label",
+      "category": "EXTERNAL_VERIFICATION_REQUIRED",
+      "familyId": "dev-food-label-live",
+      "coursePackId": "brand-vi-design",
+      "question": "食品包装刚改版，现行法规对营养成分表最小字号和警示语有哪些硬要求？",
+      "expectation": "NO_ANSWER",
+      "targetObjectIds": [],
+      "reasonClass": "NON_STATIC_EXTERNAL_FACT"
+    },
+    {
+      "id": "t41-dev-brand-control-tone-variables",
+      "category": "ANSWERABLE_CONTROL",
+      "familyId": "dev-brand-tone-control",
+      "coursePackId": "brand-vi-design",
+      "question": "大家都说这个字“年轻”，可我不知道年轻到底落在哪些笔画和间距上，怎么拆开比？",
+      "expectation": "ANSWERABLE",
+      "targetObjectIds": [
+        "brandvi-002-test-wordmark-tone-and-audience"
+      ],
+      "reasonClass": "TARGET_OBJECT_PRESENT"
+    },
+    {
+      "id": "t41-dev-brand-control-audience-task",
+      "category": "ANSWERABLE_CONTROL",
+      "familyId": "dev-brand-audience-control",
+      "coursePackId": "brand-vi-design",
+      "question": "两个字标我自己看不出差别，找目标顾客测试时该让他们做什么，别只问喜不喜欢？",
+      "expectation": "ANSWERABLE",
+      "targetObjectIds": [
+        "brandvi-002-test-wordmark-tone-and-audience"
+      ],
+      "reasonClass": "TARGET_OBJECT_PRESENT"
+    },
+    {
+      "id": "t41-dev-brand-control-isolate-variable",
+      "category": "ANSWERABLE_CONTROL",
+      "familyId": "dev-brand-isolate-control",
+      "coursePackId": "brand-vi-design",
+      "question": "我同时换了字体、颜色和构图，结果更顺眼了，但不知道是谁起作用，怎么重新做对照？",
+      "expectation": "ANSWERABLE",
+      "targetObjectIds": [
+        "brandvi-002-test-wordmark-tone-and-audience"
+      ],
+      "reasonClass": "TARGET_OBJECT_PRESENT"
+    },
+    {
+      "id": "t41-dev-brand-control-unfamiliar-audience",
+      "category": "ANSWERABLE_CONTROL",
+      "familyId": "dev-brand-unfamiliar-control",
+      "coursePackId": "brand-vi-design",
+      "question": "熟悉我们店的人一眼就认出来，我怕是记忆在帮忙，测试字标时还该找什么人？",
+      "expectation": "ANSWERABLE",
+      "targetObjectIds": [
+        "brandvi-002-test-wordmark-tone-and-audience"
+      ],
+      "reasonClass": "TARGET_OBJECT_PRESENT"
+    }
+  ]
+}

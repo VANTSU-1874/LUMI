@@ -1,0 +1,1100 @@
+{
+  "schemaVersion": 1,
+  "id": "lumi-t44-support-dev-qrels",
+  "version": "2026-07-28.1",
+  "split": "DEV",
+  "runtimeSuite": {
+    "id": "lumi-t44-support-dev-runtime",
+    "version": "2026-07-28.1",
+    "suiteHash": "a67bf1cbe71fd211355e4bd8b0e6a60326f2d697ca8a1ddafee28c29a6d27cfe"
+  },
+  "corpusSnapshot": {
+    "path": "data/knowledge-v2/knowledge-corpus.v2.json",
+    "bundleHash": "82db90934afaffa3d227b6b0d11ab5efdb88009fd8b9274845567de4888079f8"
+  },
+  "cases": [
+    {
+      "caseId": "t44-support-general-p1a",
+      "stratum": "ANSWERABLE_SINGLE_PRIMARY_DIRECT",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "understand-problem",
+          "acceptableNodeIds": [
+            "node-28e557f3c3b64347c6cfafbf5f91f261cecaf3cea4c5be0fde34205636671001"
+          ]
+        },
+        {
+          "groupId": "test-solution",
+          "acceptableNodeIds": [
+            "node-5a5d0ef237858b75d84344a06225a7bd7bbda618f4d482a5e450163bf199bd44"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-e1f6fca581593c438dbf61e8c4c9847039188dcad3a16649e8f3a445c3e71e11"
+      ]
+    },
+    {
+      "caseId": "t44-support-general-p1b",
+      "stratum": "ANSWERABLE_SINGLE_PRIMARY_DIRECT",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "brief-aspects",
+          "acceptableNodeIds": [
+            "node-39bb7d94faddd0431a7df1858fb2e824977dbef012ffaf68c4131771c31af5f2"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-ff2b21118f39f98fb795528bad30c24c77d7291a80636a0768b7e75d7df93d48"
+      ]
+    },
+    {
+      "caseId": "t44-support-general-p2a",
+      "stratum": "ANSWERABLE_PARAPHRASE_ALIAS",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "color-not-alone",
+          "acceptableNodeIds": [
+            "node-d4619b3d696422f0ba1cf1c98de0bcb13913b0081db372350cc5d97fe3ebef84"
+          ]
+        },
+        {
+          "groupId": "redundant-cues",
+          "acceptableNodeIds": [
+            "node-8bdcd635a8d8037961eeb7553c2068d9fcaaef5ba2532be643c2c70afa38c7b3"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-eb317229cedb9f20670cf494b396705bce8682a67bd89659fdce0e811c5199e2"
+      ]
+    },
+    {
+      "caseId": "t44-support-general-p2b",
+      "stratum": "ANSWERABLE_PARAPHRASE_ALIAS",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "nontext-threshold",
+          "acceptableNodeIds": [
+            "node-eb317229cedb9f20670cf494b396705bce8682a67bd89659fdce0e811c5199e2"
+          ]
+        },
+        {
+          "groupId": "measure-control",
+          "acceptableNodeIds": [
+            "node-b1428d9789647fb8e438f1425328c8aa9781b0cd744090310a8353371fe13087"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-3583ad6eda1085338af99694850f980f06fcf70fe1f1f3feb9578388156b9fbf"
+      ]
+    },
+    {
+      "caseId": "t44-support-general-p3a",
+      "stratum": "ANSWERABLE_MULTI_PRIMARY_COMPOSITION",
+      "multiClaim": true,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "small-prototype",
+          "acceptableNodeIds": [
+            "node-c70b91a847461b912d3a59c4c1d3f051ce0b9ebe9f8a2b66a89dfc1a99f03050"
+          ]
+        },
+        {
+          "groupId": "observation-plan",
+          "acceptableNodeIds": [
+            "node-a16b43143b54d081c67d86ca166ef6fd1474c369e0455d52d87bbc0ff3c486fc"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-e1f6fca581593c438dbf61e8c4c9847039188dcad3a16649e8f3a445c3e71e11"
+      ]
+    },
+    {
+      "caseId": "t44-support-general-p3b",
+      "stratum": "ANSWERABLE_MULTI_PRIMARY_COMPOSITION",
+      "multiClaim": true,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "spacing-adaptability",
+          "acceptableNodeIds": [
+            "node-066e2ba6cf38454f796c92e979cd8fd10e9336e1a269dd11e9b415f0946e07d9"
+          ]
+        },
+        {
+          "groupId": "text-contrast",
+          "acceptableNodeIds": [
+            "node-eb992744ee78b17349d7fcc220c9f6500eb45057cd4aa2f94d3ab986ef034df5"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-b1428d9789647fb8e438f1425328c8aa9781b0cd744090310a8353371fe13087"
+      ]
+    },
+    {
+      "caseId": "t44-support-general-p4a",
+      "stratum": "ANSWERABLE_IN_PACK_HARD_DISTRACTOR",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "status-purpose",
+          "acceptableNodeIds": [
+            "node-03eb88b756ee449e0bcf6a4bb88ef699091b56edd1eb19050566b889ab16791c"
+          ]
+        },
+        {
+          "groupId": "required-state",
+          "acceptableNodeIds": [
+            "node-86377dc08ff826d7673e79e76686516632c255f3776e8353adf39878b8d5cfe6"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-600037b9367d397b2087c18f1c96728dd0734fc937634551647620df308fca56"
+      ]
+    },
+    {
+      "caseId": "t44-support-general-p4b",
+      "stratum": "ANSWERABLE_IN_PACK_HARD_DISTRACTOR",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "record-format",
+          "acceptableNodeIds": [
+            "node-259130c752969942fd45ffc0e67ff0edc050a01237395d9bd09e7f5ca9ef367c"
+          ]
+        },
+        {
+          "groupId": "apply-and-compare",
+          "acceptableNodeIds": [
+            "node-71e86fabc935c83e58cdaf0f59eb4663635a97c9e75bd24bb9a5bcda8448827a"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-19605568bbc7fa2cc9490b46830581a8580bc8a2c615c2cdda2593e51b84da2b"
+      ]
+    },
+    {
+      "caseId": "t44-support-general-p5a",
+      "stratum": "ANSWERABLE_CROSS_PACK_TERM_OVERLAP",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "reading-check",
+          "acceptableNodeIds": [
+            "node-e8510cb54c38a55c3e210abd9cae3cff3388e8e4a1b3d7a77d51fe4602461ffd"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-19605568bbc7fa2cc9490b46830581a8580bc8a2c615c2cdda2593e51b84da2b"
+      ]
+    },
+    {
+      "caseId": "t44-support-general-p5b",
+      "stratum": "ANSWERABLE_CROSS_PACK_TERM_OVERLAP",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "operation-result",
+          "acceptableNodeIds": [
+            "node-03eb88b756ee449e0bcf6a4bb88ef699091b56edd1eb19050566b889ab16791c"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-2ccf7c1f706f9cb74bf132f36246bfcce3d1c3226483cf4d75480912357f2730"
+      ]
+    },
+    {
+      "caseId": "t44-support-digital-p1a",
+      "stratum": "ANSWERABLE_SINGLE_PRIMARY_DIRECT",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "signal-types",
+          "acceptableNodeIds": [
+            "node-ffc80818202c30b2a9b6f5c67e76238293894e43a32db7d7468434685c6a5ae9"
+          ]
+        },
+        {
+          "groupId": "identify-signal",
+          "acceptableNodeIds": [
+            "node-d2a6ad2612b96cdedee3a140fb072708c00fa657368cbc6ea2f2c15ec8a4a01e"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-900724afcaece91b708ec3ccb3a6a5e071989596808defce9be07f5b642dcf8a"
+      ]
+    },
+    {
+      "caseId": "t44-support-digital-p1b",
+      "stratum": "ANSWERABLE_SINGLE_PRIMARY_DIRECT",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "sender-check",
+          "acceptableNodeIds": [
+            "node-fed82171cded2ec3fa11a73583166d16c83c4d7cfa173d7720a161855a6c1c8b"
+          ]
+        },
+        {
+          "groupId": "receiver-check",
+          "acceptableNodeIds": [
+            "node-d315e87295a3fdcf742ab80c70b7ba4b293c7fbf793c1216403176809bf2566d"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-12e13f361de9070f389c5af50d3e22e91879f63cdc0fea22e45010c8f5fa001a"
+      ]
+    },
+    {
+      "caseId": "t44-support-digital-p2a",
+      "stratum": "ANSWERABLE_PARAPHRASE_ALIAS",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "filter-principle",
+          "acceptableNodeIds": [
+            "node-8235a6a58de626f43c3fc39c39731c0d4b911f2a529301a1024cff71e0b0ba04"
+          ]
+        },
+        {
+          "groupId": "compare-smoothing",
+          "acceptableNodeIds": [
+            "node-88493984297f9e90d6c6de7fc3cb1243a68327d68598d52723037f2612bf19f8"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-8a53e94a05d44e9cfd932dbae2a24d5b7157b022ba5868f0ae7fc02d964a7c09"
+      ]
+    },
+    {
+      "caseId": "t44-support-digital-p2b",
+      "stratum": "ANSWERABLE_PARAPHRASE_ALIAS",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "feedback-target",
+          "acceptableNodeIds": [
+            "node-50f45bac3e08ec7ce92b95849c5cb5df88d8395e8277000ff9275c38f0a7b62a"
+          ]
+        },
+        {
+          "groupId": "minimal-reset-test",
+          "acceptableNodeIds": [
+            "node-4d618d05591795a383ae63e15693e9b0e70f112a2e8ace97cfb69d9fdf94a0ac"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-d97bcce4a63d50642c91e02c64b92be29fd44dc16b78c6f9c4657be364c2c417"
+      ]
+    },
+    {
+      "caseId": "t44-support-digital-p3a",
+      "stratum": "ANSWERABLE_MULTI_PRIMARY_COMPOSITION",
+      "multiClaim": true,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "protocol-evidence",
+          "acceptableNodeIds": [
+            "node-17a280d57ae767e51f94fd33f27324ee0965543aa97296e1093e1ee32d3d15c0"
+          ]
+        },
+        {
+          "groupId": "mapping-endpoint",
+          "acceptableNodeIds": [
+            "node-2eecc744867fb7782d66f29972698002c0c1e7f6994332d7448ae6a92a8d7ea6"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-84b636e6e58e8ee6f4ad1a931ed8569b21d0184a4af8c248d19c2a27f0f29735"
+      ]
+    },
+    {
+      "caseId": "t44-support-digital-p3b",
+      "stratum": "ANSWERABLE_MULTI_PRIMARY_COMPOSITION",
+      "multiClaim": true,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "change-boundary",
+          "acceptableNodeIds": [
+            "node-16c17704eb26e8043ec8b9799ea245b0370e141dbdc811b31158efed84e4018f"
+          ]
+        },
+        {
+          "groupId": "preserve-replace-verify",
+          "acceptableNodeIds": [
+            "node-5adefe7ad558f174316b8737585495dd8412123ba18f91d152dd3df8bfca3d4f"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-0f7befe0b9ffd4c5d1ba5a44904893d06dcb09f753cddd0e5a10cf9049b8b40d"
+      ]
+    },
+    {
+      "caseId": "t44-support-digital-p4a",
+      "stratum": "ANSWERABLE_IN_PACK_HARD_DISTRACTOR",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "layered-observation",
+          "acceptableNodeIds": [
+            "node-b6cc84d3ddd02d609c2935692287b83dcf1a537d29f1e71e6aa84c0371b85f35"
+          ]
+        },
+        {
+          "groupId": "evidence-chain",
+          "acceptableNodeIds": [
+            "node-17a280d57ae767e51f94fd33f27324ee0965543aa97296e1093e1ee32d3d15c0"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-d97bcce4a63d50642c91e02c64b92be29fd44dc16b78c6f9c4657be364c2c417"
+      ]
+    },
+    {
+      "caseId": "t44-support-digital-p4b",
+      "stratum": "ANSWERABLE_IN_PACK_HARD_DISTRACTOR",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "midi-entry",
+          "acceptableNodeIds": [
+            "node-900724afcaece91b708ec3ccb3a6a5e071989596808defce9be07f5b642dcf8a"
+          ]
+        },
+        {
+          "groupId": "midi-signal-role",
+          "acceptableNodeIds": [
+            "node-8d0171fc2675453e33003234f0532b6b4089250e6494c14ac7792bd2172070a3"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-ffc80818202c30b2a9b6f5c67e76238293894e43a32db7d7468434685c6a5ae9"
+      ]
+    },
+    {
+      "caseId": "t44-support-digital-p5a",
+      "stratum": "ANSWERABLE_CROSS_PACK_TERM_OVERLAP",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "experience-feedback",
+          "acceptableNodeIds": [
+            "node-02c39c18b4dbaabb9bfca8f9ebd5474b4d6ff96866e3afa93038996fa445c064"
+          ]
+        },
+        {
+          "groupId": "behavior-response",
+          "acceptableNodeIds": [
+            "node-c809c7cea1e1192e93909f610fd1f09e4526b895aed17931acf763ac132c62fe"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-5c1503ee863462a32fecf3de0c696f5d53579bc523fa5cbcc40ca64f92ca5692"
+      ]
+    },
+    {
+      "caseId": "t44-support-digital-p5b",
+      "stratum": "ANSWERABLE_CROSS_PACK_TERM_OVERLAP",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "chop-role",
+          "acceptableNodeIds": [
+            "node-7e7715684768d8ece3a8a6c817aabc1c81f43def27b84bcc30184b41992d6070"
+          ]
+        },
+        {
+          "groupId": "top-role",
+          "acceptableNodeIds": [
+            "node-d97bcce4a63d50642c91e02c64b92be29fd44dc16b78c6f9c4657be364c2c417"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-e78787dd0f7de5ef53348966c79aee66980b2e4abc833fc539879f33c4de101c"
+      ]
+    },
+    {
+      "caseId": "t44-support-book-p1a",
+      "stratum": "ANSWERABLE_SINGLE_PRIMARY_DIRECT",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "bleed-trim-relation",
+          "acceptableNodeIds": [
+            "node-4b0d9ce07b00e5f8daec3c66ef671666dd4d246e91493db9c6fbff26124aad6e"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-2fa5f4ef876be38a49ad0ddfc12bbc93fe2a7dd444dcc5f3a5fc314ff8c4db4e"
+      ]
+    },
+    {
+      "caseId": "t44-support-book-p1b",
+      "stratum": "ANSWERABLE_SINGLE_PRIMARY_DIRECT",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "missing-link-risk",
+          "acceptableNodeIds": [
+            "node-56be9fd0f3872434883c44f7b86f86bf322293a780064c20fdded624e021bac3"
+          ]
+        },
+        {
+          "groupId": "link-preflight",
+          "acceptableNodeIds": [
+            "node-ea409d46615906f15ffba735eef31e4ef7bf1446eb08d6c7a041a54eee7c8526"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-344c940195b318f812f00cfbf77196b39ed6bd5bf402fc9ea9951499696b9886"
+      ]
+    },
+    {
+      "caseId": "t44-support-book-p2a",
+      "stratum": "ANSWERABLE_PARAPHRASE_ALIAS",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "edge-object-bleed",
+          "acceptableNodeIds": [
+            "node-4b0d9ce07b00e5f8daec3c66ef671666dd4d246e91493db9c6fbff26124aad6e"
+          ]
+        },
+        {
+          "groupId": "check-edge-images",
+          "acceptableNodeIds": [
+            "node-856d0bf5887078a4181fc1cd374ddd31e1e0d1aafba1b6cd9de110b0610777be"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-2fa5f4ef876be38a49ad0ddfc12bbc93fe2a7dd444dcc5f3a5fc314ff8c4db4e"
+      ]
+    },
+    {
+      "caseId": "t44-support-book-p2b",
+      "stratum": "ANSWERABLE_PARAPHRASE_ALIAS",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "kerning-tracking",
+          "acceptableNodeIds": [
+            "node-fdee4d813b851ddb17e7319c703a93157caac3b11f0aa41dc7ad03ee06f95c8a"
+          ]
+        },
+        {
+          "groupId": "adjust-by-scope",
+          "acceptableNodeIds": [
+            "node-48e84af2d8d2e3c7b5840786631900ef9557a42a11ccf87e2bce058293aa4aef"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-378fec90191bd03fc9b67ad65e5abc4bed0088ddaeb1621bb91c1e1cf8c20256"
+      ]
+    },
+    {
+      "caseId": "t44-support-book-p3a",
+      "stratum": "ANSWERABLE_MULTI_PRIMARY_COMPOSITION",
+      "multiClaim": true,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "cross-page-bleed",
+          "acceptableNodeIds": [
+            "node-4b0d9ce07b00e5f8daec3c66ef671666dd4d246e91493db9c6fbff26124aad6e"
+          ]
+        },
+        {
+          "groupId": "binding-purpose",
+          "acceptableNodeIds": [
+            "node-1652bcae2c61cc5520133d61ab00c20c215bf5424b5431fb117e10070394b364"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-52b9eb8db8f50e00cb2546b352d41387ea7bf64027cf0350e1122aabdef327bc"
+      ]
+    },
+    {
+      "caseId": "t44-support-book-p3b",
+      "stratum": "ANSWERABLE_MULTI_PRIMARY_COMPOSITION",
+      "multiClaim": true,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "layout-grid-role",
+          "acceptableNodeIds": [
+            "node-6eeeca431d3005629b0916e1a05f59e109eb0e986d8fd86eb398029d6fa940f4"
+          ]
+        },
+        {
+          "groupId": "information-levels",
+          "acceptableNodeIds": [
+            "node-6c549306c6d63ebe77e01b9f6ad30a76ae55c0f4424ccff9e1042ca38511f3a8"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-2740edd84891a7f7185a6747d15edc8b24c46160b34ed5c865a7164fd9755091"
+      ]
+    },
+    {
+      "caseId": "t44-support-book-p4a",
+      "stratum": "ANSWERABLE_IN_PACK_HARD_DISTRACTOR",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "task-sequence",
+          "acceptableNodeIds": [
+            "node-b5996114df5aed99bc42bcaaa282ed0973768b89ad5b5a44acdef75634cf5a31"
+          ]
+        },
+        {
+          "groupId": "reading-path-check",
+          "acceptableNodeIds": [
+            "node-59c28dabc2e12350f781e31bc65690c00187a39a7c66ef1971a73839033b4f1c"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-c36ebe5c1afc75e2028d0c5c09f6dc5cb9cf7591d2ba57ea469958c4b448b383"
+      ]
+    },
+    {
+      "caseId": "t44-support-book-p4b",
+      "stratum": "ANSWERABLE_IN_PACK_HARD_DISTRACTOR",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "provider-requirement",
+          "acceptableNodeIds": [
+            "node-16e7dad079fd261f823849f5059eec9eb2dd9f7260835d85272a27e9026914d3"
+          ]
+        },
+        {
+          "groupId": "confirm-and-test",
+          "acceptableNodeIds": [
+            "node-003981cbe11ab8ac238e858d72e3b4887ebbbbdcfd4910f2a753d4ea0ee90840"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-c817bd98f10a32d1fb191cccb250dd0923aff2c1a126c76e9b90ad4ab41cd39b"
+      ]
+    },
+    {
+      "caseId": "t44-support-book-p5a",
+      "stratum": "ANSWERABLE_CROSS_PACK_TERM_OVERLAP",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "whole-book-rule",
+          "acceptableNodeIds": [
+            "node-05fceac1c5d3cef8be0a6d79164402bb20a51c6f2fc7bc6dcc7f9d7d8d5721ff"
+          ]
+        },
+        {
+          "groupId": "repeated-relations",
+          "acceptableNodeIds": [
+            "node-83ca491ca3b5721b5042b354a9372fd62d06e4cd669bd7aa27e975f29537587c"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-52b9eb8db8f50e00cb2546b352d41387ea7bf64027cf0350e1122aabdef327bc"
+      ]
+    },
+    {
+      "caseId": "t44-support-book-p5b",
+      "stratum": "ANSWERABLE_CROSS_PACK_TERM_OVERLAP",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "document-grid-role",
+          "acceptableNodeIds": [
+            "node-2740edd84891a7f7185a6747d15edc8b24c46160b34ed5c865a7164fd9755091"
+          ]
+        },
+        {
+          "groupId": "layout-grid-role",
+          "acceptableNodeIds": [
+            "node-6eeeca431d3005629b0916e1a05f59e109eb0e986d8fd86eb398029d6fa940f4"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-5e93871cc053ce8ad1b64eec9d19c260a4cfa7b1aaa16f1e7de99220d153c82b"
+      ]
+    },
+    {
+      "caseId": "t44-support-layout-p1a",
+      "stratum": "ANSWERABLE_SINGLE_PRIMARY_DIRECT",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "grid-task",
+          "acceptableNodeIds": [
+            "node-a8f7b30e70182c95cdd8b6428687eebf255d9404f0f3482f5569459e8c037cf7"
+          ]
+        },
+        {
+          "groupId": "hierarchy-order",
+          "acceptableNodeIds": [
+            "node-3e9dfaafb1f52046ef2aadec2dbfb1fab9d0b3b75855eaa5f6f7fe75bd2a6377"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-46b9f9116c48c399d15d552e1b30414788a5badca0c90422cb2cbd1ef2be04a0"
+      ]
+    },
+    {
+      "caseId": "t44-support-layout-p1b",
+      "stratum": "ANSWERABLE_SINGLE_PRIMARY_DIRECT",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "reading-task",
+          "acceptableNodeIds": [
+            "node-bb6462c7b42864f0ba49f712bd6972b6993aa4336d4ef306fd84c439d1987e9e"
+          ]
+        },
+        {
+          "groupId": "not-template",
+          "acceptableNodeIds": [
+            "node-df2ff73acde93a3a565b69683b4a9f842defc437f22682f3defdd7f136769f4d"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-d6d3f6918713edbd99b6424adabb497b483fccc3c53464b3d0fa96bfdfb53ed9"
+      ]
+    },
+    {
+      "caseId": "t44-support-layout-p2a",
+      "stratum": "ANSWERABLE_PARAPHRASE_ALIAS",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "restore-contrast",
+          "acceptableNodeIds": [
+            "node-eb51b2ee8499e10097ed659d615fe1a32786d95792ef4394c297da6ad7d29981"
+          ]
+        },
+        {
+          "groupId": "shared-alignment-path",
+          "acceptableNodeIds": [
+            "node-02fbbd4d25bbe2eeb47d2d0e7a72e154f6c2c9adcf23d82a71385898957fea74"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-a1180944f96040bf5091448144d54caaad6ccfc5d0d26687eddad2957462c720"
+      ]
+    },
+    {
+      "caseId": "t44-support-layout-p2b",
+      "stratum": "ANSWERABLE_PARAPHRASE_ALIAS",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "spatial-order",
+          "acceptableNodeIds": [
+            "node-326310eb19471b7b54b112f14af6441d774ee904df77196cc2c5cadec4dcd3da"
+          ]
+        },
+        {
+          "groupId": "new-meaning",
+          "acceptableNodeIds": [
+            "node-d7091c9fb652fb141f79e016398b3f693326f7b92e28bdc29c4bc7c85e5c3d99"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-f7e9e98b393d417eecbe2365af184d35f528d0322550d7ad594399ef4e37ca57"
+      ]
+    },
+    {
+      "caseId": "t44-support-layout-p3a",
+      "stratum": "ANSWERABLE_MULTI_PRIMARY_COMPOSITION",
+      "multiClaim": true,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "column-skeleton",
+          "acceptableNodeIds": [
+            "node-272aaa9c804538cc0f5b9d44cac5addad8871be28915abbfcbb85afc6c757a4f"
+          ]
+        },
+        {
+          "groupId": "spacing-groups",
+          "acceptableNodeIds": [
+            "node-0fe8a2c44fb687856f72cb21d877a947744db8bf28cee6019cb31f371bcfd535"
+          ]
+        },
+        {
+          "groupId": "whitespace-boundary",
+          "acceptableNodeIds": [
+            "node-f4f1e98b00d05d9367050cb39b8cdba53a4929be8548c86e439dda5e325827f4"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-a1180944f96040bf5091448144d54caaad6ccfc5d0d26687eddad2957462c720"
+      ]
+    },
+    {
+      "caseId": "t44-support-layout-p3b",
+      "stratum": "ANSWERABLE_MULTI_PRIMARY_COMPOSITION",
+      "multiClaim": true,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "edition-copyright-toc",
+          "acceptableNodeIds": [
+            "node-ac2d2b8dc73f4f3315bf855e0798ce025c1dc51f093126c43e0a66f81c1fe691"
+          ]
+        },
+        {
+          "groupId": "question-led-reading",
+          "acceptableNodeIds": [
+            "node-bb9d3f3b2512fa787bb9450e41de7ab9cc5563befbe1e2bf3b8dac45c8d2ab01"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-c8f04930650db0added75f7c371f618280b8baf5d44f4e6a93bd27494f1856dd"
+      ]
+    },
+    {
+      "caseId": "t44-support-layout-p4a",
+      "stratum": "ANSWERABLE_IN_PACK_HARD_DISTRACTOR",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "decoration-to-theme",
+          "acceptableNodeIds": [
+            "node-2031a60a356427c5cfbe2f7b846102eaab6728af56cef518914d2ff9b65b723c"
+          ]
+        },
+        {
+          "groupId": "goal-and-feedback",
+          "acceptableNodeIds": [
+            "node-9f27d3d4758c1a8b6b890e574407a814eb775fb72af71f018a9dd4c53b9825dd"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-3c356602a87b866ad620b9b1ab169a5cdb855f98330fc0572b18fef7c8d25a4a"
+      ]
+    },
+    {
+      "caseId": "t44-support-layout-p4b",
+      "stratum": "ANSWERABLE_IN_PACK_HARD_DISTRACTOR",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "whitespace-function",
+          "acceptableNodeIds": [
+            "node-f4f1e98b00d05d9367050cb39b8cdba53a4929be8548c86e439dda5e325827f4"
+          ]
+        },
+        {
+          "groupId": "inspect-information-groups",
+          "acceptableNodeIds": [
+            "node-ff086c0a51f508c4b705ad151c5c4ba9edceba75a72d7eec02b70705c60723c6"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-fa0e0eccf59dd381f07b77912080607e3ff017c71862135493b2d1e7cb601cd1"
+      ]
+    },
+    {
+      "caseId": "t44-support-layout-p5a",
+      "stratum": "ANSWERABLE_CROSS_PACK_TERM_OVERLAP",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "ordered-information",
+          "acceptableNodeIds": [
+            "node-3e9dfaafb1f52046ef2aadec2dbfb1fab9d0b3b75855eaa5f6f7fe75bd2a6377"
+          ]
+        },
+        {
+          "groupId": "reader-order-proof",
+          "acceptableNodeIds": [
+            "node-9b516927c64e254493e7c47f7bddda5b1f8ac99fbaef878a25112a771d661460"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-ca1b6a50bf057070de101ec4084d2cc0809b43c564d7beb5e10847579f3de17e"
+      ]
+    },
+    {
+      "caseId": "t44-support-layout-p5b",
+      "stratum": "ANSWERABLE_CROSS_PACK_TERM_OVERLAP",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "international-context",
+          "acceptableNodeIds": [
+            "node-46658bebb37404e65c2586fe1fcbb8954651659dd0a5d7010a913b712c112f70"
+          ]
+        },
+        {
+          "groupId": "neo-chinese-context",
+          "acceptableNodeIds": [
+            "node-5c585bdf860dba5dc3f2689104c315e6748fdaf5dd41e359d81e68dae794cdd3"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-597b7b8d7f66d7827ba6a6e158107066569af0384f1adf1ace5206b371671f59"
+      ]
+    },
+    {
+      "caseId": "t44-support-brand-p1a",
+      "stratum": "ANSWERABLE_SINGLE_PRIMARY_DIRECT",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "position-and-application",
+          "acceptableNodeIds": [
+            "node-bf0161b9d74485b764f1a213badacc848d5d069738ec7fb5f0321bd76ef06f51"
+          ]
+        },
+        {
+          "groupId": "identity-task",
+          "acceptableNodeIds": [
+            "node-5627ee319393fc0c4f79ea46bdd1499a7bba90764ef3db919007639b54889653"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-c5f64013dfe50127b8492bb33ef8c2960563958995e13b58b098f58b4ca1b9dc"
+      ]
+    },
+    {
+      "caseId": "t44-support-brand-p1b",
+      "stratum": "ANSWERABLE_SINGLE_PRIMARY_DIRECT",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "controlled-versions",
+          "acceptableNodeIds": [
+            "node-4168b1c560cca4d5b0456c1e330c37ae0994f1d1c2e62dcffbc93ee9037eff70"
+          ]
+        },
+        {
+          "groupId": "single-variable",
+          "acceptableNodeIds": [
+            "node-1dc5c9d8915391e73efb765e1a442506bce5a35a3facbc71a87e85a338211584"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-d92e3f3f71ccfadcc6a5512b82f14b636ac35d5e3bb4d6f1e57a18d5282bced5"
+      ]
+    },
+    {
+      "caseId": "t44-support-brand-p2a",
+      "stratum": "ANSWERABLE_PARAPHRASE_ALIAS",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "small-mono-output",
+          "acceptableNodeIds": [
+            "node-d92e3f3f71ccfadcc6a5512b82f14b636ac35d5e3bb4d6f1e57a18d5282bced5"
+          ]
+        },
+        {
+          "groupId": "name-readability",
+          "acceptableNodeIds": [
+            "node-e35208d672573407528448ec596140040e6745634e7ef5f8403c2ebc79eeab3b"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-bf0161b9d74485b764f1a213badacc848d5d069738ec7fb5f0321bd76ef06f51"
+      ]
+    },
+    {
+      "caseId": "t44-support-brand-p2b",
+      "stratum": "ANSWERABLE_PARAPHRASE_ALIAS",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "tone-to-variables",
+          "acceptableNodeIds": [
+            "node-c91a3b45d823885dcb9b2d30543e05c22fc85a79a6d2eb08354509ccab9ec605"
+          ]
+        },
+        {
+          "groupId": "audience-evidence",
+          "acceptableNodeIds": [
+            "node-f132726cede26c51a61c47dc0d153516eec8497e89f559050447e6bce0ffdd3e"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-f610525180d34d088d7cee888b0c33cdebb37754a477a6845ab1aac8e9d329ea"
+      ]
+    },
+    {
+      "caseId": "t44-support-brand-p3a",
+      "stratum": "ANSWERABLE_MULTI_PRIMARY_COMPOSITION",
+      "multiClaim": true,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "small-mono",
+          "acceptableNodeIds": [
+            "node-d92e3f3f71ccfadcc6a5512b82f14b636ac35d5e3bb4d6f1e57a18d5282bced5"
+          ]
+        },
+        {
+          "groupId": "name-recognition",
+          "acceptableNodeIds": [
+            "node-e35208d672573407528448ec596140040e6745634e7ef5f8403c2ebc79eeab3b"
+          ]
+        },
+        {
+          "groupId": "test-record",
+          "acceptableNodeIds": [
+            "node-53c80e95103fab6792d67fda8d31bb6a302ea96817c744d184f3da14f264be8a"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-c5f64013dfe50127b8492bb33ef8c2960563958995e13b58b098f58b4ca1b9dc"
+      ]
+    },
+    {
+      "caseId": "t44-support-brand-p3b",
+      "stratum": "ANSWERABLE_MULTI_PRIMARY_COMPOSITION",
+      "multiClaim": true,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "one-variable",
+          "acceptableNodeIds": [
+            "node-1dc5c9d8915391e73efb765e1a442506bce5a35a3facbc71a87e85a338211584"
+          ]
+        },
+        {
+          "groupId": "same-contact-point",
+          "acceptableNodeIds": [
+            "node-cc743f296077853ac938b921ea070fca192b90f911fb3900a3a8afbc3048fb8b"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-f610525180d34d088d7cee888b0c33cdebb37754a477a6845ab1aac8e9d329ea"
+      ]
+    },
+    {
+      "caseId": "t44-support-brand-p4a",
+      "stratum": "ANSWERABLE_IN_PACK_HARD_DISTRACTOR",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "identity-task",
+          "acceptableNodeIds": [
+            "node-5627ee319393fc0c4f79ea46bdd1499a7bba90764ef3db919007639b54889653"
+          ]
+        },
+        {
+          "groupId": "readable-name",
+          "acceptableNodeIds": [
+            "node-e35208d672573407528448ec596140040e6745634e7ef5f8403c2ebc79eeab3b"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-bf0161b9d74485b764f1a213badacc848d5d069738ec7fb5f0321bd76ef06f51"
+      ]
+    },
+    {
+      "caseId": "t44-support-brand-p4b",
+      "stratum": "ANSWERABLE_IN_PACK_HARD_DISTRACTOR",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "small-mono-output",
+          "acceptableNodeIds": [
+            "node-d92e3f3f71ccfadcc6a5512b82f14b636ac35d5e3bb4d6f1e57a18d5282bced5"
+          ]
+        },
+        {
+          "groupId": "real-size-test",
+          "acceptableNodeIds": [
+            "node-53c80e95103fab6792d67fda8d31bb6a302ea96817c744d184f3da14f264be8a"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-c5f64013dfe50127b8492bb33ef8c2960563958995e13b58b098f58b4ca1b9dc"
+      ]
+    },
+    {
+      "caseId": "t44-support-brand-p5a",
+      "stratum": "ANSWERABLE_CROSS_PACK_TERM_OVERLAP",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "horizontal-vertical-test",
+          "acceptableNodeIds": [
+            "node-a49cf60c7899950cdc7107ae1ffdd01f8792bcc24f4d1ea281e88ebf273ed5d9"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-d92e3f3f71ccfadcc6a5512b82f14b636ac35d5e3bb4d6f1e57a18d5282bced5"
+      ]
+    },
+    {
+      "caseId": "t44-support-brand-p5b",
+      "stratum": "ANSWERABLE_CROSS_PACK_TERM_OVERLAP",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "name-readability",
+          "acceptableNodeIds": [
+            "node-e35208d672573407528448ec596140040e6745634e7ef5f8403c2ebc79eeab3b"
+          ]
+        },
+        {
+          "groupId": "name-or-shape-task",
+          "acceptableNodeIds": [
+            "node-5627ee319393fc0c4f79ea46bdd1499a7bba90764ef3db919007639b54889653"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-d92e3f3f71ccfadcc6a5512b82f14b636ac35d5e3bb4d6f1e57a18d5282bced5"
+      ]
+    }
+  ],
+  "suiteHash": "9c92e375becdae7760cd3e5d3a9dc66e45d05963302da9204e91dd260ebfe81a"
+}

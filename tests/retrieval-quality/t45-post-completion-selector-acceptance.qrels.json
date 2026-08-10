@@ -1,0 +1,436 @@
+{
+  "schemaVersion": 1,
+  "id": "lumi-t45-post-completion-selector-acceptance-qrels",
+  "version": "2026-07-30.2",
+  "split": "POST_COMPLETION_ACCEPTANCE",
+  "runtimeSuite": {
+    "id": "lumi-t45-post-completion-selector-acceptance-runtime",
+    "version": "2026-07-30.2",
+    "suiteHash": "8b3e43cbbaa21ef9bca6b9648db123beef0108508eba06c3a38b490141f00881"
+  },
+  "corpusSnapshot": {
+    "path": "data/knowledge-v2/knowledge-corpus.v2.json",
+    "bundleHash": "82db90934afaffa3d227b6b0d11ab5efdb88009fd8b9274845567de4888079f8"
+  },
+  "capabilityInventory": {
+    "id": "lumi-t45-capability-inventory",
+    "inventoryHash": "fd199dfe6f49ce1249f20a04be580dc1b1b31fff2d831b88d4bd13e022082d67"
+  },
+  "cases": [
+    {
+      "caseId": "t45-compacc-book-bleed-direct",
+      "familyId": "frozen-t44-book-bleed-output",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-7e62bd36112fa77a22813cd3c1bca2d44d7db3999824b023edd95521443fe466",
+            "node-4b0d9ce07b00e5f8daec3c66ef671666dd4d246e91493db9c6fbff26124aad6e"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-2fa5f4ef876be38a49ad0ddfc12bbc93fe2a7dd444dcc5f3a5fc314ff8c4db4e"
+      ]
+    },
+    {
+      "caseId": "t45-compacc-book-bleed-compose",
+      "familyId": "frozen-t44-book-bleed-output",
+      "multiClaim": true,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-9eaffbd745c69bb94ea2308df4363becc984472f7c9b5f5b8d4b7992fcba8cbe"
+          ]
+        },
+        {
+          "groupId": "group-2",
+          "acceptableNodeIds": [
+            "node-4b0d9ce07b00e5f8daec3c66ef671666dd4d246e91493db9c6fbff26124aad6e",
+            "node-856d0bf5887078a4181fc1cd374ddd31e1e0d1aafba1b6cd9de110b0610777be"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-2fa5f4ef876be38a49ad0ddfc12bbc93fe2a7dd444dcc5f3a5fc314ff8c4db4e"
+      ]
+    },
+    {
+      "caseId": "t45-compacc-book-spacing-direct",
+      "familyId": "frozen-t44-book-kerning-tracking",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-fdee4d813b851ddb17e7319c703a93157caac3b11f0aa41dc7ad03ee06f95c8a",
+            "node-48e84af2d8d2e3c7b5840786631900ef9557a42a11ccf87e2bce058293aa4aef"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-b317fb24752edcdabb665900a376d39b6a32b34d3006d3dfbf8fbda5d2db22fe"
+      ]
+    },
+    {
+      "caseId": "t45-compacc-book-spacing-compose",
+      "familyId": "frozen-t44-book-kerning-tracking",
+      "multiClaim": true,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-fdee4d813b851ddb17e7319c703a93157caac3b11f0aa41dc7ad03ee06f95c8a"
+          ]
+        },
+        {
+          "groupId": "group-2",
+          "acceptableNodeIds": [
+            "node-48e84af2d8d2e3c7b5840786631900ef9557a42a11ccf87e2bce058293aa4aef"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-b1a5c87d13a1fd6f28a869380508770783f6d6dea49164a82fcc19890fee8d91"
+      ]
+    },
+    {
+      "caseId": "t45-compacc-brand-readable-direct",
+      "familyId": "frozen-t44-brandvi-001-assess-wordmark-fit",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-e35208d672573407528448ec596140040e6745634e7ef5f8403c2ebc79eeab3b",
+            "node-53c80e95103fab6792d67fda8d31bb6a302ea96817c744d184f3da14f264be8a"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-bf0161b9d74485b764f1a213badacc848d5d069738ec7fb5f0321bd76ef06f51"
+      ]
+    },
+    {
+      "caseId": "t45-compacc-brand-readable-compose",
+      "familyId": "frozen-t44-brandvi-001-assess-wordmark-fit",
+      "multiClaim": true,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-d92e3f3f71ccfadcc6a5512b82f14b636ac35d5e3bb4d6f1e57a18d5282bced5",
+            "node-a49cf60c7899950cdc7107ae1ffdd01f8792bcc24f4d1ea281e88ebf273ed5d9",
+            "node-53c80e95103fab6792d67fda8d31bb6a302ea96817c744d184f3da14f264be8a"
+          ]
+        },
+        {
+          "groupId": "group-2",
+          "acceptableNodeIds": [
+            "node-f610525180d34d088d7cee888b0c33cdebb37754a477a6845ab1aac8e9d329ea",
+            "node-c5f64013dfe50127b8492bb33ef8c2960563958995e13b58b098f58b4ca1b9dc",
+            "node-4168b1c560cca4d5b0456c1e330c37ae0994f1d1c2e62dcffbc93ee9037eff70"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-bf0161b9d74485b764f1a213badacc848d5d069738ec7fb5f0321bd76ef06f51"
+      ]
+    },
+    {
+      "caseId": "t45-compacc-brand-audience-direct",
+      "familyId": "frozen-t44-brandvi-002-test-wordmark-tone-and-audience",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-ac8f4874a241ab12e7648238244a39233d78aaf0fc5ed69e7273e36f3499edb4",
+            "node-a13e4956089bcdeb9b3592b2be7d2cb78440ec04589aa520eecaeaab6a5853a4",
+            "node-cc743f296077853ac938b921ea070fca192b90f911fb3900a3a8afbc3048fb8b"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-c91a3b45d823885dcb9b2d30543e05c22fc85a79a6d2eb08354509ccab9ec605"
+      ]
+    },
+    {
+      "caseId": "t45-compacc-brand-audience-compose",
+      "familyId": "frozen-t44-brandvi-002-test-wordmark-tone-and-audience",
+      "multiClaim": true,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-c91a3b45d823885dcb9b2d30543e05c22fc85a79a6d2eb08354509ccab9ec605",
+            "node-d041cd4f202218fab5f50b42affd8b85836abc681698e89682cf652b6ad24fa6",
+            "node-c6215e544eb276a4de9e0de482fe48b4c33b5904277bc1faff0eace072305ff6"
+          ]
+        },
+        {
+          "groupId": "group-2",
+          "acceptableNodeIds": [
+            "node-a13e4956089bcdeb9b3592b2be7d2cb78440ec04589aa520eecaeaab6a5853a4",
+            "node-cc743f296077853ac938b921ea070fca192b90f911fb3900a3a8afbc3048fb8b"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-ac8f4874a241ab12e7648238244a39233d78aaf0fc5ed69e7273e36f3499edb4"
+      ]
+    },
+    {
+      "caseId": "t45-compacc-interaction-intent-direct",
+      "familyId": "frozen-t44-dicd-002-interaction-scheme-six-clarifications",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-3f33b03f74abf5295df4565c8d1915c7f66f72034e1538f9208185b4705d11af"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-2c60825478a6fa85ea4401be97ec6f3278dc55bedb5f499429b8b8d54961f175"
+      ]
+    },
+    {
+      "caseId": "t45-compacc-interaction-intent-compose",
+      "familyId": "frozen-t44-dicd-002-interaction-scheme-six-clarifications",
+      "multiClaim": true,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-af45fb4f64bbac4025d1fe7b10e72605aad3b89f88a690aa1440b96d350c8aef",
+            "node-ec9fcd76a470a2041ea876b2c37cfd10f4eb1e4dc4bf31f13b6c125024da2daf"
+          ]
+        },
+        {
+          "groupId": "group-2",
+          "acceptableNodeIds": [
+            "node-02c39c18b4dbaabb9bfca8f9ebd5474b4d6ff96866e3afa93038996fa445c064",
+            "node-c809c7cea1e1192e93909f610fd1f09e4526b895aed17931acf763ac132c62fe",
+            "node-c56dc5322d7b1911648a188b01c64036322e571e69e021cf39584aaebc959fcd"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-2c60825478a6fa85ea4401be97ec6f3278dc55bedb5f499429b8b8d54961f175"
+      ]
+    },
+    {
+      "caseId": "t45-compacc-osc-sender-direct",
+      "familyId": "frozen-t44-osc-out-chop",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-04a9d036653149c0b038c28b02ad1960bd4ab0ac9372f05ce37882650f80b19d",
+            "node-143712624f26204c0ac4aba9500771b276f4b918643ed8c288984b4392bbd491",
+            "node-fed82171cded2ec3fa11a73583166d16c83c4d7cfa173d7720a161855a6c1c8b"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-d315e87295a3fdcf742ab80c70b7ba4b293c7fbf793c1216403176809bf2566d"
+      ]
+    },
+    {
+      "caseId": "t45-compacc-osc-sender-compose",
+      "familyId": "frozen-t44-osc-out-chop",
+      "multiClaim": true,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-04a9d036653149c0b038c28b02ad1960bd4ab0ac9372f05ce37882650f80b19d",
+            "node-143712624f26204c0ac4aba9500771b276f4b918643ed8c288984b4392bbd491",
+            "node-fed82171cded2ec3fa11a73583166d16c83c4d7cfa173d7720a161855a6c1c8b"
+          ]
+        },
+        {
+          "groupId": "group-2",
+          "acceptableNodeIds": [
+            "node-d315e87295a3fdcf742ab80c70b7ba4b293c7fbf793c1216403176809bf2566d"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-12e13f361de9070f389c5af50d3e22e91879f63cdc0fea22e45010c8f5fa001a"
+      ]
+    },
+    {
+      "caseId": "t45-compacc-color-cue-direct",
+      "familyId": "frozen-t44-design-color-redundancy",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-d4619b3d696422f0ba1cf1c98de0bcb13913b0081db372350cc5d97fe3ebef84",
+            "node-8bdcd635a8d8037961eeb7553c2068d9fcaaef5ba2532be643c2c70afa38c7b3",
+            "node-2ccf7c1f706f9cb74bf132f36246bfcce3d1c3226483cf4d75480912357f2730"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-bf9fdcb01a65f140c10afc64a46692993e977c4fbd8759dd14a13db549ab16b8"
+      ]
+    },
+    {
+      "caseId": "t45-compacc-color-cue-compose",
+      "familyId": "frozen-t44-design-color-redundancy",
+      "multiClaim": true,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-c47c16dcdfb64efd63e35406bb4a7e05158773409d14776384905bf44cbf6b73"
+          ]
+        },
+        {
+          "groupId": "group-2",
+          "acceptableNodeIds": [
+            "node-8bdcd635a8d8037961eeb7553c2068d9fcaaef5ba2532be643c2c70afa38c7b3",
+            "node-2ccf7c1f706f9cb74bf132f36246bfcce3d1c3226483cf4d75480912357f2730"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-bf9fdcb01a65f140c10afc64a46692993e977c4fbd8759dd14a13db549ab16b8"
+      ]
+    },
+    {
+      "caseId": "t45-compacc-text-spacing-direct",
+      "familyId": "frozen-t44-design-text-spacing",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-1f79a8251f38c5417b9fb1c5763d03fb3f27a695b6ec33f5f9a0608f0be53d88",
+            "node-b3d27334584f4cef741fb4d51e32255386d608aea4648c3cd95aaa8b181d88b0",
+            "node-066e2ba6cf38454f796c92e979cd8fd10e9336e1a269dd11e9b415f0946e07d9"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-55ea562038b75493d4ec01408581fa6e9568dce3254708c12d372eb931748169"
+      ]
+    },
+    {
+      "caseId": "t45-compacc-text-spacing-compose",
+      "familyId": "frozen-t44-design-text-spacing",
+      "multiClaim": true,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-b3d27334584f4cef741fb4d51e32255386d608aea4648c3cd95aaa8b181d88b0",
+            "node-066e2ba6cf38454f796c92e979cd8fd10e9336e1a269dd11e9b415f0946e07d9"
+          ]
+        },
+        {
+          "groupId": "group-2",
+          "acceptableNodeIds": [
+            "node-fc680db0ac0ad9d86796b9e27f88b7a8afe61dc593281dc69a080d972bcf6f2f"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-55ea562038b75493d4ec01408581fa6e9568dce3254708c12d372eb931748169"
+      ]
+    },
+    {
+      "caseId": "t45-compacc-type-groups-direct",
+      "familyId": "frozen-t44-layout-002-type-hierarchy-and-whitespace",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-387a263cfd5f531c846ffa1680aa892770d4c5cccf2cb07408af3fc980bc7f22",
+            "node-c95cd51c38485365cf00c17c0b5de70b11ac37ae10c605c44ac613fa360c38af"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-86a2ad2f1914d0d992162ff3be917f3037360035e9b2c94f9adf9abfd59016f8"
+      ]
+    },
+    {
+      "caseId": "t45-compacc-type-groups-compose",
+      "familyId": "frozen-t44-layout-002-type-hierarchy-and-whitespace",
+      "multiClaim": true,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-c95cd51c38485365cf00c17c0b5de70b11ac37ae10c605c44ac613fa360c38af",
+            "node-0fe8a2c44fb687856f72cb21d877a947744db8bf28cee6019cb31f371bcfd535",
+            "node-0f21de802f350fdc80d173a2ac89e7861c1855402d0d994b79dab7ddd338fbd6"
+          ]
+        },
+        {
+          "groupId": "group-2",
+          "acceptableNodeIds": [
+            "node-15be50a84e0126adcfb7efccb2725ba005c7bde35fd22341e1420202ba0fd953"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-86a2ad2f1914d0d992162ff3be917f3037360035e9b2c94f9adf9abfd59016f8"
+      ]
+    },
+    {
+      "caseId": "t45-compacc-visual-align-direct",
+      "familyId": "frozen-t44-layout-042-review-alignment-with-guides-hidden",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-a1180944f96040bf5091448144d54caaad6ccfc5d0d26687eddad2957462c720",
+            "node-7d89aee5ffb3330e1299c702004e699045988ff73d28cc704044e8f8e13cc9f8",
+            "node-dda935f8f2e87acd715f4cf98f328ad3e2aa99691fbe8958a4e600e533d46e20"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-2d4d753a3a70915b3692ca4fc505aa45019d4e70dbc76a68a51a3d58686ae0d5"
+      ]
+    },
+    {
+      "caseId": "t45-compacc-visual-align-compose",
+      "familyId": "frozen-t44-layout-042-review-alignment-with-guides-hidden",
+      "multiClaim": true,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-534dc9673fa09916688e5140dd9383e822f8c8e24edbf8da0b44e53504b480df",
+            "node-343ea240d2aa757fa7836623d9bcc3baac6f285513849b3865bf7cd7da579e95",
+            "node-5bd33687de84f0f103d8c459bfc84e008927101af05e1ea4d6ba3c6ca80496b6",
+            "node-ad64d3bebf529c5c941a2ede66e4e4786d020db31d636b2e66ad30dc7a5a9902"
+          ]
+        },
+        {
+          "groupId": "group-2",
+          "acceptableNodeIds": [
+            "node-4112d501aa6e7e1a70232ddd2a27b97c5075f62cfc095e5e8ed8db5db9e56e25"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-2d4d753a3a70915b3692ca4fc505aa45019d4e70dbc76a68a51a3d58686ae0d5"
+      ]
+    }
+  ],
+  "suiteHash": "7a395f7073f042ce169b81e2b59c531ab08c18c1602a80654831a65a08f29e94"
+}

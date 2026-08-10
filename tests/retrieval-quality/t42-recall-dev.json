@@ -1,0 +1,873 @@
+{
+  "schemaVersion": 1,
+  "suiteVersion": "2026-07-28.1",
+  "suiteId": "T42-RECALL-DEV",
+  "split": "DEV",
+  "splitRole": "MODEL_DEVELOPMENT",
+  "corpusSnapshot": {
+    "path": "data/knowledge-v2/knowledge-corpus.v2.json",
+    "bundleHash": "82db90934afaffa3d227b6b0d11ab5efdb88009fd8b9274845567de4888079f8"
+  },
+  "contract": {
+    "mode": "TEXT_TO_TEXT",
+    "caseCount": 40,
+    "coursePackCount": 5,
+    "casesPerCoursePack": 8,
+    "answerablePerCoursePack": 5,
+    "noAnswerPerCoursePack": 3,
+    "requiredEvidenceGroupSemantics": "ALL_GROUPS_REQUIRED_ANY_NODE_WITHIN_GROUP",
+    "runtimeFields": [
+      "mode",
+      "coursePackId",
+      "coursePackVersion",
+      "question"
+    ],
+    "expectedFields": [
+      "expectation",
+      "targetObjectIds",
+      "requiredEvidenceGroups"
+    ]
+  },
+  "answerableTargetSummary": {
+    "answerableCaseCount": 25,
+    "uniqueTargetObjectCount": 22,
+    "maxCasesPerObjectOutsideDeclaredSmallPackOverlap": 1,
+    "reusedEvidenceNodeCount": 0
+  },
+  "smallPackOverlapStrata": [
+    {
+      "coursePackId": "brand-vi-design",
+      "availableCorpusObjectCount": 2,
+      "requiredAnswerableCaseCount": 5,
+      "uniqueTargetObjectCount": 2,
+      "policy": "REUSE_OBJECT_WITH_DISJOINT_REAL_TEXT_NODE_GROUPS",
+      "objectCaseCounts": [
+        {
+          "objectId": "brandvi-001-assess-wordmark-fit",
+          "caseCount": 3
+        },
+        {
+          "objectId": "brandvi-002-test-wordmark-tone-and-audience",
+          "caseCount": 2
+        }
+      ]
+    }
+  ],
+  "cases": [
+    {
+      "id": "t42-recall-dev-general-answerable-color-cue",
+      "familyId": "t42-family-color-status-secondary-cue",
+      "clusterId": "t42-cluster-general-color-status-secondary-cue",
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "general-design",
+        "coursePackVersion": "1",
+        "question": "报名表里我只用红点和绿点表示“没交”和“已交”，有些同学说根本分不出来，最省事该补什么提示？"
+      },
+      "expected": {
+        "expectation": "ANSWERABLE",
+        "targetObjectIds": [
+          "design-color-redundancy"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-c47c16dcdfb64efd63e35406bb4a7e05158773409d14776384905bf44cbf6b73",
+            "node-8bdcd635a8d8037961eeb7553c2068d9fcaaef5ba2532be643c2c70afa38c7b3",
+            "node-2ccf7c1f706f9cb74bf132f36246bfcce3d1c3226483cf4d75480912357f2730"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "t42-recall-dev-general-answerable-process-loopback",
+      "familyId": "t42-family-double-diamond-loopback",
+      "clusterId": "t42-cluster-general-double-diamond-loopback",
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "general-design",
+        "coursePackVersion": "1",
+        "question": "方案都做到一半了，新访谈却把原来的问题推翻了。双钻是不是还得照顺序往下走，还是能退回去？"
+      },
+      "expected": {
+        "expectation": "ANSWERABLE",
+        "targetObjectIds": [
+          "design-double-diamond"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-2f2cc4fad9739a4b7e9830ca35a47cae8d75f6c2e3621df9a95b04000951611b",
+            "node-f6ad5388c9d2ce4f4faa679c17ed464f22169dad2a81a49539b5c246fc3310ce"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "t42-recall-dev-general-answerable-spacing-overflow",
+      "familyId": "t42-family-text-spacing-container-overflow",
+      "clusterId": "t42-cluster-general-text-spacing-container-overflow",
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "general-design",
+        "coursePackVersion": "1",
+        "question": "网页里一调大行距，说明文字就被卡片底边切掉了。这里该查字号，还是先查容器写死了高度？"
+      },
+      "expected": {
+        "expectation": "ANSWERABLE",
+        "targetObjectIds": [
+          "design-text-spacing"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-1f79a8251f38c5417b9fb1c5763d03fb3f27a695b6ec33f5f9a0608f0be53d88",
+            "node-066e2ba6cf38454f796c92e979cd8fd10e9336e1a269dd11e9b415f0946e07d9"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "t42-recall-dev-general-answerable-guide-lock-proof",
+      "familyId": "t42-family-illustrator-guide-lock-proof",
+      "clusterId": "t42-cluster-general-illustrator-guide-lock-proof",
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "general-design",
+        "coursePackVersion": "1",
+        "question": "AI 里参考线明明摆好了，一拖对象还是会把线带跑。我怎么确认它真的锁住了，还能留个检查证据？"
+      },
+      "expected": {
+        "expectation": "ANSWERABLE",
+        "targetObjectIds": [
+          "illustrator-001-grid-guides-and-format-reuse"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-19605568bbc7fa2cc9490b46830581a8580bc8a2c615c2cdda2593e51b84da2b",
+            "node-09aeaa55580eaf0a2033635bb43cae4e68b1290238c38bbe019dcd7e221224de"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "t42-recall-dev-general-answerable-print-contrast-boundary",
+      "familyId": "t42-family-screen-print-contrast-boundary",
+      "clusterId": "t42-cluster-general-screen-print-contrast-boundary",
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "general-design",
+        "coursePackVersion": "1",
+        "question": "小册子在电脑上测着颜色差够大，打样出来灰蒙蒙的。我能只拿屏幕那个对比数值判定成品合格吗？"
+      },
+      "expected": {
+        "expectation": "ANSWERABLE",
+        "targetObjectIds": [
+          "design-text-contrast"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-7a789eab958b1ca37d9028a8c492efe38ad6836030e1b9cd19e9744967fdd0f4"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "t42-recall-dev-general-no-answer-rhino-loft",
+      "familyId": "t42-family-rhino-loft-twist",
+      "clusterId": "t42-cluster-general-rhino-loft-twist",
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "general-design",
+        "coursePackVersion": "1",
+        "question": "Rhino 里两条截面线放样后曲面突然拧了一圈，接缝和曲线方向具体怎么重排？"
+      },
+      "expected": {
+        "expectation": "NO_ANSWER",
+        "targetObjectIds": [],
+        "requiredEvidenceGroups": []
+      }
+    },
+    {
+      "id": "t42-recall-dev-general-no-answer-live-printer-market",
+      "familyId": "t42-family-live-resin-printer-market",
+      "clusterId": "t42-cluster-general-live-resin-printer-market",
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "general-design",
+        "coursePackVersion": "1",
+        "question": "我想给校园展览买一台树脂 3D 打印机，今天哪款价格最低、耗材也最便宜？"
+      },
+      "expected": {
+        "expectation": "NO_ANSWER",
+        "targetObjectIds": [],
+        "requiredEvidenceGroups": []
+      }
+    },
+    {
+      "id": "t42-recall-dev-general-no-answer-patent-outcome",
+      "familyId": "t42-family-design-patent-outcome",
+      "clusterId": "t42-cluster-general-design-patent-outcome",
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "general-design",
+        "coursePackVersion": "1",
+        "question": "这张角色图能不能直接拿去申请外观设计专利，授权成功率大概多少？"
+      },
+      "expected": {
+        "expectation": "NO_ANSWER",
+        "targetObjectIds": [],
+        "requiredEvidenceGroups": []
+      }
+    },
+    {
+      "id": "t42-recall-dev-digital-answerable-learning-progression",
+      "familyId": "t42-family-interaction-learning-progression",
+      "clusterId": "t42-cluster-digital-interaction-learning-progression",
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "digital-interaction",
+        "coursePackVersion": "1",
+        "question": "我已经会看传感器数值，也能让画面有反应了，后面的综合练习到底还要补哪几段关系？"
+      },
+      "expected": {
+        "expectation": "ANSWERABLE",
+        "targetObjectIds": [
+          "course-four-stage-progression"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-067bbf0af7076f2fc6dc811df7e34a645a60d3eb3337b32ca87d1cd208bf3931",
+            "node-0f7befe0b9ffd4c5d1ba5a44904893d06dcb09f753cddd0e5a10cf9049b8b40d"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "t42-recall-dev-digital-answerable-tool-role-switch",
+      "familyId": "t42-family-tool-role-by-current-problem",
+      "clusterId": "t42-cluster-digital-tool-role-by-current-problem",
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "digital-interaction",
+        "coursePackVersion": "1",
+        "question": "互动想法还没想明白，我却一直在 DigiShow 和 TouchDesigner 之间来回切。该按软件顺序学，还是按眼前的问题来选？"
+      },
+      "expected": {
+        "expectation": "ANSWERABLE",
+        "targetObjectIds": [
+          "dicd-003-digishow-touchdesigner-roles"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-fb66b89c574d97e9dd1f44300423f55031c86ca26e0724c0cc210529bcb36ec2",
+            "node-9c69e20c937538bc19f2b1fa024caa4fdb4f299f060a952c6b93e43b1410eaf8"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "t42-recall-dev-digital-answerable-filter-balance",
+      "familyId": "t42-family-filter-stability-response-balance",
+      "clusterId": "t42-cluster-digital-filter-stability-response-balance",
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "digital-interaction",
+        "coursePackVersion": "1",
+        "question": "距离传感器一会儿高一会儿低，画面跟着抽动。我想压掉抖动又不想变迟钝，怎么试比较靠谱？"
+      },
+      "expected": {
+        "expectation": "ANSWERABLE",
+        "targetObjectIds": [
+          "td-filter-chop"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-71dad949a2f610c87c6228ebd839215217dc99f735fde28126aca09b2bcd63ef",
+            "node-88493984297f9e90d6c6de7fc3cb1243a68327d68598d52723037f2612bf19f8"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "t42-recall-dev-digital-answerable-range-remap",
+      "familyId": "t42-family-observed-range-remap",
+      "clusterId": "t42-cluster-digital-observed-range-remap",
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "digital-interaction",
+        "coursePackVersion": "1",
+        "question": "传感器实际只跑在 0.2 到 0.7，我想把这段铺到画面的 0 到 1，应该先记什么、再在哪儿映射？"
+      },
+      "expected": {
+        "expectation": "ANSWERABLE",
+        "targetObjectIds": [
+          "td-math-chop"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-454a163cc2d1e376fc00911119a567cf772cd869da16e9916544ccc041b55d01",
+            "node-bbdfb4137caad4eb121b01833daa97607cb1cad9d2dcc4c88ca202f5e327e63d",
+            "node-2240617d0c0d1718964d587d0f39c4c117abd370b24731183b7fe287e7bb9de2"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "t42-recall-dev-digital-answerable-stable-null-outlet",
+      "familyId": "t42-family-stable-control-outlet",
+      "clusterId": "t42-cluster-digital-stable-control-outlet",
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "digital-interaction",
+        "coursePackVersion": "1",
+        "question": "上游滤波方式一换，后面十几个参数引用就得重绑。网络里能不能先留一个稳定出口？"
+      },
+      "expected": {
+        "expectation": "ANSWERABLE",
+        "targetObjectIds": [
+          "td-null-chop"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-77a9738aef7714c0a6f4af662ea2a0b8c56a9eeba4248e1c6e40a8ea1397a4f3",
+            "node-0331ebc2c6ab74915f1fdc08dcca0be7f5885c205e186a94a0192b33a0895848",
+            "node-e64c502b665b7e50dc9da5c3ffebd75cfccc3e2ef9fa3904942bcd11c4bc372c"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "t42-recall-dev-digital-no-answer-arduino-debounce",
+      "familyId": "t42-family-arduino-millis-debounce",
+      "clusterId": "t42-cluster-digital-arduino-millis-debounce",
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "digital-interaction",
+        "coursePackVersion": "1",
+        "question": "Arduino 按钮一按就连跳几次，能给我一段用 millis 写的消抖程序吗？"
+      },
+      "expected": {
+        "expectation": "NO_ANSWER",
+        "targetObjectIds": [],
+        "requiredEvidenceGroups": []
+      }
+    },
+    {
+      "id": "t42-recall-dev-digital-no-answer-unity-water-shader",
+      "familyId": "t42-family-unity-depth-water-shader",
+      "clusterId": "t42-cluster-digital-unity-depth-water-shader",
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "digital-interaction",
+        "coursePackVersion": "1",
+        "question": "Unity 的 Shader Graph 里怎样用深度纹理做交互水波，节点要怎么连？"
+      },
+      "expected": {
+        "expectation": "NO_ANSWER",
+        "targetObjectIds": [],
+        "requiredEvidenceGroups": []
+      }
+    },
+    {
+      "id": "t42-recall-dev-digital-no-answer-resolume-sync",
+      "familyId": "t42-family-resolume-multimachine-sync",
+      "clusterId": "t42-cluster-digital-resolume-multimachine-sync",
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "digital-interaction",
+        "coursePackVersion": "1",
+        "question": "两台电脑跑 Resolume，现场要做帧级同步，网卡、协议和延迟补偿具体怎么配？"
+      },
+      "expected": {
+        "expectation": "NO_ANSWER",
+        "targetObjectIds": [],
+        "requiredEvidenceGroups": []
+      }
+    },
+    {
+      "id": "t42-recall-dev-book-answerable-whole-book-system",
+      "familyId": "t42-family-cover-to-whole-book-system",
+      "clusterId": "t42-cluster-book-cover-to-whole-book-system",
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "book-design",
+        "coursePackVersion": "1",
+        "question": "封面单看挺完整，可一翻开就像换了一本书。评这套书时，除了封面还得把哪些部分连起来看？"
+      },
+      "expected": {
+        "expectation": "ANSWERABLE",
+        "targetObjectIds": [
+          "book-001-book-as-complete-system"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-854b9212f37450a7791674d204d3442dc8a3c70543bd766a8feb28e0089423ea",
+            "node-52b9eb8db8f50e00cb2546b352d41387ea7bf64027cf0350e1122aabdef327bc",
+            "node-83ca491ca3b5721b5042b354a9372fd62d06e4cd669bd7aa27e975f29537587c"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "t42-recall-dev-book-answerable-link-color-space",
+      "familyId": "t42-family-link-info-color-space",
+      "clusterId": "t42-cluster-book-link-info-color-space",
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "book-design",
+        "coursePackVersion": "1",
+        "question": "版面里的图有 RGB 也有 CMYK，我不想挨个打开源文件，输出前能不能在链接信息里先排查？"
+      },
+      "expected": {
+        "expectation": "ANSWERABLE",
+        "targetObjectIds": [
+          "book-linked-assets"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-344c940195b318f812f00cfbf77196b39ed6bd5bf402fc9ea9951499696b9886"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "t42-recall-dev-book-answerable-grid-language-fit",
+      "familyId": "t42-family-layout-grid-writing-system-fit",
+      "clusterId": "t42-cluster-book-layout-grid-writing-system-fit",
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "book-design",
+        "coursePackVersion": "1",
+        "question": "这本中文小册子有人建议直接套日文字符网格。我该先看哪些条件，再决定用它还是栏网格？"
+      },
+      "expected": {
+        "expectation": "ANSWERABLE",
+        "targetObjectIds": [
+          "book-layout-grid"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-9f8d84e64eaf92348b288a61c280a37f34d0c9d98359010b7bf9678b51457e01",
+            "node-6eeeca431d3005629b0916e1a05f59e109eb0e986d8fd86eb398029d6fa940f4"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "t42-recall-dev-book-answerable-digital-pdf-marks",
+      "familyId": "t42-family-digital-pdf-printer-marks",
+      "clusterId": "t42-cluster-book-digital-pdf-printer-marks",
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "book-design",
+        "coursePackVersion": "1",
+        "question": "我只交屏幕阅读的 PDF，导出时也要把裁切线、套准线和色条全打开吗？"
+      },
+      "expected": {
+        "expectation": "ANSWERABLE",
+        "targetObjectIds": [
+          "book-printer-marks"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-cb54202e17e374b6da6886292dc762d271a8469f90de88ea9b3cc2649f578a71",
+            "node-1f5b8546165f8fc8fa8e198d59599911bf9624ccefaa2abcc8c676ad1d4e316a"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "t42-recall-dev-book-answerable-metrics-optical",
+      "familyId": "t42-family-kerning-metrics-optical",
+      "clusterId": "t42-cluster-book-kerning-metrics-optical",
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "book-design",
+        "coursePackVersion": "1",
+        "question": "英文标题里 AV 这一对看着怪，InDesign 的 Metrics 和 Optical 到底是在按什么依据排它？"
+      },
+      "expected": {
+        "expectation": "ANSWERABLE",
+        "targetObjectIds": [
+          "book-kerning-tracking"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-378fec90191bd03fc9b67ad65e5abc4bed0088ddaeb1621bb91c1e1cf8c20256"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "t42-recall-dev-book-no-answer-signature-binding",
+      "familyId": "t42-family-signature-binding-calculation",
+      "clusterId": "t42-cluster-book-signature-binding-calculation",
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "book-design",
+        "coursePackVersion": "1",
+        "question": "锁线胶订这本 160 页的书该分多少帖，每帖几页才不会鼓脊？"
+      },
+      "expected": {
+        "expectation": "NO_ANSWER",
+        "targetObjectIds": [],
+        "requiredEvidenceGroups": []
+      }
+    },
+    {
+      "id": "t42-recall-dev-book-no-answer-isbn-process",
+      "familyId": "t42-family-live-isbn-application",
+      "clusterId": "t42-cluster-book-live-isbn-application",
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "book-design",
+        "coursePackVersion": "1",
+        "question": "中国大陆个人作者现在申请 ISBN 要走什么流程，费用和周期分别是多少？"
+      },
+      "expected": {
+        "expectation": "NO_ANSWER",
+        "targetObjectIds": [],
+        "requiredEvidenceGroups": []
+      }
+    },
+    {
+      "id": "t42-recall-dev-book-no-answer-acrobat-trapping",
+      "familyId": "t42-family-acrobat-trapping-preset",
+      "clusterId": "t42-cluster-book-acrobat-trapping-preset",
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "book-design",
+        "coursePackVersion": "1",
+        "question": "Acrobat 里怎么给印刷 PDF 做陷印预设，还要检查叠印对象？"
+      },
+      "expected": {
+        "expectation": "NO_ANSWER",
+        "targetObjectIds": [],
+        "requiredEvidenceGroups": []
+      }
+    },
+    {
+      "id": "t42-recall-dev-layout-answerable-international-fit",
+      "familyId": "t42-family-international-style-local-character",
+      "clusterId": "t42-cluster-layout-international-style-local-character",
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "layout-design",
+        "coursePackVersion": "1",
+        "question": "社区展海报既要信息规整，又得保留很强的地方手作味。国际主义那套干净网格适不适合，不能只看“整齐”吧？"
+      },
+      "expected": {
+        "expectation": "ANSWERABLE",
+        "targetObjectIds": [
+          "layout-010-international-style-fit"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-b7d2b1eb65e677022a1eb4e321fc6a9bcc54af6e747c40799bab1aa2ce1ba684",
+            "node-efe90d986156d84e3df9a6b5f4d277e72e1e6a461063c3f79ac132d918a5f624"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "t42-recall-dev-layout-answerable-retrofuture-context",
+      "familyId": "t42-family-retrofuture-era-coherence",
+      "clusterId": "t42-cluster-layout-retrofuture-era-coherence",
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "layout-design",
+        "coursePackVersion": "1",
+        "question": "我把像素、霓虹、金属、太空舱全塞进去了，还是像特效拼盘。复古未来感该从哪条时代线索收起？"
+      },
+      "expected": {
+        "expectation": "ANSWERABLE",
+        "targetObjectIds": [
+          "layout-020-retro-futurism-style-fit"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-71684e9debae37e61838517038050a1e8100724c84120b3a2b2cb06b2f627136",
+            "node-0e03b3d5e32da6c6c79683d0411a298ea22be3d43132e5fd8cc7cc0afadd5542",
+            "node-1a0694843317ac1fd5a486ee022c3bab017c734db055febbe830ded686d44d04"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "t42-recall-dev-layout-answerable-material-cues",
+      "familyId": "t42-family-material-cue-coherence",
+      "clusterId": "t42-cluster-layout-material-cue-coherence",
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "layout-design",
+        "coursePackVersion": "1",
+        "question": "标题加了高光、投影和噪点，结果既不像玻璃也不像金属。先检查哪几种线索有没有打架？"
+      },
+      "expected": {
+        "expectation": "ANSWERABLE",
+        "targetObjectIds": [
+          "layout-022-tactile-texture-style-fit"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-0bb921ec6533ce78e1cf3876988c16e506203035c84ee61db837b61566ca4600",
+            "node-ccea499b8212bd9154057ce439bebd7c68de69d63393586bb7ebe028e7a2093b",
+            "node-f3a7656ee46619db7739aa2a1b31cf45b21dff22a571a0dd84a76fd6082ef8ba"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "t42-recall-dev-layout-answerable-focus-competition",
+      "familyId": "t42-family-type-image-color-focus-competition",
+      "clusterId": "t42-cluster-layout-type-image-color-focus-competition",
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "layout-design",
+        "coursePackVersion": "1",
+        "question": "标题、主图和亮色块都在抢第一眼，我该怎么拆开检查到底是谁把阅读顺序弄乱了？"
+      },
+      "expected": {
+        "expectation": "ANSWERABLE",
+        "targetObjectIds": [
+          "layout-031-coordinate-type-image-and-color"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-bda1f1ed963eefeec36ed5984d84558691af66d246bc0b1c1f29f609cf750f9e",
+            "node-ca95648ea5e9591cb6dc93ccfbbe4ad59dc8761a26f41b571b421ebe6ff473fc",
+            "node-2d581c73a1272a57931dc76397d7e99ee6e9c3efeda2dd771f36c8e4838e981f"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "t42-recall-dev-layout-answerable-hidden-guide-alignment",
+      "familyId": "t42-family-hidden-guide-optical-alignment",
+      "clusterId": "t42-cluster-layout-hidden-guide-optical-alignment",
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "layout-design",
+        "coursePackVersion": "1",
+        "question": "开着参考线看着特别齐，隐藏后中英文边缘还是歪。我该先动整个文本框，还是先判断是字形本身的问题？"
+      },
+      "expected": {
+        "expectation": "ANSWERABLE",
+        "targetObjectIds": [
+          "layout-042-review-alignment-with-guides-hidden"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-bb15dc6ad64c373d1d29e65840248346186aad626676d3340b96d84af9dc886c",
+            "node-343ea240d2aa757fa7836623d9bcc3baac6f285513849b3865bf7cd7da579e95",
+            "node-ad64d3bebf529c5c941a2ede66e4e4786d020db31d636b2e66ad30dc7a5a9902"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "t42-recall-dev-layout-no-answer-css-grid",
+      "familyId": "t42-family-css-grid-responsive-code",
+      "clusterId": "t42-cluster-layout-css-grid-responsive-code",
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "layout-design",
+        "coursePackVersion": "1",
+        "question": "网页从 1440 缩到 375 时，CSS Grid 的断点和 minmax() 应该怎么写？"
+      },
+      "expected": {
+        "expectation": "NO_ANSWER",
+        "targetObjectIds": [],
+        "requiredEvidenceGroups": []
+      }
+    },
+    {
+      "id": "t42-recall-dev-layout-no-answer-ae-kinetic-type",
+      "familyId": "t42-family-after-effects-kinetic-type",
+      "clusterId": "t42-cluster-layout-after-effects-kinetic-type",
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "layout-design",
+        "coursePackVersion": "1",
+        "question": "After Effects 里要做一段沿路径弹跳的动态字体，表达式和关键帧怎么配？"
+      },
+      "expected": {
+        "expectation": "NO_ANSWER",
+        "targetObjectIds": [],
+        "requiredEvidenceGroups": []
+      }
+    },
+    {
+      "id": "t42-recall-dev-layout-no-answer-live-metro-media",
+      "familyId": "t42-family-live-metro-media-inventory",
+      "clusterId": "t42-cluster-layout-live-metro-media-inventory",
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "layout-design",
+        "coursePackVersion": "1",
+        "question": "我想把展览海报投到地铁灯箱，下周成都哪些站点还有空位、刊例价多少？"
+      },
+      "expected": {
+        "expectation": "NO_ANSWER",
+        "targetObjectIds": [],
+        "requiredEvidenceGroups": []
+      }
+    },
+    {
+      "id": "t42-recall-dev-brand-answerable-name-legibility",
+      "familyId": "t42-family-wordmark-deformation-legibility",
+      "clusterId": "t42-cluster-brand-wordmark-deformation-legibility",
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "brand-vi-design",
+        "coursePackVersion": "1",
+        "question": "为了让字标独特，我把几个字改得很夸张，同学开始念错品牌名。判断要不要收回来该看什么？"
+      },
+      "expected": {
+        "expectation": "ANSWERABLE",
+        "targetObjectIds": [
+          "brandvi-001-assess-wordmark-fit"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-e35208d672573407528448ec596140040e6745634e7ef5f8403c2ebc79eeab3b"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "t42-recall-dev-brand-answerable-adjacent-confusion",
+      "familyId": "t42-family-wordmark-adjacent-brand-confusion",
+      "clusterId": "t42-cluster-brand-wordmark-adjacent-brand-confusion",
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "brand-vi-design",
+        "coursePackVersion": "1",
+        "question": "字标单独看挺特别，放到一排同类咖啡品牌里就像别人家的。该怎么测这种混淆？"
+      },
+      "expected": {
+        "expectation": "ANSWERABLE",
+        "targetObjectIds": [
+          "brandvi-001-assess-wordmark-fit"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-f610525180d34d088d7cee888b0c33cdebb37754a477a6845ab1aac8e9d329ea"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "t42-recall-dev-brand-answerable-application-variants",
+      "familyId": "t42-family-wordmark-orientation-material-test",
+      "clusterId": "t42-cluster-brand-wordmark-orientation-material-test",
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "brand-vi-design",
+        "coursePackVersion": "1",
+        "question": "字标在横版网页没问题，到了竖窄吊牌和压纹材质就变形，测试清单要怎么定？"
+      },
+      "expected": {
+        "expectation": "ANSWERABLE",
+        "targetObjectIds": [
+          "brandvi-001-assess-wordmark-fit"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-a49cf60c7899950cdc7107ae1ffdd01f8792bcc24f4d1ea281e88ebf273ed5d9"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "t42-recall-dev-brand-answerable-behavior-records",
+      "familyId": "t42-family-wordmark-behavior-over-vote",
+      "clusterId": "t42-cluster-brand-wordmark-behavior-over-vote",
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "brand-vi-design",
+        "coursePackVersion": "1",
+        "question": "团队投票都说 A 更好看，可顾客读名字更慢。我该留哪些原始记录，别只凭投票？"
+      },
+      "expected": {
+        "expectation": "ANSWERABLE",
+        "targetObjectIds": [
+          "brandvi-002-test-wordmark-tone-and-audience"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-f132726cede26c51a61c47dc0d153516eec8497e89f559050447e6bce0ffdd3e"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "t42-recall-dev-brand-answerable-contextual-tone",
+      "familyId": "t42-family-wordmark-tone-is-contextual",
+      "clusterId": "t42-cluster-brand-wordmark-tone-is-contextual",
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "brand-vi-design",
+        "coursePackVersion": "1",
+        "question": "同一款字体在朋友的品牌上显得亲切，放到我这个名字上却很冷，是不是字体自带固定气质？"
+      },
+      "expected": {
+        "expectation": "ANSWERABLE",
+        "targetObjectIds": [
+          "brandvi-002-test-wordmark-tone-and-audience"
+        ],
+        "requiredEvidenceGroups": [
+          [
+            "node-246c54864ac055e824371d4a9eeec738c72a6af32294ac9ab1ccfc6debfa8015"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "t42-recall-dev-brand-no-answer-live-trademark-search",
+      "familyId": "t42-family-live-trademark-clearance",
+      "clusterId": "t42-cluster-brand-live-trademark-clearance",
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "brand-vi-design",
+        "coursePackVersion": "1",
+        "question": "帮我实时查一下这个中文品牌名有没有近似商标，告诉我注册通过率。"
+      },
+      "expected": {
+        "expectation": "NO_ANSWER",
+        "targetObjectIds": [],
+        "requiredEvidenceGroups": []
+      }
+    },
+    {
+      "id": "t42-recall-dev-brand-no-answer-esko-shrink-sleeve",
+      "familyId": "t42-family-esko-shrink-sleeve-artwork",
+      "clusterId": "t42-cluster-brand-esko-shrink-sleeve-artwork",
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "brand-vi-design",
+        "coursePackVersion": "1",
+        "question": "Esko Studio 里怎么按瓶身刀模自动生成收缩膜变形稿？"
+      },
+      "expected": {
+        "expectation": "NO_ANSWER",
+        "targetObjectIds": [],
+        "requiredEvidenceGroups": []
+      }
+    },
+    {
+      "id": "t42-recall-dev-brand-no-answer-live-ad-pricing",
+      "familyId": "t42-family-live-social-ad-cpm",
+      "clusterId": "t42-cluster-brand-live-social-ad-cpm",
+      "runtime": {
+        "mode": "TEXT_TO_TEXT",
+        "coursePackId": "brand-vi-design",
+        "coursePackVersion": "1",
+        "question": "小红书上给新品牌投放，今天美妆类信息流的千次曝光大概多少钱？"
+      },
+      "expected": {
+        "expectation": "NO_ANSWER",
+        "targetObjectIds": [],
+        "requiredEvidenceGroups": []
+      }
+    }
+  ]
+}

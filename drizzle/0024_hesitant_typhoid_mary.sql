@@ -1,0 +1,1 @@
+ALTER TABLE `learner_profiles` ADD `data_type` text GENERATED ALWAYS AS (case when user_id glob 'demo-student-*' then 'DEMONSTRATION_DATA' else 'REAL' end) VIRTUAL;

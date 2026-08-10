@@ -1,0 +1,47 @@
+.root {
+  display: grid;
+  gap: 0.75rem;
+  padding: 1rem 0 0.4rem;
+}
+
+.saved,
+.loading,
+.state p {
+  margin: 0;
+  color: #667069;
+  font-size: 0.78rem;
+  line-height: 1.55;
+}
+
+.saved {
+  padding: 0.65rem 0.8rem;
+  border: 1px solid #cfe0d4;
+  border-radius: 0.75rem;
+  background: #f2f8f4;
+  color: #3e654d;
+}
+
+.loading {
+  padding: 1rem 0;
+}
+
+.state {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.8rem 0;
+}
+
+.state button {
+  min-height: 2.35rem;
+  flex: 0 0 auto;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #cbd3cd;
+  border-radius: 0.7rem;
+  background: #fff;
+  color: #283029;
+  cursor: pointer;
+  font-size: 0.76rem;
+  font-weight: 650;
+}

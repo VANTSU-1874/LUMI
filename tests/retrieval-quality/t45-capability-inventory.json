@@ -1,0 +1,2584 @@
+{
+  "schemaVersion": 1,
+  "id": "lumi-t45-capability-inventory",
+  "corpusBundleHash": "82db90934afaffa3d227b6b0d11ab5efdb88009fd8b9274845567de4888079f8",
+  "fingerprintPolicy": {
+    "normalization": "NFKC_TRIM",
+    "projection": "KIND_ROLE_BODY_SORTED",
+    "hash": "SHA256"
+  },
+  "objects": [
+    {
+      "objectId": "audio-reactive-visual",
+      "coursePackId": "digital-interaction",
+      "objectContentHash": "c5a58f6a2bd92302b5c75d72fc9a3eee9b0ddef04a93489c6561af7bb3410c3a",
+      "eligibleNodeIds": [
+        "node-125c49efdd9c0e4d6dae65b80ce314d37df9def0b371553b4d9067215dfaa88e",
+        "node-5458e1db5147fb7f36edea4c77cf8b4b267f8bc150b46dabcd03299c32ff61df",
+        "node-749f0b30d0fecd735db800f5cb7a689313d486cf901a7b3f5b18cabb9b0a0e1c",
+        "node-931885b63d9584df28ef9ebed35517cf9ca7bef66d90db9d8548fdd2857dbcf3",
+        "node-b6cc84d3ddd02d609c2935692287b83dcf1a537d29f1e71e6aa84c0371b85f35",
+        "node-e5f23504a777e2a5659ef42a44915387fbb3fb2291cfb534b2ae58617960a091"
+      ],
+      "capabilityFingerprint": "4f85c098b48fd38c5362372caf6158bf3f50c7895cb1d618ad5383f2303aa7cc",
+      "familyId": "frozen-t44-audio-reactive-visual",
+      "partition": "FROZEN_T44"
+    },
+    {
+      "objectId": "book-001-book-as-complete-system",
+      "coursePackId": "book-design",
+      "objectContentHash": "e87ea60013c1ac27d12fa21bbf4a59fa064557b4faa66985ca280471cd1c4c6e",
+      "eligibleNodeIds": [
+        "node-05fceac1c5d3cef8be0a6d79164402bb20a51c6f2fc7bc6dcc7f9d7d8d5721ff",
+        "node-1456285089e6a1194dff80851fe7448c98165ed1c8ecbd374c8266546af25f33",
+        "node-1652bcae2c61cc5520133d61ab00c20c215bf5424b5431fb117e10070394b364",
+        "node-3f4f667b597b1594df72929c766bf561f3b784bab29caa9e67d913372194227a",
+        "node-52b9eb8db8f50e00cb2546b352d41387ea7bf64027cf0350e1122aabdef327bc",
+        "node-83ca491ca3b5721b5042b354a9372fd62d06e4cd669bd7aa27e975f29537587c",
+        "node-86e406b9abebf73c5389ee817c66c1cbb0ccf8bcb3c65fcd4f3d15f3c6cb88e3",
+        "node-9fcf0c9e6499d489bfd24f1e0b01a802760d9c920864e002868b633287302880",
+        "node-bb47e02bd6c55198dfe2c2cbad21af6c85365e183c8261981987fada6f2490c1",
+        "node-e4da8a194c82e054db7f8ad8bf4df5b67719c4138ad1f8639bf3fafed634dd3a"
+      ],
+      "capabilityFingerprint": "14fb27fbad7f67f03c06f2f9f75f7e0c3d08ef8be686c2cbc8e7b7ecccd01c77",
+      "familyId": "frozen-t44-book-001-book-as-complete-system",
+      "partition": "FROZEN_T44"
+    },
+    {
+      "objectId": "book-bleed-output",
+      "coursePackId": "book-design",
+      "objectContentHash": "739280b003d94bc7053a35c59e08f76f99bdf2ddeae98cfdd31668849bd042f8",
+      "eligibleNodeIds": [
+        "node-2fa5f4ef876be38a49ad0ddfc12bbc93fe2a7dd444dcc5f3a5fc314ff8c4db4e",
+        "node-4b0d9ce07b00e5f8daec3c66ef671666dd4d246e91493db9c6fbff26124aad6e",
+        "node-71ba666d0db5c9ae3f22fa54ac7ee4fdd41f772ae03e06c2719161d9aa7bfaf4",
+        "node-856d0bf5887078a4181fc1cd374ddd31e1e0d1aafba1b6cd9de110b0610777be",
+        "node-9eaffbd745c69bb94ea2308df4363becc984472f7c9b5f5b8d4b7992fcba8cbe"
+      ],
+      "capabilityFingerprint": "6606b10bc14a39f50f079f8744e831264af3d8dd6d8eaa91b560e32c62e20af7",
+      "familyId": "frozen-t44-book-bleed-output",
+      "partition": "FROZEN_T44"
+    },
+    {
+      "objectId": "book-design-principles",
+      "coursePackId": "book-design",
+      "objectContentHash": "71342ae36d2f9688300689253e8066f7703588a56f7523c9cc218fd34986855d",
+      "eligibleNodeIds": [
+        "node-4bd21d11b1cb22e92d55325c04e05d27e321df5b9766f945c42e217a0662b65b",
+        "node-645ce5a2360473fb4902b11b12f9db34ec5e309151b04bbbb4a477d019a3713e",
+        "node-79435c110d14b70acfdf1e7ee4d53a2f1b5dbb96e29b9d8944b2dd3b33a42f46",
+        "node-8d69f1cecc1471b571bfa3960fb6d0e91004575ce270b906a420738493bf8b49"
+      ],
+      "capabilityFingerprint": "37608952dd4b5489827930ac247c50ecf1e3b4f911bce08430315149e93e9cab",
+      "familyId": "book-microtask-principles",
+      "partition": "DEV_CAL"
+    },
+    {
+      "objectId": "book-document-grid",
+      "coursePackId": "book-design",
+      "objectContentHash": "0cd5c9fe6e1be960e2d616688eba507403bb374a9dbd0bc259b253ad52310639",
+      "eligibleNodeIds": [
+        "node-2740edd84891a7f7185a6747d15edc8b24c46160b34ed5c865a7164fd9755091",
+        "node-4bf8133cca0d67ddb5cd195d416de2282f3ea40443222f3388e00748fdb0c84d",
+        "node-59c28dabc2e12350f781e31bc65690c00187a39a7c66ef1971a73839033b4f1c",
+        "node-c36ebe5c1afc75e2028d0c5c09f6dc5cb9cf7591d2ba57ea469958c4b448b383"
+      ],
+      "capabilityFingerprint": "ea5264590daffa7ac21e74e096fc5f50ca5d9ea9ca5d07d0368fb7f7cd264d5e",
+      "familyId": "frozen-t44-book-document-grid",
+      "partition": "FROZEN_T44"
+    },
+    {
+      "objectId": "book-kerning-tracking",
+      "coursePackId": "book-design",
+      "objectContentHash": "aa37ef394977797b00fb28a9b20d01e7b067bd83b753aa5ed2876f97fec18371",
+      "eligibleNodeIds": [
+        "node-378fec90191bd03fc9b67ad65e5abc4bed0088ddaeb1621bb91c1e1cf8c20256",
+        "node-48e84af2d8d2e3c7b5840786631900ef9557a42a11ccf87e2bce058293aa4aef",
+        "node-b1a5c87d13a1fd6f28a869380508770783f6d6dea49164a82fcc19890fee8d91",
+        "node-b317fb24752edcdabb665900a376d39b6a32b34d3006d3dfbf8fbda5d2db22fe",
+        "node-fdee4d813b851ddb17e7319c703a93157caac3b11f0aa41dc7ad03ee06f95c8a"
+      ],
+      "capabilityFingerprint": "4214c38c6da2bc22b3db4717f04f6c5194f95c9ec8b113342ddfddb8cb749291",
+      "familyId": "frozen-t44-book-kerning-tracking",
+      "partition": "FROZEN_T44"
+    },
+    {
+      "objectId": "book-layout-grid",
+      "coursePackId": "book-design",
+      "objectContentHash": "cbe151a8bdf445b456c1e6476333542cc3a0ed311f3152c63381b1c8b289000d",
+      "eligibleNodeIds": [
+        "node-05a9ca64244b072f5cf90a5d3a5f9a2a1a9c073f50c7b8b3057ac9c17f6e2ef8",
+        "node-5e93871cc053ce8ad1b64eec9d19c260a4cfa7b1aaa16f1e7de99220d153c82b",
+        "node-6eeeca431d3005629b0916e1a05f59e109eb0e986d8fd86eb398029d6fa940f4",
+        "node-7b5839b47288cb8abc3ab40bc4f778efb8614eae89d1ec754c58ed614f08ae16",
+        "node-ae672ab8a93a9a46c92ca6e9274b15425bddfbd4952beafad82be54abd2a8c80"
+      ],
+      "capabilityFingerprint": "c8f13c260e8ffaf4a9481c09855bbfbb3c2d3a0ea58c25abbb11425d12959248",
+      "familyId": "frozen-t44-book-layout-grid",
+      "partition": "FROZEN_T44"
+    },
+    {
+      "objectId": "book-linked-assets",
+      "coursePackId": "book-design",
+      "objectContentHash": "b529222edca264c38cd885f9acc2950bec79d0a4b941fcd5b5eb60f9d4ed48eb",
+      "eligibleNodeIds": [
+        "node-344c940195b318f812f00cfbf77196b39ed6bd5bf402fc9ea9951499696b9886",
+        "node-56be9fd0f3872434883c44f7b86f86bf322293a780064c20fdded624e021bac3",
+        "node-a0740bf707218a8e1fc771cf1723e185ea4b81eaa526bf11418beee06195be5a",
+        "node-dc3ee510bfeb118277dac61a9f9b8ef0f7fb1e0ce4b4afdb6032ab59252c7f31",
+        "node-ea409d46615906f15ffba735eef31e4ef7bf1446eb08d6c7a041a54eee7c8526"
+      ],
+      "capabilityFingerprint": "48023bc765b0863247f0a7a3c48284f33772509b6f91275d066429fd77f110b1",
+      "familyId": "frozen-t44-book-linked-assets",
+      "partition": "FROZEN_T44"
+    },
+    {
+      "objectId": "book-printer-marks",
+      "coursePackId": "book-design",
+      "objectContentHash": "b86b39bbe394128613e9dd99f99e7ad052a61bfa19eb774f7e8d0f29b89dbdb2",
+      "eligibleNodeIds": [
+        "node-003981cbe11ab8ac238e858d72e3b4887ebbbbdcfd4910f2a753d4ea0ee90840",
+        "node-16e7dad079fd261f823849f5059eec9eb2dd9f7260835d85272a27e9026914d3",
+        "node-1f5b8546165f8fc8fa8e198d59599911bf9624ccefaa2abcc8c676ad1d4e316a",
+        "node-21a59f368f1f2509fde4ca4608e793f02f98e8f7d23c9590a797cf1a2b32be9b",
+        "node-c817bd98f10a32d1fb191cccb250dd0923aff2c1a126c76e9b90ad4ab41cd39b"
+      ],
+      "capabilityFingerprint": "48c78048924b80ae7ff4dfadc6d116ee513df134d3d6337fcd0400d034140975",
+      "familyId": "frozen-t44-book-printer-marks",
+      "partition": "FROZEN_T44"
+    },
+    {
+      "objectId": "brandvi-001-assess-wordmark-fit",
+      "coursePackId": "brand-vi-design",
+      "objectContentHash": "230382683af18c2532de8b6031beb3a034b60718a749b3760a2b5cf4bbe4c6d3",
+      "eligibleNodeIds": [
+        "node-4168b1c560cca4d5b0456c1e330c37ae0994f1d1c2e62dcffbc93ee9037eff70",
+        "node-53c80e95103fab6792d67fda8d31bb6a302ea96817c744d184f3da14f264be8a",
+        "node-5627ee319393fc0c4f79ea46bdd1499a7bba90764ef3db919007639b54889653",
+        "node-a49cf60c7899950cdc7107ae1ffdd01f8792bcc24f4d1ea281e88ebf273ed5d9",
+        "node-bf0161b9d74485b764f1a213badacc848d5d069738ec7fb5f0321bd76ef06f51",
+        "node-c5f64013dfe50127b8492bb33ef8c2960563958995e13b58b098f58b4ca1b9dc",
+        "node-d92e3f3f71ccfadcc6a5512b82f14b636ac35d5e3bb4d6f1e57a18d5282bced5",
+        "node-e35208d672573407528448ec596140040e6745634e7ef5f8403c2ebc79eeab3b",
+        "node-f610525180d34d088d7cee888b0c33cdebb37754a477a6845ab1aac8e9d329ea"
+      ],
+      "capabilityFingerprint": "8511a465d53d4b4d66a8b28adfdd46665719f4d28a846db9bd0f5bd8c44adf07",
+      "familyId": "frozen-t44-brandvi-001-assess-wordmark-fit",
+      "partition": "FROZEN_T44"
+    },
+    {
+      "objectId": "brandvi-002-test-wordmark-tone-and-audience",
+      "coursePackId": "brand-vi-design",
+      "objectContentHash": "6c75ad60fa79d679c96a7f0ee72f3f551e98bf4249d458fc989f7f6c64574830",
+      "eligibleNodeIds": [
+        "node-07b85210e0070fe4e279088598b05374d884edcc79607884ab7b34a9f51c8ece",
+        "node-1dc5c9d8915391e73efb765e1a442506bce5a35a3facbc71a87e85a338211584",
+        "node-a13e4956089bcdeb9b3592b2be7d2cb78440ec04589aa520eecaeaab6a5853a4",
+        "node-ac8f4874a241ab12e7648238244a39233d78aaf0fc5ed69e7273e36f3499edb4",
+        "node-c6215e544eb276a4de9e0de482fe48b4c33b5904277bc1faff0eace072305ff6",
+        "node-c91a3b45d823885dcb9b2d30543e05c22fc85a79a6d2eb08354509ccab9ec605",
+        "node-cc743f296077853ac938b921ea070fca192b90f911fb3900a3a8afbc3048fb8b",
+        "node-d041cd4f202218fab5f50b42affd8b85836abc681698e89682cf652b6ad24fa6",
+        "node-f132726cede26c51a61c47dc0d153516eec8497e89f559050447e6bce0ffdd3e"
+      ],
+      "capabilityFingerprint": "0c7a21aedcd4de54f7018a08d5bf09aa3e3b8bfb98ded63a5209baa7177dc986",
+      "familyId": "frozen-t44-brandvi-002-test-wordmark-tone-and-audience",
+      "partition": "FROZEN_T44"
+    },
+    {
+      "objectId": "competition-direction-two-evidence",
+      "coursePackId": "digital-interaction",
+      "objectContentHash": "9ecc0d89605cbc21549706d541a8430d729c3a7b61788828df99ae5265940a42",
+      "eligibleNodeIds": [
+        "node-7ed0d79acb7b0e0069f5759b75adf47f15dac579285c7bd68dbb8f1018dafb99",
+        "node-81b5f6d2a6cf2fe58b685e24d296aa74e9ca0166476bac774a4823dab4845e6e",
+        "node-c7d38d5c4d8d14e40b5d50daaaf4c283025ef27c31a9f58dc09c370fdca8a161",
+        "node-e4780ac468e828e6ccefc2b16d1bba40f051469c095accb425b9202c49b66b68"
+      ],
+      "capabilityFingerprint": "317ded18fefd3c37cffff87fe4ed3b04d811e1015c191f680b67e5cef5a5b85d",
+      "familyId": "competition-direction-two-evidence",
+      "partition": "DEV_CAL"
+    },
+    {
+      "objectId": "course-four-stage-progression",
+      "coursePackId": "digital-interaction",
+      "objectContentHash": "32e68a77afa6bf579e14e09fa849052d3485691a6eeba4230d0e94edc56f3c9f",
+      "eligibleNodeIds": [
+        "node-0f7befe0b9ffd4c5d1ba5a44904893d06dcb09f753cddd0e5a10cf9049b8b40d",
+        "node-282e7a0a8694153ef9e5fd269cfb757a154738ffdcd5631d02d53d6cb73c66ea",
+        "node-87084c195a3dec353d84b99025da947718c9fa64c210b3de08b6420998955205",
+        "node-877043f9ecb733d98d9e35949d5196acb1ac4bb0fdf5256a3cbd7ab1a927d53d",
+        "node-c13b76c781966b355fade01c19b2606adf554a19cfcf3e602bcea8674ea312ab",
+        "node-d0d335e2004778434111020c99265c0ee2def746dba86514bd4e102c6839d4fa"
+      ],
+      "capabilityFingerprint": "6678f97558e1cd41cccbec8eea9456fb08507e13b1c01d409e245c5094c77f4f",
+      "familyId": "frozen-t44-course-four-stage-progression",
+      "partition": "FROZEN_T44"
+    },
+    {
+      "objectId": "course-principles",
+      "coursePackId": "digital-interaction",
+      "objectContentHash": "119aa20c0c414ad507d27f2f4ad2aa14ea9888dd03b5b24ad7ecc2dd8d865bf1",
+      "eligibleNodeIds": [
+        "node-0d6f1c569e81ad926f98497db6aaff2fc960d7cd59d458c67500e5a334d1eb15",
+        "node-0f2e81947953e273dc9cd97973de239c5908a7d3b66db4bc14f2ac45e291dcf4",
+        "node-1963c91489d38be7c1cfdf4e90d0ff8ff70d20aed6250b9cd9047cd209813968",
+        "node-5c1503ee863462a32fecf3de0c696f5d53579bc523fa5cbcc40ca64f92ca5692",
+        "node-d05aefd44c43adf6b971fe273ea903f78326d91ac708a97431c7638d13ce39aa"
+      ],
+      "capabilityFingerprint": "11010878ffad0008a9fc93a170847793f34b02780d40e90552480dc45ad0c209",
+      "familyId": "frozen-t44-course-principles",
+      "partition": "FROZEN_T44"
+    },
+    {
+      "objectId": "design-color-redundancy",
+      "coursePackId": "general-design",
+      "objectContentHash": "46075ced18fcbc7b6c2c6006139da1e406124301a32a57a557cd3f92db56ae55",
+      "eligibleNodeIds": [
+        "node-2ccf7c1f706f9cb74bf132f36246bfcce3d1c3226483cf4d75480912357f2730",
+        "node-8bdcd635a8d8037961eeb7553c2068d9fcaaef5ba2532be643c2c70afa38c7b3",
+        "node-bf9fdcb01a65f140c10afc64a46692993e977c4fbd8759dd14a13db549ab16b8",
+        "node-d4619b3d696422f0ba1cf1c98de0bcb13913b0081db372350cc5d97fe3ebef84"
+      ],
+      "capabilityFingerprint": "0326a709223a3ddcf36d4ac192661e48de5273ac697c542b2401bd8f9cfcb188",
+      "familyId": "frozen-t44-design-color-redundancy",
+      "partition": "FROZEN_T44"
+    },
+    {
+      "objectId": "design-double-diamond",
+      "coursePackId": "general-design",
+      "objectContentHash": "a4731d21b7f947c7bd9a786e51699afa9aa80a1a6b657f5d24c9bd55c326a751",
+      "eligibleNodeIds": [
+        "node-28e557f3c3b64347c6cfafbf5f91f261cecaf3cea4c5be0fde34205636671001",
+        "node-5a5d0ef237858b75d84344a06225a7bd7bbda618f4d482a5e450163bf199bd44",
+        "node-bc0db8c85ebe3ab7dab0ce7adf580c048ceda1f8e6c7929d81bc10b052a01e47",
+        "node-e1f6fca581593c438dbf61e8c4c9847039188dcad3a16649e8f3a445c3e71e11",
+        "node-f6ad5388c9d2ce4f4faa679c17ed464f22169dad2a81a49539b5c246fc3310ce"
+      ],
+      "capabilityFingerprint": "0e12bd3e2373ab445b22a885e33e54eb84b9bedb2b39ca5b951af5c205d2714e",
+      "familyId": "frozen-t44-design-double-diamond",
+      "partition": "FROZEN_T44"
+    },
+    {
+      "objectId": "design-nontext-contrast",
+      "coursePackId": "general-design",
+      "objectContentHash": "73e47910b39ad3c1fddbcbe3c201be9cf6a5bb3e1bead4c5778fa136723da578",
+      "eligibleNodeIds": [
+        "node-08f2e6c6fee64fd8392dc96fccf0fca76f4c15f1375b589cc03f82edda4e1708",
+        "node-76d812825302b28f286fe8503071c8b5ea00840dcfdd22dd7211f2f623a84d0f",
+        "node-b1428d9789647fb8e438f1425328c8aa9781b0cd744090310a8353371fe13087",
+        "node-eb317229cedb9f20670cf494b396705bce8682a67bd89659fdce0e811c5199e2"
+      ],
+      "capabilityFingerprint": "eb3537f8fa4b1f86b398c6e97517c9949923bbb21c24f5e649412a206571ee37",
+      "familyId": "frozen-t44-design-nontext-contrast",
+      "partition": "FROZEN_T44"
+    },
+    {
+      "objectId": "design-project-brief",
+      "coursePackId": "general-design",
+      "objectContentHash": "b30ff41b03f5e9611cb4c1f14fde2bef49909f59b716a8ae1a6c939d24930805",
+      "eligibleNodeIds": [
+        "node-0fca3918b544f5ee7a0fd47b189feab3cc5d439242b2b2988e33810427817755",
+        "node-1606ee48fd3fd5f37da5fa31c6508abf2db92c0aa455ec89c29f88bf7713a117",
+        "node-39bb7d94faddd0431a7df1858fb2e824977dbef012ffaf68c4131771c31af5f2",
+        "node-ff2b21118f39f98fb795528bad30c24c77d7291a80636a0768b7e75d7df93d48"
+      ],
+      "capabilityFingerprint": "3213fb6ce6ca63186d5ec076a9841223b9a07490fbde27c45e61fa4dda2638dd",
+      "familyId": "frozen-t44-design-project-brief",
+      "partition": "FROZEN_T44"
+    },
+    {
+      "objectId": "design-prototype-test",
+      "coursePackId": "general-design",
+      "objectContentHash": "518a22c204efec20ee89b2595f888c5504767882b18a2bfcccef8000523d7c21",
+      "eligibleNodeIds": [
+        "node-754692f4157073a2e70b09ec999066f6264a1ec50131a6cf6ec86a6e7642b4f2",
+        "node-938a1cdc948aa6da4a952941bce70314d8522e997490fb4bc4b8a01f873ac476",
+        "node-a16b43143b54d081c67d86ca166ef6fd1474c369e0455d52d87bbc0ff3c486fc",
+        "node-c70b91a847461b912d3a59c4c1d3f051ce0b9ebe9f8a2b66a89dfc1a99f03050"
+      ],
+      "capabilityFingerprint": "eca3d7a20632c28a3739e816bfef6cd1aac43b6652d6c5b506e4761420fcde00",
+      "familyId": "frozen-t44-design-prototype-test",
+      "partition": "FROZEN_T44"
+    },
+    {
+      "objectId": "design-status-feedback",
+      "coursePackId": "general-design",
+      "objectContentHash": "5a32f2a8b8f4e3cdb2be1ed3386347a673832cfb0529d07b6dd6e6c7823a80d8",
+      "eligibleNodeIds": [
+        "node-03eb88b756ee449e0bcf6a4bb88ef699091b56edd1eb19050566b889ab16791c",
+        "node-5414d2b1a8b518662cf9f9c0701ed54a5480c1420bbca2099e46e79d1813c15d",
+        "node-600037b9367d397b2087c18f1c96728dd0734fc937634551647620df308fca56",
+        "node-86377dc08ff826d7673e79e76686516632c255f3776e8353adf39878b8d5cfe6"
+      ],
+      "capabilityFingerprint": "6b0f4ee45899771b77f8d87201ba98cacda0888cc495ddfc460052c0e3387732",
+      "familyId": "frozen-t44-design-status-feedback",
+      "partition": "FROZEN_T44"
+    },
+    {
+      "objectId": "design-text-contrast",
+      "coursePackId": "general-design",
+      "objectContentHash": "876a87b9ddcd16b46f24a7db034aefd955b35ba67b9a912c503f4ddcd3fd7f60",
+      "eligibleNodeIds": [
+        "node-1e38c4e83650e218554c9a0b7e5272724e7644632e7f263235f5cabb61ef0e63",
+        "node-3583ad6eda1085338af99694850f980f06fcf70fe1f1f3feb9578388156b9fbf",
+        "node-8ffc9883442bacd9da1d4505635e27c4c0e2ca4c13ffd6698e1f33b04c2b1465",
+        "node-bd29ce7ccde757b60bb70ee466392bb8ee5c2fe281ceb302e858b4c85d5348b3",
+        "node-eb992744ee78b17349d7fcc220c9f6500eb45057cd4aa2f94d3ab986ef034df5"
+      ],
+      "capabilityFingerprint": "7171fef0348f4ba0609e02f88ce0ab77c8f7a130f53a729774d2eac14f8f9e18",
+      "familyId": "frozen-t44-design-text-contrast",
+      "partition": "FROZEN_T44"
+    },
+    {
+      "objectId": "design-text-spacing",
+      "coursePackId": "general-design",
+      "objectContentHash": "140f985a57b9b7b13b9c5e6a4bef9d20353e537d8e33df59a4245f11da921498",
+      "eligibleNodeIds": [
+        "node-066e2ba6cf38454f796c92e979cd8fd10e9336e1a269dd11e9b415f0946e07d9",
+        "node-55ea562038b75493d4ec01408581fa6e9568dce3254708c12d372eb931748169",
+        "node-b3d27334584f4cef741fb4d51e32255386d608aea4648c3cd95aaa8b181d88b0",
+        "node-fc680db0ac0ad9d86796b9e27f88b7a8afe61dc593281dc69a080d972bcf6f2f"
+      ],
+      "capabilityFingerprint": "4c9fd2df74288b5d965cbaac62b405e6c490b0220466a817825babb87ab4e09a",
+      "familyId": "frozen-t44-design-text-spacing",
+      "partition": "FROZEN_T44"
+    },
+    {
+      "objectId": "dicd-001-signal-chain-troubleshooting",
+      "coursePackId": "digital-interaction",
+      "objectContentHash": "fc1f87b3e8da0480be3d5f91a58cce65a008ecfbf6f9f9ecf88286ce0d7fdf92",
+      "eligibleNodeIds": [
+        "node-0080a9e4bc3c7348680576d3af722c9d5ec3c9f92b4adb5ab99aadc465ad351c",
+        "node-15e0af41fe3b67db5b295f88bade8f316702dae786d0565201bbad1483e72fa3",
+        "node-17a280d57ae767e51f94fd33f27324ee0965543aa97296e1093e1ee32d3d15c0",
+        "node-4ce6b297751881a594b946aa74296f2cb9846f0d0f96d6ee99f277f5599c63b4",
+        "node-60be42d4d1f81cc0dadf9e6520f3d35f2f53285a277db8066a6e5ed2dc2330fb",
+        "node-7fc8154257409822f4b03d53f4b96e7c6674f0437f1de1a2c8eabadd3eeecf77",
+        "node-d2d5b7540ee384fdcf6745c8517a3c273d0c6846af3f621bcf974fa64ef94ee8",
+        "node-f9e56778f2f8b7b916e8e655fed75f4dce351e19667b4884776c9a66b0033142"
+      ],
+      "capabilityFingerprint": "a2f294447fce31bcb87f4725dd7cfabc8f42474e88775e803a5cc8cceda86a34",
+      "familyId": "frozen-t44-dicd-001-signal-chain-troubleshooting",
+      "partition": "FROZEN_T44"
+    },
+    {
+      "objectId": "dicd-002-interaction-scheme-six-clarifications",
+      "coursePackId": "digital-interaction",
+      "objectContentHash": "38852ff64af693c9df56ccb1c1c9b64e02a3020214c78d8d7a90ede0538f21fe",
+      "eligibleNodeIds": [
+        "node-02c39c18b4dbaabb9bfca8f9ebd5474b4d6ff96866e3afa93038996fa445c064",
+        "node-2c60825478a6fa85ea4401be97ec6f3278dc55bedb5f499429b8b8d54961f175",
+        "node-3f33b03f74abf5295df4565c8d1915c7f66f72034e1538f9208185b4705d11af",
+        "node-85a61401c0616218fc7320b57dab8bdc081768c1b4065c406a6b43b0e0ea96aa",
+        "node-af45fb4f64bbac4025d1fe7b10e72605aad3b89f88a690aa1440b96d350c8aef",
+        "node-c56dc5322d7b1911648a188b01c64036322e571e69e021cf39584aaebc959fcd",
+        "node-c809c7cea1e1192e93909f610fd1f09e4526b895aed17931acf763ac132c62fe",
+        "node-ec9fcd76a470a2041ea876b2c37cfd10f4eb1e4dc4bf31f13b6c125024da2daf"
+      ],
+      "capabilityFingerprint": "cce0b7669d6d08be2792d054127262d0005f7812f9c47feabcfb088cd5730278",
+      "familyId": "frozen-t44-dicd-002-interaction-scheme-six-clarifications",
+      "partition": "FROZEN_T44"
+    },
+    {
+      "objectId": "dicd-003-digishow-touchdesigner-roles",
+      "coursePackId": "digital-interaction",
+      "objectContentHash": "a50dfcb76ec6fb75682f6fcdcc9df4a9bfdc74bee29ff421a11ed9e4127ea592",
+      "eligibleNodeIds": [
+        "node-2e8c571d3146f2ef0928beccbe6eaf450336cc6b505aecde283d671ac29fd7d5",
+        "node-3385f4b0d1f3f0e3bcbc062331482f2b02eca4633c758221f481aceb0556bb9e",
+        "node-57f3a0274452963e0084f004ea289d9acf2edaf44cb6fbedccb95458999440b0",
+        "node-6512f8cfdb7dd2bbcbd04b23fe4a4fa34a0b1f1730613ff44a8925a007681a91",
+        "node-9c69e20c937538bc19f2b1fa024caa4fdb4f299f060a952c6b93e43b1410eaf8",
+        "node-bb9218cda428f01212625c18ec6f2f4d817df381febc5eb0edbfa25ecc203fd6",
+        "node-d49f6e5457d4f41dc9f060c2672e0c450befa2f03caf54792a041bdac8668f02",
+        "node-e56909f1ebf3d914f377c9e295bf41b9fa991d2d09991781e473b23ccb818400",
+        "node-f911798339b557e21f9c83629b41d1ba65a42d3831ffd4c6bc9236dd18c9c246"
+      ],
+      "capabilityFingerprint": "4be33816b077108af9cc50af35060bff098e844a8102ba5f35e44c6f33d05f20",
+      "familyId": "digishow-touchdesigner-workflow",
+      "partition": "DEV_CAL"
+    },
+    {
+      "objectId": "dicd-004-change-one-condition-for-transfer",
+      "coursePackId": "digital-interaction",
+      "objectContentHash": "01051972f4fed6555ba4bf35a668d135c6304b623684cb3654832c69e35460a2",
+      "eligibleNodeIds": [
+        "node-16c17704eb26e8043ec8b9799ea245b0370e141dbdc811b31158efed84e4018f",
+        "node-2bbb79218db342ecb3c9b36d16d3dd813dea01a616e6d972d57903cb143f530c",
+        "node-3bf7507c1f646100efc100c3bdb6f8dd69bf5ebe75d490f9033f9986be8c3b41",
+        "node-5097ad00befd7bea7ca7054ff032fe769dba54b83e255ba849f5658afa432c04",
+        "node-5adefe7ad558f174316b8737585495dd8412123ba18f91d152dd3df8bfca3d4f",
+        "node-91ac03589185a5f2ffdc38f6f423edb19d56afe0676f291b51f2e75493ffe790",
+        "node-9693d40c880394491e23010a2e5d42b3eed3fca0e52cf20cb18355be264753eb",
+        "node-b690f1cbd478455161143d578974408b87b27da0c16ed61827fcd9a9bb4c7bb7",
+        "node-b7f9864961bc62456695dbdf059df3218187df69591922bd9b69dd0d79a88da2"
+      ],
+      "capabilityFingerprint": "bce098c6e9e2180ebbe44385fe001dbb9199e25c2d6f54ec4ea831abdbdae3fb",
+      "familyId": "frozen-t44-dicd-004-change-one-condition-for-transfer",
+      "partition": "FROZEN_T44"
+    },
+    {
+      "objectId": "digishow-interface-workflow",
+      "coursePackId": "digital-interaction",
+      "objectContentHash": "75e60d54d16fd5bb58b0d8f30333c3479d53e259c36af87ca04a3f6ec5c402b6",
+      "eligibleNodeIds": [
+        "node-2fc97b6a6f6e67976252633260826136928559a3dfca1dd6c13b85e3f1ad9844",
+        "node-39038ced6e739956f4907ad23512cbcd6e098b48205a46a13a04904fca08ef6d",
+        "node-4eb9a69fde0f059d83a0877607e004ca9dcd3582374774cc13aaef46d7b173be",
+        "node-5aec8cf3675c9b82b81a5850227e9a9fac05e3c2f494f2601b205e39e35b84dd",
+        "node-9c62ac696fc0e38b9a3841360f15af5b412619935442626b96aab0a2b305f137"
+      ],
+      "capabilityFingerprint": "0833ec6d08ff82199ef8fc4b4240915b64b1c4694671a10f5040cb7b0e5e7191",
+      "familyId": "digishow-touchdesigner-workflow",
+      "partition": "DEV_CAL"
+    },
+    {
+      "objectId": "digishow-lighting-midi",
+      "coursePackId": "digital-interaction",
+      "objectContentHash": "eb5c7fc5c220a918b5f74334a1e472d0c905c823c5097a756689dae87ae0cd1a",
+      "eligibleNodeIds": [
+        "node-2eecc744867fb7782d66f29972698002c0c1e7f6994332d7448ae6a92a8d7ea6",
+        "node-84b636e6e58e8ee6f4ad1a931ed8569b21d0184a4af8c248d19c2a27f0f29735",
+        "node-8d0171fc2675453e33003234f0532b6b4089250e6494c14ac7792bd2172070a3",
+        "node-900724afcaece91b708ec3ccb3a6a5e071989596808defce9be07f5b642dcf8a"
+      ],
+      "capabilityFingerprint": "060ae5fa4ac7c4085bdcb69350df2312270eed457e29ec1c169b3c935e05c613",
+      "familyId": "frozen-t44-digishow-lighting-midi",
+      "partition": "FROZEN_T44"
+    },
+    {
+      "objectId": "digishow-signals",
+      "coursePackId": "digital-interaction",
+      "objectContentHash": "d57abfe57a13f71531a05233fe413c2c60267516f4285d6e65a7f86bfdccb25b",
+      "eligibleNodeIds": [
+        "node-bbcb14bef676ada24715e75b1e5214074a0fe70250ddced29337463feaa379f7",
+        "node-d2a6ad2612b96cdedee3a140fb072708c00fa657368cbc6ea2f2c15ec8a4a01e",
+        "node-e3afafef8ac11413cab189d0150cd6eba7560def8142cb41233d4ceaccbef5a0",
+        "node-ffc80818202c30b2a9b6f5c67e76238293894e43a32db7d7468434685c6a5ae9"
+      ],
+      "capabilityFingerprint": "aa9f4bef1c5fbc11dfb24cec3ed2fa392883f351f30b6739da01bf80a218ba2e",
+      "familyId": "frozen-t44-digishow-signals",
+      "partition": "FROZEN_T44"
+    },
+    {
+      "objectId": "illustrator-001-grid-guides-and-format-reuse",
+      "coursePackId": "general-design",
+      "objectContentHash": "4e1deaa30d6fb6416227e675c61f6c99e24542b9843d0a2c51cb347495dfd6a9",
+      "eligibleNodeIds": [
+        "node-09aeaa55580eaf0a2033635bb43cae4e68b1290238c38bbe019dcd7e221224de",
+        "node-19605568bbc7fa2cc9490b46830581a8580bc8a2c615c2cdda2593e51b84da2b",
+        "node-259130c752969942fd45ffc0e67ff0edc050a01237395d9bd09e7f5ca9ef367c",
+        "node-4512dae97105d48f79622587e99cee31da942f8bb4cb83dba5069fcc4e3afbfc",
+        "node-4631e47c52fda2d14c052ed81dcf815767d1f770f1422ed388f41eea9ad26fb1",
+        "node-600a211bd4d0ec79bb744ac9dca7c3f37f038384be7c696f04be0b6de64483cc",
+        "node-71e86fabc935c83e58cdaf0f59eb4663635a97c9e75bd24bb9a5bcda8448827a",
+        "node-b6c1b01fd4424a4a1f1c9ab244a8d0e4afa7bbe3838947d06a59a925a07e3a99",
+        "node-c04bf9b2b16bb66ecd5010ad671d9a400c59cf849d502d388d93cf9aa7dcd5b3",
+        "node-db6a03242f314715ebf18d9daff0f76d80d5e31bb8f4a8469806bf10cc697b01",
+        "node-e8510cb54c38a55c3e210abd9cae3cff3388e8e4a1b3d7a77d51fe4602461ffd"
+      ],
+      "capabilityFingerprint": "3dbda7286ebf469bb67aec81bdbe5b9709473922ac61dcb0abaa3a5e9b40d916",
+      "familyId": "frozen-t44-illustrator-001-grid-guides-and-format-reuse",
+      "partition": "FROZEN_T44"
+    },
+    {
+      "objectId": "information-hierarchy",
+      "coursePackId": "book-design",
+      "objectContentHash": "30be7e4c0a832e9611bd5c7f16ec628d1c013f3bce0259782455b8b1f026cdfa",
+      "eligibleNodeIds": [
+        "node-0de975a820d7252786cecb47cdbac4b12b971101ce12e7285ecdc227c71623bc",
+        "node-6c549306c6d63ebe77e01b9f6ad30a76ae55c0f4424ccff9e1042ca38511f3a8",
+        "node-7697a9a665271e3a99a8f43a7806f2f3530ead12c73440150e88b74b4a6612a1",
+        "node-997257db7e7fa91a62c6c85bd494bd0e306331837d6302bcb3bf4148f699ff91",
+        "node-b5996114df5aed99bc42bcaaa282ed0973768b89ad5b5a44acdef75634cf5a31",
+        "node-c5535ba9cca3903aedde129972a42199389cd8a4e8c17e36d35cf67cf89800b0"
+      ],
+      "capabilityFingerprint": "c2efcbb476bde7632d5e93254fac6a846464d32a15ecf61328cad8592051784e",
+      "familyId": "frozen-t44-information-hierarchy",
+      "partition": "FROZEN_T44"
+    },
+    {
+      "objectId": "layout-001-grid-and-hierarchy",
+      "coursePackId": "layout-design",
+      "objectContentHash": "7dfc036da0d90438310c725ca2e17ee145cbb86ac22fa2bb056dea6daf97ff61",
+      "eligibleNodeIds": [
+        "node-02fbbd4d25bbe2eeb47d2d0e7a72e154f6c2c9adcf23d82a71385898957fea74",
+        "node-04a437018bb4c3e6f57f356e21121d9748f6dd5dc1ac755805ed957cfc7cc002",
+        "node-19489142179e955df6542033a90d7e7275c6f83d0852ecf1543f19008d240efa",
+        "node-242fa280261b3ab8fea91adcee1d73793121c98e09077f4494dd6ee97c90fbea",
+        "node-3e9dfaafb1f52046ef2aadec2dbfb1fab9d0b3b75855eaa5f6f7fe75bd2a6377",
+        "node-46b9f9116c48c399d15d552e1b30414788a5badca0c90422cb2cbd1ef2be04a0",
+        "node-64dd7941ae2cf7c84a8007ab83f952dc6a544199e5b2842227cd0bdf44cec1a4",
+        "node-eb51b2ee8499e10097ed659d615fe1a32786d95792ef4394c297da6ad7d29981"
+      ],
+      "capabilityFingerprint": "cf94650da667fe88a0357c1f9153dc0955e8e1d5482cb3c2ef11586bdad98d18",
+      "familyId": "frozen-t44-layout-001-grid-and-hierarchy",
+      "partition": "FROZEN_T44"
+    },
+    {
+      "objectId": "layout-002-type-hierarchy-and-whitespace",
+      "coursePackId": "layout-design",
+      "objectContentHash": "7bf6d5f412a68de4288dee07a6b9abc45551b2ff842f5c1498ac0bb888770496",
+      "eligibleNodeIds": [
+        "node-0f21de802f350fdc80d173a2ac89e7861c1855402d0d994b79dab7ddd338fbd6",
+        "node-0fe8a2c44fb687856f72cb21d877a947744db8bf28cee6019cb31f371bcfd535",
+        "node-15be50a84e0126adcfb7efccb2725ba005c7bde35fd22341e1420202ba0fd953",
+        "node-387a263cfd5f531c846ffa1680aa892770d4c5cccf2cb07408af3fc980bc7f22",
+        "node-86a2ad2f1914d0d992162ff3be917f3037360035e9b2c94f9adf9abfd59016f8",
+        "node-c95cd51c38485365cf00c17c0b5de70b11ac37ae10c605c44ac613fa360c38af",
+        "node-f4f1e98b00d05d9367050cb39b8cdba53a4929be8548c86e439dda5e325827f4",
+        "node-ff086c0a51f508c4b705ad151c5c4ba9edceba75a72d7eec02b70705c60723c6"
+      ],
+      "capabilityFingerprint": "8dc3c59c6525ea2a62028163aa9f310c58c41fa5c2c57cb3496fd10184747132",
+      "familyId": "frozen-t44-layout-002-type-hierarchy-and-whitespace",
+      "partition": "FROZEN_T44"
+    },
+    {
+      "objectId": "layout-010-international-style-fit",
+      "coursePackId": "layout-design",
+      "objectContentHash": "baa59a4ce2f3cfe7d1b6a097ba7f6752291d924a02e1bf026f71855929dfa6c7",
+      "eligibleNodeIds": [
+        "node-0b2164f4cf13c18cb4792fe71caa536f99db810ad96b796ce88cadc5d0398ec9",
+        "node-46658bebb37404e65c2586fe1fcbb8954651659dd0a5d7010a913b712c112f70",
+        "node-50a825a48e5ea10895b62b4ecfa67f2c5f4922200f0f6e9c0c35eff76e221d4e",
+        "node-597b7b8d7f66d7827ba6a6e158107066569af0384f1adf1ace5206b371671f59",
+        "node-96e8eaac62715afdb1a58bdbac724a14c1c0c7415f0a5dd52c68f72a2770a3dc",
+        "node-ad233b896ef5d03f2a8f8042808f9ef281f5e30d6906345e42a778c054bee3ef",
+        "node-bb6462c7b42864f0ba49f712bd6972b6993aa4336d4ef306fd84c439d1987e9e",
+        "node-d6d3f6918713edbd99b6424adabb497b483fccc3c53464b3d0fa96bfdfb53ed9",
+        "node-df2ff73acde93a3a565b69683b4a9f842defc437f22682f3defdd7f136769f4d",
+        "node-efe90d986156d84e3df9a6b5f4d277e72e1e6a461063c3f79ac132d918a5f624",
+        "node-fa0e0eccf59dd381f07b77912080607e3ff017c71862135493b2d1e7cb601cd1"
+      ],
+      "capabilityFingerprint": "6f47b080bdf3b9ea067dda41c214f7d45c7d0b07bcb69dd6879d26fcf109597e",
+      "familyId": "frozen-t44-layout-010-international-style-fit",
+      "partition": "FROZEN_T44"
+    },
+    {
+      "objectId": "layout-011-international-style-history",
+      "coursePackId": "layout-design",
+      "objectContentHash": "6e1998a9c2b6511d85985498f822be76f25e6e04187bf44adbc2e9a77be9298c",
+      "eligibleNodeIds": [
+        "node-2f922ad16d69e60c85a6dc4333aa17c5430603075b00ff4ef7e4c97f9a94ec0f",
+        "node-607fec78a499ecb458d45b396b1ef28bc1ac50f6c395788ba4d91bab801d982d",
+        "node-926d968079b49abc16dfc3b31f3dfebeb219a69eecffe58bad296b727e162ce8",
+        "node-94de53e8b8bcc3fd729a54829b51e90c81c87b6e750ca5d365e78ff6a8223c88",
+        "node-99871315f84f72ee264196b457a63b1e41d565e5e87c7cdebcebce54ad0652b3",
+        "node-9ada4708f28b865fcfb003b0514fb118d3d14c39485c1286e9bc292ec9846377",
+        "node-e9733f83bfe08d6f82a38aee28f5d4c903b308e934d222697bb0cfcc76bd1d3c",
+        "node-eac8473db9d5d726bfcc7a25d971aa117697e55b6ce2d7f604bcf7ab3b4654dd",
+        "node-fe76fe2a5f7d3b1b06a32790efc138d7a12a257437ae773480c8af3343f2c852"
+      ],
+      "capabilityFingerprint": "0450dd70503eecd3c97d84162dcaf9662aeb1d7ee93fa235a00d82435d703a36",
+      "familyId": "international-style-history",
+      "partition": "DEV_CAL"
+    },
+    {
+      "objectId": "layout-012-acid-style-fit",
+      "coursePackId": "layout-design",
+      "objectContentHash": "709522a48eb31753c480ba68e0080485913ccf06141a4c417234ac47e337ac47",
+      "eligibleNodeIds": [
+        "node-016251b2f0a5651b2c5d833bce760bc1098a1a8cbf2ad77a3081e83225456014",
+        "node-2031a60a356427c5cfbe2f7b846102eaab6728af56cef518914d2ff9b65b723c",
+        "node-2f1a11dc504325df58a334c5da4871590de8215554df79d92e05cf0d7ce05d86",
+        "node-3c356602a87b866ad620b9b1ab169a5cdb855f98330fc0572b18fef7c8d25a4a",
+        "node-82f5c8a1d1006fbde0c9df28841147ca64736118b4e11a8746167cd5f68ea829",
+        "node-9f27d3d4758c1a8b6b890e574407a814eb775fb72af71f018a9dd4c53b9825dd",
+        "node-bf36a17cf967e2b02e42520902aa1ea2e40fa4645e2cce5902e457c5d870684f",
+        "node-c42d82e9e36d624625dbc5477615b01e962e1130a59c8f8ce7e8f573020f8581",
+        "node-cab025a56b06d7962fc33628242339bfead698068be1cac38b9add755e7098a6",
+        "node-e05be4c2bde26689aafb86fa064220f56e6e2a857476a4b8d9af2c90d7db9c3f",
+        "node-ea7b34331658ea11bdcb45ff67fdd5ea9a256c2a44a4217e18d20b2d008ed5cd"
+      ],
+      "capabilityFingerprint": "187891188d262d68452d5a9b3febc00792fb75395b2f131b94da84f33a6068e0",
+      "familyId": "frozen-t44-layout-012-acid-style-fit",
+      "partition": "FROZEN_T44"
+    },
+    {
+      "objectId": "layout-013-acid-style-history",
+      "coursePackId": "layout-design",
+      "objectContentHash": "48d0c22ead181eb610bf218190ad7927f133b25047e14b0f7a132c12a556e83e",
+      "eligibleNodeIds": [
+        "node-188869c9f4a7726f463d847fc7b474e8f093dbe8faf35aa2e5935e4b238fd1cd",
+        "node-22328058cb7c08dbab61530ce31d25d3faae49fcfab49612b43612d0f5697acd",
+        "node-26e8c69be3970e5b46b2ebd478c3cd224a082c4fe21fb7401d0b6b886ff4f9d6",
+        "node-4dfafbdb6c58b18e522f580c17ea4f59273da93ed23ced5129dc27b69c81b6ff",
+        "node-62e830dfa7809e0f960cc60ad5215cfce6f65a20ab8845ae59a3c6e1eb57ee4d",
+        "node-7ad07e3d3b572c861e918255caafbce30494cbe8eb7b500118654b9e33aa4d71",
+        "node-b9cc541ca87ed001c771e7c07370332e4568e1720239b3d9c8f25e903b250036",
+        "node-d15a5bfec9c702f2a0f14e335c801a0df1ec04fc97351cb864834e5f80759df0",
+        "node-d4eced8fcae109e3b92714794d113cb884d66eb8ee767ca2edd0f5ce1a7271ee"
+      ],
+      "capabilityFingerprint": "6e0bc63fe52875f725b40835ef2cf197c5e2fed82eafb5d4b8f3d317bbcd87a2",
+      "familyId": "acid-style-history",
+      "partition": "DEV_CAL"
+    },
+    {
+      "objectId": "layout-014-collage-style-fit",
+      "coursePackId": "layout-design",
+      "objectContentHash": "5d0b8307d50b51db10dd66ecf7fc681e8d8713f53e08676bb3575672e2717026",
+      "eligibleNodeIds": [
+        "node-038ac829690782b275e416f24f5eab76501bec3bcc461b9e56ff457a7bfd4ebe",
+        "node-1546614a1dda2410cc38e82812a1aa360a22fb5274d25558bbbb162c75fa8a06",
+        "node-326310eb19471b7b54b112f14af6441d774ee904df77196cc2c5cadec4dcd3da",
+        "node-3c43917e0f145b547be5626556ee54bbaed687dfd2388da6ef27e2cdb6e59c50",
+        "node-5bff5e761fb7818fbc8bcc4bed40e3b354e088d2517bfede61d7313b2a694b46",
+        "node-7041470c074033e27b46f243fd3d99bf63d8a79e591bbfed3dff320c9c6380f2",
+        "node-719b6bdc5dc966efcf0813f2d4ad6927f36cb00cd931f71ca8c6ccd6ea3cb302",
+        "node-76d290fc5450a20d95152bfbbf4f29677b0177de55fa37d882d85211656dbfc0",
+        "node-c78415ae3af93e448f96b0fcb68aa1f49bd5068446e34a41dbf6c3a3009a5bd4",
+        "node-d7091c9fb652fb141f79e016398b3f693326f7b92e28bdc29c4bc7c85e5c3d99",
+        "node-f7e9e98b393d417eecbe2365af184d35f528d0322550d7ad594399ef4e37ca57"
+      ],
+      "capabilityFingerprint": "ce4c217c06053e0d4559e9a92a53dab5cf8103521220cb1b3964bc121862e959",
+      "familyId": "frozen-t44-layout-014-collage-style-fit",
+      "partition": "FROZEN_T44"
+    },
+    {
+      "objectId": "layout-015-collage-style-history",
+      "coursePackId": "layout-design",
+      "objectContentHash": "cd80cab2c4990b24586b11906344a729cdf2883549b68879e3e20cdd89f5a9d0",
+      "eligibleNodeIds": [
+        "node-028b039baaed4db3d7f00017e234bf3973938fd4356f36dd9782cb9c6754993a",
+        "node-20e49a4610209ef7fb273d04b60b6ccdf21ca8fa168187e0fe0c7386e2747a97",
+        "node-544067afd355c1d79a1a45ccba9e431fb96e1fd2a50513712f57d3fab51077a6",
+        "node-5c6d8a8d4b904249e96e1c23f8aaf8c0a6f837d466626b0f027289ab63fe8ad6",
+        "node-6e2acee41f084627f2b89be60811d47c8c63bbda5f608fb58f0b4aa9a6b5d296",
+        "node-b7c859ae9da51576eafd4b96dc2ff62ba2f18f670797dd0b56d5da930223b8d4",
+        "node-cbfe77fe359da93cbfe5c1a462eb18e2d936c937a37a053feb86abd2c8ee7c39",
+        "node-d32440dc5499654a3065ba3320f9d0023121ea52ddbf5289e0e1a177d7d4dfda",
+        "node-f8867b415a34e70f7ac1ca15513eb7615c9d4c378b2bc7609aa7f5a4911eb347"
+      ],
+      "capabilityFingerprint": "bc86c2be358c901c2313f14b2afd0261dd0cfc9877fa02ea978dcc41c048397b",
+      "familyId": "collage-style-history",
+      "partition": "DEV_CAL"
+    },
+    {
+      "objectId": "layout-016-new-ugly-style-fit",
+      "coursePackId": "layout-design",
+      "objectContentHash": "18a4563886d2a42aaa854c19d874dc0b9a25b51b8535a7b0c28d324d7de6b3e9",
+      "eligibleNodeIds": [
+        "node-30c06843d583bcbd03cb1dd10502ac978583800a0bb60dcc84c2c44e5c588b34",
+        "node-4efb3647f71b981c0809f2d43202967f73735bf464f679c227e8289ec945079f",
+        "node-6971fc5fa075dd5f605dff50aed12cef4f9e872fa698678175313b8a52245bab",
+        "node-6ca3095f3beab9b1c6d0a4eb6e97f8cdc48c257f741711821bcef774ed932093",
+        "node-89140f6b6698c15aa09702029b64685b1d9bbd6cc09c9bd0f1c67aa16f579b92",
+        "node-8b6662b488bb757c6fbe83c8e606b861c2a2b56566e81b0f1623b26a0f08a8b0",
+        "node-b46dc315f87e1e7131c003ad13d7339c89fa034ffa36d56a2407e6c3cfcf8e1f",
+        "node-d068976fa93b01bbc5eb761ed644be1143e79ab413de740c8cc439a9c0e7234e",
+        "node-dc4669f0ddc8dd17a5f5bf5b2d9661d9bcfe07eb5dd25f6df582db22938a458b",
+        "node-e7f80a722eab8bfb45f34f384c1abec2a15b17598b4be4a5a9d0057289e5b706",
+        "node-ed3c7f1e80e61065ec69a0b9f0e0368b76a9d8d1ffda409ec4613444a2bbbba4"
+      ],
+      "capabilityFingerprint": "4654e05f81f3a9c7ef2198bf17de4fa2058738d2b1f182857ec77f9dfc7e8e7e",
+      "familyId": "new-ugly-style",
+      "partition": "VALIDATION"
+    },
+    {
+      "objectId": "layout-017-new-ugly-style-history",
+      "coursePackId": "layout-design",
+      "objectContentHash": "6b4bbfcb9041673649c41508a8f48b618700600bc23e24e24887bbb86ab0f80f",
+      "eligibleNodeIds": [
+        "node-0822c1b513f69459d3cac70910721c50389ec3714d50e6371b18ab49916941b9",
+        "node-40fd69496ffcb134da420cfebc6d4b7953d7ec2126d83344d767c55d5a935a43",
+        "node-4592a881af3ee72150debd38369a9dca91e7d56ee9a3ec7d4202b1ffcf3710c5",
+        "node-5e3707cf32958c311bbbe1d32820ff422c534a410e44014594e1c5bde9e9f9f2",
+        "node-67e20eed1d3b8c34c0904a93bcb9f698050a161eaee51c2adaeacedcb3c95d23",
+        "node-8284e2e15d7e0124370007846a4766492d3b230d9c42a81bf76234c199f8039b",
+        "node-9b0de10e925bd2afc7a4d4de17f8350e772f74904aac4c6d718e6b6f4a5acea5",
+        "node-ce4e30c8b0f6223336e3bd1d865879b05d0316742f5df89e4fcbb68053428ea7",
+        "node-fe67eb8a96d03334788f3ecb14e55d469826254c5a031ddc5ab6fb228024c212"
+      ],
+      "capabilityFingerprint": "38db8463e4766334933420028a2c45746e84bb986bdb35f5ceec9d94edd4701b",
+      "familyId": "new-ugly-style",
+      "partition": "VALIDATION"
+    },
+    {
+      "objectId": "layout-018-neo-chinese-style-fit",
+      "coursePackId": "layout-design",
+      "objectContentHash": "bdddfcaa30718cbbfdc4bf660c75a9513ea5eea7a9b83981e8a1a9bba9042c46",
+      "eligibleNodeIds": [
+        "node-12d1bd01dc2e2b3a80655b2012e24e1db93b3fc21c766f6139c6175ec456a77a",
+        "node-13e63975de445d6acea39affc40222101cd0c2755b499ab893c809c212e2898b",
+        "node-556712c621c97003450e4877485e4350383f1b24d6bb0bd04599a27dae8067df",
+        "node-5c585bdf860dba5dc3f2689104c315e6748fdaf5dd41e359d81e68dae794cdd3",
+        "node-6d86a4054bfa23d9af60ae5e25c14db9c316c743daf5e0fcfad1fe84bddcd1d4",
+        "node-8c32f5985cc93370227f38c24e009167038a80378ac416f76bd4eca7a52e2632",
+        "node-a7a06bd0f93489d91ab0c27dda0a2641008d2988f7fb60b02fa9a2fb289054e0",
+        "node-a8de5fba54ce86fe7a8adfecc44e5b4f1ab462a34807da5978269c065ba4b56d",
+        "node-be2d7291219f1dd7fa12cb07bbedf7a07212adbf1737135915482ca8419edd76",
+        "node-bfae1e0747c31fe17e484ad74a7199feebed2310d896526a3fe52c0061541a27",
+        "node-df634a476d6e1f3149c591d7091c4b02dfc6390092e2a0e0e7e60a7961f7d9c6"
+      ],
+      "capabilityFingerprint": "020bd5275a95adbdf19679f537dd0f937199a60e5be872709e9b6f59e0f2b10f",
+      "familyId": "frozen-t44-layout-018-neo-chinese-style-fit",
+      "partition": "FROZEN_T44"
+    },
+    {
+      "objectId": "layout-019-neo-chinese-style-history",
+      "coursePackId": "layout-design",
+      "objectContentHash": "31606d4ca182dd85cd20e03e105caa40d82b3b1823674ff4e1ca12fccc2ba7c0",
+      "eligibleNodeIds": [
+        "node-3677158c8082223d24c0a4c7cfac153f1c374168f4572d7699d67ad871c7e526",
+        "node-63800cdd2620fd4bfde8aa6d85866a43b64f95f008992359398596ba5eac8b51",
+        "node-6f10197a43b02e334e4a2d2696073d9970f191d3ee42a11d288acb79f820cbaf",
+        "node-94fadea3c2aa639d72da833ad556d86f5d26ec14693424337e03d127a5985c78",
+        "node-a17c7307ca664923711d652501c7e4f1a674918ef98449898074ac0e1ed9f58b",
+        "node-ac9f60f7f600f9aa8018e84e595e3aafafd3d520f4f920111bd04e71cdb37bc4",
+        "node-d5c7f24ff566caa32eab1317895101f8047dd29f0f80db549291b0553e70a075",
+        "node-e4dd188af4038051836bb520de1a2674d3ce6da8b025cbcc02c3ffab79945e41",
+        "node-fbf09e8bb8bf4cd7d075ad347b24ad4704d62e09e339dce9956129eb25caf16b"
+      ],
+      "capabilityFingerprint": "52017f439414e661626ff576b98ea9e7804ec813dd59e89485be26cccd3b8607",
+      "familyId": "neo-chinese-style-history",
+      "partition": "DEV_CAL"
+    },
+    {
+      "objectId": "layout-020-retro-futurism-style-fit",
+      "coursePackId": "layout-design",
+      "objectContentHash": "9dac9962368f45f331588c87fc3b79338068de7cf660925332162222f7b48076",
+      "eligibleNodeIds": [
+        "node-093a6a37b64848e7efe09c8cddffff8ec4e0471ffae01588081b9eef8f86110a",
+        "node-0e03b3d5e32da6c6c79683d0411a298ea22be3d43132e5fd8cc7cc0afadd5542",
+        "node-1a0694843317ac1fd5a486ee022c3bab017c734db055febbe830ded686d44d04",
+        "node-5dbe08bcb9ca6817944256dbd8309bc7d63099b13ad9831c37a718718b00e546",
+        "node-7a4cae02218014943e175db010edbc1784e0d9bd43d9b14b61c4020023139a5a",
+        "node-810866e60d5c711c4f10d79ce574d9beaf9020782c474feb2d39e3acc74d585e",
+        "node-890c2cbdd61560daaefac03067ea8ff249404e3356fb8d6a314cac26fb8b3f84",
+        "node-911d26b2cdf00fe88a82c928067e31704403eb2504473442728ce1e1ff9b5030",
+        "node-ac42918c125954ae83e03f95ee56b6bcbe192d36dbca345664aab699075b4cd9",
+        "node-b336fa680542a6cf4556a62921433745274a8391c473799b09ab2ea70662fed4",
+        "node-bc33d011294fc69a5348d47c813843d5c7104e0c00baf0217a414fdf76e06c8c"
+      ],
+      "capabilityFingerprint": "5190b435f72b0b6ed1bf95221210263ce6ad8a1f631a8af930f59b4e2995544c",
+      "familyId": "retro-futurism",
+      "partition": "VALIDATION"
+    },
+    {
+      "objectId": "layout-022-tactile-texture-style-fit",
+      "coursePackId": "layout-design",
+      "objectContentHash": "5974d5d5ebcb38e82063b49863727fa118f468d2e920ec0ecb53ebeb2032db41",
+      "eligibleNodeIds": [
+        "node-02e2683b05ba50c6e7cab2fd7fabe5ee8ac6aa170de75e3d0d5d717e84ff1874",
+        "node-19712a32a551454ac65dfea1063057b60a01fb158d5832c934a9f22f25c517bd",
+        "node-289cb8849bb6b37aa86a0196860e909c83a5195a46a006fd4e9cd04f4efe2aac",
+        "node-5018c920074c16dca516bb5776fc2aab3727a5ab39513a2a849c7db4731dca19",
+        "node-6e963a2c176781138c10a4aa8db4cbf971eb029d9e85ae495a94267efd98e21c",
+        "node-87146630eba305ad0d5b8c7d0b2c191a2c963b30a3c489350f6f68ff6855a50b",
+        "node-bc4eaca769f380bed156dc7ecab45cdacafd344b6689d61cf52cec90bc6656a3",
+        "node-ccea499b8212bd9154057ce439bebd7c68de69d63393586bb7ebe028e7a2093b",
+        "node-cd0029503159c83a3e6281e70008903a95de62e9d5322abcc05f148934ad85d0",
+        "node-cd5c3a5463f3810aa24984cf3785f710eb3bb043f40fd188fc6dcfbb482a3dfd",
+        "node-f3a7656ee46619db7739aa2a1b31cf45b21dff22a571a0dd84a76fd6082ef8ba"
+      ],
+      "capabilityFingerprint": "3ab0bf79f2ac72998df88412f7ecdf7676d7c53af854c705e56ac0c5323f89d7",
+      "familyId": "tactile-texture",
+      "partition": "VALIDATION"
+    },
+    {
+      "objectId": "layout-023-tactile-texture-style-history",
+      "coursePackId": "layout-design",
+      "objectContentHash": "a4a67fa1fc7d1d877336f6c8ff2944b31ff02c0613c88efd0ee9626950047a1a",
+      "eligibleNodeIds": [
+        "node-38e10c7f824c97a63fe12197a64c047e098876203a26a944fe3b5260a34036cc",
+        "node-45b96b301828d2beb41315b4f18f989cfb7e5a1202655aeb2ef0fb28bb00552a",
+        "node-82d5ef481d5bb139219580ebd5e9b5982b33b99fcd48fb185bfe4ebd087ab790",
+        "node-84c71ad42b9dfe5056a8ddab200732c9d7e38026e127a3663115d49b1f3ad076",
+        "node-b444bdff9681c78e05612ab540e4a76c2ea136f567e8772fa48e0b2714bdbe83",
+        "node-b79420227083a6693fa44c64c23fd1ec8782f3f133da148c5b8e33ef27c3d908",
+        "node-ccf92f935c48ae6b88d67b343af6f1c49ed32275a01f07690c5c7fa80d0652fd",
+        "node-d75a22694fcf274988260e59c6f83d4cafca74464aa649d2789f3eecd7fb1771",
+        "node-ff9099b5a0dcdf6075d393a93fb199209716b0917200c90c0b0f69879672cb8a"
+      ],
+      "capabilityFingerprint": "41498d29c41949752408866a17d9d6f7c141be4d3fbda7a5d8902216302ff9cb",
+      "familyId": "tactile-texture",
+      "partition": "VALIDATION"
+    },
+    {
+      "objectId": "layout-030-font-trend-by-context",
+      "coursePackId": "layout-design",
+      "objectContentHash": "14b30f48071722b8b03fb469529c330d5c513b457c769ccabdbe6502ff4a6dfa",
+      "eligibleNodeIds": [
+        "node-365f7f830409f19fd8535a595d274b9dd462bae848363e040dd1c88b4f5dc94b",
+        "node-498637cdc231adb3497288ab7b024ffb1a4477d440fdaf31a582e1a2e9046fa0",
+        "node-7c30acae611d11e136676b9c75e1e5344e2a5e927de15b08df63b241cea219b3",
+        "node-ab4efe3e165b339f032ea4fcbaf233670399ea9c8126e7c249a58c654e9d61db",
+        "node-ae281445d40ac7044d041b8d4021be14116f958b02271ccbc467373e5db1933a",
+        "node-befe722ec548b6ee278b2f5e2ce3abf83fd060faf37bc59e99a0adf01bdaf53a",
+        "node-da1417452d233e4d539c46034e64c2b2bcd14878ae5bd4d26ed75723850da8af",
+        "node-df637b457fcf57150d4bc85f92ae23387f5556d85a771055bdcbd5d2038bc294",
+        "node-f6d916106c63f87ced02abb2364ad87a97274fb056efaffda38561db41e39aa2"
+      ],
+      "capabilityFingerprint": "0f6f078bac6f3ef7de0d84f2d41dc84540235d102133e2d1f5f7b750ef1a93e0",
+      "familyId": "font-selection-context",
+      "partition": "VALIDATION"
+    },
+    {
+      "objectId": "layout-031-coordinate-type-image-and-color",
+      "coursePackId": "layout-design",
+      "objectContentHash": "7deb9385423cd24044bcc2a5f850c72613ddd2b787ccc0013543e7849ee5add7",
+      "eligibleNodeIds": [
+        "node-177885afa2379c8542b83d4bc03e88ad6e58e00ad80d3f68ef06c8f1ccbf32a9",
+        "node-2d581c73a1272a57931dc76397d7e99ee6e9c3efeda2dd771f36c8e4838e981f",
+        "node-5e10d1f2b517df78a783dc0648d93d9c54879b8e95b10ff489a406359a5a627a",
+        "node-636c86930dd944aaf648003a979c65a6998a8963665f2a304b6f193528aae06b",
+        "node-6f30c8b0dc7a20c95923a62188b470d205e48fbee29c24afaff5ddced7bdefdf",
+        "node-818d62b763bb877084fbb514f77a0d50026eb05a553df6d512f069afcb68a452",
+        "node-8459343d667ba40a08536ba28e9f8128353ea7977f0d9e7bda5cdb6c3032eed5",
+        "node-ca95648ea5e9591cb6dc93ccfbbe4ad59dc8761a26f41b571b421ebe6ff473fc",
+        "node-cd8057aa7db8b8f89c7a498fca8022ac6aa13022614b677885840987acbaff3c"
+      ],
+      "capabilityFingerprint": "8a0b97c4e81a11c98c9f30a11482d4eb2b51b2cbb01228a9ee7a56426303b971",
+      "familyId": "type-image-color-coordination",
+      "partition": "VALIDATION"
+    },
+    {
+      "objectId": "layout-032-select-type-for-audience-purpose-and-medium",
+      "coursePackId": "layout-design",
+      "objectContentHash": "a4ed5d8fe91e3368c9635739951ea58848342f444db7e6cfd92db81af78c10ac",
+      "eligibleNodeIds": [
+        "node-0ff3eee9444eb616430f3c6af28959cd113838177c3781198ab6bf1e85b8ce48",
+        "node-5946e6e15c4ccf6ce18a9265c6fc132406bbe43d0f88314f22f23516dc9c1d36",
+        "node-59789eb249ecfa24c236a09e9e9bd9c046a7281020ba17e721e0c70924d7f43b",
+        "node-63f536f52fafb7a489bf31b592c5a4fe15598b40a0df141928856738b52db95c",
+        "node-bdd41f999f0a9548b8c06c7abc433ff7edf9e13daf9659f349f52af74d8319ba",
+        "node-d2d7b1413952e5a076622b770d5ee25a609471f9512b5d5021e6972e88783ecf",
+        "node-d6e77fea1134b22ef61da0ee2a301a2a25159cfeecafaed1628f43adf3e28f23",
+        "node-e598b68998541618c059891111a885b3ab4367a7a5b634ed57878b7dc472987a",
+        "node-ea069e9514918e37a45404267b4c3107f80926f5aa61ae26b53e57d88f6c89ba"
+      ],
+      "capabilityFingerprint": "680386899ef7880c6de72c7b0687d245e16515b037e60dee07a1aa291a6221f4",
+      "familyId": "font-selection-context",
+      "partition": "VALIDATION"
+    },
+    {
+      "objectId": "layout-040-six-step-grid-layout-check",
+      "coursePackId": "layout-design",
+      "objectContentHash": "d81e762aef4ebef9bf6ecb7172081a0c5d16c03d0a1a807045fcd0455c7636f7",
+      "eligibleNodeIds": [
+        "node-08fa9d071472ebe13c5fc1896c941684243d6a7270f75da066cbbd7429cd0963",
+        "node-1cabe4b009e949d1632690f1903568c9eaee168587ee4a30619c0b7b97e66cfa",
+        "node-272aaa9c804538cc0f5b9d44cac5addad8871be28915abbfcbb85afc6c757a4f",
+        "node-3c9f96f39388c7515e0045ac6c90f67e186711e3df9c4d4eccf3227ea10aadc4",
+        "node-551b331efa891175af50ab4454d0bd15e8a10161af3b563aeb69f3047313f73f",
+        "node-5acdcd42edd68f593ad5c97c721c493be53959547257cf9d23de96da8c687405",
+        "node-7fdfa120816b7aa61552b8bbc324760c94117cd8239a229332cbde592c69d57b",
+        "node-a8f7b30e70182c95cdd8b6428687eebf255d9404f0f3482f5569459e8c037cf7",
+        "node-ca1b6a50bf057070de101ec4084d2cc0809b43c564d7beb5e10847579f3de17e",
+        "node-f4a9f3179e9201908e9517eace22ba9e2701e9f6a130ef2b3b2cca48f0b8d2b8"
+      ],
+      "capabilityFingerprint": "4ce9965ead9a3720fe50df6fec16a2f365c39218ca2d93b3ecc7f3d7c1d19cc0",
+      "familyId": "frozen-t44-layout-040-six-step-grid-layout-check",
+      "partition": "FROZEN_T44"
+    },
+    {
+      "objectId": "layout-041-review-layout-with-observable-evidence",
+      "coursePackId": "layout-design",
+      "objectContentHash": "a92a1488069b2dc5e9ca062acefc80b89b847fd1bb393440293f992c5d955912",
+      "eligibleNodeIds": [
+        "node-1d363f31c704514a5e504a3a9b18f7a912c4689df9cbcc4435bad42831ad501a",
+        "node-22e2ba8dbfb181bb21754e19bf47407397e86fbde646bc5127e5b8b2b85a5de1",
+        "node-34d24c8d31b6c333cc4d00a5bd9de4ea9ec4d303f76a51f3a75f309cdc13304e",
+        "node-59a72ca4cb2ffe15df021bb63036086267b345be44a6431f923c3eb0db73a834",
+        "node-5f7cc53d41e33c97d8669860a5d6df61a0298525d1e994806983802c0098e07e",
+        "node-9b516927c64e254493e7c47f7bddda5b1f8ac99fbaef878a25112a771d661460",
+        "node-a1e2e530cebcd24b6990957d79f52eccd688e97aa8ff4db20db232876782fe70",
+        "node-cf3b885e69af352f01620e1a2e462e76e6365a81ca96e6d0d89a5aa7aa510c59",
+        "node-d830aa69684ad2118d6738c7d1a9ed05ece278a6733efae2f71c49bdba0c1a25",
+        "node-dc9e6d90208bdf8c8d935b4ee481903ccd090f6005f69cbad0e4a44d3a20dff2"
+      ],
+      "capabilityFingerprint": "d47dc49cc45430b08ecc3923446b212406d861eb1c681ebf2ebdef536c228501",
+      "familyId": "frozen-t44-layout-041-review-layout-with-observable-evidence",
+      "partition": "FROZEN_T44"
+    },
+    {
+      "objectId": "layout-042-review-alignment-with-guides-hidden",
+      "coursePackId": "layout-design",
+      "objectContentHash": "9add886ee38a9a560506378327153280e593f4abaee7f496a223a5fd89bddd8f",
+      "eligibleNodeIds": [
+        "node-2d4d753a3a70915b3692ca4fc505aa45019d4e70dbc76a68a51a3d58686ae0d5",
+        "node-343ea240d2aa757fa7836623d9bcc3baac6f285513849b3865bf7cd7da579e95",
+        "node-4112d501aa6e7e1a70232ddd2a27b97c5075f62cfc095e5e8ed8db5db9e56e25",
+        "node-534dc9673fa09916688e5140dd9383e822f8c8e24edbf8da0b44e53504b480df",
+        "node-5bd33687de84f0f103d8c459bfc84e008927101af05e1ea4d6ba3c6ca80496b6",
+        "node-7d89aee5ffb3330e1299c702004e699045988ff73d28cc704044e8f8e13cc9f8",
+        "node-a1180944f96040bf5091448144d54caaad6ccfc5d0d26687eddad2957462c720",
+        "node-ad64d3bebf529c5c941a2ede66e4e4786d020db31d636b2e66ad30dc7a5a9902",
+        "node-dda935f8f2e87acd715f4cf98f328ad3e2aa99691fbe8958a4e600e533d46e20"
+      ],
+      "capabilityFingerprint": "cdc6c60d147171de2a3ebfc48fcba5bcf39060d880969b85e6f7159aceb70a95",
+      "familyId": "frozen-t44-layout-042-review-alignment-with-guides-hidden",
+      "partition": "FROZEN_T44"
+    },
+    {
+      "objectId": "layout-043-refine-spacing-weight-and-text-hierarchy",
+      "coursePackId": "layout-design",
+      "objectContentHash": "41fae46f9232edcc043c29a9ea0ac795109945156d4f58b685a6d41ebf342a58",
+      "eligibleNodeIds": [
+        "node-0b2f4a9b3d3c685b61be1e33894f5c2498f95470c2acb4522c636e9aabdc43b9",
+        "node-30edcba50a1dc36e05b92720991bda02f342f4fbfaf6056192ad84aa4022a63c",
+        "node-37f742d8339552189fded4e8b441c01dd99a7e37b61b19d9911c985ca43b7b67",
+        "node-3db878dd66471da99d4ba61e44bd0b48c77d6a983c8b3135c317376a1813370b",
+        "node-630e420e32b43e1f711a6cdd4636bddfe2c0639a7c66f7149f340a01ea29d4ce",
+        "node-786e9980a3bda60712c984a6cf99b2b2ebe6d8a6c2e3d12cbb6581ff7ce57ec6",
+        "node-961b2ba9a6e563cfe47966500c7a468a95efe2b9926f855cd3b7e3804d998145",
+        "node-97b4a2ac7883e7715a262c672eb14e15aafa46d4fef7d888a3a899ae86f35f90",
+        "node-cd2a51d471d0726f1e54a17ab8038d2075b8019fd36264b61dba174971ec28db",
+        "node-ef06b3dffbcd673dbb568f3271b51380f6aefc0a9ea0b8a044a193c81c303288"
+      ],
+      "capabilityFingerprint": "48eb8ca58353a3dafe8defd6b507e75be7c90ba5af10a9e758b5b62854206210",
+      "familyId": "type-hierarchy-refinement",
+      "partition": "VALIDATION"
+    },
+    {
+      "objectId": "layout-050-select-design-books-by-learning-question",
+      "coursePackId": "layout-design",
+      "objectContentHash": "a82dd00c357718de3a460eafc8ab8f66bb4592ac0222708120b7335415801d7d",
+      "eligibleNodeIds": [
+        "node-087ef4da87ccd38770e17872eea661f7666a5bed23641728531b4ccae0ee9925",
+        "node-0f7a8784594b11dfccdd04d9456a372aace556adfb31a1a6563aa4e04e135fe4",
+        "node-3ae406ab31a0cf776d48ea5a5fb0bf707c3e8a059b7bb56b8fcf5f03dcfc73d1",
+        "node-67715ee19c0d0af5d06bd52c35cfdf181ac8e2766358119ec757e2438803e332",
+        "node-783c82ddd023187b53e0feeaf510d640e56c0f89c6dcd46df36e72ba4da8a617",
+        "node-7a8230c2fe6457f05c78c67c4077c447a3052fecc237245084a03e0ad118e3c7",
+        "node-ac2d2b8dc73f4f3315bf855e0798ce025c1dc51f093126c43e0a66f81c1fe691",
+        "node-bb9d3f3b2512fa787bb9450e41de7ab9cc5563befbe1e2bf3b8dac45c8d2ab01",
+        "node-c8f04930650db0added75f7c371f618280b8baf5d44f4e6a93bd27494f1856dd",
+        "node-f4f5d0d3272d617075ccd30b906bc47df28abd1da516c2d8a0760482f0e164fe"
+      ],
+      "capabilityFingerprint": "625ac447b7464db91ec915761c585d62487cbc9710833e2a5c26c5c363b30011",
+      "familyId": "frozen-t44-layout-050-select-design-books-by-learning-question",
+      "partition": "FROZEN_T44"
+    },
+    {
+      "objectId": "layout-051-select-reference-resources-by-task",
+      "coursePackId": "layout-design",
+      "objectContentHash": "4f67fcc97c36eae2ac4781893f95f5ec973f80c6c5dfaffe186e3eb3b09a6a88",
+      "eligibleNodeIds": [
+        "node-1cb35a4a34d0072492a128ecb3b9fa413f7fdb7f86c828c0773ee8090bef3d3c",
+        "node-21f7c47a29a1de1cd6442ab5676fd7986b441e3e8b13cbbc3c137cd87613466c",
+        "node-4db30e4c37fd67829f40c77c0cfc8c761c045705be5dc00ba368616f038ea0c0",
+        "node-53b5847c764f4da2541c8b5b35569cf9daaa80cb7357b64315ebea452361e74b",
+        "node-75a20ce9bd6efa381d8f870fe6bd1c4501b77472e659d69628ed08bc38235cac",
+        "node-823f5c7a01d1cedfbde70d2673111c1e6ff5e9ba825a0fbb36969eacf24e0d6f",
+        "node-97583651795c10472c80c5fc5fe75cd28881345cdf7d787161b72e6a94cbe4df",
+        "node-997abd33ff4cf6182f41052ef5ecfaa584aaa4370c22513e20f3e675f1269331",
+        "node-a4bfbcfd2fc74a48f779be1542e48d85f7c6b61a58e8a5385064d6a689bad5d1",
+        "node-a6f5dba1fd6062ebc0d84c56ed2835e74640b31abace03d34d21aed2aa0432dc"
+      ],
+      "capabilityFingerprint": "d42b0e0f16c2e8bacb4985817319217a15002c000003ccda13afa0409dd1d26e",
+      "familyId": "reference-resource-selection",
+      "partition": "DEV_CAL"
+    },
+    {
+      "objectId": "layout-101-poster-01-analysis",
+      "coursePackId": "layout-design",
+      "objectContentHash": "23f9029df398028c39e9ac5342444785562be1ab3bdc35b067842f2700aac91f",
+      "eligibleNodeIds": [
+        "node-049ccdc639bb763c53ad42004adad220d3c010175bf55857c15ebd862c35251d",
+        "node-05d8e67cbc78ce9fa898ee4ec1862cf7bb3d743a91b1cc6b6c28039d18568d85",
+        "node-15138b66636a3c96d714d43dd057fda00dac290229bc4752c25b497619193d85",
+        "node-a98cb1b22457dd4cfdce353800b7d69b2a18704f441e604aa8cb17b5a6d2ad7a",
+        "node-b33468ae9d01dd2dcdf347101699c66d9e7f4e5e712258455a916789042a7b91",
+        "node-c881095d1cfaab84367b7020cd2a8fa5923e2ab72357cf790a66d03ecb2d030d",
+        "node-df62411327d848a1f2483c9f67046fb80eb806a1860463b75cb0c9aca87a8800",
+        "node-f31026f31127e02700c903a748be77dcfadd9396181f813aa896707372f552ba",
+        "node-f68136117e56a651a11a13fd3f57ef420176021be548a07314af6f8c5355a930"
+      ],
+      "capabilityFingerprint": "cd3d636f69a75efcbfb2ad69a56b19379061579a0abc2b246473b2a19d0f81c1",
+      "familyId": "poster-analysis-template",
+      "partition": "VISUAL_RESERVE"
+    },
+    {
+      "objectId": "layout-102-poster-02-analysis",
+      "coursePackId": "layout-design",
+      "objectContentHash": "ac6e26fac57bc4f48bf04adc5661f4ed1027ac4a6bf212ab78c62b1360d8c3d4",
+      "eligibleNodeIds": [
+        "node-34d827099de40ea0facce99bb0bcf29d577872c80bcd211ffa23e4dc04a44df4",
+        "node-4a19797f9b1b9c3f2bbab45e8e1a7542577a56e2cfd4714c31ed98d1f3f212f9",
+        "node-747fdd3beed21b7d0afda993f533822e4bb4103e117621ad7eacf9cf45c0e189",
+        "node-86ff9811cae5a7f929f6994e1f09cccbb05d48bb4d7393ee694bbc65c871e722",
+        "node-8b3dd9a988e93e3fbdf4b8b0f25d52d07316ebc11dadde98a224d56471506ace",
+        "node-a56b18bd05f094da65d5381f9b3fd4caf354a8ac28f492942309ea6cebdcf00f",
+        "node-b169cb0b9c88d966266e06d217d2885a9257f99187d59a1d56660eaf8e520060",
+        "node-e0f9f4955e69764ea23d362dfaf8b4de5725449bc79a323a24aa5e2017043567",
+        "node-f9624a1f65286b71961ca935615170bfb302cb7c8b0e902c71e28c669e91c7b5"
+      ],
+      "capabilityFingerprint": "cd3d636f69a75efcbfb2ad69a56b19379061579a0abc2b246473b2a19d0f81c1",
+      "familyId": "poster-analysis-template",
+      "partition": "VISUAL_RESERVE"
+    },
+    {
+      "objectId": "layout-103-poster-03-analysis",
+      "coursePackId": "layout-design",
+      "objectContentHash": "f4983136d380559b38047cf33d2a3fc76035efd74649c85442f916a9a1703d8f",
+      "eligibleNodeIds": [
+        "node-02983aeb873a4f33020081884aed9a42b305fb27c4a31bece4161855173b8925",
+        "node-13f691818b7f59e320362720076e01941f338338b739079e6872bf747adbd59a",
+        "node-3c4d1d4bf75ca3422e416cd93f51c4ab9f21037ecf1dd0c3920b4be787ce3e85",
+        "node-5064c7648d163e865e58d35f7cc77385d2f77732cc0bda9ef6498e484a993126",
+        "node-537a2f3e188753ace876462ce8abdcbc821b2fb69df9489056b303cbb6c6d0c9",
+        "node-594ba91cb2a1bef40858376ede4d86d9a80d279b5c0f4a1459eda8cabf06dc1d",
+        "node-5c42f4f63fe2442b044c33e1585f6816d05ad812167348fc8721ec2eb8f7d0ba",
+        "node-ca922888cc9434b7cf7a93a409a67fa4ed4698b789cfdf29ed641a58bfbb260d",
+        "node-cd6f2543e01d87ac0b31462a83f07ff300b9633634a0c05c7fbb1f673dd26cf2"
+      ],
+      "capabilityFingerprint": "cd3d636f69a75efcbfb2ad69a56b19379061579a0abc2b246473b2a19d0f81c1",
+      "familyId": "poster-analysis-template",
+      "partition": "VISUAL_RESERVE"
+    },
+    {
+      "objectId": "layout-104-poster-04-analysis",
+      "coursePackId": "layout-design",
+      "objectContentHash": "c3945d3cc437a8704225da69e6c2aeb60c0f0eb6efcf009e2bfb141fbaa1dbf6",
+      "eligibleNodeIds": [
+        "node-278802f2c45b995e2ef1ab6fecc32f0963ba6b2b329e7d7492068a363210508b",
+        "node-3711f0f75afca07eef044f9b0f38e6fc82786b9f374898b83d909ca3a1472ece",
+        "node-37d1c05e1b70630d2b1a97b8ff1a54a03a8ee29dcd449f667f7965ac458dd177",
+        "node-68fb117cf52f4930e05f49f3e25f75dedd91402f2a38a68715048c06a4018a10",
+        "node-8982d42cf1a2cd738ebdef9a43ec2ff28f42cad75e00e79993e13b33075edd26",
+        "node-bdde7d93b150852cbb5bf8f08863377f1e609008b2b7a52529a0575b4c08f6dc",
+        "node-cb1b8f2f6c723b0247f8a8df521415c406ba0b9e40c73e79a0380b8a01a5f3b5",
+        "node-d45088f81204dda18afc483f0c1638fc387fec2d569839597ed77cb1bec82865",
+        "node-e881123b268af24c434624cc5560fa7a2a463bcfdfb29793ed563db34d98a55d"
+      ],
+      "capabilityFingerprint": "cd3d636f69a75efcbfb2ad69a56b19379061579a0abc2b246473b2a19d0f81c1",
+      "familyId": "poster-analysis-template",
+      "partition": "VISUAL_RESERVE"
+    },
+    {
+      "objectId": "layout-105-poster-05-analysis",
+      "coursePackId": "layout-design",
+      "objectContentHash": "3fcc9bbf1d52a39f9eb451d4442653fc70197dc1cbe74ebef1a9eb56dbf25e77",
+      "eligibleNodeIds": [
+        "node-2a64fe31c1c3767bf7b7ee9bead33c607a5c6b342c8578acb572e64ad63ec60c",
+        "node-3215354df994e6c88ea91e4cc1207fe23c03719e34b63f0319a3b5876c29a9ed",
+        "node-652f12892cd3ffea8d64d705496ff0b87a6d30936926a1cf71bff9b1390c1beb",
+        "node-65fe0fbd5ff42e493065f88067729bf045f24d2ac3ad15f4138c38952a309bc4",
+        "node-73e0e7146f75eabaf2ae9a1151d94acca314d320c0715bb08e22198d87b5128f",
+        "node-887c570d31350cfe5765893be12e9dd94f985e48dd077441ecc5489e7fe7a421",
+        "node-b06deadf26d3cf9beeb3cdaa4438327f6371fe8c0f84eb51e29fe1172645558e",
+        "node-cf4fe0461adf9d24c2147c9d6c4057388bdcd00d651128feaf4b5c642bcad895",
+        "node-f10dc6d745f27e8a4e152ff0a7e6ba5b1eb709b6e852ebe7735c3474d7da335b"
+      ],
+      "capabilityFingerprint": "cd3d636f69a75efcbfb2ad69a56b19379061579a0abc2b246473b2a19d0f81c1",
+      "familyId": "poster-analysis-template",
+      "partition": "VISUAL_RESERVE"
+    },
+    {
+      "objectId": "layout-106-poster-06-analysis",
+      "coursePackId": "layout-design",
+      "objectContentHash": "301160fbe3fce21d177cd59042165d9dca211f5d244f26585e143883752c56d8",
+      "eligibleNodeIds": [
+        "node-0e38e9d64ae08747a4de013659e8f806099d91f49200e0849e7c6abe5d3f590e",
+        "node-42a9aa838d842ed7c522244300f75c58604f8747557e84b13db87ac5553bc179",
+        "node-5314ac00b6f9ab60779d8a71c083b55a8a225a3f6f767effad57e7600e9c13ee",
+        "node-5a509c146df36d681aec5ef74c159b12de970f8ffd69198023ac485bfa639c04",
+        "node-653db735fe549315deeb85d55c890b905e2bcc092688348d4ee9ddcdaa21e8ae",
+        "node-91c51a790217572a2c7b411e12d5cc94059307675f8261829d8affb5e66581dd",
+        "node-922fbe1149e950670f29e5b108c1bf48dd7bdf4f1aebb545d1db333de3c03737",
+        "node-9982fe40e06055f81b878b682a253cc7e46e88fc76ae18c19968d9b179389e1d",
+        "node-db23f365992986a53c259eaf326f7eaf92e242df76c3e9b5f950cc9ade7d672c"
+      ],
+      "capabilityFingerprint": "cd3d636f69a75efcbfb2ad69a56b19379061579a0abc2b246473b2a19d0f81c1",
+      "familyId": "poster-analysis-template",
+      "partition": "VISUAL_RESERVE"
+    },
+    {
+      "objectId": "layout-107-poster-07-analysis",
+      "coursePackId": "layout-design",
+      "objectContentHash": "7a8e86761116a95ad0f889ba201fcb5521c1b396ee304ec90d6dbc992fb0d720",
+      "eligibleNodeIds": [
+        "node-685d19e86360d5e9dca1845e6ad1f08f0eea1f8caeef6658cf23dca36f94b552",
+        "node-9b73f128e2d695c9f19dfd22112da291baeb1d145049160a05386445143326a8",
+        "node-a64c9c65fce1a0ddd8af859b7f02a4dc3a47650b4505362d3ada3ecd36616132",
+        "node-ab570fb9dd7479a42cd2c81c861fbce8e890dfb7b7c027687a00e312628b8906",
+        "node-b5bd4be4d87e3103e1a567dd7086611fb36db93f9f8b6c2d25329052f5828581",
+        "node-df66bf15e1061794b7761fc5c06e77cd64c87d12c7b92c3f17121ac09ac190cf",
+        "node-e1fef71c3a91cf97e452d961652d001ab6d82fa0c2ab03b9f0b645177c493f97",
+        "node-e28491f22a06a4b5287e281179a796491961df4ce3636657a12c9209655b3efc",
+        "node-ed47272363c1e07afa3597f8cf103609c6092b93bb0240a69ee8acb222b866fa"
+      ],
+      "capabilityFingerprint": "cd3d636f69a75efcbfb2ad69a56b19379061579a0abc2b246473b2a19d0f81c1",
+      "familyId": "poster-analysis-template",
+      "partition": "VISUAL_RESERVE"
+    },
+    {
+      "objectId": "layout-108-poster-08-analysis",
+      "coursePackId": "layout-design",
+      "objectContentHash": "2187781789104b9a1d625c351a33c9db3f2fcfc0b8201040205a2e10225785fa",
+      "eligibleNodeIds": [
+        "node-3843b8dcc1eb69b4129a48c743ab59582cb133b05e9f34421f763d3af7231131",
+        "node-4f4c29f4f0a93d1c12f2e3bee18f5fcb2bdeac6904a46e582397e73a11afd302",
+        "node-51768fa3136ccc5494ca2a922e42a3b7bc7b0e097be81e9d1d657ae60d4c2c91",
+        "node-810fa9e1ac13d4cfb46dfd5c8bfa6f20781f37299343d3baea8cbc31586adeb5",
+        "node-82cd10fdc82a2a83503a08c7ed718d4dfce93ed260ce5dc6cc20c13e50fedce6",
+        "node-a62491c0a92b2b280192864d8e1157bc6cd49af78d7b07acd6b12ae1f9805611",
+        "node-ad971497bc2cc4327a6181a2026e41a035dd2b0e4e5855697071c867c66ba88c",
+        "node-c00bb367454e8301249d8b70da530d516f0a3e1c015a54c9b5fb11f213a66d96",
+        "node-c94f9e92860df5b708540a922da1a7dfc86aab89dd1775ffc8644c98963dd6b1"
+      ],
+      "capabilityFingerprint": "cd3d636f69a75efcbfb2ad69a56b19379061579a0abc2b246473b2a19d0f81c1",
+      "familyId": "poster-analysis-template",
+      "partition": "VISUAL_RESERVE"
+    },
+    {
+      "objectId": "layout-109-poster-09-analysis",
+      "coursePackId": "layout-design",
+      "objectContentHash": "d4d9c741e30c68cf7081ebf47b99f5034fdbda238fda13bfacde56571c694c10",
+      "eligibleNodeIds": [
+        "node-2b055c2599860e9192a492f4fbb3f554a509fd5950ed3bc620ab14919870cc2d",
+        "node-2ba7305c19af8091b2cc80b640721bc24fca14ce80f96f7d64a542958263a074",
+        "node-2d5c12dbce639a337a73b0d64c7c6132c37e74bae416f1530491d505ecde22ef",
+        "node-31caaaac50a5f1c1ea34f3ff9f05be8a03cf8636b2ba69ed7d6c99f80d437e6c",
+        "node-5c855553ff3861e14b2fe0d640428ff3f88870fa1de5d494a59019d0ce90418d",
+        "node-77566cd45a472c9d6934242c669e9471c93fe40781ccbb3b4e9edd0386fd06ea",
+        "node-a05cad5efa070b3803bfa6fa84463240115d2c019921a2ea89ae8a1113b5b033",
+        "node-f406ca4496ee861c621fb657367776b57ee94632e86b671585ba3ba9d39ffc7c",
+        "node-f927a1bceeda01a529f4d8185724b8e5284c746b14a98ed8493f535c08401336"
+      ],
+      "capabilityFingerprint": "cd3d636f69a75efcbfb2ad69a56b19379061579a0abc2b246473b2a19d0f81c1",
+      "familyId": "poster-analysis-template",
+      "partition": "VISUAL_RESERVE"
+    },
+    {
+      "objectId": "layout-110-poster-10-analysis",
+      "coursePackId": "layout-design",
+      "objectContentHash": "4d6522eee57ee9f0dcc75db64207588807cebcf1dfb2701777d3d05466b3b284",
+      "eligibleNodeIds": [
+        "node-0cb498c90b370c7c5e2cc5ce77c4de9dfa199173109ca0e805ec491448d5bbdd",
+        "node-62339b6302e06da154dfce7793cd0b16d753ea3494ae24a6bb4ffb392e13f168",
+        "node-82ca2e133dde2e4a7972b72ed80b3aae45dbdfca4c14a700eb274e46dcc34e2b",
+        "node-850b4e8ee26e01b9545079af6714c5548aca020008c0d0bb65a6c8e826abefbd",
+        "node-9ef75a34741c9fafcb159b639c39a61aeb5cdd8f340dbc94809569f7dd969be7",
+        "node-a1bd3a0b5383c567f436a506fa16ee50c919e6513f2f69bf2e721b5c1a1168ae",
+        "node-e85dbd67c552a52380828d789d8fb4580fc108b1dba68198e1b1e37ea970c6a4",
+        "node-eb185474015eb33cfcf1325128abbd0fc4b6a0dc5dd663b694d2ef87d5d46842",
+        "node-f973b7da3f7e1ef45dbe3ec92346225af9f5ee35425bc327fb3e0332dfd108c2"
+      ],
+      "capabilityFingerprint": "cd3d636f69a75efcbfb2ad69a56b19379061579a0abc2b246473b2a19d0f81c1",
+      "familyId": "poster-analysis-template",
+      "partition": "VISUAL_RESERVE"
+    },
+    {
+      "objectId": "layout-111-poster-11-analysis",
+      "coursePackId": "layout-design",
+      "objectContentHash": "d327a649dc68d891da5fafd0a9445a7958fd02460b262ba6060414606662651e",
+      "eligibleNodeIds": [
+        "node-06034d78e89277ffa9e3be4de4558587360b08d57f20df9775b501e294f06e34",
+        "node-439623475fd30a9bddd90117fb0b8b518477eabe4f0c0b88e9e3c105fe29b87f",
+        "node-642ab648c11b3cf61eb417709f5d440c25ee70cc2c4d280737007c9b32cbe412",
+        "node-b38aa0ebe1d09bc2902434eb487fd6b5415e637bd77566803f04749b42e1ed24",
+        "node-b7001b307288123a2b2743defd86b14d58df43fb77f0e396aabf440a334b5c0a",
+        "node-b9ca8ff946a0dfcf578ed230fc8968cfc9241042beda42caabc99f0b21b5a161",
+        "node-cec7fadebbc201e442984555a169fc373d38b4815e1ab9c26772cdd1e724ec2e",
+        "node-d3368b9e5420d3149a32b4b68a769e86fcce8ee1a417bc5a0735c1704810710a",
+        "node-eeeb033af396e2694d124f88d1a7becefa3d079e300b9d52a51e07cb7a14ae04"
+      ],
+      "capabilityFingerprint": "cd3d636f69a75efcbfb2ad69a56b19379061579a0abc2b246473b2a19d0f81c1",
+      "familyId": "poster-analysis-template",
+      "partition": "VISUAL_RESERVE"
+    },
+    {
+      "objectId": "layout-112-poster-12-analysis",
+      "coursePackId": "layout-design",
+      "objectContentHash": "f5710a08bf220a639cc9127c79ec0d9342b5eda4755f390087dc51f4daebd5ee",
+      "eligibleNodeIds": [
+        "node-1ee2fa2bb42c7b56fd659527869fea7e93eeb41ca77f30331bf935986e8c797f",
+        "node-249a4bce4f739271f89047aa72a35a009e598dad6044c4e4f33cc4a83b756b97",
+        "node-2ce3444b906564e3dd465e8bb60ab0c5b4d82f726fd963cce796874d78d05433",
+        "node-3ca1575b6212ff1859bd192c8185e93c042c5282e4e79c8362bf379d1215f30b",
+        "node-4f952acf0e3802f412032a592907135426c0514efbf8e9e3e707dd85b278f553",
+        "node-8161c7e78b24697b64c6c49aba714bd4fdefd8f6306b4e8263effcae298e2b34",
+        "node-ddf8ee06d07e611caaff33ff1583c4e3edf85457cb61488d82a5edddf1fa41f6",
+        "node-f4f3d82d6e0304b88ef67377e5bf7d90428652fae0668fc616189e5b0f27a8b8",
+        "node-fd1ab69b7a011e8a0df96224b9e7d8e699bb0235eba854d3a0adea75d0425fe9"
+      ],
+      "capabilityFingerprint": "cd3d636f69a75efcbfb2ad69a56b19379061579a0abc2b246473b2a19d0f81c1",
+      "familyId": "poster-analysis-template",
+      "partition": "VISUAL_RESERVE"
+    },
+    {
+      "objectId": "layout-113-poster-13-analysis",
+      "coursePackId": "layout-design",
+      "objectContentHash": "706a5138e229f6f7795025f9b51c33b66925fc86386dcd62e7e2dc2da3727ef2",
+      "eligibleNodeIds": [
+        "node-462313dc02bf6e40c525941c1b653447b8763f4a9820d4501ff2d8527f5a37ab",
+        "node-5baf76792ee133038e1103a35d62cbdce3b0e746a8c3f7353c68a362afd7f224",
+        "node-63decbf31e9b26d51be8046088fbd2e249e213fce16ba88b1ae73b3879de7085",
+        "node-cae296ee9dd1ecaab636fe2aeec96d717b1d1dee34743f074014a9c2825306c3",
+        "node-cb34961d087b65e11f0846c061dd3fc76af5cb07fe605f3b3ce2dffd2a96025f",
+        "node-d06a6247fe3922cef791f8c7bbacc91ff85b881a164aeebd052df6fd647c85fa",
+        "node-da96535f1ef2c990589ad5812a78cda2161f5f21df4ff83f4ba4edefc96d7a79",
+        "node-de2ed3bbe45055cfc7cc2f9a5e3605ce03f529eca8c740a256ac91f1c24e7fc5",
+        "node-e9c488e5e61e86d44a5323bed73a04f056792d5da2bd681f61ab5aa6f079829e"
+      ],
+      "capabilityFingerprint": "cd3d636f69a75efcbfb2ad69a56b19379061579a0abc2b246473b2a19d0f81c1",
+      "familyId": "poster-analysis-template",
+      "partition": "VISUAL_RESERVE"
+    },
+    {
+      "objectId": "layout-114-poster-14-analysis",
+      "coursePackId": "layout-design",
+      "objectContentHash": "c332487399224d684298e86d9134796bbccc4cc8b29e1869c150d84b98bf5f5c",
+      "eligibleNodeIds": [
+        "node-10410cc00f8cf2e2780b3afcb3c774d34e14096f82ea986c7bfd35bb68a0f337",
+        "node-2650d45189479a4855f76dedfc1debbabd14f7cdcacc2b9198fc8c8b564ca82e",
+        "node-35ff268c76bb6ac582e744a47125a01fe807bdf91caf615f3d7af23284abb599",
+        "node-38241ec32dd86d4cf4d00cfd3b8cbcc5074db209b8e21b21819f24ceeae679b8",
+        "node-4da9775a288a4010e0ac8793ccf9f56d980bd67478c2756672db450443dcab06",
+        "node-4eee8b182c92b14913ab052fee6271e252171b5617e69b1efe27275b9f9d6271",
+        "node-5fb6ecc65aae1cc1da86c5f6e8e5ce6fd2b94afab3148a1d5d918d703cf818d1",
+        "node-654367bc540de93bcad5dcc1021dc622ec5f4f998b68fb37c26d0c1ea2c0bee6",
+        "node-7a344b731eabe3d0b4689b56405f23029546455e4004d57da442efa8bd97bd33"
+      ],
+      "capabilityFingerprint": "cd3d636f69a75efcbfb2ad69a56b19379061579a0abc2b246473b2a19d0f81c1",
+      "familyId": "poster-analysis-template",
+      "partition": "VISUAL_RESERVE"
+    },
+    {
+      "objectId": "layout-115-poster-15-analysis",
+      "coursePackId": "layout-design",
+      "objectContentHash": "fc318faf0e4f0957c1dc8f6d2234b0ff774749a1137488e1f931e989f7a6ac6d",
+      "eligibleNodeIds": [
+        "node-1509fffb243f3c6eab6b7782028d7ad22917c97456ea994cfeede19043a3d004",
+        "node-15103b96602daa634914c5c2aecf73d9a4aa01c1b4fe88f13cb9d22fa3971687",
+        "node-41e85246f5f57d963a68c2143220dea1e6d604b38fdd5ed79beb79c1de1d4990",
+        "node-9311ad7fd4ccc95e30416614ff6fdb018f746d92687daa3dc627c50b207c1b7c",
+        "node-a1c8a93f6f0e00c4f799a9eeb8d333fc32bdc1f1fe2948718376ebb7df5ee3fd",
+        "node-bac423eef8f8b0889d629415c276e14703c8b08968fd816017b890ef9b5d2246",
+        "node-d50df991d53cfe3ce9761b8dd9c2a8da34ee3b94ee4fc29e5c19639c27410a2f",
+        "node-eb4d73fbef7a26bb708ac908a20cee69c37164fed03908685908caf2e0a47a08",
+        "node-f778dc985a3e66363822c5945c9cbb0d74fd621889c12ab7020354eb74691555"
+      ],
+      "capabilityFingerprint": "cd3d636f69a75efcbfb2ad69a56b19379061579a0abc2b246473b2a19d0f81c1",
+      "familyId": "poster-analysis-template",
+      "partition": "VISUAL_RESERVE"
+    },
+    {
+      "objectId": "layout-116-poster-16-analysis",
+      "coursePackId": "layout-design",
+      "objectContentHash": "f211734328d56d0e206b8048107cd94a288bb5e8120cc681e05105dddc485dc3",
+      "eligibleNodeIds": [
+        "node-17c7907cca7bcb36bbd153ca40cb8016903364749389fccef0f39cbb476df09c",
+        "node-1ea54758a32fa6102b19c9796d94436b2e9b7d9305beb474de46a9b64b476b1b",
+        "node-3da645d11bf19cfe6ba1bf2f46e786163af5e9234a702bc40997f668d180a476",
+        "node-698fee0ee812ae9324d11331f8c6e49412c2b3ac29edb0354bfcc0268f921dd1",
+        "node-78bda62be8bbae1465a4b7552afd2175684fb3fd9aa1413e11381135d23b80a9",
+        "node-a72e9e4cd6188b8af4f8a9619bf90c1020c8658f35f097c10af2374457b9282d",
+        "node-d6cace6a4e813727f302b4691368999e19b5c72af0811e1ccad98c5768dadba8",
+        "node-dee41478f7c1cd4c58bfa2e0b2f476cd092039900bfaca333b9870639848f8c6",
+        "node-ebcf3c83ee3ca98723c64d79a70459231f06dff96117c99ff37564c77892fed0"
+      ],
+      "capabilityFingerprint": "cd3d636f69a75efcbfb2ad69a56b19379061579a0abc2b246473b2a19d0f81c1",
+      "familyId": "poster-analysis-template",
+      "partition": "VISUAL_RESERVE"
+    },
+    {
+      "objectId": "layout-117-poster-17-analysis",
+      "coursePackId": "layout-design",
+      "objectContentHash": "e6e7befb890615c750923439d49b7ab8e13594705b1ac552d1fa498ac5e26677",
+      "eligibleNodeIds": [
+        "node-0dbe66ae74031ce54a637b5333da22d33ecc2f27819784ff8e95e3dbf370e8a9",
+        "node-110a6e92633bfcec67924699139fdd3f4271327d803a3e9bb2088d9ea56e54bf",
+        "node-15ed90db5323a6524802c2809b3343d403ea679427233d7db090f291e214faeb",
+        "node-56383f67b9470c540dfbdd2bafdb3eb0c733fef4ff848ca159f460bdcf746641",
+        "node-7b397e933c8581cb789af33ab1574f2a9cafe451e505ebf270c51936efdc6f01",
+        "node-7d2737fc52926990ccc199cf4843d318572ffcbf43acc05acb7576aca89e2c3f",
+        "node-92c54df3f93f250faed6a3ffc9dcd8ec82cfe7d60ca5dd33894b8873d0f14c78",
+        "node-d43acfbd3d9e274c267a5ae538ac5e57d048b974ddf9e339455e59341c1ce014",
+        "node-e793392cda2b5f8a6021e7d8e1039da35c2f0e80f2a18d945ef626cf043eb018"
+      ],
+      "capabilityFingerprint": "cd3d636f69a75efcbfb2ad69a56b19379061579a0abc2b246473b2a19d0f81c1",
+      "familyId": "poster-analysis-template",
+      "partition": "VISUAL_RESERVE"
+    },
+    {
+      "objectId": "layout-118-poster-18-analysis",
+      "coursePackId": "layout-design",
+      "objectContentHash": "7f33521bbb138bfe89bc578d6b6f016a0f0b6e2d0f6f280bc67b413e6e25a28c",
+      "eligibleNodeIds": [
+        "node-186aaa306c552443dcff1c8f5d6786e3cdeff544809533d63fc8cf73522ec38a",
+        "node-308197c9f045b68229336b000aec92265ad8e2bad9e6dd1189b0d991e97c0959",
+        "node-37c43699cb6e2f6b14b262e1f03ec4d078d4dc075119f24fbbfcbb60337b19bc",
+        "node-42196a6f749c69159ca5c19003f8a09ccce2125550716e946a88c0e282f10495",
+        "node-53f45ac8eb6da1e6aceb682dd9f30b2cdca1f11c74bf2ae74db7c9e3c5e9f8cb",
+        "node-81454c5b7e50299d1a2a234cc7f4136a0cc48671a747490efd26dc16555595f2",
+        "node-e8b9f9805308100e0532b16b417aa36061f560b29c1e4a6996f12c7f67dc8d59",
+        "node-fc1d84bdd6afa9f16c11249abf46e059d7b951e3d406c2e70823328586f7039e",
+        "node-fd167782e4993f73ee526fed877c51b6dd5fc67d2ed86f79ba867da1146233ed"
+      ],
+      "capabilityFingerprint": "cd3d636f69a75efcbfb2ad69a56b19379061579a0abc2b246473b2a19d0f81c1",
+      "familyId": "poster-analysis-template",
+      "partition": "VISUAL_RESERVE"
+    },
+    {
+      "objectId": "layout-119-poster-19-analysis",
+      "coursePackId": "layout-design",
+      "objectContentHash": "5fb65e8ed9a58d2cf13a3b07cded3f82e16f52d5ca7dc0d42985375e8fdddb06",
+      "eligibleNodeIds": [
+        "node-529e62c990a5eb4916ae54745506a3d460d40d88789ae41de2f34e39ee17025c",
+        "node-5ac6100d559ca89e3fc835a611d1a311c74c28635ffe6293ed2d2493e493b00c",
+        "node-8d5d10a309af708b6b613d6ac28a69fa0538f41e7b948bb2b0b4dbe885fb5163",
+        "node-a08361420aee30819b8e7987d09919198f3c0212af50675a128da1e44d55a4d1",
+        "node-afd3a866695a7a98bd6397ba266522df3bdbb8a2b5228f0f24bca610527e8148",
+        "node-c628b5bfe6ae21eedb190f5c5390ac760b15a8032e399dee0e288c8a98e02ad7",
+        "node-d9b157527e6639a3b7235b70432d97374ae04b9438dc3468be765830498b2b18",
+        "node-e603c13b479f743171c27e81fb0faf204ddecd4bb34efb50a08f0e7ac1478192",
+        "node-e9f761cf90d9b6e28612b2f6669cd66a2c7b2f1f2af8a4789e2200eed8505e20"
+      ],
+      "capabilityFingerprint": "cd3d636f69a75efcbfb2ad69a56b19379061579a0abc2b246473b2a19d0f81c1",
+      "familyId": "poster-analysis-template",
+      "partition": "VISUAL_RESERVE"
+    },
+    {
+      "objectId": "layout-120-poster-20-analysis",
+      "coursePackId": "layout-design",
+      "objectContentHash": "8901bcd3c0d2e7a3577ef304db68801bfd456d2a9a69caad95c3c4ddef1503fd",
+      "eligibleNodeIds": [
+        "node-07c0880d184b76cc7ab30a815a34ea29868f3e7d2c83e877474ec58a32c507b6",
+        "node-172f5492565123969978439bb3b41ee1ddd8856cc2e377cca1edf85a1dbf68ac",
+        "node-1ad7af090449be766f03054db4c50733f83a3f73187bcb03adb1cf7d34e272a0",
+        "node-267f9280635b9a603b2fe5e360c8b60938083d77027e7c90c4374ea7d3a15523",
+        "node-28d08d38829e64bcaaf9907ac93c0ae778f8d58c9cb807b948ee25570782b430",
+        "node-38072fb97e4c3ea4b7b6a100ceec2f23f5171903db6aa028f3110b66e242b9c1",
+        "node-4c5df401b49e8bdb187d73372f202d414ff1fc225343d5502374ef4e25e2d488",
+        "node-700ce2c318d770d6c5a1802b1ec2e09214547d1fd5ffae74f9a1a033e9e44aee",
+        "node-f22d7adbaff9fbafdcbcfe388667a31dc8a29a27b9c6e1107bae7c64299ad285"
+      ],
+      "capabilityFingerprint": "cd3d636f69a75efcbfb2ad69a56b19379061579a0abc2b246473b2a19d0f81c1",
+      "familyId": "poster-analysis-template",
+      "partition": "VISUAL_RESERVE"
+    },
+    {
+      "objectId": "layout-121-poster-21-analysis",
+      "coursePackId": "layout-design",
+      "objectContentHash": "f07ae0c12929aff2eb428e0edb02e685809209f4b9904ad087a85b9e9bac6e0b",
+      "eligibleNodeIds": [
+        "node-039e63bf25dcb9b5faf1f0def1fa87a103775cd865dd56cd32d5c5ebf9a30400",
+        "node-204ce0bbe1281059ed13792d73ba4d88e3f2108f2bd31f12f70d92fce30d5516",
+        "node-26ba535f61d40d964e26be70bc21c3301549bd55baf009f791d75749b8b46fc0",
+        "node-4859737758c8c75e2a2041a34cddb624072157f168ae785c0797ceadab2225bb",
+        "node-7435b0d7978884bdf8ae9262d017d2aa26a3224005419df2837f1ee3a80b5012",
+        "node-b878110dafe8d8b170d29ed77cad0cd49702e8d83556b9bf3712ea3edb6998b8",
+        "node-e13310797b48da010400772b25b5fe39424da528fa4321190f6b6f12fcca05e1",
+        "node-e80b35e055c2003545c8fea3c677f5c0ea0eebae81ef636db2fce53b16f2ee5b",
+        "node-f139ca1df88a7642138cf60dc42e6bc20c7e78009d7db44ea60662c3922d8d72"
+      ],
+      "capabilityFingerprint": "cd3d636f69a75efcbfb2ad69a56b19379061579a0abc2b246473b2a19d0f81c1",
+      "familyId": "poster-analysis-template",
+      "partition": "VISUAL_RESERVE"
+    },
+    {
+      "objectId": "layout-122-poster-22-analysis",
+      "coursePackId": "layout-design",
+      "objectContentHash": "1c2646af0f8a876d0d7235248c46e673800714a94af04896bdd34e8e82d27e0f",
+      "eligibleNodeIds": [
+        "node-31fe554fec18a99393261ebdd86b351839dbbb3274068315b1fac5ab284140bd",
+        "node-60ba5258e92f6520465c950102c4fb55d24e1e3754b8c1a98c2a84a884bfe004",
+        "node-6e7d8208e439a8cf92e5d15ddb6309026de735e3686920d047369d9d09d46bb4",
+        "node-9050372cbecf96e53cd13f623a737acf92b8ca0de9337cbf211927053890f51c",
+        "node-a62424ff809dac03a53c76b25c4434a01aefbedc657d549486abe1f4bbc0251e",
+        "node-a7721ddf231cc77f891d71502fd8cbaf4d4de40f7ee9355f0e3511c83a96234a",
+        "node-ba3b79a0a92891df88d1f7dcf25fdaf68a93c628abfd3af1372df13f7e23a656",
+        "node-be985840da14e9f1dc56cd72c8da06b566808cefffdf90ce78127976ef592a68",
+        "node-ff33ac93819809f3087a42a1f443bf3dd179a61195c8bb4c40b77ba788d51307"
+      ],
+      "capabilityFingerprint": "cd3d636f69a75efcbfb2ad69a56b19379061579a0abc2b246473b2a19d0f81c1",
+      "familyId": "poster-analysis-template",
+      "partition": "VISUAL_RESERVE"
+    },
+    {
+      "objectId": "layout-123-poster-23-analysis",
+      "coursePackId": "layout-design",
+      "objectContentHash": "9057a22bc91a14679cb7f8cfd0150a092efd7abc6c40b24a4be4b46ab3cd3ffa",
+      "eligibleNodeIds": [
+        "node-15720dc8bb91b990fffa3cf97daf06b0b176c2d0abb2a96cf0fb11b918a7ae21",
+        "node-3e11ef8d51a4ff7b934938b30449d7ba8583d4b1cbfb9e0680d35841d0889265",
+        "node-4d9f6af1b711f741943a776c1785645f8391cf2195b03f36d70a1b074b9fe05d",
+        "node-52e06827b9463bd3728cc396f8ecee860f52d66ecb7a90c14f545b5bcec7e97b",
+        "node-53274b859ef9d0cbddb7a477618c4a0b6e9a11fb6d10f031ab153694585f0309",
+        "node-9777e97956593d4cabb8d22eb17577e091002d1f859d826ffaf0c87c82abbf48",
+        "node-9ee4d5a4109065e94cfd55059498663830ca03d398395e0af374907ca801c5ec",
+        "node-cacc91d5f969ba2933978fd307c240be69a31aaf9b12fe1aac249e2eab9ce95b",
+        "node-fc3e0ca2b46136d8425bdceb47cf0721f43ca0f9e65d9509a64e05d749a8cd04"
+      ],
+      "capabilityFingerprint": "cd3d636f69a75efcbfb2ad69a56b19379061579a0abc2b246473b2a19d0f81c1",
+      "familyId": "poster-analysis-template",
+      "partition": "VISUAL_RESERVE"
+    },
+    {
+      "objectId": "layout-124-poster-24-analysis",
+      "coursePackId": "layout-design",
+      "objectContentHash": "d8c51d520fb9098df79b57bafb0933e6f9036891c82d0cfcc2f1a81463f8f636",
+      "eligibleNodeIds": [
+        "node-19bdd7cf772f3920b0d2f34783fac66cb7dbd395e499e3382311aa60b139a352",
+        "node-29903fc59ff56e32adfc66a0e257a30cf474737a17c599452549a4bf4ca1511f",
+        "node-33f9457292dde62bde6f2e976933578279df10f0edee07867b22691a810bef89",
+        "node-93a5439ee6363f3c38ffe61c2036d7a0387b95cff57d7ae7c2410331ede68d33",
+        "node-c5eb90be412db200d9cf3385840c8897e68cbfa3ed136381545c8078c886c9e1",
+        "node-d36dd340deba9a3c43187928983a5f17bfd703a8e447c94f46d5581412e1c3f1",
+        "node-f45c2cec86639870bc918fa17fc5799a1e9623b31a42b53e4d2dbbbe48e66802",
+        "node-f955db7ac5cbecff313383f0b5bb2eb7cf8f534686165eed902c17e9f0203a07",
+        "node-fa2e4484a0565fa1dccef08e2052ab23d683c3d833e665a2a1c2c839da5fba79"
+      ],
+      "capabilityFingerprint": "cd3d636f69a75efcbfb2ad69a56b19379061579a0abc2b246473b2a19d0f81c1",
+      "familyId": "poster-analysis-template",
+      "partition": "VISUAL_RESERVE"
+    },
+    {
+      "objectId": "layout-125-poster-25-analysis",
+      "coursePackId": "layout-design",
+      "objectContentHash": "985e3302fe793768a41ce0ad9ebe056e702a7410d4f9454257758160a2998d1d",
+      "eligibleNodeIds": [
+        "node-2aea468c7d1a14179811b48085475c6ce2cd8470311a45d972ef21b334f88721",
+        "node-36335abb5a9ee6716650d8280cae0bb20080cc91bfa8810ab50a1d103cf72097",
+        "node-38037c45b7a854c358790c84af916cb036dae2415676379e7c93cfad4030cbe1",
+        "node-431d0d5f6e2eb3fe073b9593477bf4c746718440fd2d746403521fee2bf8c62a",
+        "node-61471e6e86d1991fdc7ae82002d59aaa36d47dcb8a11614b87d8a777198e6092",
+        "node-a00714f8e34a243102058cc4fe1d0537e102103ae5fa44d338135e7d7dbee40d",
+        "node-a6e42ff63b8f516d96308d23840e96d92a87728a2c4bab3c17ffd760abaad1ab",
+        "node-cd20091a3217d7ad79262e5f57271abd074e0f8ef0b10ab1be97d14880bb5db3",
+        "node-e7420189aabb884a77c187f2f6096a49e7086630c74e50dc5fe9851b4c50ada7"
+      ],
+      "capabilityFingerprint": "cd3d636f69a75efcbfb2ad69a56b19379061579a0abc2b246473b2a19d0f81c1",
+      "familyId": "poster-analysis-template",
+      "partition": "VISUAL_RESERVE"
+    },
+    {
+      "objectId": "layout-126-poster-26-analysis",
+      "coursePackId": "layout-design",
+      "objectContentHash": "aa67c672c80c6c07b5a3aa8838ba52d752fda1aab9939665f166a30be944f5dc",
+      "eligibleNodeIds": [
+        "node-0fc4777563a36f2934dbf93d2d7c234a2f6b6945efa0a049462761fba1737b38",
+        "node-286a8fa0c435e026534fec9b0edcdffcc41eeffbf1a08c3d7f443de9478f17d2",
+        "node-538ba82a7ef3ae36d169255bb6612bb59ad0c385c58cf3220f5ddda7b0af9bcf",
+        "node-9587303b066d8d6bc23f6d916dcae377342615b01a456eeac03a3497f551640a",
+        "node-a0b0bd8e0b8a78dd5fbd9d65e719ef1927616a29f6028505142fd3037a20dd09",
+        "node-ac3fef5dce37fcc89d1cf079f2b26225f684d97cb48c47d8c41454b0a60c90f3",
+        "node-d89a2b5014e60d19d2f7483bd6c59ba9e4365b07e03bf908914acb9dc4cbd7e5",
+        "node-da23a1523921952a1338fd18b5105dac1e6a28e3f5b512ef51f8669276cb2142",
+        "node-ee208c430e89c202d9f64e4cf95863f49f687bffe5ebfce2f5542b5e14766c4f"
+      ],
+      "capabilityFingerprint": "cd3d636f69a75efcbfb2ad69a56b19379061579a0abc2b246473b2a19d0f81c1",
+      "familyId": "poster-analysis-template",
+      "partition": "VISUAL_RESERVE"
+    },
+    {
+      "objectId": "layout-127-poster-27-analysis",
+      "coursePackId": "layout-design",
+      "objectContentHash": "968730719422afa1c7a810ab51055efb182a8c3c52d72ce02ac1707336d0e927",
+      "eligibleNodeIds": [
+        "node-08ef8031ca90fb347e83870ae4fd37c4afc5556c3dd206f1168fd3bc63049551",
+        "node-1ee398d7ee91824911f72da02f3fe9aa85c28def1b9cc51883b063e9619ebf8f",
+        "node-34f096608521ef7b17a942a307ed58ae356261cd37243c1f05fb945fa3501ce9",
+        "node-4728ac241b271d4ea813bc7fc2baa8f93fba24cc4e68c5c9a15fbf94fcdfb2da",
+        "node-628fb3a81ef465bde6f3d51a98316b8ce5ae2a4a0fa6dae1561e9d8f4c80e126",
+        "node-811527a73b167ac41bbfbce8bda073ef49320e3541512cb089aeb29b18254d0e",
+        "node-af82c2ff37670a9f63238771d86ba7e6eec8412f7dc9dc226f775c5db102f3a5",
+        "node-b9f3d35b6db513d40148044e0cd72cf8e53441686169ddf44a89e6951309c325",
+        "node-fc5a3ee9b843e5609170806cce37153751a7083d6138097fd5d4165c50b4e1fd"
+      ],
+      "capabilityFingerprint": "cd3d636f69a75efcbfb2ad69a56b19379061579a0abc2b246473b2a19d0f81c1",
+      "familyId": "poster-analysis-template",
+      "partition": "VISUAL_RESERVE"
+    },
+    {
+      "objectId": "layout-128-poster-28-analysis",
+      "coursePackId": "layout-design",
+      "objectContentHash": "33b63dbc17d85373132bffa15004ba7d0d69bf37bcf1e0ec15948dcb130fa0e7",
+      "eligibleNodeIds": [
+        "node-1cac29eaf9f91d65fb5b8fb02022b3cefc815bd8e2824dafce092935f4f9ae70",
+        "node-28dbdf2ea03fc2c208684f15d663dc687a1c91cf2cbcccc79588ab6df80cc241",
+        "node-3b829b7f2d565bfb34c5826c6be018a090b3947ba803f95051bf5d7395675e5d",
+        "node-6fd85f5b3c41ba416504f727f308b2d20f58fb6933b9f3d3f84d3187f896cd81",
+        "node-85a917e4a7eb33ac5a8d5b55cdc0ce4075c45b522dbca52da3d7d0690313312c",
+        "node-8f4b7ac92bfd6ee70779ea0ae5ebf4ff4ba0835e9d3eb4938a91dc81a58cfe35",
+        "node-91cb9463a9a040d65bdfdadd3ea0416c4e86885cfc0ff0f1c8b873f09f415544",
+        "node-b53ac804774b100b48695be0eeb2dc8358f2abd01d1984bffc78501ef4185f99",
+        "node-c9d84f02cfa6082c481405d576348dbc8c4f025deaf30a7a3ed90efca3c20b29"
+      ],
+      "capabilityFingerprint": "cd3d636f69a75efcbfb2ad69a56b19379061579a0abc2b246473b2a19d0f81c1",
+      "familyId": "poster-analysis-template",
+      "partition": "VISUAL_RESERVE"
+    },
+    {
+      "objectId": "layout-129-poster-29-analysis",
+      "coursePackId": "layout-design",
+      "objectContentHash": "e7f25baedf517317665a79744aa021547652b90bb6d1215ae6c8af1d8263a427",
+      "eligibleNodeIds": [
+        "node-153bea9b42b4fb4eabf21ee8d4fc0eb82c93a1bcd70717292b982b7d0fa759cc",
+        "node-180bfd73a3b525861b12296b45b7fb4aea20b0fae196fe39eb1721c0ecff4016",
+        "node-4342d5a393b0ec69c38f0fff83ae67c72fc2d041d4723e40af63b080f8a1dfa8",
+        "node-865a974be9b2c381e193d3640b1584c19740a63fb81e5bd8d6771e1ace490b9c",
+        "node-87a0943557f7ef628b8f1fac0cd2eb898687301e6bf739ea9cce5b5f4cdcbb07",
+        "node-9a34d87ddf0be640bad47f341e602dbbf56585ab1a5962680843d80876686d25",
+        "node-be98c2dbea7bc7aa107bc7d3018c247d12c408d61dd6da0b3cae4c537ff16c2e",
+        "node-edad37ead525f4c6f929d75dc78daa2d81c947b9d85b9995426aff6ab6522df6",
+        "node-f3fb009a29eee484c7590935b2f95fa38c133258e8b52f64ae5ab8781314ba59"
+      ],
+      "capabilityFingerprint": "cd3d636f69a75efcbfb2ad69a56b19379061579a0abc2b246473b2a19d0f81c1",
+      "familyId": "poster-analysis-template",
+      "partition": "VISUAL_RESERVE"
+    },
+    {
+      "objectId": "layout-130-poster-30-analysis",
+      "coursePackId": "layout-design",
+      "objectContentHash": "8fc6413054ce556b1847cb9d978790fe0e36150e7b88452b7a3ad27bf1a36c17",
+      "eligibleNodeIds": [
+        "node-1596071bffb7bf024de2f73f13e5b199910467ce1b4aa69cf615eb873422dafc",
+        "node-160758abaf0d3432e317e61b46c2f043315f92c27620da1ec8b067eb5ea1c28e",
+        "node-5c66f4a944386189056981537d114bf50096ee26fcdfc6419802c3b2f8df2202",
+        "node-7efd137ad06834ee792c8db8c85d800d807c6cf3deeaa83d6e4b689815089cd6",
+        "node-9d5c5e8a4bb9178ac8bef691bb13774a82e7e0b635d47b84245e174286b51aed",
+        "node-b5140fdccd3602ef6458ef970a6b8085e90f41cccaa46cdae374bc10a93888fe",
+        "node-c5df1866516baa247c0d04700f50aa735ff5f501c7109a968a8f534261b7f951",
+        "node-cb7fde8573e72ff46d4486c88468badafdf274eac881d911aa36b87a914747e5",
+        "node-e028b173aaf49902f60dde284db105c344c4e47a42a17ff42873efa47732d5e7"
+      ],
+      "capabilityFingerprint": "cd3d636f69a75efcbfb2ad69a56b19379061579a0abc2b246473b2a19d0f81c1",
+      "familyId": "poster-analysis-template",
+      "partition": "VISUAL_RESERVE"
+    },
+    {
+      "objectId": "layout-131-poster-31-analysis",
+      "coursePackId": "layout-design",
+      "objectContentHash": "9c30fb00410869bdc00022be02bbf39228ec793f02be751c0075816d391632c7",
+      "eligibleNodeIds": [
+        "node-29a7b638bca5991a7ef29f605dbaaae072509ddcbafdc835d9dbed331ae7ed65",
+        "node-77513c8e4a75e50651609baff14487998302a1272038db21ddb5f14d8221a254",
+        "node-7ca6e699e813ccf4b31888b0e6572cc9246b18ac8064e782e3b7c43eb32a16f7",
+        "node-8f5535d6e27f9128639f65a817cfa56ad7dbf6efd3603ce3e3b9aa76967e8f97",
+        "node-9199eb1045ce1c4e5bcff46a28a0133a49ae01e289109c60829a8dc266ab0b49",
+        "node-9ccca96833b9976a5fbc2738e1eece829fba669da7bbae31e90291757f3905c2",
+        "node-b2f8b6419f6b6b2858e878b93791a698434a3d4f11d2dc5b2eee968cce7fabe6",
+        "node-d34bfefbd6ec38a804cd6fd92f45dfa7a246f32d974251b3ecac6edd749df79d",
+        "node-f36df5b2504de5c2380c87f84621e12751bfd0a61010ec519fedfc1e2e308306"
+      ],
+      "capabilityFingerprint": "cd3d636f69a75efcbfb2ad69a56b19379061579a0abc2b246473b2a19d0f81c1",
+      "familyId": "poster-analysis-template",
+      "partition": "VISUAL_RESERVE"
+    },
+    {
+      "objectId": "layout-132-poster-32-analysis",
+      "coursePackId": "layout-design",
+      "objectContentHash": "ef588a760af8a8d6594ac1a6a55dc62d8052951e897b141372ba40e7b13f280b",
+      "eligibleNodeIds": [
+        "node-2b5746d65179a316c44481d376be9774fed7afd860236da7c0f8bbd52cb431a8",
+        "node-2e2406cc95d1e536a2038be54239187e068f0a3df41b512aee53a90dcf574bbd",
+        "node-35d8c223186528c7f4a289d0ab3445be76b35805c8287af4b13dd712d5992dac",
+        "node-36d69e5ba979f6cc378f696480e53a5feb55b78d8cf4f8aeba46372f9cfeb3ba",
+        "node-688332b7c435b9550ab8ff470901446c9de1f684ba57a379f716624d07c739d2",
+        "node-7657cd8bbe7c87c7f114a111fde88a3e8232706ed81bdfefee57dc71cd6461e4",
+        "node-98aff2c148d24dbea17959f9c014dfb526c2ec6de33941f949ee494f522144c4",
+        "node-a51382878240917bb6cee7ac629f4821668c10baed5889fb9fbb8d15bc0caea8",
+        "node-ff5fae362151f315206e167fbecd67b7d52f15ce8c1c66b9a5584a67c40d64c6"
+      ],
+      "capabilityFingerprint": "cd3d636f69a75efcbfb2ad69a56b19379061579a0abc2b246473b2a19d0f81c1",
+      "familyId": "poster-analysis-template",
+      "partition": "VISUAL_RESERVE"
+    },
+    {
+      "objectId": "layout-133-poster-33-analysis",
+      "coursePackId": "layout-design",
+      "objectContentHash": "6cfd0a1dcb8730cc1a0ac56887d82dbd4b13a3c73840527f82425d0204c5f061",
+      "eligibleNodeIds": [
+        "node-0301c7e08a40b44e600b8b24371fb4f201378eaf695d06a761a85052a721b975",
+        "node-23608d183a2c070fe25c405916b209b1b5278d10f00e75db577b9fd261d111e7",
+        "node-61c2d97387a7406e7fe5b100fba3138f3788a835a8421d48a289d81ee737076c",
+        "node-69a88322cee04b1419f92f09123eacd782841792504b3453b9f19dae54d7df52",
+        "node-7036451f09c043b13e63081fd145ececf800d695348f3b67d9ac9eea1b2a717e",
+        "node-a6f047d225d242392f24292cf81773f96e92073e45bf7fb0497995237accf28d",
+        "node-a721a82140e78ebe3342fa0d4130b33cd7e66f1eae89ef372fbbbfc1877017c3",
+        "node-ad14e1389aaa10eba9d3cde96a64b771b61976ee7f5905681a4b0e13f10eb80c",
+        "node-b70f134131dc7da6fbacdbffcf96661db9fb134247b87a5097b2f7923d28f42c"
+      ],
+      "capabilityFingerprint": "cd3d636f69a75efcbfb2ad69a56b19379061579a0abc2b246473b2a19d0f81c1",
+      "familyId": "poster-analysis-template",
+      "partition": "VISUAL_RESERVE"
+    },
+    {
+      "objectId": "layout-134-poster-34-analysis",
+      "coursePackId": "layout-design",
+      "objectContentHash": "143fc9412b3949e8248c823d476e219e8763e3124d03c6ab24702f5871ce6942",
+      "eligibleNodeIds": [
+        "node-10f9913a8f3e5e679c4a93caa69cac7d34d86c701a26aa4ad66fe2d1aefd4b1f",
+        "node-27a8b2afd30f6023f2460ac42f33475b25562df1233ea473c981472fe37f7df1",
+        "node-2bad14e8f16b61d5823bd193a4069ab66a7d781edc22ebd51a012e5973bfd6b3",
+        "node-3f534cbe457abf116352a9e16f5cf2281adecf38945c53be1607e064c0ca964f",
+        "node-73acc840c4fc678be3349cee3fd188098db85f8999b582de143c3087d9515540",
+        "node-8e7feaaf5cfcf71d0bdd71216c2051d586c6a522c6b841dbcc9117fe377e0bf4",
+        "node-96b80fa8674313d3fe178d17603ae3251e4ade5f10bef74b550f8ea9198aee93",
+        "node-d2b87d30935a062b5b7f6c6e628b4947d60f04cf7cee20b95b82e0f54aeacabe",
+        "node-f72e07464a7ae69935a877b203940f881fa3fe16f97fb24e2a6b071ccd2a46e9"
+      ],
+      "capabilityFingerprint": "cd3d636f69a75efcbfb2ad69a56b19379061579a0abc2b246473b2a19d0f81c1",
+      "familyId": "poster-analysis-template",
+      "partition": "VISUAL_RESERVE"
+    },
+    {
+      "objectId": "layout-135-poster-35-analysis",
+      "coursePackId": "layout-design",
+      "objectContentHash": "3998b7185bc08d7f23e6e9f9ef9ae60e2d7418c7c48419cf95edf06a10f73a51",
+      "eligibleNodeIds": [
+        "node-0cff5a073c3e8957417fad32d3cbc1b4bd22249d5c56780228e573d568ff85a7",
+        "node-141c6880202fa02df98bd4fb90d3bd2a931e9f128fba2e2ab1b165f9895b0f03",
+        "node-152fa36b4369ce37e45ad5c511678355ff2faaa8bc16a2e63c30c75625ff504e",
+        "node-85f14457ccaf01d8085a25e8b43752025e6908bddab35d3fb8d687a672caabf3",
+        "node-95c489f951e44fb490f17b357c51181de016198acbc852ecd2bb42b68e1800f3",
+        "node-a48abc67e9fe99276660f2ec0a19a3c1d0f1ba7a8e1d78027af1da3a4b440116",
+        "node-c18a42f94e9d7a81c1abac95d58185a657f3b4964dc3d565e76f33fcd364cd80",
+        "node-d7855744eb902164fd6890a81a54a650527dfc6ad34c8e628c4be2cbc564bd78",
+        "node-dc407f8e78923ab5dec4852221bbd322f2176d039a934cb5f8b62f5d5886f3a5"
+      ],
+      "capabilityFingerprint": "cd3d636f69a75efcbfb2ad69a56b19379061579a0abc2b246473b2a19d0f81c1",
+      "familyId": "poster-analysis-template",
+      "partition": "VISUAL_RESERVE"
+    },
+    {
+      "objectId": "layout-136-poster-36-analysis",
+      "coursePackId": "layout-design",
+      "objectContentHash": "87136d3b58b0eaa2407ff569a6b0b798f7a7e84d719ae0340e4ac1e47945fcfe",
+      "eligibleNodeIds": [
+        "node-0ef294dacaba2e305b7b5155d35b3081d366d075325ef7acf8707db0cc6b043f",
+        "node-1c9081d8bbf09c18ba1781d1c2f8d6a29a5bcb278e9d6d79ca687619fbb6abe3",
+        "node-2aea776dd8d04336defc7b089cef942d1339071ee1a953177205f1d47f0596d5",
+        "node-3f6bb9a5120fda2e810084da554a46a423afe79188f2086d9583c5eac80bab7b",
+        "node-8066d50100910237916861dbd67f2c178d60c881c3b27acd32a29521bfbce5e0",
+        "node-9de42cfb73b971ee32dfa901284257a8f5c5c694571e7096eaec2e2a18d8baac",
+        "node-c956be9216b6432e2380470de3ea019c3b749c6ada00564040facaec554e4aeb",
+        "node-da8d33a708c7fa04b783e16c4a524062299404441db4ea5087680ce307b25482",
+        "node-f98ff2cf06bfa45bf9de3cb71214112885a0ec8c1fb1f96d22025fca56dc79b3"
+      ],
+      "capabilityFingerprint": "cd3d636f69a75efcbfb2ad69a56b19379061579a0abc2b246473b2a19d0f81c1",
+      "familyId": "poster-analysis-template",
+      "partition": "VISUAL_RESERVE"
+    },
+    {
+      "objectId": "layout-137-poster-37-analysis",
+      "coursePackId": "layout-design",
+      "objectContentHash": "19d20cc56d3190c8349829368c5a655a898a967c5871fba84a92a4b0e037cd34",
+      "eligibleNodeIds": [
+        "node-059c9ce5e7f0ddc83516b6e011e2bc75b90ce415b55cd3bd2874186b1bf168b0",
+        "node-128753b65969d0bb5b9ee1ed82b91232da96a30971629db4e8f2d6365a3a02f6",
+        "node-1a3a25b0067a2586d8b84e724062235b4e9dcad5cab513688c500b24798a3e43",
+        "node-21b7f6897ad12468e2a4751a0a6d6147861c99bdf4d4e8e81034498952cb8ba4",
+        "node-267bfcceaef14bc0dde1f019f8b8c30208aceceb6230300bcc21cafb5d15c2a8",
+        "node-2c5bdfa5750c7ee37318ede4566e457c48a57c5f7607954fe654b299ad95b76c",
+        "node-3cd7cd1a42ab85078dfa4f7d155c26fcc1f02191b87969eff353f6079572bdd1",
+        "node-519af7d6d7152a78cb13001e3f4e867a3330fad0224552e63e2b9d0b353f1758",
+        "node-7ac5df4df67be5933fc1746a7664568fa9063f7aafbb4e43b0c2f875be445ed6"
+      ],
+      "capabilityFingerprint": "cd3d636f69a75efcbfb2ad69a56b19379061579a0abc2b246473b2a19d0f81c1",
+      "familyId": "poster-analysis-template",
+      "partition": "VISUAL_RESERVE"
+    },
+    {
+      "objectId": "layout-138-poster-38-analysis",
+      "coursePackId": "layout-design",
+      "objectContentHash": "43c6eee45cd8a8b44b5a0bfa406daec1a649ec44ec148ad2d7f969786850844e",
+      "eligibleNodeIds": [
+        "node-34431eb25b7eaba1df0f1d54e1bbdd2a7bd233752c39973134e1d25842091047",
+        "node-73d6c060f1fdc750bfdcadf856996835ccd25d1ae517f35da6636ee9be28cae5",
+        "node-91cd78499ea40c8ff2652f6248e2622ed974cedc9c0e79f3b88284e7f6bc429a",
+        "node-a1ebb2e422e7865b2837dc8110254dc55746b2e7141dbb1b880ceaedaf39ab0a",
+        "node-a8d4dcbb83043c9691006d1c70cc13e9029d409ed7ad934b24a25cb315517229",
+        "node-d3a4d079966d329f18e2564a8cdcf00e690c2496d332318855f1d4a4c52085f5",
+        "node-de01833ae7ccb0239853339f3ef9369d4ac60b1be2a4a8e1999f390e54377c16",
+        "node-e636b7ae7d6acc849cf07ce3c2419ad3119149824f383ba5107d6af020ed7fd2",
+        "node-f7cfbb4dd89e5a29d6f650aa155496b4ca7f39ca61867d8bf551560f86d0c66e"
+      ],
+      "capabilityFingerprint": "cd3d636f69a75efcbfb2ad69a56b19379061579a0abc2b246473b2a19d0f81c1",
+      "familyId": "poster-analysis-template",
+      "partition": "VISUAL_RESERVE"
+    },
+    {
+      "objectId": "layout-139-poster-39-analysis",
+      "coursePackId": "layout-design",
+      "objectContentHash": "ff48b52bab85cc291c749e173d0e94d9a8800c0469fce8c04f0c9f98342cb08b",
+      "eligibleNodeIds": [
+        "node-2e1b725e2fa2eed77428c8767836fc189135c62a13f4ab2b6043a7583f1be77a",
+        "node-4602a32c3ec71c75ad281057ff8169f0aad9e2b170f177f0c5bbbd713ddc10c2",
+        "node-624ca544f4367e5b0361d6f74ac8fe1e80f6b2b163eb574ff1a6edbf5b5a5eff",
+        "node-676b0c39f15345f11088efc299bd1fe39dd617d8dfc3960d4b766a4235301c16",
+        "node-7f5fd4e782e6eadbd6a66f427ed871ff5ee32f214688b6e133ee49a948cc9ffe",
+        "node-8ce15b4eebbb90a3793e7779086bbc3c8ff8beac625880a7c74d13922fe8c1c1",
+        "node-a382350e8414636df9f25468f9dd7a49331d6f5f440078d470a9810dd3b6290d",
+        "node-c172736613bc04a39087853dbfddefadef8a03886eb486e3190503ff43b1f25a",
+        "node-c6232dde2097b4c8e9a3c564a3b6968a7b215aa8892fa7f9dc2fd4ed9584e87e"
+      ],
+      "capabilityFingerprint": "cd3d636f69a75efcbfb2ad69a56b19379061579a0abc2b246473b2a19d0f81c1",
+      "familyId": "poster-analysis-template",
+      "partition": "VISUAL_RESERVE"
+    },
+    {
+      "objectId": "layout-140-poster-40-analysis",
+      "coursePackId": "layout-design",
+      "objectContentHash": "f92f650cbec93ccc3a213fb054839dcf121a1bbdc815d2b3267fe485a3d7b7d5",
+      "eligibleNodeIds": [
+        "node-1a7e77d92c483a6ec7f802e617614ced86f397fe93ab71cc4312c4ead989a53a",
+        "node-440748573cf0cf3a620f80f1b56f337ae3dc26a2080aaa654f1f22b7228c0cd5",
+        "node-6056b1d6dc4e16afdf9c48a21e5d85c7f2b1b6deae6fc7ee528559512e2815b1",
+        "node-9728a2d7b9764f078b72cebf124a45b2e71a883dc059063cd28d845b0475fda9",
+        "node-9cceee5eadbbbc2ee0ca0cab49ddad2f7bb7c1355cd09da434889ae47728a829",
+        "node-a02876c62fe70e38d35bbe45c4e426273e81b59a30e634fed08f06839fbb4aca",
+        "node-ba4f483d32d26b64aa0c221f6bef59fc63e1b3944e944ff28c56ff02d3cfe156",
+        "node-c1f6c60da07be52c2dc84678cee39940a7ef1c39c19160a2c38ddff6fb60c86a",
+        "node-d71c8747299e878fcb6f2b51ec3b29cecc59d3b5c42e12fdad32595d9e554348"
+      ],
+      "capabilityFingerprint": "cd3d636f69a75efcbfb2ad69a56b19379061579a0abc2b246473b2a19d0f81c1",
+      "familyId": "poster-analysis-template",
+      "partition": "VISUAL_RESERVE"
+    },
+    {
+      "objectId": "layout-141-poster-41-analysis",
+      "coursePackId": "layout-design",
+      "objectContentHash": "7144a31825beca9f518f85975a577c94a6103bc14547fdf0f45de937d69a5dd3",
+      "eligibleNodeIds": [
+        "node-2c37c51181ee71940bf51737e05bf52418abfca32f59195e723ff4d49845b180",
+        "node-3acb3012ee6c6d0adc0dd59e6a5eb658c88045e4a34e5fa0b6b87bcea2ef0b5e",
+        "node-91889f292ee186a48badad20e8a34992389495b0e3be357769d49945c20ab16a",
+        "node-91bddff92032fcf31f73252d8214978c829388305d14638ce3e1ec778f15332c",
+        "node-9326b8d0b7bcc824ce5cce601c6e743641d50bcba2e0a5494a1022b935779882",
+        "node-97786d0faf0717ec7e618e419cd6fe1987cd0493d129c96d62c5df67a3a3fb58",
+        "node-ae4918c6e45aaaab86673b73b9bc8683f2115f999715e8d07a31c60b92726e4b",
+        "node-bf7a964c5541a0962f9f872441344b89f2f878706c35080a31c9a7fb5366b3cf",
+        "node-dad92b67aeb40ca4bbd52f57dab06897d43479b737adb5f22a6698e5dca58058"
+      ],
+      "capabilityFingerprint": "cd3d636f69a75efcbfb2ad69a56b19379061579a0abc2b246473b2a19d0f81c1",
+      "familyId": "poster-analysis-template",
+      "partition": "VISUAL_RESERVE"
+    },
+    {
+      "objectId": "layout-142-poster-42-analysis",
+      "coursePackId": "layout-design",
+      "objectContentHash": "6643a961a7abf3ba62dc69184436875b43488b0bb2f0146f0b93457517a2b22e",
+      "eligibleNodeIds": [
+        "node-096d932772f4ed7ddd40c276ffa2057eee88142bdca673754509b0e8f6ad62ed",
+        "node-5c6916eac5e2370fcf439ec4c0da385b36cc32db50b30717c0b349d6aad64072",
+        "node-62116d5a584e81794af471310d0fa2ef191596556287d8f1c675ce65155e0696",
+        "node-8383adf83d3a762bc110bc301ccd40c9796b2aef5b7685ff46909b5420973ae4",
+        "node-9ac302b282dd256f38811813789271ed8b30b18ae9e795563a2123fc13a8fd2c",
+        "node-9b401eb1c37cef2c1d532ff9af994ef600e060fe34af037f4d8d17829a939c0e",
+        "node-b57ad1984bd074bd0b2b52bcca9f7f2ce27ef73672f5df0e313961808709307e",
+        "node-c5a97b65984a06796403ddb72439d54a0f6bc2bf53939f97c06a6c5aa81c0a55",
+        "node-e589eb4132478e1e8d051e380a6329b0279bfd75eafa6f4cec228b1d7703ba36"
+      ],
+      "capabilityFingerprint": "cd3d636f69a75efcbfb2ad69a56b19379061579a0abc2b246473b2a19d0f81c1",
+      "familyId": "poster-analysis-template",
+      "partition": "VISUAL_RESERVE"
+    },
+    {
+      "objectId": "layout-143-poster-43-analysis",
+      "coursePackId": "layout-design",
+      "objectContentHash": "c4d33c53d61e9c368ce104f8d2f3bd6f07c66bca69ed85b79c4f3f96d9ef16dc",
+      "eligibleNodeIds": [
+        "node-20294383736e32f2e65019eb6f21ebf73832fe9d523ff513d8165978f665aa25",
+        "node-3aa81665c6bca210d8bcc8fee25ce7a66ce6e9479f56d6782e1e15621d1c1687",
+        "node-5f284448cee1eabe0c7cd374976b15bc2bee90fb7f4253727b54941dacee76e0",
+        "node-62d54521c3dff5e37951c0f483705e7f4d1b6edcaa4227a6305dee8f1978cdcc",
+        "node-7cf5a6d46eb261998bb2dc4ced315542e92b796cecbd28768cb7982092aad0df",
+        "node-87c8e8dcf3c2dddc80b0e8c8f0d0155b75bb136e288f7b1fc6074fb2411148b1",
+        "node-a1f19d9960d3a9788c27813b0d2e3422e0406233bb74c1c9f6e879df196f0411",
+        "node-b5c89ba6fa1d9e0afae239ffb3f2264c712391ff46214348095ad2913faf848e",
+        "node-c47c906001db2a4d79b787d8217e02ac513b2216fed936f7756327b5c1a4af45"
+      ],
+      "capabilityFingerprint": "cd3d636f69a75efcbfb2ad69a56b19379061579a0abc2b246473b2a19d0f81c1",
+      "familyId": "poster-analysis-template",
+      "partition": "VISUAL_RESERVE"
+    },
+    {
+      "objectId": "layout-144-poster-44-analysis",
+      "coursePackId": "layout-design",
+      "objectContentHash": "33680b355b4fe24cf9335c98a8145fdbacc9c640007c3dc30177f899bab99c66",
+      "eligibleNodeIds": [
+        "node-12df29faf6538521d734f402e854c454dd209ab29b0992896f7a3b7db727d595",
+        "node-4e4fba4ac069db56cd8472cda81dc30b617a68614937e1a7c984ecded0a94bad",
+        "node-6c9b65ea47729a3703fe8e23b43c70a36781550e7a4934013accc035cb3a3dca",
+        "node-7dffc34edf676b0104251eed3a502c6498e6329be4d075924c2e49c25fa2e849",
+        "node-93f3e8141d360973d9dc0a18d28585ba6505a001d9bb255e0b9bef5b97e00952",
+        "node-97b01fe6f8a6800b58e8b95624c112cd6f6fb5dea7ecdac81210dfdf82941503",
+        "node-bcbbd86e5f1ba414d16d64b6ccabbd1c351332aebd20a90a9398657b33074d02",
+        "node-d7b5f29f4ce30d58d9937e07008c130d6c53a618ffd831844cea98208e7fa0b4",
+        "node-ffb30eeb5138130c275e0bfaa1e537498b4781ade1ff7f757d50aa2b458fb648"
+      ],
+      "capabilityFingerprint": "cd3d636f69a75efcbfb2ad69a56b19379061579a0abc2b246473b2a19d0f81c1",
+      "familyId": "poster-analysis-template",
+      "partition": "VISUAL_RESERVE"
+    },
+    {
+      "objectId": "layout-145-poster-45-analysis",
+      "coursePackId": "layout-design",
+      "objectContentHash": "22d3407087a57abe4cf5bd3265f0f493f32423ab598003be6e8b4854aad7241b",
+      "eligibleNodeIds": [
+        "node-12c84229819e2adcd704c4b72149f6768420013861eb5be4cbf5383d90e536f5",
+        "node-2f4aa2ac293add5827dc572a2e3787c108a776e5a49b1e0b5724a9f00efcfa6e",
+        "node-318dbec6b4b12e00111bad221ba8862ddecca53a4175beaccfde32487d10d588",
+        "node-3db961105996abc8e4103384d919d835903c8c69bdcf3e87331e984cb3e50bc4",
+        "node-573d8ed492bb621a867cdddae36973eedbb4e3b200ded18a4b821ce3e81b7205",
+        "node-887794af79a8eea28098e1a402f11df6258269f67c7d18f23591d17e42d516e4",
+        "node-98e169368e731d9673d7fd08bcd1e1a2c30dc0e12597e7d00ed09b4a63346e59",
+        "node-bd802e7f09f4c9e99386ab6e66b64e5be2255f7b4162ea0f1da719ec23bb6ca9",
+        "node-cc908b1826f184c37d9493087ff968a7a8799cb1fbfd6ef1a40ea72f36062648"
+      ],
+      "capabilityFingerprint": "cd3d636f69a75efcbfb2ad69a56b19379061579a0abc2b246473b2a19d0f81c1",
+      "familyId": "poster-analysis-template",
+      "partition": "VISUAL_RESERVE"
+    },
+    {
+      "objectId": "layout-146-poster-46-analysis",
+      "coursePackId": "layout-design",
+      "objectContentHash": "392baa1f3f1bfdb3b6bf56839bd25d8f816ef5d0acc70a553a2b05a5e500400a",
+      "eligibleNodeIds": [
+        "node-0b76bb514bb70eba4c6002111692ae72e7467d9319bcc3becd0dc25f2b728f7f",
+        "node-1a88fa7dbb976b7d46508ae3bc86d8939711544d7eadc77f7e25e2e988c6117c",
+        "node-20138170c4cfd30932e578bfd262cf82319bd35c7ae908a7d0fed7f2d2886b20",
+        "node-228173a771f400df01e5b4c36bed5775b882378ddd45930b2cdbf60087d55639",
+        "node-256927af8a1faaf3e1ca2700e67fbd8d059437d2260c0c322bd66adc14645680",
+        "node-a5cdeb344676ffe2fe99d6ec4d137af9efb8941b1f842a3ebb71635308332436",
+        "node-d17b4b3bbc8f99739c26442b5ee992ad5f3a31e7d27157ed80e949b8f34720c6",
+        "node-f25af514e5ea1c2765ed3441b81b7fd2d0603ab69e8d7f37d7e7903f6be6782b",
+        "node-ffccbb26bb3f9e3b533b0abe05ac0715f6cebfa63139781052dca5d67fcb0a1f"
+      ],
+      "capabilityFingerprint": "cd3d636f69a75efcbfb2ad69a56b19379061579a0abc2b246473b2a19d0f81c1",
+      "familyId": "poster-analysis-template",
+      "partition": "VISUAL_RESERVE"
+    },
+    {
+      "objectId": "layout-147-poster-47-analysis",
+      "coursePackId": "layout-design",
+      "objectContentHash": "5ecc9d00a12b90b3fef89f4c1cd00f6167011804f9ce47b5c92405f40e3f5173",
+      "eligibleNodeIds": [
+        "node-0a7ee77a24ad4055bd89dd78e836c657600dcc8f3b0c1355f6779b69077852f7",
+        "node-501bf551f908d1d35f4a55197e6c6799562f2bc0633c803cfb9db7c71812783b",
+        "node-573a1879e70db65dae9e41a3e19d23bd962c0339a74fcc161c80bd267859a5d0",
+        "node-80ac1d2aaf9afa8b4945d6c8c3cffd53dd85c7aa8270207d1cd67bd70a122d42",
+        "node-814c6e5c02f3ce1ddc244fc6b18f7dec9b59f444ac3293bf987f65b2338c9ace",
+        "node-8393586591f8ea0df3b4c65dbf77f2315a9ab64b96290a68fbfe6993323b25cf",
+        "node-8f41d0e3a7228f69424e843f6a11feb06e7fa06e1be468c46a51d04d8d776e7b",
+        "node-9d73bfe99d882933b255ed3a42e0a15b352e244759cb66e509daa115c72b67d3",
+        "node-f4ba4de9e2d840d88aa690755f0e1d7a8829c3aec5cf651474f191c6a835d2b5"
+      ],
+      "capabilityFingerprint": "cd3d636f69a75efcbfb2ad69a56b19379061579a0abc2b246473b2a19d0f81c1",
+      "familyId": "poster-analysis-template",
+      "partition": "VISUAL_RESERVE"
+    },
+    {
+      "objectId": "layout-148-poster-48-analysis",
+      "coursePackId": "layout-design",
+      "objectContentHash": "16e8bbc7969cce74703f907f6f95775ceb15e168b079e706fa1228eec3611e3d",
+      "eligibleNodeIds": [
+        "node-190786931c41ac047f9387336f1f69ecd27e9693e3cea89267ce876ff6b9d347",
+        "node-44a1c28b5a82350ff380ef3226e2694949d0dc76fbb3d8f9f2725875fdaad682",
+        "node-493f7c89d0f6f1daee26a14a72488ef7c1d59991e5391c9850811727cf494042",
+        "node-4c8f8091d856796b0a9e6a06d72c7a9b8be518557cb1330c74c435fa4b9de09c",
+        "node-76f79ecad39962f273adbee458ca4854deabd79cd173720b3bf77b0854d0437b",
+        "node-8d1e1ac217128fa8a45e7886032fb7671a5bd31ceafc9d571c03ba53d5dc95b5",
+        "node-dd7f61d6851dc0050f428d91751f43ea293a47fb282269e546e0634c33ed8c00",
+        "node-e37aa76213f3d7a8cd85dfa69670895ee58361594f72675f77666543527f435c",
+        "node-ecfb37053987ccc01c5da2780107337831191e2a7b3756a0607c72ab0bcc3dac"
+      ],
+      "capabilityFingerprint": "cd3d636f69a75efcbfb2ad69a56b19379061579a0abc2b246473b2a19d0f81c1",
+      "familyId": "poster-analysis-template",
+      "partition": "VISUAL_RESERVE"
+    },
+    {
+      "objectId": "layout-149-poster-49-analysis",
+      "coursePackId": "layout-design",
+      "objectContentHash": "19250e7c1124c79cb18d4824df1d9e8ad1342b0335297cd7b833ee460963d643",
+      "eligibleNodeIds": [
+        "node-2827ad18b99cab2d651787115e55981cd9f69eaf10c93431b3b432e18d4d2d2d",
+        "node-71042128bb8d324f1652b675851326c2d9fdb3d414673c52e1d5c78cad629bbd",
+        "node-7a5249be3c77048945cd76630192b69fd11280b3a0ed6293b59bcbdcbab085e1",
+        "node-a752bb1fb6c69a8bc01e6b11b60727545ce8b7e26ab0383db316ae12e0642b7c",
+        "node-b8c4009ef6a383a17ccce8824d334463e7f2bb9d45d50057cdb6c6baaae933a9",
+        "node-c12a57244f6ff3d176eff2a8b7689a6dcd9d3b4a73e5c961ce99b25c0f62444b",
+        "node-cc26101b74aed8469bc50c18609d9730cc3bcb6ae893be0eb86cef5bd8a5aec5",
+        "node-e2e45dbd0d017cf11d8530e1811e1591d21b36a33c617a6480e7c8e521cef0ad",
+        "node-ebda58a1fcfa6205be6c3c835c785862a58aabba27f9a3f4f3539c186d0a0d5d"
+      ],
+      "capabilityFingerprint": "cd3d636f69a75efcbfb2ad69a56b19379061579a0abc2b246473b2a19d0f81c1",
+      "familyId": "poster-analysis-template",
+      "partition": "VISUAL_RESERVE"
+    },
+    {
+      "objectId": "layout-150-poster-50-analysis",
+      "coursePackId": "layout-design",
+      "objectContentHash": "fb6ec9ca83c0e8b9c31cfaa271c99c6e99c0231356adbaeef1a2fe2e54bb9b65",
+      "eligibleNodeIds": [
+        "node-3a74cf7914f77e05982c2b9ac81fea9fd2e5e698118d857a304b44bd93b56259",
+        "node-5088a669b0bcf99a56aba7de4cbb1097cfaed7f0a6190884bd00893870b4fa6f",
+        "node-6b78a24e8c212de4568d55b1c47d191ac627d1b23fa053463a7ba0fb8e1401b0",
+        "node-7e21f8ad87e6e7447757695717bbb18d9e99f449d0d159acca49a6dcb1d8f755",
+        "node-a549b0514128529ebcf05f2bfb25b1cf6aa231e92abbb1386d99963e30589f23",
+        "node-b65a628244b4851e4028914d610e40586cacfa73ae5f4c03cd88eb92d5bd215d",
+        "node-b7e3283a06914a56cbd905e4b88c99a26ddc899332058938c17c517b3027cae6",
+        "node-c894a33d0b8b7815ceb1fe75c556302ae5f0830026a3a04d5e496f5b1ea98030",
+        "node-eb55b43e396397745cb8e2542759ee439409bdf8f0ec087ad3a94ddef6b5e03c"
+      ],
+      "capabilityFingerprint": "cd3d636f69a75efcbfb2ad69a56b19379061579a0abc2b246473b2a19d0f81c1",
+      "familyId": "poster-analysis-template",
+      "partition": "VISUAL_RESERVE"
+    },
+    {
+      "objectId": "layout-evidence",
+      "coursePackId": "book-design",
+      "objectContentHash": "8299076f57cda4d27079c2c9e7ca5b9ee7ca77387b37f2ab4162b67e59b1cd71",
+      "eligibleNodeIds": [
+        "node-00ebfafeaabbc8a8e2bf3015e3d606bda24e2f05e949c020e9bcbd41e7db7504",
+        "node-33c1bd0340d0f68a3ade07a697e84dd5e2c57625a53bc0138fb3dcd776fcb7c8",
+        "node-9df299c19aa9e47c56d3c7a490499216ce619916efa0815d224085067e22274a",
+        "node-ca56bdcc266319f22f6821f5f55b921cf7f5d5504206fb83afd02401cc500348"
+      ],
+      "capabilityFingerprint": "03222407dd8caa89d7a6000df7113f50277e13727bc4656651c8971223314903",
+      "familyId": "book-layout-reading-evidence",
+      "partition": "VALIDATION"
+    },
+    {
+      "objectId": "osc-out-chop",
+      "coursePackId": "digital-interaction",
+      "objectContentHash": "fa0b6306420840b976aea6487dbd5cc1a1913c2e72d2cf91a9e3e3cffc95482f",
+      "eligibleNodeIds": [
+        "node-04a9d036653149c0b038c28b02ad1960bd4ab0ac9372f05ce37882650f80b19d",
+        "node-12e13f361de9070f389c5af50d3e22e91879f63cdc0fea22e45010c8f5fa001a",
+        "node-143712624f26204c0ac4aba9500771b276f4b918643ed8c288984b4392bbd491",
+        "node-d315e87295a3fdcf742ab80c70b7ba4b293c7fbf793c1216403176809bf2566d",
+        "node-fed82171cded2ec3fa11a73583166d16c83c4d7cfa173d7720a161855a6c1c8b"
+      ],
+      "capabilityFingerprint": "9e391aa85aa228a76ede5871fb43211d23921ea2dd61b5ac64620c9cb22d33ab",
+      "familyId": "frozen-t44-osc-out-chop",
+      "partition": "FROZEN_T44"
+    },
+    {
+      "objectId": "td-analyze-chop",
+      "coursePackId": "digital-interaction",
+      "objectContentHash": "40b61303a5d0c5d0ea7371699d86944c8f5f7bab0c5b569973103229f365fb82",
+      "eligibleNodeIds": [
+        "node-23d6a34666b64af5632168ceaf56fb381932ff7944012082fd96b5f68676c040",
+        "node-4c9c5ffe411be7c6ce35d7f7f3e994eda5802beecf8884bd2951c175fc6cf581",
+        "node-62dfedf35270baf9cd7872ca1a25d0574b9219f97fca2365882ac0fb5de64a68",
+        "node-8a53e94a05d44e9cfd932dbae2a24d5b7157b022ba5868f0ae7fc02d964a7c09"
+      ],
+      "capabilityFingerprint": "a4d2ec8242dc9c4ab270732c2d67955a560ad36014fde6b174dd2fe27a4f7620",
+      "familyId": "frozen-t44-td-analyze-chop",
+      "partition": "FROZEN_T44"
+    },
+    {
+      "objectId": "td-case-version-comparison",
+      "coursePackId": "digital-interaction",
+      "objectContentHash": "e75cd747b96c8a740151676dca10f29841f2628385fcb06c89b3ff54fc07767f",
+      "eligibleNodeIds": [
+        "node-4e1395124d1f36aaa60723e1dabdec83a96b5aad429cd86d1fe8d9efec92b513",
+        "node-522c3eacc2c93b11cc865c89bf1d0de86a94dc9db0ac967e256cfa03e08cbeb0",
+        "node-7030e41e7f25ac74c1478fbefd7108eb22202ece4316c2b6c0179ac17f51895a",
+        "node-72b608aa12827590df6308d1cb04b0397f0c452cf93c0776a069fec9a9ebd149",
+        "node-dff00c52b51116b5fbace95856089251bee1e5356e6b33bd7c1719922655f203"
+      ],
+      "capabilityFingerprint": "30bfe064d3dcf1a332d284ea152f955d060edebf1d0ab4a8bcabde3216c7ca3b",
+      "familyId": "td-case-version-comparison",
+      "partition": "DEV_CAL"
+    },
+    {
+      "objectId": "td-feedback-top",
+      "coursePackId": "digital-interaction",
+      "objectContentHash": "446ae1371e6627ecc0ece875b11b1a58fba249b55d71e311b66f8c0fb485840c",
+      "eligibleNodeIds": [
+        "node-4c3aa30fe45e3ec4c6315e8fb2bedda2b54ed1706670bbd6b925788a3b7d8c8a",
+        "node-4d618d05591795a383ae63e15693e9b0e70f112a2e8ace97cfb69d9fdf94a0ac",
+        "node-50f45bac3e08ec7ce92b95849c5cb5df88d8395e8277000ff9275c38f0a7b62a",
+        "node-99211ca197677b832758ff5d3525f4c26a2fb95f083a706bc5298bd07ce0f650",
+        "node-c0f933c7e138ea32be3e32ffabb559ff7e81b6c5309deca1a433f20ac579c6d3"
+      ],
+      "capabilityFingerprint": "07c0a85ae4f745f7957f226fb3ac6cfc18a89212f15343226234b5a31d0710b8",
+      "familyId": "frozen-t44-td-feedback-top",
+      "partition": "FROZEN_T44"
+    },
+    {
+      "objectId": "td-filter-chop",
+      "coursePackId": "digital-interaction",
+      "objectContentHash": "6c15d7f1c93f192631128fe9a4d956a4ef6229c9f6f467fa81bd94d8e8cb1ab4",
+      "eligibleNodeIds": [
+        "node-4b3336fdab4f31e4c5d6b6dce5f15f2345b718a8a99a42248c9557b875d029dd",
+        "node-8235a6a58de626f43c3fc39c39731c0d4b911f2a529301a1024cff71e0b0ba04",
+        "node-88493984297f9e90d6c6de7fc3cb1243a68327d68598d52723037f2612bf19f8",
+        "node-fd1bdd7c54d9652910b302287c38ee4a19cbb8200ce345568a1ad343dde46d26",
+        "node-fd405122137ccaa1ed7b476f7960cd00d81eca99ba789a6782fb001a80f07c4e"
+      ],
+      "capabilityFingerprint": "d14fedfe60c6ad8a582f8a645610725bbc6a2da275b6e7890c1a4095b494bad4",
+      "familyId": "frozen-t44-td-filter-chop",
+      "partition": "FROZEN_T44"
+    },
+    {
+      "objectId": "td-glsl-top",
+      "coursePackId": "digital-interaction",
+      "objectContentHash": "57984bd410ab75e3c76b59583e5f9a8c12d516e79b4a9039322dec55bc9de6c5",
+      "eligibleNodeIds": [
+        "node-0da16c9324e0f38bf6ac640c46d587b3218f01b67033d51ae17e3583fbd8d650",
+        "node-471becdcbf69ea342b0f350c3cab3b594470169c2d3560ab66c66f5484e79474",
+        "node-6f33cb5876413ca65774008ed2151d83fe56f6cec667af81ecbd726b67e7c98a",
+        "node-acf85c5f5aa1057a5da3b395cd51a776dfd22feef390ef2fec5e16daf5a782c8",
+        "node-b74a8808676daac2aa088f63e9a0378606ae84fdfda43a2bd3ff4ab07cd6c10e"
+      ],
+      "capabilityFingerprint": "0703de2e52b6088fbfc6b7eb49bd42e1f92b656f678e563e44813376027465ee",
+      "familyId": "td-glsl-output-debugging",
+      "partition": "VALIDATION"
+    },
+    {
+      "objectId": "td-math-chop",
+      "coursePackId": "digital-interaction",
+      "objectContentHash": "9c7a52dd2636d9bc9a32127ac730d55856f4f0e1eddce6b1f3c0483cee69f902",
+      "eligibleNodeIds": [
+        "node-2240617d0c0d1718964d587d0f39c4c117abd370b24731183b7fe287e7bb9de2",
+        "node-454a163cc2d1e376fc00911119a567cf772cd869da16e9916544ccc041b55d01",
+        "node-8be273d4fb47420a49fb130f1610b7bd90c477abfa5c809c734aeffc7fa50c12",
+        "node-bbdfb4137caad4eb121b01833daa97607cb1cad9d2dcc4c88ca202f5e327e63d",
+        "node-faf24cb480c17e0b2556cc0e653fecfdb2fa9a2a208e7df685567461bfd4b951"
+      ],
+      "capabilityFingerprint": "44636b96f60060de121dcf77cfa254048ae8c14ddad7c10ad044a177fbeae534",
+      "familyId": "td-math-channel-mapping",
+      "partition": "VALIDATION"
+    },
+    {
+      "objectId": "td-null-chop",
+      "coursePackId": "digital-interaction",
+      "objectContentHash": "a9cd1f2ee0d7009d4b36caccd47392bb427f9aa0f62979c0d0cd1ffb3e948e5a",
+      "eligibleNodeIds": [
+        "node-0331ebc2c6ab74915f1fdc08dcca0be7f5885c205e186a94a0192b33a0895848",
+        "node-40e684c0e39eb50fc1834e747f129b56c70849e68b86bc05ae2e1351ba04d9f0",
+        "node-41c316324ff89c2db0c953ea0aa892c8b859b391baaf5b6b7064f0341c9409b6",
+        "node-87d0537f3d9ff93165d53a8fe83072f074eeb72074e0c425af97691cefe0688f",
+        "node-e64c502b665b7e50dc9da5c3ffebd75cfccc3e2ef9fa3904942bcd11c4bc372c"
+      ],
+      "capabilityFingerprint": "3497ee507a588cef06ed61b9196bf3e14627adcbcc07b34e1b3a0a2b77e7d367",
+      "familyId": "td-null-stable-reference",
+      "partition": "VALIDATION"
+    },
+    {
+      "objectId": "touchdesigner-foundations",
+      "coursePackId": "digital-interaction",
+      "objectContentHash": "68b4fb306c3c78e3db16a0804922fd17bc32531682f6aa382aaf84e211b3dab3",
+      "eligibleNodeIds": [
+        "node-0e3fc358897c0e2c0d11ddd9243a7dee5391d1d8b4865da0f5fb8645b2bedb1a",
+        "node-7e7715684768d8ece3a8a6c817aabc1c81f43def27b84bcc30184b41992d6070",
+        "node-a51fa3626f013ecd236d89af55d5c22dae21de9adebee9a840817fe2f4bde10b",
+        "node-d97bcce4a63d50642c91e02c64b92be29fd44dc16b78c6f9c4657be364c2c417",
+        "node-e78787dd0f7de5ef53348966c79aee66980b2e4abc833fc539879f33c4de101c"
+      ],
+      "capabilityFingerprint": "b645afabad2965be6305e27f83d9c8680b9d3565edbca934c762470885376286",
+      "familyId": "frozen-t44-touchdesigner-foundations",
+      "partition": "FROZEN_T44"
+    },
+    {
+      "objectId": "touchdesigner-osc-troubleshooting",
+      "coursePackId": "digital-interaction",
+      "objectContentHash": "d3c2cbb57611247d6c211c4acf591597aca11f3213b4683bb7b1da6e531450e1",
+      "eligibleNodeIds": [
+        "node-90e878109a05b2d27be073a58e7651a2c8578d08fd96a6d8a8685302b5fc73c3",
+        "node-d6c3b301bde24d9a7ece63f61cf3098973b25464a2b5bbac8ed424248b6091ae",
+        "node-e33739f7bd6a337c7e9f73b719d16510138e4a737de08a1f3641be317a95c4e9",
+        "node-fa17933f7b528c18daf51763785817ad5f8808941b610935d379793e445ca260"
+      ],
+      "capabilityFingerprint": "44d2a7651155f8633c60fc9146af8d50bf4949837130109fc01115ef99a6d413",
+      "familyId": "osc-input-troubleshooting",
+      "partition": "DEV_CAL"
+    }
+  ],
+  "families": [
+    {
+      "familyId": "frozen-t44-audio-reactive-visual",
+      "objectIds": [
+        "audio-reactive-visual"
+      ],
+      "partition": "FROZEN_T44"
+    },
+    {
+      "familyId": "frozen-t44-book-001-book-as-complete-system",
+      "objectIds": [
+        "book-001-book-as-complete-system"
+      ],
+      "partition": "FROZEN_T44"
+    },
+    {
+      "familyId": "frozen-t44-book-bleed-output",
+      "objectIds": [
+        "book-bleed-output"
+      ],
+      "partition": "FROZEN_T44"
+    },
+    {
+      "familyId": "frozen-t44-book-document-grid",
+      "objectIds": [
+        "book-document-grid"
+      ],
+      "partition": "FROZEN_T44"
+    },
+    {
+      "familyId": "frozen-t44-book-kerning-tracking",
+      "objectIds": [
+        "book-kerning-tracking"
+      ],
+      "partition": "FROZEN_T44"
+    },
+    {
+      "familyId": "frozen-t44-book-layout-grid",
+      "objectIds": [
+        "book-layout-grid"
+      ],
+      "partition": "FROZEN_T44"
+    },
+    {
+      "familyId": "frozen-t44-book-linked-assets",
+      "objectIds": [
+        "book-linked-assets"
+      ],
+      "partition": "FROZEN_T44"
+    },
+    {
+      "familyId": "frozen-t44-book-printer-marks",
+      "objectIds": [
+        "book-printer-marks"
+      ],
+      "partition": "FROZEN_T44"
+    },
+    {
+      "familyId": "frozen-t44-brandvi-001-assess-wordmark-fit",
+      "objectIds": [
+        "brandvi-001-assess-wordmark-fit"
+      ],
+      "partition": "FROZEN_T44"
+    },
+    {
+      "familyId": "frozen-t44-brandvi-002-test-wordmark-tone-and-audience",
+      "objectIds": [
+        "brandvi-002-test-wordmark-tone-and-audience"
+      ],
+      "partition": "FROZEN_T44"
+    },
+    {
+      "familyId": "frozen-t44-course-four-stage-progression",
+      "objectIds": [
+        "course-four-stage-progression"
+      ],
+      "partition": "FROZEN_T44"
+    },
+    {
+      "familyId": "frozen-t44-course-principles",
+      "objectIds": [
+        "course-principles"
+      ],
+      "partition": "FROZEN_T44"
+    },
+    {
+      "familyId": "frozen-t44-design-color-redundancy",
+      "objectIds": [
+        "design-color-redundancy"
+      ],
+      "partition": "FROZEN_T44"
+    },
+    {
+      "familyId": "frozen-t44-design-double-diamond",
+      "objectIds": [
+        "design-double-diamond"
+      ],
+      "partition": "FROZEN_T44"
+    },
+    {
+      "familyId": "frozen-t44-design-nontext-contrast",
+      "objectIds": [
+        "design-nontext-contrast"
+      ],
+      "partition": "FROZEN_T44"
+    },
+    {
+      "familyId": "frozen-t44-design-project-brief",
+      "objectIds": [
+        "design-project-brief"
+      ],
+      "partition": "FROZEN_T44"
+    },
+    {
+      "familyId": "frozen-t44-design-prototype-test",
+      "objectIds": [
+        "design-prototype-test"
+      ],
+      "partition": "FROZEN_T44"
+    },
+    {
+      "familyId": "frozen-t44-design-status-feedback",
+      "objectIds": [
+        "design-status-feedback"
+      ],
+      "partition": "FROZEN_T44"
+    },
+    {
+      "familyId": "frozen-t44-design-text-contrast",
+      "objectIds": [
+        "design-text-contrast"
+      ],
+      "partition": "FROZEN_T44"
+    },
+    {
+      "familyId": "frozen-t44-design-text-spacing",
+      "objectIds": [
+        "design-text-spacing"
+      ],
+      "partition": "FROZEN_T44"
+    },
+    {
+      "familyId": "frozen-t44-dicd-001-signal-chain-troubleshooting",
+      "objectIds": [
+        "dicd-001-signal-chain-troubleshooting"
+      ],
+      "partition": "FROZEN_T44"
+    },
+    {
+      "familyId": "frozen-t44-dicd-002-interaction-scheme-six-clarifications",
+      "objectIds": [
+        "dicd-002-interaction-scheme-six-clarifications"
+      ],
+      "partition": "FROZEN_T44"
+    },
+    {
+      "familyId": "frozen-t44-dicd-004-change-one-condition-for-transfer",
+      "objectIds": [
+        "dicd-004-change-one-condition-for-transfer"
+      ],
+      "partition": "FROZEN_T44"
+    },
+    {
+      "familyId": "frozen-t44-digishow-lighting-midi",
+      "objectIds": [
+        "digishow-lighting-midi"
+      ],
+      "partition": "FROZEN_T44"
+    },
+    {
+      "familyId": "frozen-t44-digishow-signals",
+      "objectIds": [
+        "digishow-signals"
+      ],
+      "partition": "FROZEN_T44"
+    },
+    {
+      "familyId": "frozen-t44-illustrator-001-grid-guides-and-format-reuse",
+      "objectIds": [
+        "illustrator-001-grid-guides-and-format-reuse"
+      ],
+      "partition": "FROZEN_T44"
+    },
+    {
+      "familyId": "frozen-t44-information-hierarchy",
+      "objectIds": [
+        "information-hierarchy"
+      ],
+      "partition": "FROZEN_T44"
+    },
+    {
+      "familyId": "frozen-t44-layout-001-grid-and-hierarchy",
+      "objectIds": [
+        "layout-001-grid-and-hierarchy"
+      ],
+      "partition": "FROZEN_T44"
+    },
+    {
+      "familyId": "frozen-t44-layout-002-type-hierarchy-and-whitespace",
+      "objectIds": [
+        "layout-002-type-hierarchy-and-whitespace"
+      ],
+      "partition": "FROZEN_T44"
+    },
+    {
+      "familyId": "frozen-t44-layout-010-international-style-fit",
+      "objectIds": [
+        "layout-010-international-style-fit"
+      ],
+      "partition": "FROZEN_T44"
+    },
+    {
+      "familyId": "frozen-t44-layout-012-acid-style-fit",
+      "objectIds": [
+        "layout-012-acid-style-fit"
+      ],
+      "partition": "FROZEN_T44"
+    },
+    {
+      "familyId": "frozen-t44-layout-014-collage-style-fit",
+      "objectIds": [
+        "layout-014-collage-style-fit"
+      ],
+      "partition": "FROZEN_T44"
+    },
+    {
+      "familyId": "frozen-t44-layout-018-neo-chinese-style-fit",
+      "objectIds": [
+        "layout-018-neo-chinese-style-fit"
+      ],
+      "partition": "FROZEN_T44"
+    },
+    {
+      "familyId": "frozen-t44-layout-040-six-step-grid-layout-check",
+      "objectIds": [
+        "layout-040-six-step-grid-layout-check"
+      ],
+      "partition": "FROZEN_T44"
+    },
+    {
+      "familyId": "frozen-t44-layout-041-review-layout-with-observable-evidence",
+      "objectIds": [
+        "layout-041-review-layout-with-observable-evidence"
+      ],
+      "partition": "FROZEN_T44"
+    },
+    {
+      "familyId": "frozen-t44-layout-042-review-alignment-with-guides-hidden",
+      "objectIds": [
+        "layout-042-review-alignment-with-guides-hidden"
+      ],
+      "partition": "FROZEN_T44"
+    },
+    {
+      "familyId": "frozen-t44-layout-050-select-design-books-by-learning-question",
+      "objectIds": [
+        "layout-050-select-design-books-by-learning-question"
+      ],
+      "partition": "FROZEN_T44"
+    },
+    {
+      "familyId": "frozen-t44-osc-out-chop",
+      "objectIds": [
+        "osc-out-chop"
+      ],
+      "partition": "FROZEN_T44"
+    },
+    {
+      "familyId": "frozen-t44-td-analyze-chop",
+      "objectIds": [
+        "td-analyze-chop"
+      ],
+      "partition": "FROZEN_T44"
+    },
+    {
+      "familyId": "frozen-t44-td-feedback-top",
+      "objectIds": [
+        "td-feedback-top"
+      ],
+      "partition": "FROZEN_T44"
+    },
+    {
+      "familyId": "frozen-t44-td-filter-chop",
+      "objectIds": [
+        "td-filter-chop"
+      ],
+      "partition": "FROZEN_T44"
+    },
+    {
+      "familyId": "frozen-t44-touchdesigner-foundations",
+      "objectIds": [
+        "touchdesigner-foundations"
+      ],
+      "partition": "FROZEN_T44"
+    },
+    {
+      "familyId": "book-microtask-principles",
+      "objectIds": [
+        "book-design-principles"
+      ],
+      "partition": "DEV_CAL"
+    },
+    {
+      "familyId": "competition-direction-two-evidence",
+      "objectIds": [
+        "competition-direction-two-evidence"
+      ],
+      "partition": "DEV_CAL"
+    },
+    {
+      "familyId": "digishow-touchdesigner-workflow",
+      "objectIds": [
+        "dicd-003-digishow-touchdesigner-roles",
+        "digishow-interface-workflow"
+      ],
+      "partition": "DEV_CAL"
+    },
+    {
+      "familyId": "td-case-version-comparison",
+      "objectIds": [
+        "td-case-version-comparison"
+      ],
+      "partition": "DEV_CAL"
+    },
+    {
+      "familyId": "osc-input-troubleshooting",
+      "objectIds": [
+        "touchdesigner-osc-troubleshooting"
+      ],
+      "partition": "DEV_CAL"
+    },
+    {
+      "familyId": "international-style-history",
+      "objectIds": [
+        "layout-011-international-style-history"
+      ],
+      "partition": "DEV_CAL"
+    },
+    {
+      "familyId": "acid-style-history",
+      "objectIds": [
+        "layout-013-acid-style-history"
+      ],
+      "partition": "DEV_CAL"
+    },
+    {
+      "familyId": "collage-style-history",
+      "objectIds": [
+        "layout-015-collage-style-history"
+      ],
+      "partition": "DEV_CAL"
+    },
+    {
+      "familyId": "neo-chinese-style-history",
+      "objectIds": [
+        "layout-019-neo-chinese-style-history"
+      ],
+      "partition": "DEV_CAL"
+    },
+    {
+      "familyId": "reference-resource-selection",
+      "objectIds": [
+        "layout-051-select-reference-resources-by-task"
+      ],
+      "partition": "DEV_CAL"
+    },
+    {
+      "familyId": "book-layout-reading-evidence",
+      "objectIds": [
+        "layout-evidence"
+      ],
+      "partition": "VALIDATION"
+    },
+    {
+      "familyId": "td-glsl-output-debugging",
+      "objectIds": [
+        "td-glsl-top"
+      ],
+      "partition": "VALIDATION"
+    },
+    {
+      "familyId": "td-math-channel-mapping",
+      "objectIds": [
+        "td-math-chop"
+      ],
+      "partition": "VALIDATION"
+    },
+    {
+      "familyId": "td-null-stable-reference",
+      "objectIds": [
+        "td-null-chop"
+      ],
+      "partition": "VALIDATION"
+    },
+    {
+      "familyId": "new-ugly-style",
+      "objectIds": [
+        "layout-016-new-ugly-style-fit",
+        "layout-017-new-ugly-style-history"
+      ],
+      "partition": "VALIDATION"
+    },
+    {
+      "familyId": "tactile-texture",
+      "objectIds": [
+        "layout-022-tactile-texture-style-fit",
+        "layout-023-tactile-texture-style-history"
+      ],
+      "partition": "VALIDATION"
+    },
+    {
+      "familyId": "retro-futurism",
+      "objectIds": [
+        "layout-020-retro-futurism-style-fit"
+      ],
+      "partition": "VALIDATION"
+    },
+    {
+      "familyId": "font-selection-context",
+      "objectIds": [
+        "layout-030-font-trend-by-context",
+        "layout-032-select-type-for-audience-purpose-and-medium"
+      ],
+      "partition": "VALIDATION"
+    },
+    {
+      "familyId": "type-image-color-coordination",
+      "objectIds": [
+        "layout-031-coordinate-type-image-and-color"
+      ],
+      "partition": "VALIDATION"
+    },
+    {
+      "familyId": "type-hierarchy-refinement",
+      "objectIds": [
+        "layout-043-refine-spacing-weight-and-text-hierarchy"
+      ],
+      "partition": "VALIDATION"
+    },
+    {
+      "familyId": "poster-analysis-template",
+      "objectIds": [
+        "layout-101-poster-01-analysis",
+        "layout-102-poster-02-analysis",
+        "layout-103-poster-03-analysis",
+        "layout-104-poster-04-analysis",
+        "layout-105-poster-05-analysis",
+        "layout-106-poster-06-analysis",
+        "layout-107-poster-07-analysis",
+        "layout-108-poster-08-analysis",
+        "layout-109-poster-09-analysis",
+        "layout-110-poster-10-analysis",
+        "layout-111-poster-11-analysis",
+        "layout-112-poster-12-analysis",
+        "layout-113-poster-13-analysis",
+        "layout-114-poster-14-analysis",
+        "layout-115-poster-15-analysis",
+        "layout-116-poster-16-analysis",
+        "layout-117-poster-17-analysis",
+        "layout-118-poster-18-analysis",
+        "layout-119-poster-19-analysis",
+        "layout-120-poster-20-analysis",
+        "layout-121-poster-21-analysis",
+        "layout-122-poster-22-analysis",
+        "layout-123-poster-23-analysis",
+        "layout-124-poster-24-analysis",
+        "layout-125-poster-25-analysis",
+        "layout-126-poster-26-analysis",
+        "layout-127-poster-27-analysis",
+        "layout-128-poster-28-analysis",
+        "layout-129-poster-29-analysis",
+        "layout-130-poster-30-analysis",
+        "layout-131-poster-31-analysis",
+        "layout-132-poster-32-analysis",
+        "layout-133-poster-33-analysis",
+        "layout-134-poster-34-analysis",
+        "layout-135-poster-35-analysis",
+        "layout-136-poster-36-analysis",
+        "layout-137-poster-37-analysis",
+        "layout-138-poster-38-analysis",
+        "layout-139-poster-39-analysis",
+        "layout-140-poster-40-analysis",
+        "layout-141-poster-41-analysis",
+        "layout-142-poster-42-analysis",
+        "layout-143-poster-43-analysis",
+        "layout-144-poster-44-analysis",
+        "layout-145-poster-45-analysis",
+        "layout-146-poster-46-analysis",
+        "layout-147-poster-47-analysis",
+        "layout-148-poster-48-analysis",
+        "layout-149-poster-49-analysis",
+        "layout-150-poster-50-analysis"
+      ],
+      "partition": "VISUAL_RESERVE"
+    }
+  ],
+  "inventoryHash": "fd199dfe6f49ce1249f20a04be580dc1b1b31fff2d831b88d4bd13e022082d67"
+}

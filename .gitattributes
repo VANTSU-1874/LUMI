@@ -1,0 +1,14 @@
+/public/demo/*.svg text eol=lf
+/public/demo/manifest.json text eol=lf
+/scripts/ops/lumi-release text eol=lf
+/scripts/ops/lumi-release.sudoers text eol=lf
+/scripts/ops/lumi-release-allowed-signers text eol=lf
+/scripts/ops/install-lumi-release-wrapper.sh text eol=lf
+/tests/retrieval-quality/*.json text eol=lf
+/tests/fixtures/agent-runtime-harness/evidence-channel/**/*.json text eol=lf
+
+# Preserve byte-pinned upstream license text.
+/third_party/knowledge-v2/LICENSE-*.txt text eol=lf -whitespace
+
+# Drizzle records a SHA-256 of raw SQL text.
+/drizzle/*.sql text eol=lf

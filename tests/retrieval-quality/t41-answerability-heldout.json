@@ -1,0 +1,328 @@
+{
+  "schemaVersion": 1,
+  "suiteVersion": "2026-07-28.1",
+  "split": "HELDOUT",
+  "splitRole": "FINAL_BLIND_EVALUATION",
+  "cases": [
+    {
+      "id": "t41-heldout-general-cross-traditional-order",
+      "category": "OTHER_COURSE_EXCLUSIVE",
+      "familyId": "heldout-neo-chinese-scope",
+      "coursePackId": "general-design",
+      "question": "我不想再贴书法和纹样，想只借传统构图里的轴线、疏密和留白做现代页面，这些关系该怎么提取？",
+      "expectation": "NO_ANSWER",
+      "targetObjectIds": [],
+      "reasonClass": "COURSE_SCOPE_MISMATCH"
+    },
+    {
+      "id": "t41-heldout-general-tool-sketch-smart-layout",
+      "category": "PRODUCT_SCOPE_CORPUS_GAP",
+      "familyId": "heldout-sketch-smart-layout-gap",
+      "coursePackId": "general-design",
+      "question": "Sketch 的 Smart Layout 里，标签文字变长后怎么让按钮宽度自动撑开又保持内边距？",
+      "expectation": "NO_ANSWER",
+      "targetObjectIds": [],
+      "reasonClass": "OBJECT_NOT_IN_CORPUS"
+    },
+    {
+      "id": "t41-heldout-general-operation-skip-link",
+      "category": "SAME_COURSE_OPERATION_GAP",
+      "familyId": "heldout-skip-link-gap",
+      "coursePackId": "general-design",
+      "question": "网页想加“跳到正文”链接和 main、nav 地标，键盘顺序、隐藏样式和焦点落点具体怎么写代码？",
+      "expectation": "NO_ANSWER",
+      "targetObjectIds": [],
+      "reasonClass": "PROCEDURE_NOT_IN_CORPUS"
+    },
+    {
+      "id": "t41-heldout-general-external-wcag3",
+      "category": "EXTERNAL_VERIFICATION_REQUIRED",
+      "familyId": "heldout-wcag3-live",
+      "coursePackId": "general-design",
+      "question": "WCAG 3 现在正式发布到哪个阶段了，今天做项目该不该把它当强制标准？",
+      "expectation": "NO_ANSWER",
+      "targetObjectIds": [],
+      "reasonClass": "NON_STATIC_EXTERNAL_FACT"
+    },
+    {
+      "id": "t41-heldout-general-control-color-redundancy",
+      "category": "ANSWERABLE_CONTROL",
+      "familyId": "heldout-color-redundancy-scope",
+      "coursePackId": "general-design",
+      "question": "图表只用红绿分两组，我转灰度就全混了，除了换颜色还能补什么线索？",
+      "expectation": "ANSWERABLE",
+      "targetObjectIds": [
+        "design-color-redundancy"
+      ],
+      "reasonClass": "TARGET_OBJECT_PRESENT"
+    },
+    {
+      "id": "t41-heldout-general-control-text-spacing",
+      "category": "ANSWERABLE_CONTROL",
+      "familyId": "heldout-text-spacing-control",
+      "coursePackId": "general-design",
+      "question": "同学把浏览器字距行距放大后，我的卡片文字被截掉了，这种情况该怎么测？",
+      "expectation": "ANSWERABLE",
+      "targetObjectIds": [
+        "design-text-spacing"
+      ],
+      "reasonClass": "TARGET_OBJECT_PRESENT"
+    },
+    {
+      "id": "t41-heldout-digital-cross-neo-chinese",
+      "category": "OTHER_COURSE_EXCLUSIVE",
+      "familyId": "heldout-neo-chinese-scope",
+      "coursePackId": "digital-interaction",
+      "question": "实时投影想做新中式，放了水墨、篆字和红印还是很拼贴，怎么判断传统元素有没有被重新组织？",
+      "expectation": "NO_ANSWER",
+      "targetObjectIds": [],
+      "reasonClass": "COURSE_SCOPE_MISMATCH"
+    },
+    {
+      "id": "t41-heldout-digital-tool-davinci-fusion",
+      "category": "PRODUCT_SCOPE_CORPUS_GAP",
+      "familyId": "heldout-davinci-fusion-gap",
+      "coursePackId": "digital-interaction",
+      "question": "DaVinci Resolve 的 Fusion 里怎么让粒子沿手绘路径发射，再回到剪辑页保留透明通道？",
+      "expectation": "NO_ANSWER",
+      "targetObjectIds": [],
+      "reasonClass": "OBJECT_NOT_IN_CORPUS"
+    },
+    {
+      "id": "t41-heldout-digital-operation-kinect",
+      "category": "SAME_COURSE_OPERATION_GAP",
+      "familyId": "heldout-kinect-gap",
+      "coursePackId": "digital-interaction",
+      "question": "TouchDesigner 接 Azure Kinect 做点云，校准深度和彩色相机后该用哪个节点链去掉地面噪点？",
+      "expectation": "NO_ANSWER",
+      "targetObjectIds": [],
+      "reasonClass": "PROCEDURE_NOT_IN_CORPUS"
+    },
+    {
+      "id": "t41-heldout-digital-external-macos16",
+      "category": "EXTERNAL_VERIFICATION_REQUIRED",
+      "familyId": "heldout-macos16-live",
+      "coursePackId": "digital-interaction",
+      "question": "macOS 16 这次更新后 TouchDesigner 哪个正式版确认兼容，旧工程打开会不会有已知问题？",
+      "expectation": "NO_ANSWER",
+      "targetObjectIds": [],
+      "reasonClass": "NON_STATIC_EXTERNAL_FACT"
+    },
+    {
+      "id": "t41-heldout-digital-control-math-range",
+      "category": "ANSWERABLE_CONTROL",
+      "familyId": "heldout-signal-conditioning-scope",
+      "coursePackId": "digital-interaction",
+      "question": "传感器实际只在二百到八百之间跳，我想让它控制零到一，Math 里该先记什么再映射？",
+      "expectation": "ANSWERABLE",
+      "targetObjectIds": [
+        "td-math-chop"
+      ],
+      "reasonClass": "TARGET_OBJECT_PRESENT"
+    },
+    {
+      "id": "t41-heldout-digital-control-six-elements",
+      "category": "ANSWERABLE_CONTROL",
+      "familyId": "heldout-six-elements-control",
+      "coursePackId": "digital-interaction",
+      "question": "我只想到“人靠近，纹样会亮”，怎么把这个互动点子拆成几项说清楚？",
+      "expectation": "ANSWERABLE",
+      "targetObjectIds": [
+        "dicd-002-interaction-scheme-six-clarifications"
+      ],
+      "reasonClass": "TARGET_OBJECT_PRESENT"
+    },
+    {
+      "id": "t41-heldout-book-cross-color-redundancy",
+      "category": "OTHER_COURSE_EXCLUSIVE",
+      "familyId": "heldout-color-redundancy-scope",
+      "coursePackId": "book-design",
+      "question": "电子书里的统计图只靠蓝橙两种颜色分组，色弱读者看不出来时还应该补哪种非颜色线索？",
+      "expectation": "NO_ANSWER",
+      "targetObjectIds": [],
+      "reasonClass": "COURSE_SCOPE_MISMATCH"
+    },
+    {
+      "id": "t41-heldout-book-tool-quark-job-jackets",
+      "category": "PRODUCT_SCOPE_CORPUS_GAP",
+      "familyId": "heldout-quark-job-jackets-gap",
+      "coursePackId": "book-design",
+      "question": "QuarkXPress 的 Job Jackets 怎么绑定版面规范，让不同文件在输出前一起检查？",
+      "expectation": "NO_ANSWER",
+      "targetObjectIds": [],
+      "reasonClass": "OBJECT_NOT_IN_CORPUS"
+    },
+    {
+      "id": "t41-heldout-book-operation-grep-style",
+      "category": "SAME_COURSE_OPERATION_GAP",
+      "familyId": "heldout-grep-style-gap",
+      "coursePackId": "book-design",
+      "question": "InDesign 里想让正文中的所有图号自动套字符样式，GREP Style 表达式和应用顺序怎么写？",
+      "expectation": "NO_ANSWER",
+      "targetObjectIds": [],
+      "reasonClass": "PROCEDURE_NOT_IN_CORPUS"
+    },
+    {
+      "id": "t41-heldout-book-external-isbn",
+      "category": "EXTERNAL_VERIFICATION_REQUIRED",
+      "familyId": "heldout-isbn-live",
+      "coursePackId": "book-design",
+      "question": "国内个人做一本非卖品作品集，现在申请 ISBN 要走什么渠道、费用和材料有没有新规定？",
+      "expectation": "NO_ANSWER",
+      "targetObjectIds": [],
+      "reasonClass": "NON_STATIC_EXTERNAL_FACT"
+    },
+    {
+      "id": "t41-heldout-book-control-reading-goal",
+      "category": "ANSWERABLE_CONTROL",
+      "familyId": "heldout-book-reading-goal-control",
+      "coursePackId": "book-design",
+      "question": "我还没定小册子长什么样，想先说清楚谁会在什么地方读、他最先要找到什么，这两件事该怎么写？",
+      "expectation": "ANSWERABLE",
+      "targetObjectIds": [
+        "book-design-principles"
+      ],
+      "reasonClass": "TARGET_OBJECT_PRESENT"
+    },
+    {
+      "id": "t41-heldout-book-control-complete-system",
+      "category": "ANSWERABLE_CONTROL",
+      "familyId": "heldout-book-system-scope",
+      "coursePackId": "book-design",
+      "question": "我总把封面当海报做，想检查整本书是不是一个系统，还得把哪些部分摆在一起看？",
+      "expectation": "ANSWERABLE",
+      "targetObjectIds": [
+        "book-001-book-as-complete-system"
+      ],
+      "reasonClass": "TARGET_OBJECT_PRESENT"
+    },
+    {
+      "id": "t41-heldout-layout-cross-filter",
+      "category": "OTHER_COURSE_EXCLUSIVE",
+      "familyId": "heldout-signal-conditioning-scope",
+      "coursePackId": "layout-design",
+      "question": "传感器数值抖得厉害，Filter CHOP 的宽度调大后又太迟钝，怎么用前后曲线找平衡？",
+      "expectation": "NO_ANSWER",
+      "targetObjectIds": [],
+      "reasonClass": "COURSE_SCOPE_MISMATCH"
+    },
+    {
+      "id": "t41-heldout-layout-tool-procreate-animation",
+      "category": "PRODUCT_SCOPE_CORPUS_GAP",
+      "familyId": "heldout-procreate-animation-gap",
+      "coursePackId": "layout-design",
+      "question": "Procreate 的 Animation Assist 里怎么设洋葱皮和保持帧，让 IP 动作循环不跳？",
+      "expectation": "NO_ANSWER",
+      "targetObjectIds": [],
+      "reasonClass": "OBJECT_NOT_IN_CORPUS"
+    },
+    {
+      "id": "t41-heldout-layout-operation-variable-font",
+      "category": "SAME_COURSE_OPERATION_GAP",
+      "familyId": "heldout-variable-font-gap",
+      "coursePackId": "layout-design",
+      "question": "可变字体的 opsz 轴想跟海报字号联动，导出 PDF 前在 Glyphs 3 里怎么设轴映射和实例？",
+      "expectation": "NO_ANSWER",
+      "targetObjectIds": [],
+      "reasonClass": "PROCEDURE_NOT_IN_CORPUS"
+    },
+    {
+      "id": "t41-heldout-layout-external-xiaohongshu",
+      "category": "EXTERNAL_VERIFICATION_REQUIRED",
+      "familyId": "heldout-xiaohongshu-live",
+      "coursePackId": "layout-design",
+      "question": "小红书现在竖版封面的推荐像素、裁切安全区和文件大小上限分别是多少？",
+      "expectation": "NO_ANSWER",
+      "targetObjectIds": [],
+      "reasonClass": "NON_STATIC_EXTERNAL_FACT"
+    },
+    {
+      "id": "t41-heldout-layout-control-neo-chinese",
+      "category": "ANSWERABLE_CONTROL",
+      "familyId": "heldout-neo-chinese-scope",
+      "coursePackId": "layout-design",
+      "question": "我放了书法、云纹和朱红色，还是像素材拼盘，新中式到底该看它们有没有形成什么关系？",
+      "expectation": "ANSWERABLE",
+      "targetObjectIds": [
+        "layout-018-neo-chinese-style-fit"
+      ],
+      "reasonClass": "TARGET_OBJECT_PRESENT"
+    },
+    {
+      "id": "t41-heldout-layout-control-hidden-guides",
+      "category": "ANSWERABLE_CONTROL",
+      "familyId": "heldout-hidden-guides-control",
+      "coursePackId": "layout-design",
+      "question": "参考线开着特别齐，关掉就觉得文字歪了，我该先分清是文本框还是字形边缘的问题吗？",
+      "expectation": "ANSWERABLE",
+      "targetObjectIds": [
+        "layout-042-review-alignment-with-guides-hidden"
+      ],
+      "reasonClass": "TARGET_OBJECT_PRESENT"
+    },
+    {
+      "id": "t41-heldout-brand-cross-book-system",
+      "category": "OTHER_COURSE_EXCLUSIVE",
+      "familyId": "heldout-book-system-scope",
+      "coursePackId": "brand-vi-design",
+      "question": "品牌手册只做了封面和几张规范页，怎么检查书脊、目录、页码和连续跨页是不是一个完整系统？",
+      "expectation": "NO_ANSWER",
+      "targetObjectIds": [],
+      "reasonClass": "COURSE_SCOPE_MISMATCH"
+    },
+    {
+      "id": "t41-heldout-brand-tool-substance",
+      "category": "PRODUCT_SCOPE_CORPUS_GAP",
+      "familyId": "heldout-substance-gap",
+      "coursePackId": "brand-vi-design",
+      "question": "Substance 3D Painter 里怎么给品牌包装模型做智能材质，并把贴图回传 Blender 不丢色？",
+      "expectation": "NO_ANSWER",
+      "targetObjectIds": [],
+      "reasonClass": "OBJECT_NOT_IN_CORPUS"
+    },
+    {
+      "id": "t41-heldout-brand-operation-style-dictionary",
+      "category": "SAME_COURSE_OPERATION_GAP",
+      "familyId": "heldout-style-dictionary-gap",
+      "coursePackId": "brand-vi-design",
+      "question": "品牌色和字号想交给前端复用，Style Dictionary 里 token JSON 怎么命名、分层和导出？",
+      "expectation": "NO_ANSWER",
+      "targetObjectIds": [],
+      "reasonClass": "PROCEDURE_NOT_IN_CORPUS"
+    },
+    {
+      "id": "t41-heldout-brand-external-cnipa",
+      "category": "EXTERNAL_VERIFICATION_REQUIRED",
+      "familyId": "heldout-cnipa-live",
+      "coursePackId": "brand-vi-design",
+      "question": "我准备注册“青瓦茶事”，今天在国家知识产权局系统里有没有近似商标、属于哪一类？",
+      "expectation": "NO_ANSWER",
+      "targetObjectIds": [],
+      "reasonClass": "NON_STATIC_EXTERNAL_FACT"
+    },
+    {
+      "id": "t41-heldout-brand-control-small-scale",
+      "category": "ANSWERABLE_CONTROL",
+      "familyId": "heldout-wordmark-scope",
+      "coursePackId": "brand-vi-design",
+      "question": "字标放在招牌上还清楚，缩到瓶盖就糊了，我应该把哪些尺寸和单色场景放一起测？",
+      "expectation": "ANSWERABLE",
+      "targetObjectIds": [
+        "brandvi-001-assess-wordmark-fit"
+      ],
+      "reasonClass": "TARGET_OBJECT_PRESENT"
+    },
+    {
+      "id": "t41-heldout-brand-control-name-reading",
+      "category": "ANSWERABLE_CONTROL",
+      "familyId": "heldout-wordmark-scope",
+      "coursePackId": "brand-vi-design",
+      "question": "我把店名字改了几个笔画想做得特别，怎么验证别人还读得出名字、不会认错？",
+      "expectation": "ANSWERABLE",
+      "targetObjectIds": [
+        "brandvi-001-assess-wordmark-fit"
+      ],
+      "reasonClass": "TARGET_OBJECT_PRESENT"
+    }
+  ]
+}

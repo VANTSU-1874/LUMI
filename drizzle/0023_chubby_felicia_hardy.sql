@@ -1,0 +1,12 @@
+ALTER TABLE `audit_events` ADD `data_type` text GENERATED ALWAYS AS (case when user_id glob 'demo-student-*' then 'DEMONSTRATION_DATA' else 'REAL' end) VIRTUAL;--> statement-breakpoint
+ALTER TABLE `evidence` ADD `data_type` text GENERATED ALWAYS AS (case when student_id glob 'demo-student-*' then 'DEMONSTRATION_DATA' else 'REAL' end) VIRTUAL;--> statement-breakpoint
+ALTER TABLE `hint_records` ADD `data_type` text GENERATED ALWAYS AS (case when student_id glob 'demo-student-*' then 'DEMONSTRATION_DATA' else 'REAL' end) VIRTUAL;--> statement-breakpoint
+ALTER TABLE `logic_cards` ADD `data_type` text GENERATED ALWAYS AS (case when project_id glob 'demo-project-*' then 'DEMONSTRATION_DATA' else 'REAL' end) VIRTUAL;--> statement-breakpoint
+ALTER TABLE `projects` ADD `data_type` text GENERATED ALWAYS AS (case when student_id glob 'demo-student-*' then 'DEMONSTRATION_DATA' else 'REAL' end) VIRTUAL;--> statement-breakpoint
+ALTER TABLE `teacher_decisions` ADD `data_type` text GENERATED ALWAYS AS (case when student_id glob 'demo-student-*' then 'DEMONSTRATION_DATA' else 'REAL' end) VIRTUAL;--> statement-breakpoint
+ALTER TABLE `tool_path_plans` ADD `data_type` text GENERATED ALWAYS AS (case when project_id glob 'demo-project-*' then 'DEMONSTRATION_DATA' else 'REAL' end) VIRTUAL;--> statement-breakpoint
+ALTER TABLE `transfer_attempts` ADD `data_type` text GENERATED ALWAYS AS (case when student_id glob 'demo-student-*' then 'DEMONSTRATION_DATA' else 'REAL' end) VIRTUAL;--> statement-breakpoint
+ALTER TABLE `transfer_challenge_revisions` ADD `data_type` text GENERATED ALWAYS AS (case when student_id glob 'demo-student-*' then 'DEMONSTRATION_DATA' else 'REAL' end) VIRTUAL;--> statement-breakpoint
+ALTER TABLE `transfer_challenges` ADD `data_type` text GENERATED ALWAYS AS (case when student_id glob 'demo-student-*' then 'DEMONSTRATION_DATA' else 'REAL' end) VIRTUAL;--> statement-breakpoint
+ALTER TABLE `troubleshooting_runs` ADD `data_type` text GENERATED ALWAYS AS (case when project_id glob 'demo-project-*' then 'DEMONSTRATION_DATA' else 'REAL' end) VIRTUAL;--> statement-breakpoint
+ALTER TABLE `users` ADD `data_type` text GENERATED ALWAYS AS (case when id glob 'demo-*' then 'DEMONSTRATION_DATA' else 'REAL' end) VIRTUAL;

@@ -1,0 +1,197 @@
+{
+  "schemaVersion": 1,
+  "id": "lumi-t45-post-remediation-selector-acceptance-runtime",
+  "version": "2026-07-30.1",
+  "split": "POST_REMEDIATION_ACCEPTANCE",
+  "corpusSnapshot": {
+    "path": "data/knowledge-v2/knowledge-corpus.v2.json",
+    "bundleHash": "82db90934afaffa3d227b6b0d11ab5efdb88009fd8b9274845567de4888079f8"
+  },
+  "capabilityInventory": {
+    "id": "lumi-t45-capability-inventory",
+    "inventoryHash": "fd199dfe6f49ce1249f20a04be580dc1b1b31fff2d831b88d4bd13e022082d67"
+  },
+  "cases": [
+    {
+      "caseId": "t45-remacc-book-grid-direct",
+      "familyId": "frozen-t44-book-layout-grid",
+      "stratum": "DIRECT_PARAPHRASE",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "book-design",
+      "coursePackVersion": "1",
+      "question": "我的书页看着挺整齐，但读起来一会儿挤一会儿松，比较两套网格时我该看什么？"
+    },
+    {
+      "caseId": "t45-remacc-book-grid-compose",
+      "familyId": "frozen-t44-book-layout-grid",
+      "stratum": "COMPOSITION_HARD_DISTRACTOR",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "book-design",
+      "coursePackVersion": "1",
+      "question": "我想换成更细的字符格，又怕页面尺寸除不尽。试排时既要核对哪些数，还要怎么证明阅读节奏真的更好？"
+    },
+    {
+      "caseId": "t45-remacc-book-links-direct",
+      "familyId": "frozen-t44-book-linked-assets",
+      "stratum": "DIRECT_PARAPHRASE",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "book-design",
+      "coursePackVersion": "1",
+      "question": "屏幕上图片挺清楚，送印前我怎么知道放大后会不会糊？"
+    },
+    {
+      "caseId": "t45-remacc-book-links-compose",
+      "familyId": "frozen-t44-book-linked-assets",
+      "stratum": "COMPOSITION_HARD_DISTRACTOR",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "book-design",
+      "coursePackVersion": "1",
+      "question": "素材刚搬过文件夹，我还改了成品尺寸。输出前怎么分开检查图片清不清、链接还在不在？"
+    },
+    {
+      "caseId": "t45-remacc-brand-wordmark-direct",
+      "familyId": "frozen-t44-brandvi-001-assess-wordmark-fit",
+      "stratum": "DIRECT_PARAPHRASE",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "brand-vi-design",
+      "coursePackVersion": "1",
+      "question": "我只做文字标是不是就一定更高级、更好认？先用什么办法判断够不够？"
+    },
+    {
+      "caseId": "t45-remacc-brand-wordmark-compose",
+      "familyId": "frozen-t44-brandvi-001-assess-wordmark-fit",
+      "stratum": "COMPOSITION_HARD_DISTRACTOR",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "brand-vi-design",
+      "coursePackVersion": "1",
+      "question": "我的字标在大屏上还行，缩到包装角落就糊，也怕跟同行撞。要做哪两组检查，才能决定要不要加图形？"
+    },
+    {
+      "caseId": "t45-remacc-brand-tone-direct",
+      "familyId": "frozen-t44-brandvi-002-test-wordmark-tone-and-audience",
+      "stratum": "DIRECT_PARAPHRASE",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "brand-vi-design",
+      "coursePackVersion": "1",
+      "question": "团队都说这款字很年轻，可谁也讲不清，我该怎么把这种感觉变成能比较的东西？"
+    },
+    {
+      "caseId": "t45-remacc-brand-tone-compose",
+      "familyId": "frozen-t44-brandvi-002-test-wordmark-tone-and-audience",
+      "stratum": "COMPOSITION_HARD_DISTRACTOR",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "brand-vi-design",
+      "coursePackVersion": "1",
+      "question": "我想找人测两款字标，但不想把颜色和图片一起换掉。测试时怎么控制变量，又该记录别人什么反应？"
+    },
+    {
+      "caseId": "t45-remacc-signal-chain-direct",
+      "familyId": "frozen-t44-dicd-001-signal-chain-troubleshooting",
+      "stratum": "DIRECT_PARAPHRASE",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "digital-interaction",
+      "coursePackVersion": "1",
+      "question": "传感器有数值，画面却没动，我先从哪一段开始查才不会到处乱改？"
+    },
+    {
+      "caseId": "t45-remacc-signal-chain-compose",
+      "familyId": "frozen-t44-dicd-001-signal-chain-troubleshooting",
+      "stratum": "COMPOSITION_HARD_DISTRACTOR",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "digital-interaction",
+      "coursePackVersion": "1",
+      "question": "DigiShow 已经能看到数值，TD 里也收到了一点，但目标参数没变化。我该按什么顺序留证据，怎么判断是传输还是绑定的问题？"
+    },
+    {
+      "caseId": "t45-remacc-audio-reactive-direct",
+      "familyId": "frozen-t44-audio-reactive-visual",
+      "stratum": "DIRECT_PARAPHRASE",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "digital-interaction",
+      "coursePackVersion": "1",
+      "question": "音乐在播，画面一点反应都没有，我第一步看哪几个数？"
+    },
+    {
+      "caseId": "t45-remacc-audio-reactive-compose",
+      "familyId": "frozen-t44-audio-reactive-visual",
+      "stratum": "COMPOSITION_HARD_DISTRACTOR",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "digital-interaction",
+      "coursePackVersion": "1",
+      "question": "RMS 数值会跳，但画面还是不动。我该怎么检查映射和参数引用，又怎么只搭一条最小链排错？"
+    },
+    {
+      "caseId": "t45-remacc-double-diamond-direct",
+      "familyId": "frozen-t44-design-double-diamond",
+      "stratum": "DIRECT_PARAPHRASE",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "general-design",
+      "coursePackVersion": "1",
+      "question": "我现在点子很多却不知道到底在解决什么，双钻能帮我先判断下一步吗？"
+    },
+    {
+      "caseId": "t45-remacc-double-diamond-compose",
+      "familyId": "frozen-t44-design-double-diamond",
+      "stratum": "COMPOSITION_HARD_DISTRACTOR",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "general-design",
+      "coursePackVersion": "1",
+      "question": "我已经做了几个方案，但最初对用户的猜测还没验证。现在该回头做什么，又怎么把假设变成能验证的问题？"
+    },
+    {
+      "caseId": "t45-remacc-prototype-direct",
+      "familyId": "frozen-t44-design-prototype-test",
+      "stratum": "DIRECT_PARAPHRASE",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "general-design",
+      "coursePackVersion": "1",
+      "question": "我还没做成品，怎么用最省事的小样先发现方向错没错？"
+    },
+    {
+      "caseId": "t45-remacc-prototype-compose",
+      "familyId": "frozen-t44-design-prototype-test",
+      "stratum": "COMPOSITION_HARD_DISTRACTOR",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "general-design",
+      "coursePackVersion": "1",
+      "question": "海报入口和信息顺序都拿不准。我不想一次全改，怎么定一个假设、做小样并记录结果？"
+    },
+    {
+      "caseId": "t45-remacc-layout-hierarchy-direct",
+      "familyId": "frozen-t44-layout-001-grid-and-hierarchy",
+      "stratum": "DIRECT_PARAPHRASE",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "layout-design",
+      "coursePackVersion": "1",
+      "question": "我的标题、时间和正文都很抢，第一眼不知道看哪儿，先怎么排查主次？"
+    },
+    {
+      "caseId": "t45-remacc-layout-hierarchy-compose",
+      "familyId": "frozen-t44-layout-001-grid-and-hierarchy",
+      "stratum": "COMPOSITION_HARD_DISTRACTOR",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "layout-design",
+      "coursePackVersion": "1",
+      "question": "我已经对齐了，但读者还是到处跳。怎么一边检查共同对齐线，一边只改一个变量验证阅读顺序？"
+    },
+    {
+      "caseId": "t45-remacc-layout-review-direct",
+      "familyId": "frozen-t44-layout-041-review-layout-with-observable-evidence",
+      "stratum": "DIRECT_PARAPHRASE",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "layout-design",
+      "coursePackVersion": "1",
+      "question": "我的页面看着很乱，但我说不出哪里乱，第一步怎么把这种感觉变成能检查的问题？"
+    },
+    {
+      "caseId": "t45-remacc-layout-review-compose",
+      "familyId": "frozen-t44-layout-041-review-layout-with-observable-evidence",
+      "stratum": "COMPOSITION_HARD_DISTRACTOR",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "layout-design",
+      "coursePackVersion": "1",
+      "question": "我想同时检查层级和对齐，又怕一改就看不出原因。该准备什么证据，怎么做前后复测？"
+    }
+  ],
+  "suiteHash": "51b07465b27cdb0d29fbb229595b56c0251b5d33978e99b2cda5c260db2f9e70"
+}

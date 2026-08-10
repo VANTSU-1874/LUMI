@@ -1,0 +1,198 @@
+{
+  "schemaVersion": 1,
+  "id": "query-prerequisite-acceptance-v1",
+  "cases": [
+    {
+      "id": "visual-attention-original",
+      "stratum": "VISUAL_ATTENTION_STATIC",
+      "text": "我的标题、图片和亮色都很抢，第一眼不知道看哪儿，先怎么判断冲突？",
+      "hasAsset": false,
+      "expectedDecision": "STATIC_CORPUS_ELIGIBLE",
+      "expectedFailClosed": false
+    },
+    {
+      "id": "visual-attention-first-glance",
+      "stratum": "VISUAL_ATTENTION_STATIC",
+      "text": "这个版面第一眼不知道该看哪儿，通常先检查什么层级关系？",
+      "hasAsset": false,
+      "expectedDecision": "STATIC_CORPUS_ELIGIBLE",
+      "expectedFailClosed": false
+    },
+    {
+      "id": "visual-attention-competing",
+      "stratum": "VISUAL_ATTENTION_STATIC",
+      "text": "我的海报注意力被好几个元素抢走，怎么判断主次有没有乱？",
+      "hasAsset": false,
+      "expectedDecision": "STATIC_CORPUS_ELIGIBLE",
+      "expectedFailClosed": false
+    },
+    {
+      "id": "visual-attention-loop",
+      "stratum": "VISUAL_ATTENTION_STATIC",
+      "text": "这个页面视线总在标题和图片之间来回跳，先按什么方法梳理？",
+      "hasAsset": false,
+      "expectedDecision": "STATIC_CORPUS_ELIGIBLE",
+      "expectedFailClosed": false
+    },
+    {
+      "id": "visual-attention-priority",
+      "stratum": "VISUAL_ATTENTION_STATIC",
+      "text": "我的图片很大、标题也很重，怎么看哪个应该先被注意？",
+      "hasAsset": false,
+      "expectedDecision": "STATIC_CORPUS_ELIGIBLE",
+      "expectedFailClosed": false
+    },
+    {
+      "id": "visual-attention-everything",
+      "stratum": "VISUAL_ATTENTION_STATIC",
+      "text": "我的版面第一眼看哪儿都像重点，这种情况怎么整理信息层级？",
+      "hasAsset": false,
+      "expectedDecision": "STATIC_CORPUS_ELIGIBLE",
+      "expectedFailClosed": false
+    },
+    {
+      "id": "missing-asset-polite-look",
+      "stratum": "MISSING_ASSET_INSPECTION",
+      "text": "帮我看看这张海报里哪个标题没对齐。",
+      "hasAsset": false,
+      "expectedDecision": "USER_ASSET_REQUIRED",
+      "expectedFailClosed": true
+    },
+    {
+      "id": "missing-asset-explicit-check",
+      "stratum": "MISSING_ASSET_INSPECTION",
+      "text": "请你检查我的版面哪里留白不均。",
+      "hasAsset": false,
+      "expectedDecision": "USER_ASSET_REQUIRED",
+      "expectedFailClosed": true
+    },
+    {
+      "id": "missing-asset-can-analyze",
+      "stratum": "MISSING_ASSET_INSPECTION",
+      "text": "能不能分析一下这张页面哪个元素最抢？",
+      "hasAsset": false,
+      "expectedDecision": "USER_ASSET_REQUIRED",
+      "expectedFailClosed": true
+    },
+    {
+      "id": "missing-asset-trouble-look",
+      "stratum": "MISSING_ASSET_INSPECTION",
+      "text": "麻烦你看看我的包装正面哪里需要调整。",
+      "hasAsset": false,
+      "expectedDecision": "USER_ASSET_REQUIRED",
+      "expectedFailClosed": true
+    },
+    {
+      "id": "missing-asset-leading-check",
+      "stratum": "MISSING_ASSET_INSPECTION",
+      "text": "检查一下这份设计稿有哪些对齐问题。",
+      "hasAsset": false,
+      "expectedDecision": "USER_ASSET_REQUIRED",
+      "expectedFailClosed": true
+    },
+    {
+      "id": "missing-asset-leading-look",
+      "stratum": "MISSING_ASSET_INSPECTION",
+      "text": "看看我的海报哪里颜色打架了。",
+      "hasAsset": false,
+      "expectedDecision": "USER_ASSET_REQUIRED",
+      "expectedFailClosed": true
+    },
+    {
+      "id": "present-asset-polite-look",
+      "stratum": "ASSET_PRESENT_INSPECTION",
+      "text": "帮我看看这张海报里哪个标题没对齐。",
+      "hasAsset": true,
+      "expectedDecision": "STATIC_CORPUS_ELIGIBLE",
+      "expectedFailClosed": false
+    },
+    {
+      "id": "present-asset-explicit-check",
+      "stratum": "ASSET_PRESENT_INSPECTION",
+      "text": "请你检查我的版面哪里留白不均。",
+      "hasAsset": true,
+      "expectedDecision": "STATIC_CORPUS_ELIGIBLE",
+      "expectedFailClosed": false
+    },
+    {
+      "id": "present-asset-can-analyze",
+      "stratum": "ASSET_PRESENT_INSPECTION",
+      "text": "能不能分析一下这张页面哪个元素最抢？",
+      "hasAsset": true,
+      "expectedDecision": "STATIC_CORPUS_ELIGIBLE",
+      "expectedFailClosed": false
+    },
+    {
+      "id": "present-asset-trouble-look",
+      "stratum": "ASSET_PRESENT_INSPECTION",
+      "text": "麻烦你看看我的包装正面哪里需要调整。",
+      "hasAsset": true,
+      "expectedDecision": "STATIC_CORPUS_ELIGIBLE",
+      "expectedFailClosed": false
+    },
+    {
+      "id": "present-asset-leading-check",
+      "stratum": "ASSET_PRESENT_INSPECTION",
+      "text": "检查一下这份设计稿有哪些对齐问题。",
+      "hasAsset": true,
+      "expectedDecision": "STATIC_CORPUS_ELIGIBLE",
+      "expectedFailClosed": false
+    },
+    {
+      "id": "present-asset-leading-look",
+      "stratum": "ASSET_PRESENT_INSPECTION",
+      "text": "看看我的海报哪里颜色打架了。",
+      "hasAsset": true,
+      "expectedDecision": "STATIC_CORPUS_ELIGIBLE",
+      "expectedFailClosed": false
+    },
+    {
+      "id": "static-method-alignment",
+      "stratum": "STATIC_METHOD",
+      "text": "海报标题没对齐时，一般怎么调整？",
+      "hasAsset": false,
+      "expectedDecision": "STATIC_CORPUS_ELIGIBLE",
+      "expectedFailClosed": false
+    },
+    {
+      "id": "static-method-priority",
+      "stratum": "STATIC_METHOD",
+      "text": "图片和文字抢注意力时，通常如何判断主次？",
+      "hasAsset": false,
+      "expectedDecision": "STATIC_CORPUS_ELIGIBLE",
+      "expectedFailClosed": false
+    },
+    {
+      "id": "static-method-whitespace",
+      "stratum": "STATIC_METHOD",
+      "text": "版面留白不均时，可以按什么顺序检查？",
+      "hasAsset": false,
+      "expectedDecision": "STATIC_CORPUS_ELIGIBLE",
+      "expectedFailClosed": false
+    },
+    {
+      "id": "static-method-flow",
+      "stratum": "STATIC_METHOD",
+      "text": "包装正面的视觉动线一般怎么分析？",
+      "hasAsset": false,
+      "expectedDecision": "STATIC_CORPUS_ELIGIBLE",
+      "expectedFailClosed": false
+    },
+    {
+      "id": "static-method-conflict",
+      "stratum": "STATIC_METHOD",
+      "text": "标题、图片和亮色都很抢时，通常先检查什么关系？",
+      "hasAsset": false,
+      "expectedDecision": "STATIC_CORPUS_ELIGIBLE",
+      "expectedFailClosed": false
+    },
+    {
+      "id": "static-method-reader-path",
+      "stratum": "STATIC_METHOD",
+      "text": "读者第一眼不知道看哪里时，应该怎样梳理层级？",
+      "hasAsset": false,
+      "expectedDecision": "STATIC_CORPUS_ELIGIBLE",
+      "expectedFailClosed": false
+    }
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "scope": {
+    "releaseMechanism": "scripts/install-local-release.ps1 via git archive",
+    "included": [
+      "third_party/knowledge-v2/NOTICE.md",
+      "third_party/knowledge-v2/LICENSE-MIT.txt",
+      "third_party/knowledge-v2/LICENSE-APACHE-2.0.txt",
+      "third_party/knowledge-v2/LICENSE-PYTORCH-2.11.0.txt",
+      "third_party/knowledge-v2/LICENSE-TORCHVISION-0.26.0.txt"
+    ],
+    "excluded": [
+      "model weights",
+      "Python environments",
+      "CUDA wheels and runtime",
+      "generated indexes and caches",
+      "course assets"
+    ]
+  },
+  "licenseFiles": {
+    "LICENSE-MIT.txt": {
+      "source": "https://spdx.org/licenses/MIT.txt",
+      "sha256": "c3b1b78bc8bd3ea13aa4bc9778442d16560270afa235006d816e5e88cef24db4"
+    },
+    "LICENSE-APACHE-2.0.txt": {
+      "source": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+    },
+    "LICENSE-PYTORCH-2.11.0.txt": {
+      "source": "https://raw.githubusercontent.com/pytorch/pytorch/v2.11.0/LICENSE",
+      "sha256": "bd018feef8825e88181c84eb7e3aa4eafb8f08a20d9fd6ef948569610c4a3e43"
+    },
+    "LICENSE-TORCHVISION-0.26.0.txt": {
+      "source": "https://raw.githubusercontent.com/pytorch/vision/v0.26.0/LICENSE",
+      "sha256": "6502f676851cfe25f8af75531dfb32375b7325b73c37e7b43741fa422893e71d"
+    }
+  },
+  "components": [
+    {
+      "name": "BAAI bge-small-zh-v1.5",
+      "versionOrRevision": "7999e1d3359715c523056ef9478215996d62a620",
+      "license": "MIT",
+      "modelCard": "https://huggingface.co/BAAI/bge-small-zh-v1.5/tree/7999e1d3359715c523056ef9478215996d62a620",
+      "modelCardSha256": "c48a4eeea77f6b1d38b48ec1c5b8d4f86d5550cc43fa345a0db1b2ca1d082369",
+      "licenseFile": "LICENSE-MIT.txt"
+    },
+    {
+      "name": "Google siglip2-base-patch16-224",
+      "versionOrRevision": "75de2d55ec2d0b4efc50b3e9ad70dba96a7b2fa2",
+      "license": "Apache-2.0",
+      "modelCard": "https://huggingface.co/google/siglip2-base-patch16-224/tree/75de2d55ec2d0b4efc50b3e9ad70dba96a7b2fa2",
+      "modelCardSha256": "39ac3705d62af9ffa1a14675b8ccb220a75f2d81acd530e564a3b1e3dfe418d8",
+      "licenseFile": "LICENSE-APACHE-2.0.txt"
+    },
+    {
+      "name": "Hugging Face Transformers",
+      "versionOrRevision": "5.14.1",
+      "license": "Apache-2.0",
+      "licenseFile": "LICENSE-APACHE-2.0.txt"
+    },
+    {
+      "name": "PyTorch",
+      "versionOrRevision": "2.11.0+cu130",
+      "license": "BSD-3-Clause",
+      "licenseFile": "LICENSE-PYTORCH-2.11.0.txt"
+    },
+    {
+      "name": "TorchVision",
+      "versionOrRevision": "0.26.0+cu130",
+      "license": "BSD",
+      "licenseFile": "LICENSE-TORCHVISION-0.26.0.txt"
+    }
+  ]
+}

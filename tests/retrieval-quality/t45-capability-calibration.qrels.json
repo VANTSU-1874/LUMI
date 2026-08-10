@@ -1,0 +1,413 @@
+{
+  "schemaVersion": 1,
+  "id": "lumi-t45-capability-calibration-qrels",
+  "version": "2026-07-29.1",
+  "split": "CALIBRATION",
+  "runtimeSuite": {
+    "id": "lumi-t45-capability-calibration-runtime",
+    "version": "2026-07-29.1",
+    "suiteHash": "1fad892a86567519fba5d86358091160873cb2baff1bc1be5d01db8cf42d456b"
+  },
+  "corpusSnapshot": {
+    "path": "data/knowledge-v2/knowledge-corpus.v2.json",
+    "bundleHash": "82db90934afaffa3d227b6b0d11ab5efdb88009fd8b9274845567de4888079f8"
+  },
+  "capabilityInventory": {
+    "id": "lumi-t45-capability-inventory",
+    "inventoryHash": "fd199dfe6f49ce1249f20a04be580dc1b1b31fff2d831b88d4bd13e022082d67"
+  },
+  "cases": [
+    {
+      "caseId": "t45-cal-book-microtask-direct",
+      "familyId": "book-microtask-principles",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-79435c110d14b70acfdf1e7ee4d53a2f1b5dbb96e29b9d8944b2dd3b33a42f46"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-4bd21d11b1cb22e92d55325c04e05d27e321df5b9766f945c42e217a0662b65b"
+      ]
+    },
+    {
+      "caseId": "t45-cal-book-microtask-compose",
+      "familyId": "book-microtask-principles",
+      "multiClaim": true,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-4bd21d11b1cb22e92d55325c04e05d27e321df5b9766f945c42e217a0662b65b"
+          ]
+        },
+        {
+          "groupId": "group-2",
+          "acceptableNodeIds": [
+            "node-645ce5a2360473fb4902b11b12f9db34ec5e309151b04bbbb4a477d019a3713e"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-8d69f1cecc1471b571bfa3960fb6d0e91004575ce270b906a420738493bf8b49"
+      ]
+    },
+    {
+      "caseId": "t45-cal-competition-direct",
+      "familyId": "competition-direction-two-evidence",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-7ed0d79acb7b0e0069f5759b75adf47f15dac579285c7bd68dbb8f1018dafb99"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-81b5f6d2a6cf2fe58b685e24d296aa74e9ca0166476bac774a4823dab4845e6e"
+      ]
+    },
+    {
+      "caseId": "t45-cal-competition-compose",
+      "familyId": "competition-direction-two-evidence",
+      "multiClaim": true,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-81b5f6d2a6cf2fe58b685e24d296aa74e9ca0166476bac774a4823dab4845e6e"
+          ]
+        },
+        {
+          "groupId": "group-2",
+          "acceptableNodeIds": [
+            "node-e4780ac468e828e6ccefc2b16d1bba40f051469c095accb425b9202c49b66b68"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-7ed0d79acb7b0e0069f5759b75adf47f15dac579285c7bd68dbb8f1018dafb99"
+      ]
+    },
+    {
+      "caseId": "t45-cal-digishow-workflow-direct",
+      "familyId": "digishow-touchdesigner-workflow",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-d49f6e5457d4f41dc9f060c2672e0c450befa2f03caf54792a041bdac8668f02",
+            "node-57f3a0274452963e0084f004ea289d9acf2edaf44cb6fbedccb95458999440b0"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-9c62ac696fc0e38b9a3841360f15af5b412619935442626b96aab0a2b305f137"
+      ]
+    },
+    {
+      "caseId": "t45-cal-digishow-workflow-compose",
+      "familyId": "digishow-touchdesigner-workflow",
+      "multiClaim": true,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-2e8c571d3146f2ef0928beccbe6eaf450336cc6b505aecde283d671ac29fd7d5",
+            "node-6512f8cfdb7dd2bbcbd04b23fe4a4fa34a0b1f1730613ff44a8925a007681a91"
+          ]
+        },
+        {
+          "groupId": "group-2",
+          "acceptableNodeIds": [
+            "node-e56909f1ebf3d914f377c9e295bf41b9fa991d2d09991781e473b23ccb818400",
+            "node-f911798339b557e21f9c83629b41d1ba65a42d3831ffd4c6bc9236dd18c9c246"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-4eb9a69fde0f059d83a0877607e004ca9dcd3582374774cc13aaef46d7b173be"
+      ]
+    },
+    {
+      "caseId": "t45-cal-td-version-direct",
+      "familyId": "td-case-version-comparison",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-4e1395124d1f36aaa60723e1dabdec83a96b5aad429cd86d1fe8d9efec92b513",
+            "node-522c3eacc2c93b11cc865c89bf1d0de86a94dc9db0ac967e256cfa03e08cbeb0"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-72b608aa12827590df6308d1cb04b0397f0c452cf93c0776a069fec9a9ebd149"
+      ]
+    },
+    {
+      "caseId": "t45-cal-td-version-compose",
+      "familyId": "td-case-version-comparison",
+      "multiClaim": true,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-7030e41e7f25ac74c1478fbefd7108eb22202ece4316c2b6c0179ac17f51895a"
+          ]
+        },
+        {
+          "groupId": "group-2",
+          "acceptableNodeIds": [
+            "node-dff00c52b51116b5fbace95856089251bee1e5356e6b33bd7c1719922655f203"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-72b608aa12827590df6308d1cb04b0397f0c452cf93c0776a069fec9a9ebd149"
+      ]
+    },
+    {
+      "caseId": "t45-cal-osc-direct",
+      "familyId": "osc-input-troubleshooting",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-fa17933f7b528c18daf51763785817ad5f8808941b610935d379793e445ca260",
+            "node-e33739f7bd6a337c7e9f73b719d16510138e4a737de08a1f3641be317a95c4e9"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-90e878109a05b2d27be073a58e7651a2c8578d08fd96a6d8a8685302b5fc73c3"
+      ]
+    },
+    {
+      "caseId": "t45-cal-osc-compose",
+      "familyId": "osc-input-troubleshooting",
+      "multiClaim": true,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-90e878109a05b2d27be073a58e7651a2c8578d08fd96a6d8a8685302b5fc73c3"
+          ]
+        },
+        {
+          "groupId": "group-2",
+          "acceptableNodeIds": [
+            "node-d6c3b301bde24d9a7ece63f61cf3098973b25464a2b5bbac8ed424248b6091ae"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-e33739f7bd6a337c7e9f73b719d16510138e4a737de08a1f3641be317a95c4e9"
+      ]
+    },
+    {
+      "caseId": "t45-cal-international-direct",
+      "familyId": "international-style-history",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-99871315f84f72ee264196b457a63b1e41d565e5e87c7cdebcebce54ad0652b3"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-607fec78a499ecb458d45b396b1ef28bc1ac50f6c395788ba4d91bab801d982d"
+      ]
+    },
+    {
+      "caseId": "t45-cal-international-compose",
+      "familyId": "international-style-history",
+      "multiClaim": true,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-eac8473db9d5d726bfcc7a25d971aa117697e55b6ce2d7f604bcf7ab3b4654dd",
+            "node-fe76fe2a5f7d3b1b06a32790efc138d7a12a257437ae773480c8af3343f2c852"
+          ]
+        },
+        {
+          "groupId": "group-2",
+          "acceptableNodeIds": [
+            "node-94de53e8b8bcc3fd729a54829b51e90c81c87b6e750ca5d365e78ff6a8223c88",
+            "node-926d968079b49abc16dfc3b31f3dfebeb219a69eecffe58bad296b727e162ce8"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-607fec78a499ecb458d45b396b1ef28bc1ac50f6c395788ba4d91bab801d982d"
+      ]
+    },
+    {
+      "caseId": "t45-cal-acid-direct",
+      "familyId": "acid-style-history",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-22328058cb7c08dbab61530ce31d25d3faae49fcfab49612b43612d0f5697acd"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-62e830dfa7809e0f960cc60ad5215cfce6f65a20ab8845ae59a3c6e1eb57ee4d"
+      ]
+    },
+    {
+      "caseId": "t45-cal-acid-compose",
+      "familyId": "acid-style-history",
+      "multiClaim": true,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-7ad07e3d3b572c861e918255caafbce30494cbe8eb7b500118654b9e33aa4d71"
+          ]
+        },
+        {
+          "groupId": "group-2",
+          "acceptableNodeIds": [
+            "node-d4eced8fcae109e3b92714794d113cb884d66eb8ee767ca2edd0f5ce1a7271ee",
+            "node-b9cc541ca87ed001c771e7c07370332e4568e1720239b3d9c8f25e903b250036"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-22328058cb7c08dbab61530ce31d25d3faae49fcfab49612b43612d0f5697acd"
+      ]
+    },
+    {
+      "caseId": "t45-cal-collage-direct",
+      "familyId": "collage-style-history",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-20e49a4610209ef7fb273d04b60b6ccdf21ca8fa168187e0fe0c7386e2747a97"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-028b039baaed4db3d7f00017e234bf3973938fd4356f36dd9782cb9c6754993a"
+      ]
+    },
+    {
+      "caseId": "t45-cal-collage-compose",
+      "familyId": "collage-style-history",
+      "multiClaim": true,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-028b039baaed4db3d7f00017e234bf3973938fd4356f36dd9782cb9c6754993a"
+          ]
+        },
+        {
+          "groupId": "group-2",
+          "acceptableNodeIds": [
+            "node-b7c859ae9da51576eafd4b96dc2ff62ba2f18f670797dd0b56d5da930223b8d4"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-20e49a4610209ef7fb273d04b60b6ccdf21ca8fa168187e0fe0c7386e2747a97"
+      ]
+    },
+    {
+      "caseId": "t45-cal-neo-chinese-direct",
+      "familyId": "neo-chinese-style-history",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-e4dd188af4038051836bb520de1a2674d3ce6da8b025cbcc02c3ffab79945e41"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-94fadea3c2aa639d72da833ad556d86f5d26ec14693424337e03d127a5985c78"
+      ]
+    },
+    {
+      "caseId": "t45-cal-neo-chinese-compose",
+      "familyId": "neo-chinese-style-history",
+      "multiClaim": true,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-6f10197a43b02e334e4a2d2696073d9970f191d3ee42a11d288acb79f820cbaf"
+          ]
+        },
+        {
+          "groupId": "group-2",
+          "acceptableNodeIds": [
+            "node-3677158c8082223d24c0a4c7cfac153f1c374168f4572d7699d67ad871c7e526"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-94fadea3c2aa639d72da833ad556d86f5d26ec14693424337e03d127a5985c78"
+      ]
+    },
+    {
+      "caseId": "t45-cal-reference-direct",
+      "familyId": "reference-resource-selection",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-97583651795c10472c80c5fc5fe75cd28881345cdf7d787161b72e6a94cbe4df",
+            "node-1cb35a4a34d0072492a128ecb3b9fa413f7fdb7f86c828c0773ee8090bef3d3c"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-a6f5dba1fd6062ebc0d84c56ed2835e74640b31abace03d34d21aed2aa0432dc"
+      ]
+    },
+    {
+      "caseId": "t45-cal-reference-compose",
+      "familyId": "reference-resource-selection",
+      "multiClaim": true,
+      "requiredEvidenceGroups": [
+        {
+          "groupId": "group-1",
+          "acceptableNodeIds": [
+            "node-a6f5dba1fd6062ebc0d84c56ed2835e74640b31abace03d34d21aed2aa0432dc",
+            "node-4db30e4c37fd67829f40c77c0cfc8c761c045705be5dc00ba368616f038ea0c0"
+          ]
+        },
+        {
+          "groupId": "group-2",
+          "acceptableNodeIds": [
+            "node-75a20ce9bd6efa381d8f870fe6bd1c4501b77472e659d69628ed08bc38235cac",
+            "node-21f7c47a29a1de1cd6442ab5676fd7986b441e3e8b13cbbc3c137cd87613466c"
+          ]
+        }
+      ],
+      "hardNegativeNodeIds": [
+        "node-997abd33ff4cf6182f41052ef5ecfaa584aaa4370c22513e20f3e675f1269331"
+      ]
+    }
+  ],
+  "suiteHash": "bf37ebb456687bab84d9f4c816764ef834ccbe89276d268a916eff45254d13cd"
+}

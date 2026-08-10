@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "fixtureStatus": "FIXTURE_CONTRACT_READY",
+  "files": [
+    {
+      "path": "course-evidence-v1.json",
+      "bytes": 7063,
+      "sha256": "cb7b37f1e5e48fa1ccca6e4ad9f7361e9453191938f6be9cd3fef567976d533e"
+    }
+  ]
+}

@@ -1,0 +1,555 @@
+{
+  "schemaVersion": 1,
+  "suiteVersion": "2026-07-30.1",
+  "cases": [
+    {
+      "caseId": "rag-standalone-text-evidence",
+      "rawQuestion": "我这个版式标题、图片和亮色都很抢，先看哪里出了问题？",
+      "selfContainedQuestion": "版式设计中标题、图片和亮色同时争夺注意力时，先判断哪一层发生视觉层级冲突？",
+      "coursePackId": "layout-design",
+      "view": "LAYOUT_GRID_LAB",
+      "modality": "TEXT",
+      "queryType": "STANDALONE",
+      "caseFamily": "EVIDENCE_CHAIN",
+      "resolvedReferences": [],
+      "answerObligations": [
+        {
+          "obligationId": "obligation-1",
+          "intent": "DIAGNOSE_CAUSE",
+          "query": "版式设计 标题 图片 亮色 视觉层级冲突"
+        }
+      ],
+      "knowledgeQuery": "版式设计 标题 图片 亮色 视觉层级冲突",
+      "memoryQuery": "学生当前版式的标题 图片 亮色冲突",
+      "ambiguityStatus": "NONE",
+      "clarifyingQuestion": null,
+      "previousTurns": [],
+      "memorySeeds": [],
+      "disputedMemoryIds": [],
+      "forbiddenContextTexts": [],
+      "knowledgeObjectV2Enabled": true,
+      "usageStrategy": "FIRST",
+      "evidence": {
+        "status": "SUCCESS",
+        "capabilitiesLost": [],
+        "nodes": [
+          {
+            "nodeId": "node-layout-hierarchy",
+            "kind": "TEXT",
+            "relation": "PRIMARY",
+            "excerpt": "先区分标题、图片和亮色各自在争夺什么注意力，再检查是否存在两个同等级入口。",
+            "assetId": null
+          },
+          {
+            "nodeId": "node-layout-context",
+            "kind": "SECTION",
+            "relation": "PARENT",
+            "excerpt": "视觉层级诊断的课程上下文。",
+            "assetId": null
+          }
+        ]
+      }
+    },
+    {
+      "caseId": "rag-context-reference-resolution",
+      "rawQuestion": "这段为什么不能直接照着现在的网格做？",
+      "selfContainedQuestion": "国际主义风格的版式为什么不能只照搬现代界面的网格外形，还要核对其历史语境与信息组织目的？",
+      "coursePackId": "layout-design",
+      "view": "LAYOUT_GRID_LAB",
+      "modality": "TEXT",
+      "queryType": "CONTEXTUAL",
+      "caseFamily": "CONTEXT",
+      "resolvedReferences": [
+        {
+          "mention": "这段",
+          "resolvedText": "国际主义风格的版式",
+          "sourceTurnId": "turn-context-reference"
+        }
+      ],
+      "answerObligations": [
+        {
+          "obligationId": "obligation-1",
+          "intent": "EXPLAIN_CONCEPT",
+          "query": "国际主义风格 网格 历史语境 信息组织"
+        }
+      ],
+      "knowledgeQuery": "国际主义风格 网格 历史语境 信息组织",
+      "memoryQuery": "学生正在分析的国际主义风格版面",
+      "ambiguityStatus": "RESOLVED",
+      "clarifyingQuestion": null,
+      "previousTurns": [
+        {
+          "turnId": "turn-context-reference",
+          "studentMessage": "我在写国际主义风格这段历史，还想联系自己的版式。",
+          "assistantMessage": "先区分历史语境、信息组织目的和后来借用的视觉外形。",
+          "coursePackId": "layout-design"
+        }
+      ],
+      "memorySeeds": [],
+      "disputedMemoryIds": [],
+      "forbiddenContextTexts": [
+        "另一个学生的包豪斯项目"
+      ],
+      "knowledgeObjectV2Enabled": true,
+      "usageStrategy": "FIRST",
+      "evidence": {
+        "status": "SUCCESS",
+        "capabilitiesLost": [],
+        "nodes": [
+          {
+            "nodeId": "node-international-grid",
+            "kind": "TEXT",
+            "relation": "PRIMARY",
+            "excerpt": "判断风格来源时要同时核对历史语境、信息组织目的与形式特征，不能只凭网格外形归因。",
+            "assetId": null
+          }
+        ]
+      }
+    },
+    {
+      "caseId": "rag-multi-obligation-coverage",
+      "rawQuestion": "版式很乱，我既想知道为什么，也想知道第一步先改什么。",
+      "selfContainedQuestion": "版式设计中多个视觉入口造成混乱的原因是什么，第一步应如何收拢层级？",
+      "coursePackId": "layout-design",
+      "view": "LAYOUT_GRID_LAB",
+      "modality": "TEXT",
+      "queryType": "STANDALONE",
+      "caseFamily": "EVIDENCE_CHAIN",
+      "resolvedReferences": [],
+      "answerObligations": [
+        {
+          "obligationId": "obligation-1",
+          "intent": "DIAGNOSE_CAUSE",
+          "query": "版式 多个视觉入口 混乱 原因"
+        },
+        {
+          "obligationId": "obligation-2",
+          "intent": "FIRST_ACTION",
+          "query": "版式 视觉层级 第一处修改"
+        }
+      ],
+      "knowledgeQuery": "版式 多个视觉入口 原因 第一处修改",
+      "memoryQuery": "学生当前版式混乱和准备修改的步骤",
+      "ambiguityStatus": "NONE",
+      "clarifyingQuestion": null,
+      "previousTurns": [],
+      "memorySeeds": [],
+      "disputedMemoryIds": [],
+      "forbiddenContextTexts": [],
+      "knowledgeObjectV2Enabled": true,
+      "usageStrategy": "FIRST_TWO",
+      "evidence": {
+        "status": "SUCCESS",
+        "capabilitiesLost": [],
+        "nodes": [
+          {
+            "nodeId": "node-multi-cause",
+            "kind": "TEXT",
+            "relation": "PRIMARY",
+            "excerpt": "多个元素同时拥有相近的尺寸、对比度和位置权重，会形成并列入口。",
+            "assetId": null
+          },
+          {
+            "nodeId": "node-multi-action",
+            "kind": "TEXT",
+            "relation": "SIBLING",
+            "excerpt": "第一步先确定唯一主入口，再降低其余元素中的一个权重变量。",
+            "assetId": null
+          }
+        ]
+      }
+    },
+    {
+      "caseId": "rag-visual-region-evidence",
+      "rawQuestion": "版式参考图里哪一块最能看出主次关系？",
+      "selfContainedQuestion": "版式设计课程参考图中，哪个受控图像区域最能说明主次关系？",
+      "coursePackId": "layout-design",
+      "view": "LAYOUT_GRID_LAB",
+      "modality": "VISUAL",
+      "queryType": "STANDALONE",
+      "caseFamily": "EVIDENCE_CHAIN",
+      "resolvedReferences": [],
+      "answerObligations": [
+        {
+          "obligationId": "obligation-1",
+          "intent": "EVIDENCE_FOR",
+          "query": "版式参考图 主次关系 图像区域"
+        }
+      ],
+      "knowledgeQuery": "版式参考图 主次关系 图像区域",
+      "memoryQuery": "学生想观察的版式主次关系",
+      "ambiguityStatus": "NONE",
+      "clarifyingQuestion": null,
+      "previousTurns": [],
+      "memorySeeds": [],
+      "disputedMemoryIds": [],
+      "forbiddenContextTexts": [],
+      "knowledgeObjectV2Enabled": true,
+      "usageStrategy": "FIRST",
+      "evidence": {
+        "status": "SUCCESS",
+        "capabilitiesLost": [],
+        "nodes": [
+          {
+            "nodeId": "node-visual-region",
+            "kind": "REGION",
+            "relation": "PRIMARY",
+            "excerpt": "标题与大面积留白相邻的区域形成主要视觉入口。",
+            "assetId": "asset-visual-layout"
+          }
+        ]
+      }
+    },
+    {
+      "caseId": "rag-cross-modal-evidence",
+      "rawQuestion": "版式课里讲的层级规则，能和参考图一起给我解释吗？",
+      "selfContainedQuestion": "版式设计课程中的层级规则如何与受控参考图中的视觉区域共同说明阅读顺序？",
+      "coursePackId": "layout-design",
+      "view": "LAYOUT_GRID_LAB",
+      "modality": "MULTIMODAL",
+      "queryType": "STANDALONE",
+      "caseFamily": "EVIDENCE_CHAIN",
+      "resolvedReferences": [],
+      "answerObligations": [
+        {
+          "obligationId": "obligation-1",
+          "intent": "EXPLAIN_CONCEPT",
+          "query": "版式 层级规则 阅读顺序"
+        },
+        {
+          "obligationId": "obligation-2",
+          "intent": "EVIDENCE_FOR",
+          "query": "版式参考图 视觉区域 阅读顺序"
+        }
+      ],
+      "knowledgeQuery": "版式 层级规则 参考图 视觉区域 阅读顺序",
+      "memoryQuery": "学生希望结合图文理解版式层级",
+      "ambiguityStatus": "NONE",
+      "clarifyingQuestion": null,
+      "previousTurns": [],
+      "memorySeeds": [],
+      "disputedMemoryIds": [],
+      "forbiddenContextTexts": [],
+      "knowledgeObjectV2Enabled": true,
+      "usageStrategy": "FIRST_TWO",
+      "evidence": {
+        "status": "SUCCESS",
+        "capabilitiesLost": [],
+        "nodes": [
+          {
+            "nodeId": "node-cross-text",
+            "kind": "TEXT",
+            "relation": "PRIMARY",
+            "excerpt": "阅读顺序由尺寸、位置、对比和留白共同建立。",
+            "assetId": null
+          },
+          {
+            "nodeId": "node-cross-image",
+            "kind": "IMAGE",
+            "relation": "SIBLING",
+            "excerpt": "参考图中从大标题到小注释的视觉路径。",
+            "assetId": "asset-cross-modal"
+          }
+        ]
+      }
+    },
+    {
+      "caseId": "rag-no-answer-no-fabrication",
+      "rawQuestion": "版式课有没有规定我这次比赛一定能拿一等奖的固定公式？",
+      "selfContainedQuestion": "版式设计课程是否存在保证比赛一等奖的固定公式？",
+      "coursePackId": "layout-design",
+      "view": "LAYOUT_GRID_LAB",
+      "modality": "NONE",
+      "queryType": "NO_ANSWER",
+      "caseFamily": "EVIDENCE_CHAIN",
+      "resolvedReferences": [],
+      "answerObligations": [
+        {
+          "obligationId": "obligation-1",
+          "intent": "VERIFY_FACT",
+          "query": "版式设计 保证比赛一等奖 固定公式"
+        }
+      ],
+      "knowledgeQuery": "版式设计 保证比赛一等奖 固定公式",
+      "memoryQuery": "学生对比赛结果保证的期待",
+      "ambiguityStatus": "NONE",
+      "clarifyingQuestion": null,
+      "previousTurns": [],
+      "memorySeeds": [],
+      "disputedMemoryIds": [],
+      "forbiddenContextTexts": [],
+      "knowledgeObjectV2Enabled": true,
+      "usageStrategy": "NONE",
+      "evidence": {
+        "status": "EMPTY",
+        "capabilitiesLost": [],
+        "nodes": []
+      }
+    },
+    {
+      "caseId": "rag-memory-conflict-course-wins",
+      "rawQuestion": "我记得国际主义版式就是多加装饰花纹，对吗？",
+      "selfContainedQuestion": "国际主义风格版式是否以增加装饰花纹为核心特征？",
+      "coursePackId": "layout-design",
+      "view": "LAYOUT_GRID_LAB",
+      "modality": "TEXT",
+      "queryType": "STANDALONE",
+      "caseFamily": "MEMORY",
+      "resolvedReferences": [],
+      "answerObligations": [
+        {
+          "obligationId": "obligation-1",
+          "intent": "VERIFY_FACT",
+          "query": "国际主义风格 版式 装饰花纹 核心特征"
+        }
+      ],
+      "knowledgeQuery": "国际主义风格 版式 装饰花纹 核心特征",
+      "memoryQuery": "学生对国际主义风格装饰花纹的旧认识",
+      "ambiguityStatus": "NONE",
+      "clarifyingQuestion": null,
+      "previousTurns": [],
+      "memorySeeds": [
+        {
+          "memoryId": "memory-conflict",
+          "owner": "CURRENT",
+          "content": "国际主义风格必须大量使用装饰花纹。",
+          "disputed": false
+        }
+      ],
+      "disputedMemoryIds": [],
+      "forbiddenContextTexts": [],
+      "knowledgeObjectV2Enabled": true,
+      "usageStrategy": "FIRST",
+      "evidence": {
+        "status": "SUCCESS",
+        "capabilitiesLost": [],
+        "nodes": [
+          {
+            "nodeId": "node-course-conflict",
+            "kind": "TEXT",
+            "relation": "PRIMARY",
+            "excerpt": "国际主义风格强调清晰的信息组织、非对称网格和克制表达，不以装饰花纹为核心。",
+            "assetId": null
+          }
+        ]
+      }
+    },
+    {
+      "caseId": "rag-disputed-memory-excluded",
+      "rawQuestion": "版式设计里网格是不是只能做成十二栏？",
+      "selfContainedQuestion": "版式设计中的网格是否只能采用十二栏？",
+      "coursePackId": "layout-design",
+      "view": "LAYOUT_GRID_LAB",
+      "modality": "TEXT",
+      "queryType": "STANDALONE",
+      "caseFamily": "MEMORY",
+      "resolvedReferences": [],
+      "answerObligations": [
+        {
+          "obligationId": "obligation-1",
+          "intent": "VERIFY_FACT",
+          "query": "版式设计 网格 十二栏 是否唯一"
+        }
+      ],
+      "knowledgeQuery": "版式设计 网格 十二栏 是否唯一",
+      "memoryQuery": "学生对十二栏网格的旧认识",
+      "ambiguityStatus": "NONE",
+      "clarifyingQuestion": null,
+      "previousTurns": [],
+      "memorySeeds": [
+        {
+          "memoryId": "memory-disputed",
+          "owner": "CURRENT",
+          "content": "版式网格只能使用十二栏，其他栏数都不专业。",
+          "disputed": true
+        }
+      ],
+      "disputedMemoryIds": [
+        "memory-disputed"
+      ],
+      "forbiddenContextTexts": [
+        "其他栏数都不专业"
+      ],
+      "knowledgeObjectV2Enabled": true,
+      "usageStrategy": "FIRST",
+      "evidence": {
+        "status": "SUCCESS",
+        "capabilitiesLost": [],
+        "nodes": [
+          {
+            "nodeId": "node-dispute-course",
+            "kind": "TEXT",
+            "relation": "PRIMARY",
+            "excerpt": "栏数应由内容密度、媒介尺寸和阅读任务决定，十二栏只是可选结构之一。",
+            "assetId": null
+          }
+        ]
+      }
+    },
+    {
+      "caseId": "rag-cross-student-project-isolated",
+      "rawQuestion": "我的版式项目现在先检查网格还是字体层级？",
+      "selfContainedQuestion": "当前学生的版式项目应先检查网格结构还是字体层级？",
+      "coursePackId": "layout-design",
+      "view": "LAYOUT_GRID_LAB",
+      "modality": "TEXT",
+      "queryType": "STANDALONE",
+      "caseFamily": "ISOLATION",
+      "resolvedReferences": [],
+      "answerObligations": [
+        {
+          "obligationId": "obligation-1",
+          "intent": "FIRST_ACTION",
+          "query": "版式项目 网格 字体层级 先检查"
+        }
+      ],
+      "knowledgeQuery": "版式项目 网格 字体层级 先检查",
+      "memoryQuery": "当前学生当前项目的版式检查顺序",
+      "ambiguityStatus": "NONE",
+      "clarifyingQuestion": null,
+      "previousTurns": [],
+      "memorySeeds": [
+        {
+          "memoryId": "memory-other-student",
+          "owner": "OTHER",
+          "content": "另一个学生的包豪斯项目要先改红色标题。",
+          "disputed": false
+        }
+      ],
+      "disputedMemoryIds": [],
+      "forbiddenContextTexts": [
+        "另一个学生的包豪斯项目",
+        "先改红色标题"
+      ],
+      "knowledgeObjectV2Enabled": true,
+      "usageStrategy": "FIRST",
+      "evidence": {
+        "status": "SUCCESS",
+        "capabilitiesLost": [],
+        "nodes": [
+          {
+            "nodeId": "node-isolation",
+            "kind": "TEXT",
+            "relation": "PRIMARY",
+            "excerpt": "先核对内容分区与网格是否支持阅读任务，再细化字体层级。",
+            "assetId": null
+          }
+        ]
+      }
+    },
+    {
+      "caseId": "rag-cross-pack-isolated",
+      "rawQuestion": "品牌VI里只用字体做字标，先判断什么？",
+      "selfContainedQuestion": "品牌 VI 设计中采用纯字体字标时，应先判断哪些品牌识别条件？",
+      "coursePackId": "brand-vi-design",
+      "view": "AGENT",
+      "modality": "TEXT",
+      "queryType": "STANDALONE",
+      "caseFamily": "ISOLATION",
+      "resolvedReferences": [],
+      "answerObligations": [
+        {
+          "obligationId": "obligation-1",
+          "intent": "CHECK_CRITERIA",
+          "query": "品牌VI 纯字体 字标 识别条件"
+        }
+      ],
+      "knowledgeQuery": "品牌VI 纯字体 字标 识别条件",
+      "memoryQuery": "学生当前品牌字标方案",
+      "ambiguityStatus": "NONE",
+      "clarifyingQuestion": null,
+      "previousTurns": [],
+      "memorySeeds": [],
+      "disputedMemoryIds": [],
+      "forbiddenContextTexts": [
+        "TouchDesigner",
+        "OSC"
+      ],
+      "knowledgeObjectV2Enabled": true,
+      "usageStrategy": "FIRST",
+      "evidence": {
+        "status": "SUCCESS",
+        "capabilitiesLost": [],
+        "nodes": [
+          {
+            "nodeId": "node-brand-wordmark",
+            "kind": "TEXT",
+            "relation": "PRIMARY",
+            "excerpt": "纯字体字标先判断名称独特性、字形可识别性、缩小后的稳定性与应用场景。",
+            "assetId": null
+          }
+        ]
+      }
+    },
+    {
+      "caseId": "rag-provider-failure-honest-degrade",
+      "rawQuestion": "版式参考图里到底是哪一块形成视觉中心？",
+      "selfContainedQuestion": "版式设计课程参考图中哪个图像区域形成视觉中心？",
+      "coursePackId": "layout-design",
+      "view": "LAYOUT_GRID_LAB",
+      "modality": "VISUAL",
+      "queryType": "FAILURE",
+      "caseFamily": "DEGRADATION",
+      "resolvedReferences": [],
+      "answerObligations": [
+        {
+          "obligationId": "obligation-1",
+          "intent": "EVIDENCE_FOR",
+          "query": "版式参考图 视觉中心 图像区域"
+        }
+      ],
+      "knowledgeQuery": "版式参考图 视觉中心 图像区域",
+      "memoryQuery": "学生希望从参考图判断视觉中心",
+      "ambiguityStatus": "NONE",
+      "clarifyingQuestion": null,
+      "previousTurns": [],
+      "memorySeeds": [],
+      "disputedMemoryIds": [],
+      "forbiddenContextTexts": [],
+      "knowledgeObjectV2Enabled": true,
+      "usageStrategy": "NONE",
+      "evidence": {
+        "status": "DEGRADED",
+        "capabilitiesLost": [
+          "VISUAL_VECTOR",
+          "ASSET",
+          "REGION"
+        ],
+        "nodes": []
+      }
+    },
+    {
+      "caseId": "rag-v2-off-legacy-compatible",
+      "rawQuestion": "关闭新版知识库后，品牌VI里怎么先判断字标是否合适？",
+      "selfContainedQuestion": "关闭 Knowledge V2 后，品牌 VI 旧课程检索如何支持纯字体字标判断？",
+      "coursePackId": "brand-vi-design",
+      "view": "AGENT",
+      "modality": "TEXT",
+      "queryType": "LEGACY",
+      "caseFamily": "COMPATIBILITY",
+      "resolvedReferences": [],
+      "answerObligations": [
+        {
+          "obligationId": "obligation-1",
+          "intent": "HOW_TO",
+          "query": "品牌VI 纯字体字标 判断"
+        }
+      ],
+      "knowledgeQuery": "品牌VI 纯字体字标 判断",
+      "memoryQuery": "学生关闭新版知识库后的字标问题",
+      "ambiguityStatus": "NONE",
+      "clarifyingQuestion": null,
+      "previousTurns": [],
+      "memorySeeds": [],
+      "disputedMemoryIds": [],
+      "forbiddenContextTexts": [],
+      "knowledgeObjectV2Enabled": false,
+      "usageStrategy": "NONE",
+      "evidence": {
+        "status": "UNSUPPORTED",
+        "capabilitiesLost": [],
+        "nodes": []
+      }
+    }
+  ]
+}

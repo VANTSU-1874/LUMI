@@ -1,0 +1,263 @@
+.root {
+  display: grid;
+  gap: 18px;
+  margin-top: 18px;
+}
+
+.header,
+.tierHeading,
+.memoryHeading,
+.memoryFooter {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.header > div,
+.tierHeading {
+  min-width: 0;
+}
+
+.header strong {
+  color: #202421;
+  font-size: 15px;
+}
+
+.header p,
+.tierHeading p {
+  margin: 4px 0 0;
+  color: #6b736d;
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.header > span {
+  flex: none;
+  border: 1px solid #d9ddd9;
+  border-radius: 999px;
+  padding: 4px 9px;
+  color: #58605a;
+  font-size: 12px;
+}
+
+.tier {
+  display: grid;
+  gap: 12px;
+  border: 1px solid #dfe3df;
+  border-radius: 16px;
+  background: #fafbf9;
+  padding: 14px;
+}
+
+.tierHeading {
+  display: block;
+}
+
+.tierHeading strong {
+  color: #303630;
+  font-size: 14px;
+}
+
+.list {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.list > li {
+  border: 1px solid #e2e5e1;
+  border-radius: 13px;
+  background: #fff;
+  padding: 13px;
+}
+
+.memoryHeading {
+  align-items: center;
+}
+
+.memoryHeading span {
+  color: #355b4d;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.memoryHeading small {
+  color: #7b837d;
+}
+
+.content {
+  margin: 9px 0 0;
+  color: #2e332f;
+  font-size: 13px;
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.memoryFooter {
+  align-items: center;
+  margin-top: 12px;
+}
+
+.memoryFooter time {
+  color: #858c86;
+  font-size: 11px;
+}
+
+.secondaryButton,
+.primaryButton,
+.dangerButton,
+.confirmActions button,
+.loadMore {
+  min-height: 34px;
+  border: 1px solid #cdd3ce;
+  border-radius: 9px;
+  background: #fff;
+  padding: 7px 11px;
+  color: #3f4741;
+  font-size: 12px;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.primaryButton {
+  border-color: #526c5e;
+  background: #526c5e;
+  color: #fff;
+}
+
+.dangerButton {
+  border-color: #b74f4f;
+  background: #b74f4f;
+  color: #fff;
+}
+
+.secondaryButton:disabled,
+.primaryButton:disabled,
+.dangerButton:disabled,
+.confirmActions button:disabled,
+.loadMore:disabled {
+  cursor: wait;
+  opacity: 0.55;
+}
+
+.confirmActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.disputeEditor {
+  display: grid;
+  flex: 1 1 100%;
+  gap: 9px;
+  width: 100%;
+}
+
+.disputeEditor label {
+  display: grid;
+  gap: 6px;
+}
+
+.disputeEditor label > span {
+  color: #5d655f;
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.disputeEditor textarea {
+  width: 100%;
+  resize: vertical;
+  border: 1px solid #cfd5d0;
+  border-radius: 10px;
+  background: #fff;
+  padding: 9px 10px;
+  color: #292e2a;
+  font: inherit;
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.disputeEditor textarea:focus-visible,
+.secondaryButton:focus-visible,
+.primaryButton:focus-visible,
+.dangerButton:focus-visible,
+.confirmActions button:focus-visible,
+.loadMore:focus-visible {
+  outline: 2px solid #8ca449;
+  outline-offset: 2px;
+}
+
+.disputed {
+  display: grid;
+  gap: 3px;
+  margin-top: 10px;
+  border: 1px solid #dfc886;
+  border-radius: 10px;
+  background: #fff9e9;
+  padding: 9px 10px;
+  color: #6b5314;
+  font-size: 12px;
+}
+
+.disputed span {
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.disputed small {
+  color: #7b682f;
+}
+
+.empty,
+.loading,
+.errorPanel {
+  margin: 0;
+  border-radius: 12px;
+  background: #f4f6f3;
+  padding: 12px;
+  color: #707872;
+  font-size: 13px;
+}
+
+.loadMore {
+  justify-self: start;
+}
+
+.status,
+.error {
+  margin: 0;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 13px;
+}
+
+.status {
+  background: #eef5e6;
+  color: #405824;
+}
+
+.error,
+.errorPanel {
+  background: #fff0f0;
+  color: #9a3434;
+}
+
+@media (max-width: 640px) {
+  .memoryFooter {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .memoryFooter > button,
+  .confirmActions {
+    width: 100%;
+  }
+
+  .confirmActions button {
+    flex: 1;
+  }
+}

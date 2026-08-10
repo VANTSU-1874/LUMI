@@ -1,0 +1,2373 @@
+{
+  "schemaVersion": 1,
+  "suiteVersion": "2026-07-28.4",
+  "corpusSnapshot": {
+    "commit": "b3ca5bedd4a7033fb9dad60e8619e032810ba929",
+    "knowledgeTree": "7bfbde8af4d66b430141954a72fa1a05ffc22a41",
+    "coursesTree": "e32d7b3a5c29e8256bb142b0e43c92ae51f4df98",
+    "runtimeKnowledgeCount": 116,
+    "generatedKnowledgeCount": 82,
+    "baselineKnowledgeCount": 34,
+    "knowledgeCorpusSha256": "53c8f012297550b93871234b92e0670cba114f66be9918f691de2048e003aef1",
+    "sourceDocumentCount": 82,
+    "sourceCorpusSha256": "5ec10c20f9e6f00ad791d1e649050b30f35536627d51fbcf35489da7accb628c",
+    "assetCount": 156,
+    "assetManifest": "data/manifests/course-png-sha256.v1.json",
+    "assetManifestSha256": "b79b8b067a995ed6914be748e94525fd9ad2b8806d308062c7dd7ab2a35b764f"
+  },
+  "cases": [
+    {
+      "id": "text-contrast-low-overlap",
+      "mode": "TEXT_TO_TEXT",
+      "expectation": "ANSWERABLE",
+      "expectedSourceCoursePackId": "general-design",
+      "expectedLegacyPlacementCoursePackId": "general-design",
+      "coursePackVersion": "1",
+      "query": {
+        "coursePackId": "general-design",
+        "text": "海报里的字像陷进底色里，看着很费劲"
+      },
+      "targets": {
+        "nodes": [
+          {
+            "id": "design-text-contrast",
+            "relevance": 3,
+            "required": true
+          }
+        ],
+        "assets": [],
+        "regions": [],
+        "expectedParentLocators": [],
+        "forbiddenNodeIds": [],
+        "forbiddenAssetPaths": []
+      },
+      "tags": [
+        "paraphrase",
+        "low-lexical-overlap"
+      ]
+    },
+    {
+      "id": "text-feedback-loop",
+      "mode": "TEXT_TO_TEXT",
+      "expectation": "ANSWERABLE",
+      "expectedSourceCoursePackId": "digital-interaction",
+      "expectedLegacyPlacementCoursePackId": "digital-interaction",
+      "coursePackVersion": "1",
+      "query": {
+        "coursePackId": "digital-interaction",
+        "text": "TouchDesigner 里想让上一帧留着叠到下一帧，越积越暗怎么办？"
+      },
+      "targets": {
+        "nodes": [
+          {
+            "id": "td-feedback-top",
+            "relevance": 3,
+            "required": true
+          }
+        ],
+        "assets": [],
+        "regions": [],
+        "expectedParentLocators": [],
+        "forbiddenNodeIds": [],
+        "forbiddenAssetPaths": []
+      },
+      "tags": [
+        "paraphrase",
+        "technical"
+      ]
+    },
+    {
+      "id": "text-print-bleed",
+      "mode": "TEXT_TO_TEXT",
+      "expectation": "ANSWERABLE",
+      "expectedSourceCoursePackId": "book-design",
+      "expectedLegacyPlacementCoursePackId": "book-design",
+      "coursePackVersion": "1",
+      "query": {
+        "coursePackId": "book-design",
+        "text": "导览册印出来边缘露白，文件应该先查什么？"
+      },
+      "targets": {
+        "nodes": [
+          {
+            "id": "book-bleed-output",
+            "relevance": 3,
+            "required": true
+          }
+        ],
+        "assets": [],
+        "regions": [],
+        "expectedParentLocators": [],
+        "forbiddenNodeIds": [],
+        "forbiddenAssetPaths": []
+      },
+      "tags": [
+        "paraphrase",
+        "production"
+      ]
+    },
+    {
+      "id": "text-wordmark-fit",
+      "mode": "TEXT_TO_TEXT",
+      "expectation": "ANSWERABLE",
+      "expectedSourceCoursePackId": "brand-vi-design",
+      "expectedLegacyPlacementCoursePackId": "brand-vi-design",
+      "coursePackVersion": "1",
+      "query": {
+        "coursePackId": "brand-vi-design",
+        "text": "咖啡店 logo 只用店名字行不行，还是一定要画个图形？"
+      },
+      "targets": {
+        "nodes": [
+          {
+            "id": "brandvi-001-assess-wordmark-fit",
+            "relevance": 3,
+            "required": true
+          }
+        ],
+        "assets": [],
+        "regions": [],
+        "expectedParentLocators": [
+          "data/courses/brand-vi-design/001-assess-wordmark-fit.md"
+        ],
+        "forbiddenNodeIds": [],
+        "forbiddenAssetPaths": []
+      },
+      "tags": [
+        "paraphrase",
+        "brand"
+      ]
+    },
+    {
+      "id": "text-layout-hierarchy",
+      "mode": "TEXT_TO_TEXT",
+      "expectation": "ANSWERABLE",
+      "expectedSourceCoursePackId": "layout-design",
+      "expectedLegacyPlacementCoursePackId": "layout-design",
+      "coursePackVersion": "1",
+      "query": {
+        "coursePackId": "layout-design",
+        "text": "字号和字体换了一堆，页面还是挤，怎么先理顺？"
+      },
+      "targets": {
+        "nodes": [
+          {
+            "id": "layout-002-type-hierarchy-and-whitespace",
+            "relevance": 3,
+            "required": true
+          }
+        ],
+        "assets": [],
+        "regions": [],
+        "expectedParentLocators": [
+          "data/courses/layout-design/002-type-hierarchy-and-whitespace.md"
+        ],
+        "forbiddenNodeIds": [],
+        "forbiddenAssetPaths": []
+      },
+      "tags": [
+        "paraphrase",
+        "layout"
+      ]
+    },
+    {
+      "id": "visual-text-poster-01-layout",
+      "mode": "TEXT_TO_IMAGE",
+      "expectation": "ANSWERABLE",
+      "expectedSourceCoursePackId": "layout-design",
+      "expectedLegacyPlacementCoursePackId": "book-design",
+      "coursePackVersion": "1",
+      "query": {
+        "coursePackId": "layout-design",
+        "text": "找一张画面中间像被巨大的英文横竖切开的展览海报，里面夹着两块旧画，边上还有竖着的日文。"
+      },
+      "targets": {
+        "nodes": [
+          {
+            "id": "layout-101-poster-01-analysis",
+            "relevance": 3,
+            "required": false
+          }
+        ],
+        "assets": [
+          {
+            "path": "assets/layout-design/poster-01-layout.png",
+            "sha256": "4517cb175e4ff03b6ca8b1df07b6fbe809180dd9da5b3a9a153a3df7d6187c0f",
+            "relevance": 3,
+            "required": true
+          },
+          {
+            "path": "assets/layout-design/poster-01-type.png",
+            "sha256": "b4a4fcd31a5aec1b2ff6984ff194764b1ddf94646b44852b94d6fdbe98f680bd",
+            "relevance": 2,
+            "required": false
+          },
+          {
+            "path": "assets/layout-design/poster-01-color.png",
+            "sha256": "ca49bc4543325d7ee049622318b13f51d95ef2d64206bd19e0f75b92609d59b0",
+            "relevance": 2,
+            "required": false
+          }
+        ],
+        "regions": [],
+        "expectedParentLocators": [
+          "data/courses/layout-design/101-poster-01-analysis.md"
+        ],
+        "forbiddenNodeIds": [],
+        "forbiddenAssetPaths": []
+      },
+      "tags": [
+        "visual-description",
+        "poster-group",
+        "natural-language",
+        "cluster-poster-01"
+      ]
+    },
+    {
+      "id": "visual-text-poster-02-layout",
+      "mode": "TEXT_TO_IMAGE",
+      "expectation": "ANSWERABLE",
+      "expectedSourceCoursePackId": "layout-design",
+      "expectedLegacyPlacementCoursePackId": "book-design",
+      "coursePackVersion": "1",
+      "query": {
+        "coursePackId": "layout-design",
+        "text": "我想参考那种上面是冷色建筑照片、下面整块橙红信息区，底下压着很粗日文标题的海报。"
+      },
+      "targets": {
+        "nodes": [
+          {
+            "id": "layout-102-poster-02-analysis",
+            "relevance": 3,
+            "required": false
+          }
+        ],
+        "assets": [
+          {
+            "path": "assets/layout-design/poster-02-layout.png",
+            "sha256": "8cf3426f102c742b50242b3849fe85c551a7dc925387f60f9d94bc82b83c5246",
+            "relevance": 3,
+            "required": true
+          },
+          {
+            "path": "assets/layout-design/poster-02-type.png",
+            "sha256": "42f0d7b6141f6e5e6f6636154cde5f672da8ce45a01d4e57575ba59d1e28e92d",
+            "relevance": 2,
+            "required": false
+          },
+          {
+            "path": "assets/layout-design/poster-02-color.png",
+            "sha256": "777d703662d8823ba0c2b2fa623b54c59184426b4e86312f6dff7982f7ed1c02",
+            "relevance": 2,
+            "required": false
+          }
+        ],
+        "regions": [],
+        "expectedParentLocators": [
+          "data/courses/layout-design/102-poster-02-analysis.md"
+        ],
+        "forbiddenNodeIds": [],
+        "forbiddenAssetPaths": []
+      },
+      "tags": [
+        "visual-description",
+        "poster-group",
+        "natural-language",
+        "cluster-poster-02"
+      ]
+    },
+    {
+      "id": "visual-text-poster-04-layout",
+      "mode": "TEXT_TO_IMAGE",
+      "expectation": "ANSWERABLE",
+      "expectedSourceCoursePackId": "layout-design",
+      "expectedLegacyPlacementCoursePackId": "book-design",
+      "coursePackVersion": "1",
+      "query": {
+        "coursePackId": "layout-design",
+        "text": "有没有标题被几个金属感圆环圈住、下半部也用圆形和网格排信息的蓝灰海报？"
+      },
+      "targets": {
+        "nodes": [
+          {
+            "id": "layout-104-poster-04-analysis",
+            "relevance": 3,
+            "required": false
+          }
+        ],
+        "assets": [
+          {
+            "path": "assets/layout-design/poster-04-layout.png",
+            "sha256": "e108b41998d6431da9a706d0dd5bdd15d13e1790ca7955c8531ce7be9f81a400",
+            "relevance": 3,
+            "required": true
+          },
+          {
+            "path": "assets/layout-design/poster-04-type.png",
+            "sha256": "3c268ad1d383705f0edc7ca947d56139766b6bfb99766e35b6f00ba5a721ee4d",
+            "relevance": 2,
+            "required": false
+          },
+          {
+            "path": "assets/layout-design/poster-04-color.png",
+            "sha256": "60a3f8762c6f8a55e743c80a5c8357263357bbc0a2cdee74b72d3b3283a70515",
+            "relevance": 2,
+            "required": false
+          }
+        ],
+        "regions": [],
+        "expectedParentLocators": [
+          "data/courses/layout-design/104-poster-04-analysis.md"
+        ],
+        "forbiddenNodeIds": [],
+        "forbiddenAssetPaths": []
+      },
+      "tags": [
+        "visual-description",
+        "poster-group",
+        "natural-language",
+        "cluster-poster-04"
+      ]
+    },
+    {
+      "id": "visual-text-poster-05-color",
+      "mode": "TEXT_TO_IMAGE",
+      "expectation": "ANSWERABLE",
+      "expectedSourceCoursePackId": "layout-design",
+      "expectedLegacyPlacementCoursePackId": "book-design",
+      "coursePackVersion": "1",
+      "query": {
+        "coursePackId": "layout-design",
+        "text": "找一张荧光粉底、蓝紫超大字反复叠在一起，像夜店活动单的海报。"
+      },
+      "targets": {
+        "nodes": [
+          {
+            "id": "layout-105-poster-05-analysis",
+            "relevance": 3,
+            "required": false
+          }
+        ],
+        "assets": [
+          {
+            "path": "assets/layout-design/poster-05-color.png",
+            "sha256": "c4766b545891de476e3496fda181cbc894d7ba03932de2d8f24280b58900208a",
+            "relevance": 3,
+            "required": true
+          },
+          {
+            "path": "assets/layout-design/poster-05-layout.png",
+            "sha256": "a132f978e56f02388be08285c7beb97d1fbb58038ee817cd268d2e9bc33ee687",
+            "relevance": 2,
+            "required": false
+          },
+          {
+            "path": "assets/layout-design/poster-05-type.png",
+            "sha256": "2a174c4453a12c8f07501f594b294b49f4aab84025f630a1259b765572f43c23",
+            "relevance": 2,
+            "required": false
+          }
+        ],
+        "regions": [],
+        "expectedParentLocators": [
+          "data/courses/layout-design/105-poster-05-analysis.md"
+        ],
+        "forbiddenNodeIds": [],
+        "forbiddenAssetPaths": []
+      },
+      "tags": [
+        "visual-description",
+        "poster-group",
+        "natural-language",
+        "cluster-poster-05"
+      ]
+    },
+    {
+      "id": "visual-text-poster-08-color",
+      "mode": "TEXT_TO_IMAGE",
+      "expectation": "ANSWERABLE",
+      "expectedSourceCoursePackId": "layout-design",
+      "expectedLegacyPlacementCoursePackId": "book-design",
+      "coursePackVersion": "1",
+      "query": {
+        "coursePackId": "layout-design",
+        "text": "想看那种黄绿色旧印刷底、红色衬线大字，正中还有怪兽插画的复古海报。"
+      },
+      "targets": {
+        "nodes": [
+          {
+            "id": "layout-108-poster-08-analysis",
+            "relevance": 3,
+            "required": false
+          }
+        ],
+        "assets": [
+          {
+            "path": "assets/layout-design/poster-08-color.png",
+            "sha256": "0285db04a8dc01dc6022be581d7ee1fcf79bedc0a672cf3600ad8c739be4979f",
+            "relevance": 3,
+            "required": true
+          },
+          {
+            "path": "assets/layout-design/poster-08-layout.png",
+            "sha256": "0f8be0cf5bd2bd4a0da29c254c0828641bd27e057ff638662b7c90824f5b6acf",
+            "relevance": 2,
+            "required": false
+          },
+          {
+            "path": "assets/layout-design/poster-08-type.png",
+            "sha256": "dae0c1401e31a8d4da16fac7b0186dda59eb1d1999442219015eebf2a60eb7bd",
+            "relevance": 2,
+            "required": false
+          }
+        ],
+        "regions": [],
+        "expectedParentLocators": [
+          "data/courses/layout-design/108-poster-08-analysis.md"
+        ],
+        "forbiddenNodeIds": [],
+        "forbiddenAssetPaths": []
+      },
+      "tags": [
+        "visual-description",
+        "poster-group",
+        "natural-language",
+        "cluster-poster-08"
+      ]
+    },
+    {
+      "id": "visual-text-poster-09-layout",
+      "mode": "TEXT_TO_IMAGE",
+      "expectation": "ANSWERABLE",
+      "expectedSourceCoursePackId": "layout-design",
+      "expectedLegacyPlacementCoursePackId": "book-design",
+      "coursePackVersion": "1",
+      "query": {
+        "coursePackId": "layout-design",
+        "text": "有没有黑白水墨上下倒着映、中央站着人、边角点金色书法的电影海报？"
+      },
+      "targets": {
+        "nodes": [
+          {
+            "id": "layout-109-poster-09-analysis",
+            "relevance": 3,
+            "required": false
+          }
+        ],
+        "assets": [
+          {
+            "path": "assets/layout-design/poster-09-layout.png",
+            "sha256": "15d51b1afcf126b4a8cadb0ed33b0ed758e5b16315e10c68263652539ff793ef",
+            "relevance": 3,
+            "required": true
+          },
+          {
+            "path": "assets/layout-design/poster-09-type.png",
+            "sha256": "04fef624a6f8e1831d5aa3cb227df85c5d8bbc6348c95bf5906aa5b9e6910b2f",
+            "relevance": 2,
+            "required": false
+          },
+          {
+            "path": "assets/layout-design/poster-09-color.png",
+            "sha256": "d261385fc35f3323e4fe0180a39db8a8559c01c3ffd00f48c88818290b1b2cac",
+            "relevance": 2,
+            "required": false
+          }
+        ],
+        "regions": [],
+        "expectedParentLocators": [
+          "data/courses/layout-design/109-poster-09-analysis.md"
+        ],
+        "forbiddenNodeIds": [],
+        "forbiddenAssetPaths": []
+      },
+      "tags": [
+        "visual-description",
+        "poster-group",
+        "natural-language",
+        "cluster-poster-09"
+      ]
+    },
+    {
+      "id": "visual-text-poster-10-layout",
+      "mode": "TEXT_TO_IMAGE",
+      "expectation": "ANSWERABLE",
+      "expectedSourceCoursePackId": "layout-design",
+      "expectedLegacyPlacementCoursePackId": "book-design",
+      "coursePackVersion": "1",
+      "query": {
+        "coursePackId": "layout-design",
+        "text": "想找一张像设计学院毕业展的，黄蓝大色块把标题、日期、地点分成几层。"
+      },
+      "targets": {
+        "nodes": [
+          {
+            "id": "layout-110-poster-10-analysis",
+            "relevance": 3,
+            "required": false
+          }
+        ],
+        "assets": [
+          {
+            "path": "assets/layout-design/poster-10-layout.png",
+            "sha256": "cc7609344383d148749316e256d46b914091be2c5b2f67e142d8824c9dae1423",
+            "relevance": 3,
+            "required": true
+          },
+          {
+            "path": "assets/layout-design/poster-10-type.png",
+            "sha256": "f01ae75830d6fe63d36f1dd7da92c9c811bde38c3eb2fa27573968d2540a7751",
+            "relevance": 2,
+            "required": false
+          },
+          {
+            "path": "assets/layout-design/poster-10-color.png",
+            "sha256": "d6b8b890e3157a820fe163ccaf5e82d7d8cfbcf26d6dde0cdb2b6662c0eae8d1",
+            "relevance": 2,
+            "required": false
+          }
+        ],
+        "regions": [],
+        "expectedParentLocators": [
+          "data/courses/layout-design/110-poster-10-analysis.md"
+        ],
+        "forbiddenNodeIds": [],
+        "forbiddenAssetPaths": []
+      },
+      "tags": [
+        "visual-description",
+        "poster-group",
+        "natural-language",
+        "cluster-poster-10"
+      ]
+    },
+    {
+      "id": "visual-text-poster-11-layout",
+      "mode": "TEXT_TO_IMAGE",
+      "expectation": "ANSWERABLE",
+      "expectedSourceCoursePackId": "layout-design",
+      "expectedLegacyPlacementCoursePackId": "book-design",
+      "coursePackVersion": "1",
+      "query": {
+        "coursePackId": "layout-design",
+        "text": "找白底极简的，中间文字竖着排，两边一红一绿斜线往里收，像一条通道。"
+      },
+      "targets": {
+        "nodes": [
+          {
+            "id": "layout-111-poster-11-analysis",
+            "relevance": 3,
+            "required": false
+          }
+        ],
+        "assets": [
+          {
+            "path": "assets/layout-design/poster-11-layout.png",
+            "sha256": "de2bb7f5dfb42801ba1bc02883568babc2a2df7fd7c1a0907a9717069aa657b5",
+            "relevance": 3,
+            "required": true
+          },
+          {
+            "path": "assets/layout-design/poster-11-type.png",
+            "sha256": "0983d60f009f84e9dcf9df26ceb4d8c1c7ee7671ed95f785f0ff39510439dec6",
+            "relevance": 2,
+            "required": false
+          },
+          {
+            "path": "assets/layout-design/poster-11-color.png",
+            "sha256": "1b59931872d22846d1ad69693f6954c0fc4bc5be55ae5cc1531b9a28afafd715",
+            "relevance": 2,
+            "required": false
+          }
+        ],
+        "regions": [],
+        "expectedParentLocators": [
+          "data/courses/layout-design/111-poster-11-analysis.md"
+        ],
+        "forbiddenNodeIds": [],
+        "forbiddenAssetPaths": []
+      },
+      "tags": [
+        "visual-description",
+        "poster-group",
+        "natural-language",
+        "cluster-poster-11"
+      ]
+    },
+    {
+      "id": "visual-text-poster-12-color",
+      "mode": "TEXT_TO_IMAGE",
+      "expectation": "ANSWERABLE",
+      "expectedSourceCoursePackId": "layout-design",
+      "expectedLegacyPlacementCoursePackId": "book-design",
+      "coursePackVersion": "1",
+      "query": {
+        "coursePackId": "layout-design",
+        "text": "有没有亮黄底、一个大圆脸加好几块粉蓝绿图形，下方还有一排小头像的海报？"
+      },
+      "targets": {
+        "nodes": [
+          {
+            "id": "layout-112-poster-12-analysis",
+            "relevance": 3,
+            "required": false
+          }
+        ],
+        "assets": [
+          {
+            "path": "assets/layout-design/poster-12-color.png",
+            "sha256": "4d1e8cd5fd3c53f3780d9fcbb0fe3dccc465f9f0eea9df6a764af0401192a415",
+            "relevance": 3,
+            "required": true
+          },
+          {
+            "path": "assets/layout-design/poster-12-layout.png",
+            "sha256": "e88040d19acf72e79c180114e9661608fd0b62ae114761ffaf226bacc384f95d",
+            "relevance": 2,
+            "required": false
+          },
+          {
+            "path": "assets/layout-design/poster-12-type.png",
+            "sha256": "70f260316cec386978696654c7f734d0bd5e5903dae4d3281053cca8452bc33d",
+            "relevance": 2,
+            "required": false
+          }
+        ],
+        "regions": [],
+        "expectedParentLocators": [
+          "data/courses/layout-design/112-poster-12-analysis.md"
+        ],
+        "forbiddenNodeIds": [],
+        "forbiddenAssetPaths": []
+      },
+      "tags": [
+        "visual-description",
+        "poster-group",
+        "natural-language",
+        "cluster-poster-12"
+      ]
+    },
+    {
+      "id": "visual-text-poster-13-layout",
+      "mode": "TEXT_TO_IMAGE",
+      "expectation": "ANSWERABLE",
+      "expectedSourceCoursePackId": "layout-design",
+      "expectedLegacyPlacementCoursePackId": "book-design",
+      "coursePackVersion": "1",
+      "query": {
+        "coursePackId": "layout-design",
+        "text": "找白底上放一把旧木椅，四周都是竖排红黑文字、像旧刊物封面的参考图。"
+      },
+      "targets": {
+        "nodes": [
+          {
+            "id": "layout-113-poster-13-analysis",
+            "relevance": 3,
+            "required": false
+          }
+        ],
+        "assets": [
+          {
+            "path": "assets/layout-design/poster-13-layout.png",
+            "sha256": "cafb6a1bf1bb6043de9f64184477d00603578be68410afb783e4c42a5cd7d5d1",
+            "relevance": 3,
+            "required": true
+          },
+          {
+            "path": "assets/layout-design/poster-13-type.png",
+            "sha256": "dae2c3670cd94162525d05b81b3f1a6a28cbdcee8569ced5f1b51158c5a8dbe5",
+            "relevance": 2,
+            "required": false
+          },
+          {
+            "path": "assets/layout-design/poster-13-color.png",
+            "sha256": "0c23ee8d519a3bc384a510544053289fccdbad6d1bc6d46ffa70944b9daab3cd",
+            "relevance": 2,
+            "required": false
+          }
+        ],
+        "regions": [],
+        "expectedParentLocators": [
+          "data/courses/layout-design/113-poster-13-analysis.md"
+        ],
+        "forbiddenNodeIds": [],
+        "forbiddenAssetPaths": []
+      },
+      "tags": [
+        "visual-description",
+        "poster-group",
+        "natural-language",
+        "cluster-poster-13"
+      ]
+    },
+    {
+      "id": "visual-text-poster-15-layout",
+      "mode": "TEXT_TO_IMAGE",
+      "expectation": "ANSWERABLE",
+      "expectedSourceCoursePackId": "layout-design",
+      "expectedLegacyPlacementCoursePackId": "book-design",
+      "coursePackVersion": "1",
+      "query": {
+        "coursePackId": "layout-design",
+        "text": "想看一张三条红金黑的蛇从上到下串起来，周围塞着年俗花纹和字的海报。"
+      },
+      "targets": {
+        "nodes": [
+          {
+            "id": "layout-115-poster-15-analysis",
+            "relevance": 3,
+            "required": false
+          }
+        ],
+        "assets": [
+          {
+            "path": "assets/layout-design/poster-15-layout.png",
+            "sha256": "98786c5b01ed2176e9f2baf462ea53526b87b07d18bb04aeb1ff71b698d42c9b",
+            "relevance": 3,
+            "required": true
+          },
+          {
+            "path": "assets/layout-design/poster-15-type.png",
+            "sha256": "68c4a69220143557203bc44f1570b2526426948ae27ef49ca302f04dc15597c1",
+            "relevance": 2,
+            "required": false
+          },
+          {
+            "path": "assets/layout-design/poster-15-color.png",
+            "sha256": "49ecfa73e4d383d4eb901e0a83fe7b3542e2e0bd7ca6501d5cda7c5465736152",
+            "relevance": 2,
+            "required": false
+          }
+        ],
+        "regions": [],
+        "expectedParentLocators": [
+          "data/courses/layout-design/115-poster-15-analysis.md"
+        ],
+        "forbiddenNodeIds": [],
+        "forbiddenAssetPaths": []
+      },
+      "tags": [
+        "visual-description",
+        "poster-group",
+        "natural-language",
+        "cluster-poster-15"
+      ]
+    },
+    {
+      "id": "visual-text-poster-18-type",
+      "mode": "TEXT_TO_IMAGE",
+      "expectation": "ANSWERABLE",
+      "expectedSourceCoursePackId": "layout-design",
+      "expectedLegacyPlacementCoursePackId": "book-design",
+      "coursePackVersion": "1",
+      "query": {
+        "coursePackId": "layout-design",
+        "text": "找一张几乎全红底、黑色粗体字排成整块，像剧团活动公告的海报。"
+      },
+      "targets": {
+        "nodes": [
+          {
+            "id": "layout-118-poster-18-analysis",
+            "relevance": 3,
+            "required": false
+          }
+        ],
+        "assets": [
+          {
+            "path": "assets/layout-design/poster-18-type.png",
+            "sha256": "f71760d4c0a2e6d2cc6bd44b7cd2614d4788b3ab1e1853dec70fbb24ef723036",
+            "relevance": 3,
+            "required": true
+          },
+          {
+            "path": "assets/layout-design/poster-18-layout.png",
+            "sha256": "10e225aefbaedec36a50535678e41417e67c0fd4c1fb8616e58d2c804d3bcca5",
+            "relevance": 2,
+            "required": false
+          },
+          {
+            "path": "assets/layout-design/poster-18-color.png",
+            "sha256": "41e5626bc6ef5143351a5db29341689a0ada6c928fdf76a612841a6692544fe4",
+            "relevance": 2,
+            "required": false
+          }
+        ],
+        "regions": [],
+        "expectedParentLocators": [
+          "data/courses/layout-design/118-poster-18-analysis.md"
+        ],
+        "forbiddenNodeIds": [],
+        "forbiddenAssetPaths": []
+      },
+      "tags": [
+        "visual-description",
+        "poster-group",
+        "natural-language",
+        "cluster-poster-18"
+      ]
+    },
+    {
+      "id": "visual-text-poster-21-layout",
+      "mode": "TEXT_TO_IMAGE",
+      "expectation": "ANSWERABLE",
+      "expectedSourceCoursePackId": "layout-design",
+      "expectedLegacyPlacementCoursePackId": "book-design",
+      "coursePackVersion": "1",
+      "query": {
+        "coursePackId": "layout-design",
+        "text": "有没有蓝色底、巨大的橙色圆形把文字压在一起，像咖啡节日程的海报？"
+      },
+      "targets": {
+        "nodes": [
+          {
+            "id": "layout-121-poster-21-analysis",
+            "relevance": 3,
+            "required": false
+          }
+        ],
+        "assets": [
+          {
+            "path": "assets/layout-design/poster-21-layout.png",
+            "sha256": "d17f5588c6835c340c0d3db17f60fc57309e912b657504673ce3aa991848ceba",
+            "relevance": 3,
+            "required": true
+          },
+          {
+            "path": "assets/layout-design/poster-21-type.png",
+            "sha256": "de660a2fe832fbc26696205e26ecb1ae4146fadf6bc97d13b83e1e11741bcf39",
+            "relevance": 2,
+            "required": false
+          },
+          {
+            "path": "assets/layout-design/poster-21-color.png",
+            "sha256": "2f1968e8635082f0ae7e154a4c6b29acc497a71c2c266eaee1f41edafdf49900",
+            "relevance": 2,
+            "required": false
+          }
+        ],
+        "regions": [],
+        "expectedParentLocators": [
+          "data/courses/layout-design/121-poster-21-analysis.md"
+        ],
+        "forbiddenNodeIds": [],
+        "forbiddenAssetPaths": []
+      },
+      "tags": [
+        "visual-description",
+        "poster-group",
+        "natural-language",
+        "cluster-poster-21"
+      ]
+    },
+    {
+      "id": "visual-text-poster-24-layout",
+      "mode": "TEXT_TO_IMAGE",
+      "expectation": "ANSWERABLE",
+      "expectedSourceCoursePackId": "layout-design",
+      "expectedLegacyPlacementCoursePackId": "book-design",
+      "coursePackVersion": "1",
+      "query": {
+        "coursePackId": "layout-design",
+        "text": "想找一张浅米色底，中间是蓝色波纹像地图，周围排着中英文展览信息的海报。"
+      },
+      "targets": {
+        "nodes": [
+          {
+            "id": "layout-124-poster-24-analysis",
+            "relevance": 3,
+            "required": false
+          }
+        ],
+        "assets": [
+          {
+            "path": "assets/layout-design/poster-24-layout.png",
+            "sha256": "775d3da1caec2cbb98fb7739447f513948ea1a563f46a4cb8b89bf4268e8fb59",
+            "relevance": 3,
+            "required": true
+          },
+          {
+            "path": "assets/layout-design/poster-24-type.png",
+            "sha256": "8ae8acbc9d675e568d3aaba672de3656dbfada2eb2ec1b8d126f27d37b88dc6e",
+            "relevance": 2,
+            "required": false
+          },
+          {
+            "path": "assets/layout-design/poster-24-color.png",
+            "sha256": "9eb03d22aa47653adc545ced7079b9f25ee248974692a93a3504ed38412994e9",
+            "relevance": 2,
+            "required": false
+          }
+        ],
+        "regions": [],
+        "expectedParentLocators": [
+          "data/courses/layout-design/124-poster-24-analysis.md"
+        ],
+        "forbiddenNodeIds": [],
+        "forbiddenAssetPaths": []
+      },
+      "tags": [
+        "visual-description",
+        "poster-group",
+        "natural-language",
+        "cluster-poster-24"
+      ]
+    },
+    {
+      "id": "visual-text-poster-26-layout",
+      "mode": "TEXT_TO_IMAGE",
+      "expectation": "ANSWERABLE",
+      "expectedSourceCoursePackId": "layout-design",
+      "expectedLegacyPlacementCoursePackId": "book-design",
+      "coursePackVersion": "1",
+      "query": {
+        "coursePackId": "layout-design",
+        "text": "找一张三排绿色拱形像树林或山丘、底下文字很小很规整的展览海报。"
+      },
+      "targets": {
+        "nodes": [
+          {
+            "id": "layout-126-poster-26-analysis",
+            "relevance": 3,
+            "required": false
+          }
+        ],
+        "assets": [
+          {
+            "path": "assets/layout-design/poster-26-layout.png",
+            "sha256": "cf9b8eec3c0a82852073e7330c86f2a535a4a2e1f547ff0f9ee7ae6f0a520305",
+            "relevance": 3,
+            "required": true
+          },
+          {
+            "path": "assets/layout-design/poster-26-type.png",
+            "sha256": "a11dedb6c0030dd08673341672e4458f4d5ae684f01ed0de6cddfe5196d296f9",
+            "relevance": 2,
+            "required": false
+          },
+          {
+            "path": "assets/layout-design/poster-26-color.png",
+            "sha256": "4614305d384a727207badf51b3f276678aebd932d25fd1b46c9f2d3f5392b3fc",
+            "relevance": 2,
+            "required": false
+          }
+        ],
+        "regions": [],
+        "expectedParentLocators": [
+          "data/courses/layout-design/126-poster-26-analysis.md"
+        ],
+        "forbiddenNodeIds": [],
+        "forbiddenAssetPaths": []
+      },
+      "tags": [
+        "visual-description",
+        "poster-group",
+        "natural-language",
+        "cluster-poster-26"
+      ]
+    },
+    {
+      "id": "visual-text-poster-31-type",
+      "mode": "TEXT_TO_IMAGE",
+      "expectation": "ANSWERABLE",
+      "expectedSourceCoursePackId": "layout-design",
+      "expectedLegacyPlacementCoursePackId": "book-design",
+      "coursePackVersion": "1",
+      "query": {
+        "coursePackId": "layout-design",
+        "text": "有没有白底上用粉绿蓝的大字像手写涂鸦一样铺开，主题是爱的演出海报？"
+      },
+      "targets": {
+        "nodes": [
+          {
+            "id": "layout-131-poster-31-analysis",
+            "relevance": 3,
+            "required": false
+          }
+        ],
+        "assets": [
+          {
+            "path": "assets/layout-design/poster-31-type.png",
+            "sha256": "4468e9cb5ec96b05b82b10c9ebd203310d2e6509a60a0835d86e2ae818606eed",
+            "relevance": 3,
+            "required": true
+          },
+          {
+            "path": "assets/layout-design/poster-31-layout.png",
+            "sha256": "fdf0d4e4ffb2c3edf406820bd3a4e973ec41135a901b93a333b8e4924cfeaa0c",
+            "relevance": 2,
+            "required": false
+          },
+          {
+            "path": "assets/layout-design/poster-31-color.png",
+            "sha256": "d2baf88df342e25ac483e80206273fa480cbf1ff631f231cb331009724ff77ef",
+            "relevance": 2,
+            "required": false
+          }
+        ],
+        "regions": [],
+        "expectedParentLocators": [
+          "data/courses/layout-design/131-poster-31-analysis.md"
+        ],
+        "forbiddenNodeIds": [],
+        "forbiddenAssetPaths": []
+      },
+      "tags": [
+        "visual-description",
+        "poster-group",
+        "natural-language",
+        "cluster-poster-31"
+      ]
+    },
+    {
+      "id": "visual-text-poster-41-layout",
+      "mode": "TEXT_TO_IMAGE",
+      "expectation": "ANSWERABLE",
+      "expectedSourceCoursePackId": "layout-design",
+      "expectedLegacyPlacementCoursePackId": "book-design",
+      "coursePackVersion": "1",
+      "query": {
+        "coursePackId": "layout-design",
+        "text": "找一张左右两个像扇面或唱片的彩色半圆，所有图形绕中轴对称的海报。"
+      },
+      "targets": {
+        "nodes": [
+          {
+            "id": "layout-141-poster-41-analysis",
+            "relevance": 3,
+            "required": false
+          }
+        ],
+        "assets": [
+          {
+            "path": "assets/layout-design/poster-41-layout.png",
+            "sha256": "6df097ee6d80edf7eafe7d7d5b60be9c4c59461e00208776dee2630e04c917de",
+            "relevance": 3,
+            "required": true
+          },
+          {
+            "path": "assets/layout-design/poster-41-type.png",
+            "sha256": "74c2252bc4fbaa4b8b8a81d383f91476f1a2022cec87ca81c42152270855e310",
+            "relevance": 2,
+            "required": false
+          },
+          {
+            "path": "assets/layout-design/poster-41-color.png",
+            "sha256": "d659df24668a0bc83e58cc756f3bf912f33354b6d8c56667afeb5fe8167d5d72",
+            "relevance": 2,
+            "required": false
+          }
+        ],
+        "regions": [],
+        "expectedParentLocators": [
+          "data/courses/layout-design/141-poster-41-analysis.md"
+        ],
+        "forbiddenNodeIds": [],
+        "forbiddenAssetPaths": []
+      },
+      "tags": [
+        "visual-description",
+        "poster-group",
+        "natural-language",
+        "cluster-poster-41"
+      ]
+    },
+    {
+      "id": "visual-text-poster-50-color",
+      "mode": "TEXT_TO_IMAGE",
+      "expectation": "ANSWERABLE",
+      "expectedSourceCoursePackId": "layout-design",
+      "expectedLegacyPlacementCoursePackId": "book-design",
+      "coursePackVersion": "1",
+      "query": {
+        "coursePackId": "layout-design",
+        "text": "我记得有一张蓝底红花，花瓣很大，文字散在四边，看起来故意不太规整。"
+      },
+      "targets": {
+        "nodes": [
+          {
+            "id": "layout-150-poster-50-analysis",
+            "relevance": 3,
+            "required": false
+          }
+        ],
+        "assets": [
+          {
+            "path": "assets/layout-design/poster-50-color.png",
+            "sha256": "29ee9c24bc96e80b7cabeb09fe0e95975f01e03d2ad996e24c33d13adbaafcb6",
+            "relevance": 3,
+            "required": true
+          },
+          {
+            "path": "assets/layout-design/poster-50-layout.png",
+            "sha256": "9e9b86f6fc04dc2fd933c94afdace023f7bd92df6056af8c8f1abe816ff97e3b",
+            "relevance": 2,
+            "required": false
+          },
+          {
+            "path": "assets/layout-design/poster-50-type.png",
+            "sha256": "d91269eeada2b310e1466de68247bfb96db08ddbb0f23e81bba174814836ac73",
+            "relevance": 2,
+            "required": false
+          }
+        ],
+        "regions": [],
+        "expectedParentLocators": [
+          "data/courses/layout-design/150-poster-50-analysis.md"
+        ],
+        "forbiddenNodeIds": [],
+        "forbiddenAssetPaths": []
+      },
+      "tags": [
+        "visual-description",
+        "poster-group",
+        "natural-language",
+        "cluster-poster-50"
+      ]
+    },
+    {
+      "id": "visual-text-grid-case-1",
+      "mode": "TEXT_TO_IMAGE",
+      "expectation": "ANSWERABLE",
+      "expectedSourceCoursePackId": "layout-design",
+      "expectedLegacyPlacementCoursePackId": "layout-design",
+      "coursePackVersion": "1",
+      "query": {
+        "coursePackId": "layout-design",
+        "text": "找一张白底展览海报，右上角像垂着深红幕布，左下有个斜着的巨大 45。"
+      },
+      "targets": {
+        "nodes": [
+          {
+            "id": "layout-040-six-step-grid-layout-check",
+            "relevance": 2,
+            "required": false
+          }
+        ],
+        "assets": [
+          {
+            "path": "assets/layout-design/grid-case-1.png",
+            "sha256": "f2d5bcaaa8f6316d9185b77344a92866e4c7ab99adf6927955a4e153d96fb418",
+            "relevance": 3,
+            "required": true
+          }
+        ],
+        "regions": [],
+        "expectedParentLocators": [
+          "data/courses/layout-design/040-six-step-grid-layout-check.md"
+        ],
+        "forbiddenNodeIds": [],
+        "forbiddenAssetPaths": []
+      },
+      "tags": [
+        "visual-description",
+        "raw-grid-case",
+        "natural-language",
+        "cluster-grid-1"
+      ]
+    },
+    {
+      "id": "visual-text-grid-case-2",
+      "mode": "TEXT_TO_IMAGE",
+      "expectation": "ANSWERABLE",
+      "expectedSourceCoursePackId": "layout-design",
+      "expectedLegacyPlacementCoursePackId": "layout-design",
+      "coursePackVersion": "1",
+      "query": {
+        "coursePackId": "layout-design",
+        "text": "有没有全黑底、白色英文一行比一行往右错开，旁边还竖排中文的海报？"
+      },
+      "targets": {
+        "nodes": [
+          {
+            "id": "layout-040-six-step-grid-layout-check",
+            "relevance": 2,
+            "required": false
+          }
+        ],
+        "assets": [
+          {
+            "path": "assets/layout-design/grid-case-2.png",
+            "sha256": "c09d492eab6dfc27f3c1e8a14df2547cd587863d4cbeb993c8aa49a5734d358e",
+            "relevance": 3,
+            "required": true
+          }
+        ],
+        "regions": [],
+        "expectedParentLocators": [
+          "data/courses/layout-design/040-six-step-grid-layout-check.md"
+        ],
+        "forbiddenNodeIds": [],
+        "forbiddenAssetPaths": []
+      },
+      "tags": [
+        "visual-description",
+        "raw-grid-case",
+        "natural-language",
+        "cluster-grid-2"
+      ]
+    },
+    {
+      "id": "visual-text-grid-case-3",
+      "mode": "TEXT_TO_IMAGE",
+      "expectation": "ANSWERABLE",
+      "expectedSourceCoursePackId": "layout-design",
+      "expectedLegacyPlacementCoursePackId": "layout-design",
+      "coursePackVersion": "1",
+      "query": {
+        "coursePackId": "layout-design",
+        "text": "想找亮蓝和黑色为主、英文特别大，角落还有两个放射圆圈的海报。"
+      },
+      "targets": {
+        "nodes": [
+          {
+            "id": "layout-040-six-step-grid-layout-check",
+            "relevance": 2,
+            "required": false
+          }
+        ],
+        "assets": [
+          {
+            "path": "assets/layout-design/grid-case-3.png",
+            "sha256": "5b93b590d2633a10003c1b078f0c3310826764c9298053b12e67c7c6e1f3ff92",
+            "relevance": 3,
+            "required": true
+          }
+        ],
+        "regions": [],
+        "expectedParentLocators": [
+          "data/courses/layout-design/040-six-step-grid-layout-check.md"
+        ],
+        "forbiddenNodeIds": [],
+        "forbiddenAssetPaths": []
+      },
+      "tags": [
+        "visual-description",
+        "raw-grid-case",
+        "natural-language",
+        "cluster-grid-3"
+      ]
+    },
+    {
+      "id": "visual-text-grid-case-4",
+      "mode": "TEXT_TO_IMAGE",
+      "expectation": "ANSWERABLE",
+      "expectedSourceCoursePackId": "layout-design",
+      "expectedLegacyPlacementCoursePackId": "layout-design",
+      "coursePackVersion": "1",
+      "query": {
+        "coursePackId": "layout-design",
+        "text": "找白底上压着一个橙色大 45、旁边用蓝字排活动信息的海报。"
+      },
+      "targets": {
+        "nodes": [
+          {
+            "id": "layout-040-six-step-grid-layout-check",
+            "relevance": 2,
+            "required": false
+          }
+        ],
+        "assets": [
+          {
+            "path": "assets/layout-design/grid-case-4.png",
+            "sha256": "18f5b9a43650e4709bf9d031d01020d82e76fa900759e0c093ff87d221179695",
+            "relevance": 3,
+            "required": true
+          }
+        ],
+        "regions": [],
+        "expectedParentLocators": [
+          "data/courses/layout-design/040-six-step-grid-layout-check.md"
+        ],
+        "forbiddenNodeIds": [],
+        "forbiddenAssetPaths": []
+      },
+      "tags": [
+        "visual-description",
+        "raw-grid-case",
+        "natural-language",
+        "cluster-grid-4"
+      ]
+    },
+    {
+      "id": "visual-text-grid-case-5",
+      "mode": "TEXT_TO_IMAGE",
+      "expectation": "ANSWERABLE",
+      "expectedSourceCoursePackId": "layout-design",
+      "expectedLegacyPlacementCoursePackId": "layout-design",
+      "coursePackVersion": "1",
+      "query": {
+        "coursePackId": "layout-design",
+        "text": "有没有白底黑色超大 DESIGN，中英文字混排，旁边带一块青色图形的海报？"
+      },
+      "targets": {
+        "nodes": [
+          {
+            "id": "layout-040-six-step-grid-layout-check",
+            "relevance": 2,
+            "required": false
+          }
+        ],
+        "assets": [
+          {
+            "path": "assets/layout-design/grid-case-5.png",
+            "sha256": "8d3997e08fbf34c7125569706ac125753880b00369ccdbdc105c2adc90e63e07",
+            "relevance": 3,
+            "required": true
+          }
+        ],
+        "regions": [],
+        "expectedParentLocators": [
+          "data/courses/layout-design/040-six-step-grid-layout-check.md"
+        ],
+        "forbiddenNodeIds": [],
+        "forbiddenAssetPaths": []
+      },
+      "tags": [
+        "visual-description",
+        "raw-grid-case",
+        "natural-language",
+        "cluster-grid-5"
+      ]
+    },
+    {
+      "id": "visual-text-grid-case-6",
+      "mode": "TEXT_TO_IMAGE",
+      "expectation": "ANSWERABLE",
+      "expectedSourceCoursePackId": "layout-design",
+      "expectedLegacyPlacementCoursePackId": "layout-design",
+      "coursePackVersion": "1",
+      "query": {
+        "coursePackId": "layout-design",
+        "text": "想看蓝绿色海岸作背景、白色中文标题很大，前面站着一个拿灯的人的海报。"
+      },
+      "targets": {
+        "nodes": [
+          {
+            "id": "layout-040-six-step-grid-layout-check",
+            "relevance": 2,
+            "required": false
+          }
+        ],
+        "assets": [
+          {
+            "path": "assets/layout-design/grid-case-6.png",
+            "sha256": "a9e69d0ba2ff156fe06f2b27a9c5772dfa32e8841280c4ed154cbf1ab56765f4",
+            "relevance": 3,
+            "required": true
+          }
+        ],
+        "regions": [],
+        "expectedParentLocators": [
+          "data/courses/layout-design/040-six-step-grid-layout-check.md"
+        ],
+        "forbiddenNodeIds": [],
+        "forbiddenAssetPaths": []
+      },
+      "tags": [
+        "visual-description",
+        "raw-grid-case",
+        "natural-language",
+        "cluster-grid-6"
+      ]
+    },
+    {
+      "id": "visual-image-poster-07-to-48",
+      "mode": "IMAGE_TO_IMAGE",
+      "expectation": "ANSWERABLE",
+      "expectedSourceCoursePackId": "layout-design",
+      "expectedLegacyPlacementCoursePackId": "book-design",
+      "coursePackVersion": "1",
+      "query": {
+        "coursePackId": "layout-design",
+        "assetPath": "assets/layout-design/poster-07-layout.png",
+        "excludeSelfAsset": true,
+        "excludeAssetPaths": [
+          "assets/layout-design/poster-07-layout.png",
+          "assets/layout-design/poster-07-type.png",
+          "assets/layout-design/poster-07-color.png"
+        ]
+      },
+      "targets": {
+        "nodes": [
+          {
+            "id": "layout-148-poster-48-analysis",
+            "relevance": 3,
+            "required": false
+          }
+        ],
+        "assets": [
+          {
+            "path": "assets/layout-design/poster-48-layout.png",
+            "sha256": "b05f69bfe5b77aa840c864902225ea2291ff3037a5e21782247e8c45c0a825ae",
+            "relevance": 3,
+            "required": true
+          },
+          {
+            "path": "assets/layout-design/poster-48-type.png",
+            "sha256": "32deda33499047ceb254b617905d79d80fdb31de92afd282068eca4756d68d52",
+            "relevance": 2,
+            "required": false
+          },
+          {
+            "path": "assets/layout-design/poster-48-color.png",
+            "sha256": "8da0a03b3292ec8c572c19c6cadd119e4c6d0228395fee343681fe891719730c",
+            "relevance": 2,
+            "required": false
+          }
+        ],
+        "regions": [],
+        "expectedParentLocators": [
+          "data/courses/layout-design/148-poster-48-analysis.md"
+        ],
+        "forbiddenNodeIds": [
+          "layout-107-poster-07-analysis"
+        ],
+        "forbiddenAssetPaths": [
+          "assets/layout-design/poster-07-layout.png",
+          "assets/layout-design/poster-07-type.png",
+          "assets/layout-design/poster-07-color.png"
+        ]
+      },
+      "tags": [
+        "cross-poster",
+        "visual-similarity",
+        "exclude-query-group",
+        "cluster-pair-poster-07-poster-48"
+      ]
+    },
+    {
+      "id": "visual-image-poster-14-to-17",
+      "mode": "IMAGE_TO_IMAGE",
+      "expectation": "ANSWERABLE",
+      "expectedSourceCoursePackId": "layout-design",
+      "expectedLegacyPlacementCoursePackId": "book-design",
+      "coursePackVersion": "1",
+      "query": {
+        "coursePackId": "layout-design",
+        "assetPath": "assets/layout-design/poster-14-layout.png",
+        "excludeSelfAsset": true,
+        "excludeAssetPaths": [
+          "assets/layout-design/poster-14-layout.png",
+          "assets/layout-design/poster-14-type.png",
+          "assets/layout-design/poster-14-color.png"
+        ]
+      },
+      "targets": {
+        "nodes": [
+          {
+            "id": "layout-117-poster-17-analysis",
+            "relevance": 3,
+            "required": false
+          }
+        ],
+        "assets": [
+          {
+            "path": "assets/layout-design/poster-17-layout.png",
+            "sha256": "8e6f6826b309d6dbcf10a7ecafbe1f198eb314719bdc2a8c2840333ed50c1c74",
+            "relevance": 3,
+            "required": true
+          },
+          {
+            "path": "assets/layout-design/poster-17-type.png",
+            "sha256": "9a16c06b4b1789fdc9fe64618e880a5b5b3779bdde8892b609169a9107378389",
+            "relevance": 2,
+            "required": false
+          },
+          {
+            "path": "assets/layout-design/poster-17-color.png",
+            "sha256": "e82beeaaca049c9db14ac2bdafba276eb4ea6ebc236986d97404aca580b70d51",
+            "relevance": 2,
+            "required": false
+          }
+        ],
+        "regions": [],
+        "expectedParentLocators": [
+          "data/courses/layout-design/117-poster-17-analysis.md"
+        ],
+        "forbiddenNodeIds": [
+          "layout-114-poster-14-analysis"
+        ],
+        "forbiddenAssetPaths": [
+          "assets/layout-design/poster-14-layout.png",
+          "assets/layout-design/poster-14-type.png",
+          "assets/layout-design/poster-14-color.png"
+        ]
+      },
+      "tags": [
+        "cross-poster",
+        "visual-similarity",
+        "exclude-query-group",
+        "cluster-pair-poster-14-poster-17"
+      ]
+    },
+    {
+      "id": "visual-image-poster-27-to-36",
+      "mode": "IMAGE_TO_IMAGE",
+      "expectation": "ANSWERABLE",
+      "expectedSourceCoursePackId": "layout-design",
+      "expectedLegacyPlacementCoursePackId": "book-design",
+      "coursePackVersion": "1",
+      "query": {
+        "coursePackId": "layout-design",
+        "assetPath": "assets/layout-design/poster-27-type.png",
+        "excludeSelfAsset": true,
+        "excludeAssetPaths": [
+          "assets/layout-design/poster-27-layout.png",
+          "assets/layout-design/poster-27-type.png",
+          "assets/layout-design/poster-27-color.png"
+        ]
+      },
+      "targets": {
+        "nodes": [
+          {
+            "id": "layout-136-poster-36-analysis",
+            "relevance": 3,
+            "required": false
+          }
+        ],
+        "assets": [
+          {
+            "path": "assets/layout-design/poster-36-type.png",
+            "sha256": "051f574c8cca7302f9924585bde2f240276b7a05fd391dbef32c195469abe2c4",
+            "relevance": 3,
+            "required": true
+          },
+          {
+            "path": "assets/layout-design/poster-36-layout.png",
+            "sha256": "7967e08b4c374238258757bfb1798b876483f84a5e8bc47070c1d64be9081c7e",
+            "relevance": 2,
+            "required": false
+          },
+          {
+            "path": "assets/layout-design/poster-36-color.png",
+            "sha256": "f5541da7438cc6bfda98e012e3c36568c1d176dbeafdc3aad14ba1daf654a4b1",
+            "relevance": 2,
+            "required": false
+          }
+        ],
+        "regions": [],
+        "expectedParentLocators": [
+          "data/courses/layout-design/136-poster-36-analysis.md"
+        ],
+        "forbiddenNodeIds": [
+          "layout-127-poster-27-analysis"
+        ],
+        "forbiddenAssetPaths": [
+          "assets/layout-design/poster-27-layout.png",
+          "assets/layout-design/poster-27-type.png",
+          "assets/layout-design/poster-27-color.png"
+        ]
+      },
+      "tags": [
+        "cross-poster",
+        "visual-similarity",
+        "exclude-query-group",
+        "cluster-pair-poster-27-poster-36"
+      ]
+    },
+    {
+      "id": "visual-image-poster-33-to-35",
+      "mode": "IMAGE_TO_IMAGE",
+      "expectation": "ANSWERABLE",
+      "expectedSourceCoursePackId": "layout-design",
+      "expectedLegacyPlacementCoursePackId": "book-design",
+      "coursePackVersion": "1",
+      "query": {
+        "coursePackId": "layout-design",
+        "assetPath": "assets/layout-design/poster-33-type.png",
+        "excludeSelfAsset": true,
+        "excludeAssetPaths": [
+          "assets/layout-design/poster-33-layout.png",
+          "assets/layout-design/poster-33-type.png",
+          "assets/layout-design/poster-33-color.png"
+        ]
+      },
+      "targets": {
+        "nodes": [
+          {
+            "id": "layout-135-poster-35-analysis",
+            "relevance": 3,
+            "required": false
+          }
+        ],
+        "assets": [
+          {
+            "path": "assets/layout-design/poster-35-type.png",
+            "sha256": "a7bbda18fd701d950bf6f13fa08118838cf89354cf2a5a4f14f0fdfb7badb656",
+            "relevance": 3,
+            "required": true
+          },
+          {
+            "path": "assets/layout-design/poster-35-layout.png",
+            "sha256": "c0f433e4c090a92973697a1ea19c2f12d735b4b9127392b5a710e0ec2b0a3e9f",
+            "relevance": 2,
+            "required": false
+          },
+          {
+            "path": "assets/layout-design/poster-35-color.png",
+            "sha256": "c61b2129ca497e445ef61e62b488d2863bd797244104c32341b2d6f4521bc756",
+            "relevance": 2,
+            "required": false
+          }
+        ],
+        "regions": [],
+        "expectedParentLocators": [
+          "data/courses/layout-design/135-poster-35-analysis.md"
+        ],
+        "forbiddenNodeIds": [
+          "layout-133-poster-33-analysis"
+        ],
+        "forbiddenAssetPaths": [
+          "assets/layout-design/poster-33-layout.png",
+          "assets/layout-design/poster-33-type.png",
+          "assets/layout-design/poster-33-color.png"
+        ]
+      },
+      "tags": [
+        "cross-poster",
+        "visual-similarity",
+        "exclude-query-group",
+        "cluster-pair-poster-33-poster-35"
+      ]
+    },
+    {
+      "id": "visual-image-poster-43-to-39",
+      "mode": "IMAGE_TO_IMAGE",
+      "expectation": "ANSWERABLE",
+      "expectedSourceCoursePackId": "layout-design",
+      "expectedLegacyPlacementCoursePackId": "book-design",
+      "coursePackVersion": "1",
+      "query": {
+        "coursePackId": "layout-design",
+        "assetPath": "assets/layout-design/poster-43-layout.png",
+        "excludeSelfAsset": true,
+        "excludeAssetPaths": [
+          "assets/layout-design/poster-43-layout.png",
+          "assets/layout-design/poster-43-type.png",
+          "assets/layout-design/poster-43-color.png"
+        ]
+      },
+      "targets": {
+        "nodes": [
+          {
+            "id": "layout-139-poster-39-analysis",
+            "relevance": 3,
+            "required": false
+          }
+        ],
+        "assets": [
+          {
+            "path": "assets/layout-design/poster-39-layout.png",
+            "sha256": "173cff4d209f5fc4d644193e437ffe19dd735843d3eaf9ec75c98b3f0c65b96e",
+            "relevance": 3,
+            "required": true
+          },
+          {
+            "path": "assets/layout-design/poster-39-type.png",
+            "sha256": "5323e66396d00f78422fa215e6c804bcdf66c9b8254308fc41f9b49f3b7e84d1",
+            "relevance": 2,
+            "required": false
+          },
+          {
+            "path": "assets/layout-design/poster-39-color.png",
+            "sha256": "b209ad13907e0b0f5c4a84e1d195fff0a5d70735c740bbf1ef83902cdd033256",
+            "relevance": 2,
+            "required": false
+          }
+        ],
+        "regions": [],
+        "expectedParentLocators": [
+          "data/courses/layout-design/139-poster-39-analysis.md"
+        ],
+        "forbiddenNodeIds": [
+          "layout-143-poster-43-analysis"
+        ],
+        "forbiddenAssetPaths": [
+          "assets/layout-design/poster-43-layout.png",
+          "assets/layout-design/poster-43-type.png",
+          "assets/layout-design/poster-43-color.png"
+        ]
+      },
+      "tags": [
+        "cross-poster",
+        "visual-similarity",
+        "exclude-query-group",
+        "cluster-pair-poster-43-poster-39"
+      ]
+    },
+    {
+      "id": "visual-image-poster-46-to-40",
+      "mode": "IMAGE_TO_IMAGE",
+      "expectation": "ANSWERABLE",
+      "expectedSourceCoursePackId": "layout-design",
+      "expectedLegacyPlacementCoursePackId": "book-design",
+      "coursePackVersion": "1",
+      "query": {
+        "coursePackId": "layout-design",
+        "assetPath": "assets/layout-design/poster-46-layout.png",
+        "excludeSelfAsset": true,
+        "excludeAssetPaths": [
+          "assets/layout-design/poster-46-layout.png",
+          "assets/layout-design/poster-46-type.png",
+          "assets/layout-design/poster-46-color.png"
+        ]
+      },
+      "targets": {
+        "nodes": [
+          {
+            "id": "layout-140-poster-40-analysis",
+            "relevance": 3,
+            "required": false
+          }
+        ],
+        "assets": [
+          {
+            "path": "assets/layout-design/poster-40-layout.png",
+            "sha256": "250facde6d999b2b300855edb44d002614de355c9ad4e786dfb6705dd898665e",
+            "relevance": 3,
+            "required": true
+          },
+          {
+            "path": "assets/layout-design/poster-40-type.png",
+            "sha256": "7c2a711832629e88da955a1c162b410f8731bb04170574081f697e4d44b003d9",
+            "relevance": 2,
+            "required": false
+          },
+          {
+            "path": "assets/layout-design/poster-40-color.png",
+            "sha256": "d70a01af8251900908ce026d1a5185fbd2f2afb2d68cc041a4ed5405c6a74674",
+            "relevance": 2,
+            "required": false
+          }
+        ],
+        "regions": [],
+        "expectedParentLocators": [
+          "data/courses/layout-design/140-poster-40-analysis.md"
+        ],
+        "forbiddenNodeIds": [
+          "layout-146-poster-46-analysis"
+        ],
+        "forbiddenAssetPaths": [
+          "assets/layout-design/poster-46-layout.png",
+          "assets/layout-design/poster-46-type.png",
+          "assets/layout-design/poster-46-color.png"
+        ]
+      },
+      "tags": [
+        "cross-poster",
+        "visual-similarity",
+        "exclude-query-group",
+        "cluster-pair-poster-46-poster-40"
+      ]
+    },
+    {
+      "id": "visual-evidence-poster-16",
+      "mode": "IMAGE_TEXT_TO_EVIDENCE",
+      "expectation": "ANSWERABLE",
+      "expectedSourceCoursePackId": "layout-design",
+      "expectedLegacyPlacementCoursePackId": "book-design",
+      "coursePackVersion": "1",
+      "query": {
+        "coursePackId": "layout-design",
+        "text": "这张图把旧照片和一大块黄色压在一起，为什么会有电影节资料的感觉？给我对应案例和原始证据。",
+        "assetPath": "assets/layout-design/poster-16-color.png",
+        "excludeSelfAsset": true,
+        "excludeAssetPaths": [
+          "assets/layout-design/poster-16-color.png"
+        ]
+      },
+      "targets": {
+        "nodes": [
+          {
+            "id": "layout-116-poster-16-analysis",
+            "relevance": 3,
+            "required": true
+          }
+        ],
+        "assets": [
+          {
+            "path": "assets/layout-design/poster-16-layout.png",
+            "sha256": "1b6ac590a9b81f83ecaab56740004b4099936c08c84fc8de30458999f5095248",
+            "relevance": 3,
+            "required": true
+          },
+          {
+            "path": "assets/layout-design/poster-16-type.png",
+            "sha256": "46e64a311568f28c3c7d041f571d7b566962945c421524fd9a2163a82522877a",
+            "relevance": 2,
+            "required": false
+          }
+        ],
+        "regions": [],
+        "expectedParentLocators": [
+          "data/courses/layout-design/116-poster-16-analysis.md"
+        ],
+        "forbiddenNodeIds": [],
+        "forbiddenAssetPaths": [
+          "assets/layout-design/poster-16-color.png"
+        ]
+      },
+      "tags": [
+        "multimodal",
+        "non-self-evidence",
+        "natural-language",
+        "cluster-evidence-poster-16"
+      ]
+    },
+    {
+      "id": "visual-evidence-poster-20",
+      "mode": "IMAGE_TEXT_TO_EVIDENCE",
+      "expectation": "ANSWERABLE",
+      "expectedSourceCoursePackId": "layout-design",
+      "expectedLegacyPlacementCoursePackId": "book-design",
+      "coursePackVersion": "1",
+      "query": {
+        "coursePackId": "layout-design",
+        "text": "这张黄底剧场海报为什么字很多却没散掉？我想看它的版面分析和另一张证据图。",
+        "assetPath": "assets/layout-design/poster-20-color.png",
+        "excludeSelfAsset": true,
+        "excludeAssetPaths": [
+          "assets/layout-design/poster-20-color.png"
+        ]
+      },
+      "targets": {
+        "nodes": [
+          {
+            "id": "layout-120-poster-20-analysis",
+            "relevance": 3,
+            "required": true
+          }
+        ],
+        "assets": [
+          {
+            "path": "assets/layout-design/poster-20-layout.png",
+            "sha256": "95cba06b65fbab392f9d2ffde634f5e11ed6ce7a9eecece33170862d881bf1c2",
+            "relevance": 3,
+            "required": true
+          },
+          {
+            "path": "assets/layout-design/poster-20-type.png",
+            "sha256": "00d337c1aec303698fc9741db7b2a11944c0feceef34139e3c2f15cf5164b1b6",
+            "relevance": 2,
+            "required": false
+          }
+        ],
+        "regions": [],
+        "expectedParentLocators": [
+          "data/courses/layout-design/120-poster-20-analysis.md"
+        ],
+        "forbiddenNodeIds": [],
+        "forbiddenAssetPaths": [
+          "assets/layout-design/poster-20-color.png"
+        ]
+      },
+      "tags": [
+        "multimodal",
+        "non-self-evidence",
+        "natural-language",
+        "cluster-evidence-poster-20"
+      ]
+    },
+    {
+      "id": "visual-evidence-poster-23",
+      "mode": "IMAGE_TEXT_TO_EVIDENCE",
+      "expectation": "ANSWERABLE",
+      "expectedSourceCoursePackId": "layout-design",
+      "expectedLegacyPlacementCoursePackId": "book-design",
+      "coursePackVersion": "1",
+      "query": {
+        "coursePackId": "layout-design",
+        "text": "这张绿白海报里夹着几条灰色图片，我总觉得阅读顺序怪，能把对应分析和原图证据找出来吗？",
+        "assetPath": "assets/layout-design/poster-23-type.png",
+        "excludeSelfAsset": true,
+        "excludeAssetPaths": [
+          "assets/layout-design/poster-23-type.png"
+        ]
+      },
+      "targets": {
+        "nodes": [
+          {
+            "id": "layout-123-poster-23-analysis",
+            "relevance": 3,
+            "required": true
+          }
+        ],
+        "assets": [
+          {
+            "path": "assets/layout-design/poster-23-layout.png",
+            "sha256": "bd708f40b7466c17f1bd1e79ed922ba921963c33d5d8db9c636afb884b56a3ab",
+            "relevance": 3,
+            "required": true
+          },
+          {
+            "path": "assets/layout-design/poster-23-color.png",
+            "sha256": "e36aaa460fbbb09580205d578c11126184a6b9bb5e73138c7e1a32cd4ead0347",
+            "relevance": 2,
+            "required": false
+          }
+        ],
+        "regions": [],
+        "expectedParentLocators": [
+          "data/courses/layout-design/123-poster-23-analysis.md"
+        ],
+        "forbiddenNodeIds": [],
+        "forbiddenAssetPaths": [
+          "assets/layout-design/poster-23-type.png"
+        ]
+      },
+      "tags": [
+        "multimodal",
+        "non-self-evidence",
+        "natural-language",
+        "cluster-evidence-poster-23"
+      ]
+    },
+    {
+      "id": "visual-evidence-poster-29",
+      "mode": "IMAGE_TEXT_TO_EVIDENCE",
+      "expectation": "ANSWERABLE",
+      "expectedSourceCoursePackId": "layout-design",
+      "expectedLegacyPlacementCoursePackId": "book-design",
+      "coursePackVersion": "1",
+      "query": {
+        "coursePackId": "layout-design",
+        "text": "这张黑蓝黄的字互相压住了，我想知道它为什么还能读，给我对应案例说明和非当前这张的证据。",
+        "assetPath": "assets/layout-design/poster-29-color.png",
+        "excludeSelfAsset": true,
+        "excludeAssetPaths": [
+          "assets/layout-design/poster-29-color.png"
+        ]
+      },
+      "targets": {
+        "nodes": [
+          {
+            "id": "layout-129-poster-29-analysis",
+            "relevance": 3,
+            "required": true
+          }
+        ],
+        "assets": [
+          {
+            "path": "assets/layout-design/poster-29-layout.png",
+            "sha256": "cbb9ce203243eb27660baafe855abbc3a9846ad437874ace2dd7b26416b90d2b",
+            "relevance": 3,
+            "required": true
+          },
+          {
+            "path": "assets/layout-design/poster-29-type.png",
+            "sha256": "5c91cf9ef5405a30efb162fb2d597702b50f82e9159b6954dab033eba6066b1b",
+            "relevance": 2,
+            "required": false
+          }
+        ],
+        "regions": [],
+        "expectedParentLocators": [
+          "data/courses/layout-design/129-poster-29-analysis.md"
+        ],
+        "forbiddenNodeIds": [],
+        "forbiddenAssetPaths": [
+          "assets/layout-design/poster-29-color.png"
+        ]
+      },
+      "tags": [
+        "multimodal",
+        "non-self-evidence",
+        "natural-language",
+        "cluster-evidence-poster-29"
+      ]
+    },
+    {
+      "id": "visual-evidence-poster-37",
+      "mode": "IMAGE_TEXT_TO_EVIDENCE",
+      "expectation": "ANSWERABLE",
+      "expectedSourceCoursePackId": "layout-design",
+      "expectedLegacyPlacementCoursePackId": "book-design",
+      "coursePackVersion": "1",
+      "query": {
+        "coursePackId": "layout-design",
+        "text": "这张画面像编织物一样密，信息是怎么顺着纹理排的？请找对应分析、别只把这张图返回来。",
+        "assetPath": "assets/layout-design/poster-37-color.png",
+        "excludeSelfAsset": true,
+        "excludeAssetPaths": [
+          "assets/layout-design/poster-37-color.png"
+        ]
+      },
+      "targets": {
+        "nodes": [
+          {
+            "id": "layout-137-poster-37-analysis",
+            "relevance": 3,
+            "required": true
+          }
+        ],
+        "assets": [
+          {
+            "path": "assets/layout-design/poster-37-layout.png",
+            "sha256": "4dc2710f6f8350329b0a6071a149b1092c2af7e7945b801a510355a66b42016f",
+            "relevance": 3,
+            "required": true
+          },
+          {
+            "path": "assets/layout-design/poster-37-type.png",
+            "sha256": "9cb3202608ca35bd3ab66c8d90a5b7de3fda3c265ba0b1de40a1668f1025fa67",
+            "relevance": 2,
+            "required": false
+          }
+        ],
+        "regions": [],
+        "expectedParentLocators": [
+          "data/courses/layout-design/137-poster-37-analysis.md"
+        ],
+        "forbiddenNodeIds": [],
+        "forbiddenAssetPaths": [
+          "assets/layout-design/poster-37-color.png"
+        ]
+      },
+      "tags": [
+        "multimodal",
+        "non-self-evidence",
+        "natural-language",
+        "cluster-evidence-poster-37"
+      ]
+    },
+    {
+      "id": "visual-evidence-poster-45",
+      "mode": "IMAGE_TEXT_TO_EVIDENCE",
+      "expectation": "ANSWERABLE",
+      "expectedSourceCoursePackId": "layout-design",
+      "expectedLegacyPlacementCoursePackId": "book-design",
+      "coursePackVersion": "1",
+      "query": {
+        "coursePackId": "layout-design",
+        "text": "这张版面为什么像交通线路图？文字和阅读路线怎么绑在一起？给我对应分析和另一张证据图。",
+        "assetPath": "assets/layout-design/poster-45-color.png",
+        "excludeSelfAsset": true,
+        "excludeAssetPaths": [
+          "assets/layout-design/poster-45-color.png"
+        ]
+      },
+      "targets": {
+        "nodes": [
+          {
+            "id": "layout-145-poster-45-analysis",
+            "relevance": 3,
+            "required": true
+          }
+        ],
+        "assets": [
+          {
+            "path": "assets/layout-design/poster-45-layout.png",
+            "sha256": "aa7a410cafa334ccd445a32b22d712c125772013ca1b07c39621eceee981f02d",
+            "relevance": 3,
+            "required": true
+          },
+          {
+            "path": "assets/layout-design/poster-45-type.png",
+            "sha256": "0f18dec1c0c3d840f8f9f27100e8d09371f39150bd3a5ae91590460ccce32d47",
+            "relevance": 2,
+            "required": false
+          }
+        ],
+        "regions": [],
+        "expectedParentLocators": [
+          "data/courses/layout-design/145-poster-45-analysis.md"
+        ],
+        "forbiddenNodeIds": [],
+        "forbiddenAssetPaths": [
+          "assets/layout-design/poster-45-color.png"
+        ]
+      },
+      "tags": [
+        "multimodal",
+        "non-self-evidence",
+        "natural-language",
+        "cluster-evidence-poster-45"
+      ]
+    },
+    {
+      "id": "negative-layout-font-license",
+      "mode": "NEGATIVE",
+      "expectation": "NO_ANSWER",
+      "expectedSourceCoursePackId": null,
+      "expectedLegacyPlacementCoursePackId": null,
+      "coursePackVersion": "1",
+      "query": {
+        "coursePackId": "layout-design",
+        "text": "参考海报里那套字体到底能不能商用，授权费是多少钱？"
+      },
+      "targets": {
+        "nodes": [],
+        "assets": [],
+        "regions": [],
+        "expectedParentLocators": [],
+        "forbiddenNodeIds": [],
+        "forbiddenAssetPaths": []
+      },
+      "tags": [
+        "negative",
+        "natural-language",
+        "cluster-negative-layout-font-license"
+      ]
+    },
+    {
+      "id": "negative-layout-admission-guarantee",
+      "mode": "NEGATIVE",
+      "expectation": "NO_ANSWER",
+      "expectedSourceCoursePackId": null,
+      "expectedLegacyPlacementCoursePackId": null,
+      "coursePackVersion": "1",
+      "query": {
+        "coursePackId": "layout-design",
+        "text": "我照着这些版式练一个月，能保证作品集通过哪所学校吗？"
+      },
+      "targets": {
+        "nodes": [],
+        "assets": [],
+        "regions": [],
+        "expectedParentLocators": [],
+        "forbiddenNodeIds": [],
+        "forbiddenAssetPaths": []
+      },
+      "tags": [
+        "negative",
+        "natural-language",
+        "cluster-negative-layout-admission-guarantee"
+      ]
+    },
+    {
+      "id": "negative-layout-current-copyright",
+      "mode": "NEGATIVE",
+      "expectation": "NO_ANSWER",
+      "expectedSourceCoursePackId": null,
+      "expectedLegacyPlacementCoursePackId": null,
+      "coursePackVersion": "1",
+      "query": {
+        "coursePackId": "layout-design",
+        "text": "资料里那张蓝底红花海报现在版权归谁，拿去印商品要付多少？"
+      },
+      "targets": {
+        "nodes": [],
+        "assets": [],
+        "regions": [],
+        "expectedParentLocators": [],
+        "forbiddenNodeIds": [],
+        "forbiddenAssetPaths": []
+      },
+      "tags": [
+        "negative",
+        "natural-language",
+        "cluster-negative-layout-current-copyright"
+      ]
+    },
+    {
+      "id": "negative-layout-exam-schedule",
+      "mode": "NEGATIVE",
+      "expectation": "NO_ANSWER",
+      "expectedSourceCoursePackId": null,
+      "expectedLegacyPlacementCoursePackId": null,
+      "coursePackVersion": "1",
+      "query": {
+        "coursePackId": "layout-design",
+        "text": "今年版式设计考试具体哪天、在哪个教室？"
+      },
+      "targets": {
+        "nodes": [],
+        "assets": [],
+        "regions": [],
+        "expectedParentLocators": [],
+        "forbiddenNodeIds": [],
+        "forbiddenAssetPaths": []
+      },
+      "tags": [
+        "negative",
+        "natural-language",
+        "cluster-negative-layout-exam-schedule"
+      ]
+    },
+    {
+      "id": "negative-brand-touchdesigner-feedback",
+      "mode": "NEGATIVE",
+      "expectation": "NO_ANSWER",
+      "expectedSourceCoursePackId": null,
+      "expectedLegacyPlacementCoursePackId": null,
+      "coursePackVersion": "1",
+      "query": {
+        "coursePackId": "brand-vi-design",
+        "text": "我在品牌课里想让 TouchDesigner 画面一帧叠一帧，该怎么接 Feedback TOP？"
+      },
+      "targets": {
+        "nodes": [],
+        "assets": [],
+        "regions": [],
+        "expectedParentLocators": [],
+        "forbiddenNodeIds": [
+          "td-feedback-top"
+        ],
+        "forbiddenAssetPaths": []
+      },
+      "tags": [
+        "negative",
+        "natural-language",
+        "cluster-negative-brand-touchdesigner-feedback"
+      ]
+    },
+    {
+      "id": "negative-digital-print-bleed",
+      "mode": "NEGATIVE",
+      "expectation": "NO_ANSWER",
+      "expectedSourceCoursePackId": null,
+      "expectedLegacyPlacementCoursePackId": null,
+      "coursePackVersion": "1",
+      "query": {
+        "coursePackId": "digital-interaction",
+        "text": "互动课作业拿去印总露白，出血到底该设多少？"
+      },
+      "targets": {
+        "nodes": [],
+        "assets": [],
+        "regions": [],
+        "expectedParentLocators": [],
+        "forbiddenNodeIds": [
+          "book-bleed-output"
+        ],
+        "forbiddenAssetPaths": []
+      },
+      "tags": [
+        "negative",
+        "natural-language",
+        "cluster-negative-digital-print-bleed"
+      ]
+    },
+    {
+      "id": "negative-general-wordmark-choice",
+      "mode": "NEGATIVE",
+      "expectation": "NO_ANSWER",
+      "expectedSourceCoursePackId": null,
+      "expectedLegacyPlacementCoursePackId": null,
+      "coursePackVersion": "1",
+      "query": {
+        "coursePackId": "general-design",
+        "text": "咖啡店标志只用店名行不行，还是必须再画一个图形？"
+      },
+      "targets": {
+        "nodes": [],
+        "assets": [],
+        "regions": [],
+        "expectedParentLocators": [],
+        "forbiddenNodeIds": [
+          "brandvi-001-assess-wordmark-fit"
+        ],
+        "forbiddenAssetPaths": []
+      },
+      "tags": [
+        "negative",
+        "natural-language",
+        "cluster-negative-general-wordmark-choice"
+      ]
+    },
+    {
+      "id": "negative-book-glsl-top",
+      "mode": "NEGATIVE",
+      "expectation": "NO_ANSWER",
+      "expectedSourceCoursePackId": null,
+      "expectedLegacyPlacementCoursePackId": null,
+      "coursePackVersion": "1",
+      "query": {
+        "coursePackId": "book-design",
+        "text": "书籍设计课里我想写 GLSL TOP 做实时着色器，第一步该怎么接？"
+      },
+      "targets": {
+        "nodes": [],
+        "assets": [],
+        "regions": [],
+        "expectedParentLocators": [],
+        "forbiddenNodeIds": [
+          "td-glsl-top"
+        ],
+        "forbiddenAssetPaths": []
+      },
+      "tags": [
+        "negative",
+        "natural-language",
+        "cluster-negative-book-glsl-top"
+      ]
+    },
+    {
+      "id": "negative-image-brand-poster-22",
+      "mode": "IMAGE_TO_IMAGE",
+      "expectation": "NO_ANSWER",
+      "expectedSourceCoursePackId": null,
+      "expectedLegacyPlacementCoursePackId": null,
+      "coursePackVersion": "1",
+      "query": {
+        "coursePackId": "brand-vi-design",
+        "assetPath": "assets/layout-design/poster-22-layout.png",
+        "excludeSelfAsset": true,
+        "excludeAssetPaths": [
+          "assets/layout-design/poster-22-layout.png",
+          "assets/layout-design/poster-22-type.png",
+          "assets/layout-design/poster-22-color.png"
+        ]
+      },
+      "targets": {
+        "nodes": [],
+        "assets": [],
+        "regions": [],
+        "expectedParentLocators": [],
+        "forbiddenNodeIds": [
+          "layout-122-poster-22-analysis"
+        ],
+        "forbiddenAssetPaths": [
+          "assets/layout-design/poster-22-layout.png",
+          "assets/layout-design/poster-22-type.png",
+          "assets/layout-design/poster-22-color.png"
+        ]
+      },
+      "tags": [
+        "negative",
+        "cross-course",
+        "exclude-query-group",
+        "cluster-negative-image-brand-poster-22"
+      ]
+    },
+    {
+      "id": "negative-evidence-digital-poster-34",
+      "mode": "IMAGE_TEXT_TO_EVIDENCE",
+      "expectation": "NO_ANSWER",
+      "expectedSourceCoursePackId": null,
+      "expectedLegacyPlacementCoursePackId": null,
+      "coursePackVersion": "1",
+      "query": {
+        "coursePackId": "digital-interaction",
+        "text": "这张蓝色海报上的金色书法，能直接说明我的互动装置该怎么接传感器吗？",
+        "assetPath": "assets/layout-design/poster-34-color.png",
+        "excludeSelfAsset": true,
+        "excludeAssetPaths": [
+          "assets/layout-design/poster-34-layout.png",
+          "assets/layout-design/poster-34-type.png",
+          "assets/layout-design/poster-34-color.png"
+        ]
+      },
+      "targets": {
+        "nodes": [],
+        "assets": [],
+        "regions": [],
+        "expectedParentLocators": [],
+        "forbiddenNodeIds": [
+          "layout-134-poster-34-analysis"
+        ],
+        "forbiddenAssetPaths": [
+          "assets/layout-design/poster-34-layout.png",
+          "assets/layout-design/poster-34-type.png",
+          "assets/layout-design/poster-34-color.png"
+        ]
+      },
+      "tags": [
+        "negative",
+        "cross-course",
+        "exclude-query-group",
+        "cluster-negative-evidence-digital-poster-34"
+      ]
+    }
+  ]
+}

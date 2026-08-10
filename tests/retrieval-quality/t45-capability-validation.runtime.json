@@ -1,0 +1,193 @@
+{
+  "schemaVersion": 1,
+  "id": "lumi-t45-capability-validation-runtime",
+  "version": "2026-07-29.1",
+  "split": "VALIDATION",
+  "corpusSnapshot": {
+    "path": "data/knowledge-v2/knowledge-corpus.v2.json",
+    "bundleHash": "82db90934afaffa3d227b6b0d11ab5efdb88009fd8b9274845567de4888079f8"
+  },
+  "cases": [
+    {
+      "caseId": "t45-val-reading-evidence-direct",
+      "familyId": "book-layout-reading-evidence",
+      "stratum": "DIRECT_PARAPHRASE",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "book-design",
+      "coursePackVersion": "1",
+      "question": "我改完版式只觉得顺眼了，怎么留下能说明这次改动有效的证据？"
+    },
+    {
+      "caseId": "t45-val-reading-evidence-compose",
+      "familyId": "book-layout-reading-evidence",
+      "stratum": "COMPOSITION_HARD_DISTRACTOR",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "book-design",
+      "coursePackVersion": "1",
+      "question": "我已经按单变量留了前后版，现在还想比较两种网格，并看读者能不能更快找到报名方式，应该控制什么、记录什么？"
+    },
+    {
+      "caseId": "t45-val-glsl-direct",
+      "familyId": "td-glsl-output-debugging",
+      "stratum": "DIRECT_PARAPHRASE",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "digital-interaction",
+      "coursePackVersion": "1",
+      "question": "GLSL TOP 黑屏了，我应该先去哪儿看第一条报错？"
+    },
+    {
+      "caseId": "t45-val-glsl-compose",
+      "familyId": "td-glsl-output-debugging",
+      "stratum": "COMPOSITION_HARD_DISTRACTOR",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "digital-interaction",
+      "coursePackVersion": "1",
+      "question": "我想用 compute shader，但现在既可能是输入没准备好，也可能是版本不够，先怎么分开查？"
+    },
+    {
+      "caseId": "t45-val-math-direct",
+      "familyId": "td-math-channel-mapping",
+      "stratum": "DIRECT_PARAPHRASE",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "digital-interaction",
+      "coursePackVersion": "1",
+      "question": "传感器值有变化，但映射到画面不是太弱就是爆掉，设 Range 前先看什么？"
+    },
+    {
+      "caseId": "t45-val-math-compose",
+      "familyId": "td-math-channel-mapping",
+      "stratum": "COMPOSITION_HARD_DISTRACTOR",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "digital-interaction",
+      "coursePackVersion": "1",
+      "question": "我已经记下输入范围了，还要先把几个通道合成再映到目标范围，Math CHOP 里这两步怎么区分，顺序上要注意什么？"
+    },
+    {
+      "caseId": "t45-val-null-direct",
+      "familyId": "td-null-stable-reference",
+      "stratum": "DIRECT_PARAPHRASE",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "digital-interaction",
+      "coursePackVersion": "1",
+      "question": "为什么大家喜欢从 Null CHOP 往参数上拖，不直接引用前面的处理节点？"
+    },
+    {
+      "caseId": "t45-val-null-compose",
+      "familyId": "td-null-stable-reference",
+      "stratum": "COMPOSITION_HARD_DISTRACTOR",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "digital-interaction",
+      "coursePackVersion": "1",
+      "question": "我想让以后换上游节点也不用重做引用，应该怎么组织出口，同时先确认什么？"
+    },
+    {
+      "caseId": "t45-val-new-ugly-direct",
+      "familyId": "new-ugly-style",
+      "stratum": "DIRECT_PARAPHRASE",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "layout-design",
+      "coursePackVersion": "1",
+      "question": "我做的新丑风看起来像没排好，怎么判断它是故意的还是失误？"
+    },
+    {
+      "caseId": "t45-val-new-ugly-compose",
+      "familyId": "new-ugly-style",
+      "stratum": "COMPOSITION_HARD_DISTRACTOR",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "layout-design",
+      "coursePackVersion": "1",
+      "question": "我想故意破坏对齐和字体，但又不想把信息读坏，做小样时应该保留什么、一次改几项？"
+    },
+    {
+      "caseId": "t45-val-tactile-direct",
+      "familyId": "tactile-texture",
+      "stratum": "DIRECT_PARAPHRASE",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "layout-design",
+      "coursePackVersion": "1",
+      "question": "我给字叠了金属和果冻效果，为什么还是不像一种真的材质？"
+    },
+    {
+      "caseId": "t45-val-tactile-compose",
+      "familyId": "tactile-texture",
+      "stratum": "COMPOSITION_HARD_DISTRACTOR",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "layout-design",
+      "coursePackVersion": "1",
+      "question": "我想做一种有触感的效果，怎样先把光源和材质规律做对，再让同伴判断它像不像？"
+    },
+    {
+      "caseId": "t45-val-retro-direct",
+      "familyId": "retro-futurism",
+      "stratum": "DIRECT_PARAPHRASE",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "layout-design",
+      "coursePackVersion": "1",
+      "question": "我加了霓虹、金属和发光，就算复古未来风了吗？"
+    },
+    {
+      "caseId": "t45-val-retro-compose",
+      "familyId": "retro-futurism",
+      "stratum": "COMPOSITION_HARD_DISTRACTOR",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "layout-design",
+      "coursePackVersion": "1",
+      "question": "我想让画面有某个年代想象未来的感觉，又不想变成效果大杂烩，参考和小样应该怎么收敛？"
+    },
+    {
+      "caseId": "t45-val-font-context-direct",
+      "familyId": "font-selection-context",
+      "stratum": "DIRECT_PARAPHRASE",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "layout-design",
+      "coursePackVersion": "1",
+      "question": "这款字现在很火，我能直接拿来做手机封面吗？"
+    },
+    {
+      "caseId": "t45-val-font-context-compose",
+      "familyId": "font-selection-context",
+      "stratum": "COMPOSITION_HARD_DISTRACTOR",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "layout-design",
+      "coursePackVersion": "1",
+      "question": "同一款字做标题挺好看，我还想拿它排长文，应该在什么尺寸和阅读任务下分别怎么测？"
+    },
+    {
+      "caseId": "t45-val-type-image-color-direct",
+      "familyId": "type-image-color-coordination",
+      "stratum": "DIRECT_PARAPHRASE",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "layout-design",
+      "coursePackVersion": "1",
+      "question": "我的标题、图片和亮色都很抢，第一眼不知道看哪儿，先怎么判断冲突？"
+    },
+    {
+      "caseId": "t45-val-type-image-color-compose",
+      "familyId": "type-image-color-coordination",
+      "stratum": "COMPOSITION_HARD_DISTRACTOR",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "layout-design",
+      "coursePackVersion": "1",
+      "question": "我想重新排层级，不想一上来继续加字体和颜色，应该先做什么骨架，再按什么顺序加回图片和强调色？"
+    },
+    {
+      "caseId": "t45-val-type-hierarchy-direct",
+      "familyId": "type-hierarchy-refinement",
+      "stratum": "DIRECT_PARAPHRASE",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "layout-design",
+      "coursePackVersion": "1",
+      "question": "层级不清时，我先拉字距有用吗，还是应该先查别的？"
+    },
+    {
+      "caseId": "t45-val-type-hierarchy-compose",
+      "familyId": "type-hierarchy-refinement",
+      "stratum": "COMPOSITION_HARD_DISTRACTOR",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "layout-design",
+      "coursePackVersion": "1",
+      "question": "我想把字重和字距都调一下，怎么保存对照才知道是哪一个起作用，还要怎么检查颜色没在帮我作弊？"
+    }
+  ],
+  "suiteHash": "e3a7f38cb76d402cbcac2a5d8e362b6c5536fe0c75f35c631769914a658e807b"
+}

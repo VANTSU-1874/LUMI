@@ -1,0 +1,363 @@
+{
+  "schemaVersion": 1,
+  "id": "lumi-t44-support-dev-runtime",
+  "version": "2026-07-28.1",
+  "split": "DEV",
+  "corpusSnapshot": {
+    "path": "data/knowledge-v2/knowledge-corpus.v2.json",
+    "bundleHash": "82db90934afaffa3d227b6b0d11ab5efdb88009fd8b9274845567de4888079f8"
+  },
+  "cases": [
+    {
+      "caseId": "t44-support-general-p1a",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "general-design",
+      "coursePackVersion": "1",
+      "question": "双钻做项目时，前面理解问题和后面验证方案分别在做什么？"
+    },
+    {
+      "caseId": "t44-support-general-p1b",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "general-design",
+      "coursePackVersion": "1",
+      "question": "项目简报总写得很空，我应该先把哪几件事说清楚？"
+    },
+    {
+      "caseId": "t44-support-general-p2a",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "general-design",
+      "coursePackVersion": "1",
+      "question": "只靠颜色区分状态不太稳，还能加什么线索？"
+    },
+    {
+      "caseId": "t44-support-general-p2b",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "general-design",
+      "coursePackVersion": "1",
+      "question": "两个关键图形快黏在一起了，怎么检查它们的明暗差别？"
+    },
+    {
+      "caseId": "t44-support-general-p3a",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "general-design",
+      "coursePackVersion": "1",
+      "question": "有了一个想法后，怎样先做小样，再用观察结果决定改哪里？"
+    },
+    {
+      "caseId": "t44-support-general-p3b",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "general-design",
+      "coursePackVersion": "1",
+      "question": "正文又挤又不醒目时，字距适应性和文字对比各自要检查什么？"
+    },
+    {
+      "caseId": "t44-support-general-p4a",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "general-design",
+      "coursePackVersion": "1",
+      "question": "状态反馈做得很热闹却让人更迷糊，判断重点是什么？"
+    },
+    {
+      "caseId": "t44-support-general-p4b",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "general-design",
+      "coursePackVersion": "1",
+      "question": "Illustrator 里的文字格式怎样复用，才不会每段都重新调？"
+    },
+    {
+      "caseId": "t44-support-general-p5a",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "general-design",
+      "coursePackVersion": "1",
+      "question": "参考线都对齐了，为什么还要抽查新段落的实际阅读效果？"
+    },
+    {
+      "caseId": "t44-support-general-p5b",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "general-design",
+      "coursePackVersion": "1",
+      "question": "交互反馈不能只做动画的话，还要让使用者确认什么？"
+    },
+    {
+      "caseId": "t44-support-digital-p1a",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "digital-interaction",
+      "coursePackVersion": "1",
+      "question": "DigiShow 的连续值、开关和音符信号应该怎么区分？"
+    },
+    {
+      "caseId": "t44-support-digital-p1b",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "digital-interaction",
+      "coursePackVersion": "1",
+      "question": "OSC Out CHOP 发不出去时，第一轮排查从哪儿开始？"
+    },
+    {
+      "caseId": "t44-support-digital-p2a",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "digital-interaction",
+      "coursePackVersion": "1",
+      "question": "声音一大画面就乱跳，怎样先把输入变得平稳一点？"
+    },
+    {
+      "caseId": "t44-support-digital-p2b",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "digital-interaction",
+      "coursePackVersion": "1",
+      "question": "画面拖影一层层糊住了，反馈回路里应该先改哪类关系？"
+    },
+    {
+      "caseId": "t44-support-digital-p3a",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "digital-interaction",
+      "coursePackVersion": "1",
+      "question": "从传感器输入到灯光输出，怎样把映射和协议两段一起排查？"
+    },
+    {
+      "caseId": "t44-support-digital-p3b",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "digital-interaction",
+      "coursePackVersion": "1",
+      "question": "互动方案想换一个场地测试，哪些条件要保持，哪些条件可以只改一个？"
+    },
+    {
+      "caseId": "t44-support-digital-p4a",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "digital-interaction",
+      "coursePackVersion": "1",
+      "question": "节点都在工作但互动还是没反应，为什么不能只看最后输出？"
+    },
+    {
+      "caseId": "t44-support-digital-p4b",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "digital-interaction",
+      "coursePackVersion": "1",
+      "question": "MIDI Note 和 MIDI CC 都能进来时，映射前要先确认什么？"
+    },
+    {
+      "caseId": "t44-support-digital-p5a",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "digital-interaction",
+      "coursePackVersion": "1",
+      "question": "互动界面的版面很整齐，但状态变化还是看不懂，问题可能在哪？"
+    },
+    {
+      "caseId": "t44-support-digital-p5b",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "digital-interaction",
+      "coursePackVersion": "1",
+      "question": "TOP 和 CHOP 名字很像时，怎样先按数据角色判断该看哪个？"
+    },
+    {
+      "caseId": "t44-support-book-p1a",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "book-design",
+      "coursePackVersion": "1",
+      "question": "出血线和最终裁切边界到底是什么关系？"
+    },
+    {
+      "caseId": "t44-support-book-p1b",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "book-design",
+      "coursePackVersion": "1",
+      "question": "图片链接丢失时，交付印刷前应该先检查什么？"
+    },
+    {
+      "caseId": "t44-support-book-p2a",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "book-design",
+      "coursePackVersion": "1",
+      "question": "正文贴边不是加边距的话，哪些画面才需要延伸出去？"
+    },
+    {
+      "caseId": "t44-support-book-p2b",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "book-design",
+      "coursePackVersion": "1",
+      "question": "字母看着忽松忽紧，应该先分清字偶距还是整体字距吗？"
+    },
+    {
+      "caseId": "t44-support-book-p3a",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "book-design",
+      "coursePackVersion": "1",
+      "question": "做跨页图时，怎样同时检查出血和装订影响？"
+    },
+    {
+      "caseId": "t44-support-book-p3b",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "book-design",
+      "coursePackVersion": "1",
+      "question": "目录页既要对齐又要分层，Layout Grid 和信息层级怎么配合？"
+    },
+    {
+      "caseId": "t44-support-book-p4a",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "book-design",
+      "coursePackVersion": "1",
+      "question": "页面看起来很整齐却不方便读，为什么网格不能代替阅读顺序？"
+    },
+    {
+      "caseId": "t44-support-book-p4b",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "book-design",
+      "coursePackVersion": "1",
+      "question": "Printer Marks 选得越多越安全吗，还是要按交付要求判断？"
+    },
+    {
+      "caseId": "t44-support-book-p5a",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "book-design",
+      "coursePackVersion": "1",
+      "question": "封面和内页都讲层级，它们在整本书里怎样保持一致？"
+    },
+    {
+      "caseId": "t44-support-book-p5b",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "book-design",
+      "coursePackVersion": "1",
+      "question": "Document Grid 和 Layout Grid 都叫网格，判断时先看什么任务？"
+    },
+    {
+      "caseId": "t44-support-layout-p1a",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "layout-design",
+      "coursePackVersion": "1",
+      "question": "内容很多时，栅格和信息层级分别解决什么问题？"
+    },
+    {
+      "caseId": "t44-support-layout-p1b",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "layout-design",
+      "coursePackVersion": "1",
+      "question": "国际主义风格适合什么阅读任务，不能只看哪些表面特征？"
+    },
+    {
+      "caseId": "t44-support-layout-p2a",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "layout-design",
+      "coursePackVersion": "1",
+      "question": "所有东西都对齐了还是没重点，应该先重新分哪几类信息？"
+    },
+    {
+      "caseId": "t44-support-layout-p2b",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "layout-design",
+      "coursePackVersion": "1",
+      "question": "拼贴不是随便堆素材的话，画面关系要怎么建立？"
+    },
+    {
+      "caseId": "t44-support-layout-p3a",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "layout-design",
+      "coursePackVersion": "1",
+      "question": "先分主要和次要信息后，怎样用栏位、间距和留白把阅读路线做出来？"
+    },
+    {
+      "caseId": "t44-support-layout-p3b",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "layout-design",
+      "coursePackVersion": "1",
+      "question": "选设计书参考时，怎样一起核对版本、版权页和目录？"
+    },
+    {
+      "caseId": "t44-support-layout-p4a",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "layout-design",
+      "coursePackVersion": "1",
+      "question": "酸性风格很抢眼，但怎样判断它是不是只在装饰？"
+    },
+    {
+      "caseId": "t44-support-layout-p4b",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "layout-design",
+      "coursePackVersion": "1",
+      "question": "留白很多不一定高级，应该回到什么阅读任务判断？"
+    },
+    {
+      "caseId": "t44-support-layout-p5a",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "layout-design",
+      "coursePackVersion": "1",
+      "question": "页面也讲反馈的话，视觉层级怎样帮助读者找到下一步？"
+    },
+    {
+      "caseId": "t44-support-layout-p5b",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "layout-design",
+      "coursePackVersion": "1",
+      "question": "新中式和国际主义都能用网格时，选择依据应该落在哪？"
+    },
+    {
+      "caseId": "t44-support-brand-p1a",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "brand-vi-design",
+      "coursePackVersion": "1",
+      "question": "纯字体字标适合品牌时，最先要验证什么？"
+    },
+    {
+      "caseId": "t44-support-brand-p1b",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "brand-vi-design",
+      "coursePackVersion": "1",
+      "question": "字标单独用和图形加字标，怎样做一个公平比较？"
+    },
+    {
+      "caseId": "t44-support-brand-p2a",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "brand-vi-design",
+      "coursePackVersion": "1",
+      "question": "只用文字做标识不一定更高级，那我该看哪些真实表现？"
+    },
+    {
+      "caseId": "t44-support-brand-p2b",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "brand-vi-design",
+      "coursePackVersion": "1",
+      "question": "这个字标感觉太冷，怎么判断是字形问题还是受众不合适？"
+    },
+    {
+      "caseId": "t44-support-brand-p3a",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "brand-vi-design",
+      "coursePackVersion": "1",
+      "question": "比较两个字标时，怎样一起记录识别、缩小清晰度和单色表现？"
+    },
+    {
+      "caseId": "t44-support-brand-p3b",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "brand-vi-design",
+      "coursePackVersion": "1",
+      "question": "先做低保真版本后，怎样用同一名称、尺寸和位置比较？"
+    },
+    {
+      "caseId": "t44-support-brand-p4a",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "brand-vi-design",
+      "coursePackVersion": "1",
+      "question": "品牌名很长时，纯字标看着简洁就一定合适吗？"
+    },
+    {
+      "caseId": "t44-support-brand-p4b",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "brand-vi-design",
+      "coursePackVersion": "1",
+      "question": "包装上看着很醒目，为什么还要换到小尺寸和单色里测？"
+    },
+    {
+      "caseId": "t44-support-brand-p5a",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "brand-vi-design",
+      "coursePackVersion": "1",
+      "question": "字标也有版式适配问题，横版和竖版应该怎么一起测？"
+    },
+    {
+      "caseId": "t44-support-brand-p5b",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "brand-vi-design",
+      "coursePackVersion": "1",
+      "question": "标志缩小后仍清楚，和名称能不能被认出来是一回事吗？"
+    }
+  ],
+  "suiteHash": "a67bf1cbe71fd211355e4bd8b0e6a60326f2d697ca8a1ddafee28c29a6d27cfe"
+}

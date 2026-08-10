@@ -1,0 +1,7 @@
+# Direct Linux CPU runtime requirements. T3 installs torch from the official
+# PyTorch CPU wheel index, installs the remaining packages from PyPI, and seals
+# the fully resolved environment in a separate Linux readiness receipt.
+torch==2.11.0
+huggingface-hub==1.24.0
+safetensors==0.8.0
+transformers==5.14.1

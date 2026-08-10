@@ -1,0 +1,8 @@
+allowBuilds:
+  better-sqlite3: true
+  esbuild: true
+  sharp: true
+overrides:
+  "@esbuild-kit/core-utils>esbuild": 0.25.4
+  ini: 1.3.8
+  postcss: 8.5.16

@@ -1,0 +1,3 @@
+# Narrow, root-owned Lumi release capability. Argument validation occurs only
+# inside /usr/local/sbin/lumi-release, which is root:root and mode 0750.
+arlo ALL=(root) NOPASSWD: /usr/local/sbin/lumi-release

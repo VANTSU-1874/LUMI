@@ -1,0 +1,413 @@
+{
+  "schemaVersion": 3,
+  "id": "lumi-t44-prerequisite-dev",
+  "version": "2026-07-28.1",
+  "split": "DEV",
+  "suiteHash": "df3773e18df8074a773c5ad41b2b3e03e1a83c420eaac7683c3878c4bd60a8c3",
+  "cases": [
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "general-design", "coursePackVersion": "1", "question": "双钻做项目时，前面发散和后面收敛分别是在干什么？" },
+      "scoring": { "caseId": "t44-route-general-p1a", "familyId": "general-double-diamond-purpose", "stratum": "ANSWERABLE_SINGLE_PRIMARY_DIRECT", "expectation": "ANSWERABLE", "expectedDecision": "STATIC_CORPUS_ELIGIBLE", "expectedFailClosedEligible": false }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "general-design", "coursePackVersion": "1", "question": "项目简报总写得很空，我应该先把哪几件事说清楚？" },
+      "scoring": { "caseId": "t44-route-general-p1b", "familyId": "general-brief-clarity", "stratum": "ANSWERABLE_SINGLE_PRIMARY_DIRECT", "expectation": "ANSWERABLE", "expectedDecision": "STATIC_CORPUS_ELIGIBLE", "expectedFailClosedEligible": false }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "general-design", "coursePackVersion": "1", "question": "只靠颜色区分状态不太稳，还有什么办法能补上？" },
+      "scoring": { "caseId": "t44-route-general-p2a", "familyId": "general-color-redundancy", "stratum": "ANSWERABLE_PARAPHRASE_ALIAS", "expectation": "ANSWERABLE", "expectedDecision": "STATIC_CORPUS_ELIGIBLE", "expectedFailClosedEligible": false }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "general-design", "coursePackVersion": "1", "question": "两个图形看着快黏在一起了，怎么检查它们的明暗差别？" },
+      "scoring": { "caseId": "t44-route-general-p2b", "familyId": "general-nontext-contrast", "stratum": "ANSWERABLE_PARAPHRASE_ALIAS", "expectation": "ANSWERABLE", "expectedDecision": "STATIC_CORPUS_ELIGIBLE", "expectedFailClosedEligible": false }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "general-design", "coursePackVersion": "1", "question": "有了一个想法后，怎样先做小样，再用观察结果决定改哪里？" },
+      "scoring": { "caseId": "t44-route-general-p3a", "familyId": "general-prototype-observation", "stratum": "ANSWERABLE_MULTI_PRIMARY_COMPOSITION", "expectation": "ANSWERABLE", "expectedDecision": "STATIC_CORPUS_ELIGIBLE", "expectedFailClosedEligible": false }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "general-design", "coursePackVersion": "1", "question": "正文既挤又不醒目时，字距和文字对比应该按什么顺序检查？" },
+      "scoring": { "caseId": "t44-route-general-p3b", "familyId": "general-spacing-contrast-order", "stratum": "ANSWERABLE_MULTI_PRIMARY_COMPOSITION", "expectation": "ANSWERABLE", "expectedDecision": "STATIC_CORPUS_ELIGIBLE", "expectedFailClosedEligible": false }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "general-design", "coursePackVersion": "1", "question": "状态反馈做得很热闹却让人更迷糊，判断重点是什么？" },
+      "scoring": { "caseId": "t44-route-general-p4a", "familyId": "general-status-feedback-focus", "stratum": "ANSWERABLE_IN_PACK_HARD_DISTRACTOR", "expectation": "ANSWERABLE", "expectedDecision": "STATIC_CORPUS_ELIGIBLE", "expectedFailClosedEligible": false }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "general-design", "coursePackVersion": "1", "question": "Illustrator 里的参考线怎样复用，才不会每页都重新拉？" },
+      "scoring": { "caseId": "t44-route-general-p4b", "familyId": "general-illustrator-grid-reuse", "stratum": "ANSWERABLE_IN_PACK_HARD_DISTRACTOR", "expectation": "ANSWERABLE", "expectedDecision": "STATIC_CORPUS_ELIGIBLE", "expectedFailClosedEligible": false }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "general-design", "coursePackVersion": "1", "question": "页面有网格但阅读还是乱，问题可能出在信息顺序还是对齐？" },
+      "scoring": { "caseId": "t44-route-general-p5a", "familyId": "general-grid-reading-order", "stratum": "ANSWERABLE_CROSS_PACK_TERM_OVERLAP", "expectation": "ANSWERABLE", "expectedDecision": "STATIC_CORPUS_ELIGIBLE", "expectedFailClosedEligible": false }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "general-design", "coursePackVersion": "1", "question": "交互反馈不能只做动画的话，还要让使用者确认什么？" },
+      "scoring": { "caseId": "t44-route-general-p5b", "familyId": "general-feedback-confirmation", "stratum": "ANSWERABLE_CROSS_PACK_TERM_OVERLAP", "expectation": "ANSWERABLE", "expectedDecision": "STATIC_CORPUS_ELIGIBLE", "expectedFailClosedEligible": false }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "general-design", "coursePackVersion": "1", "question": "帮我看看这张界面图片里具体哪个按钮对比不够。" },
+      "scoring": { "caseId": "t44-route-general-n1a", "familyId": "general-missing-interface-asset", "stratum": "NO_ANSWER_ENTITY_OPERATION_GAP", "expectation": "NO_ANSWER", "expectedDecision": "USER_ASSET_REQUIRED", "expectedFailClosedEligible": true }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "general-design", "coursePackVersion": "1", "question": "请你在 Illustrator 里直接替我打开这个文件并改好。" },
+      "scoring": { "caseId": "t44-route-general-n1b", "familyId": "general-local-illustrator-action", "stratum": "NO_ANSWER_ENTITY_OPERATION_GAP", "expectation": "NO_ANSWER", "expectedDecision": "LOCAL_TOOL_ACTION_REQUIRED", "expectedFailClosedEligible": true }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "general-design", "coursePackVersion": "1", "question": "没有给你画布，正文的精确字号到底设多少？" },
+      "scoring": { "caseId": "t44-route-general-n2a", "familyId": "general-missing-canvas-font-size", "stratum": "NO_ANSWER_PARAMETER_CODE_STEP_GAP", "expectation": "NO_ANSWER", "expectedDecision": "PARAMETER_CONTEXT_REQUIRED", "expectedFailClosedEligible": true }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "general-design", "coursePackVersion": "1", "question": "未提供观看距离，文字间距的具体数值该填多少？" },
+      "scoring": { "caseId": "t44-route-general-n2b", "familyId": "general-missing-distance-spacing", "stratum": "NO_ANSWER_PARAMETER_CODE_STEP_GAP", "expectation": "NO_ANSWER", "expectedDecision": "PARAMETER_CONTEXT_REQUIRED", "expectedFailClosedEligible": true }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "general-design", "coursePackVersion": "1", "question": "今天展厅里大家点错入口的比例有多少？" },
+      "scoring": { "caseId": "t44-route-general-n3a", "familyId": "general-live-entry-error-rate", "stratum": "NO_ANSWER_LIVE_EXTERNAL_FACT", "expectation": "NO_ANSWER", "expectedDecision": "EXTERNAL_STATE_REQUIRED", "expectedFailClosedEligible": true }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "general-design", "coursePackVersion": "1", "question": "这周报名答辩的截止日期是哪天？" },
+      "scoring": { "caseId": "t44-route-general-n3b", "familyId": "general-live-defense-deadline", "stratum": "NO_ANSWER_LIVE_EXTERNAL_FACT", "expectation": "NO_ANSWER", "expectedDecision": "EXTERNAL_STATE_REQUIRED", "expectedFailClosedEligible": true }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "general-design", "coursePackVersion": "1", "question": "OSC Out CHOP 发送地址时要先检查哪个字段？" },
+      "scoring": { "caseId": "t44-route-general-n4a", "familyId": "general-foreign-osc-out", "stratum": "NO_ANSWER_OTHER_PACK_NEIGHBOR", "expectation": "NO_ANSWER", "expectedDecision": "COURSE_SCOPE_MISMATCH_CANDIDATE", "expectedFailClosedEligible": false }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "general-design", "coursePackVersion": "1", "question": "Wordmark 的字面语气应该怎样判断？" },
+      "scoring": { "caseId": "t44-route-general-n4b", "familyId": "general-foreign-wordmark", "stratum": "NO_ANSWER_OTHER_PACK_NEIGHBOR", "expectation": "NO_ANSWER", "expectedDecision": "COURSE_SCOPE_MISMATCH_CANDIDATE", "expectedFailClosedEligible": false }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "general-design", "coursePackVersion": "1", "question": "水晶能量如何决定按钮应该用什么颜色？" },
+      "scoring": { "caseId": "t44-route-general-n5a", "familyId": "general-gap-crystal-color", "stratum": "NO_ANSWER_CORPUS_GAP_LEXICAL_OVERLAP", "expectation": "NO_ANSWER", "expectedDecision": "STATIC_CORPUS_ELIGIBLE", "expectedFailClosedEligible": false }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "general-design", "coursePackVersion": "1", "question": "设计师的星座和用户动线之间有什么设计依据？" },
+      "scoring": { "caseId": "t44-route-general-n5b", "familyId": "general-gap-zodiac-flow", "stratum": "NO_ANSWER_CORPUS_GAP_LEXICAL_OVERLAP", "expectation": "NO_ANSWER", "expectedDecision": "STATIC_CORPUS_ELIGIBLE", "expectedFailClosedEligible": false }
+    },
+
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "digital-interaction", "coursePackVersion": "1", "question": "DigiShow 的连续值、开关和音符信号应该怎么区分？" },
+      "scoring": { "caseId": "t44-route-digital-p1a", "familyId": "digital-signal-types", "stratum": "ANSWERABLE_SINGLE_PRIMARY_DIRECT", "expectation": "ANSWERABLE", "expectedDecision": "STATIC_CORPUS_ELIGIBLE", "expectedFailClosedEligible": false }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "digital-interaction", "coursePackVersion": "1", "question": "OSC Out CHOP 发不出去时，第一轮排查从哪儿开始？" },
+      "scoring": { "caseId": "t44-route-digital-p1b", "familyId": "digital-osc-troubleshoot", "stratum": "ANSWERABLE_SINGLE_PRIMARY_DIRECT", "expectation": "ANSWERABLE", "expectedDecision": "STATIC_CORPUS_ELIGIBLE", "expectedFailClosedEligible": false }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "digital-interaction", "coursePackVersion": "1", "question": "声音一大画面就乱跳，怎样先把输入变得平稳一点？" },
+      "scoring": { "caseId": "t44-route-digital-p2a", "familyId": "digital-audio-smoothing", "stratum": "ANSWERABLE_PARAPHRASE_ALIAS", "expectation": "ANSWERABLE", "expectedDecision": "STATIC_CORPUS_ELIGIBLE", "expectedFailClosedEligible": false }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "digital-interaction", "coursePackVersion": "1", "question": "画面拖影一层层糊住了，反馈回路里应该先改哪类关系？" },
+      "scoring": { "caseId": "t44-route-digital-p2b", "familyId": "digital-feedback-loop-control", "stratum": "ANSWERABLE_PARAPHRASE_ALIAS", "expectation": "ANSWERABLE", "expectedDecision": "STATIC_CORPUS_ELIGIBLE", "expectedFailClosedEligible": false }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "digital-interaction", "coursePackVersion": "1", "question": "从传感器输入到灯光输出，怎样把映射和协议两段一起排查？" },
+      "scoring": { "caseId": "t44-route-digital-p3a", "familyId": "digital-input-output-chain", "stratum": "ANSWERABLE_MULTI_PRIMARY_COMPOSITION", "expectation": "ANSWERABLE", "expectedDecision": "STATIC_CORPUS_ELIGIBLE", "expectedFailClosedEligible": false }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "digital-interaction", "coursePackVersion": "1", "question": "互动方案想换一个场地测试，哪些条件要保持，哪些条件可以只改一个？" },
+      "scoring": { "caseId": "t44-route-digital-p3b", "familyId": "digital-transfer-one-condition", "stratum": "ANSWERABLE_MULTI_PRIMARY_COMPOSITION", "expectation": "ANSWERABLE", "expectedDecision": "STATIC_CORPUS_ELIGIBLE", "expectedFailClosedEligible": false }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "digital-interaction", "coursePackVersion": "1", "question": "节点都在工作但互动还是没反应，为什么不能只看最后输出？" },
+      "scoring": { "caseId": "t44-route-digital-p4a", "familyId": "digital-chain-hard-distractor", "stratum": "ANSWERABLE_IN_PACK_HARD_DISTRACTOR", "expectation": "ANSWERABLE", "expectedDecision": "STATIC_CORPUS_ELIGIBLE", "expectedFailClosedEligible": false }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "digital-interaction", "coursePackVersion": "1", "question": "MIDI Note 和 MIDI CC 都能进来时，映射前要先确认什么？" },
+      "scoring": { "caseId": "t44-route-digital-p4b", "familyId": "digital-midi-event-choice", "stratum": "ANSWERABLE_IN_PACK_HARD_DISTRACTOR", "expectation": "ANSWERABLE", "expectedDecision": "STATIC_CORPUS_ELIGIBLE", "expectedFailClosedEligible": false }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "digital-interaction", "coursePackVersion": "1", "question": "互动界面的版面很整齐，但状态变化还是看不懂，问题可能在哪？" },
+      "scoring": { "caseId": "t44-route-digital-p5a", "familyId": "digital-layout-state-overlap", "stratum": "ANSWERABLE_CROSS_PACK_TERM_OVERLAP", "expectation": "ANSWERABLE", "expectedDecision": "STATIC_CORPUS_ELIGIBLE", "expectedFailClosedEligible": false }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "digital-interaction", "coursePackVersion": "1", "question": "TOP 和 CHOP 名字很像时，怎样先按数据角色判断该看哪个？" },
+      "scoring": { "caseId": "t44-route-digital-p5b", "familyId": "digital-top-chop-role", "stratum": "ANSWERABLE_CROSS_PACK_TERM_OVERLAP", "expectation": "ANSWERABLE", "expectedDecision": "STATIC_CORPUS_ELIGIBLE", "expectedFailClosedEligible": false }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "digital-interaction", "coursePackVersion": "1", "question": "帮我检查这份 TouchDesigner 工程里哪个节点没有接上。" },
+      "scoring": { "caseId": "t44-route-digital-n1a", "familyId": "digital-missing-project-asset", "stratum": "NO_ANSWER_ENTITY_OPERATION_GAP", "expectation": "NO_ANSWER", "expectedDecision": "USER_ASSET_REQUIRED", "expectedFailClosedEligible": true }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "digital-interaction", "coursePackVersion": "1", "question": "请你在 TouchDesigner 里直接替我连接这个节点并运行。" },
+      "scoring": { "caseId": "t44-route-digital-n1b", "familyId": "digital-local-touchdesigner-action", "stratum": "NO_ANSWER_ENTITY_OPERATION_GAP", "expectation": "NO_ANSWER", "expectedDecision": "LOCAL_TOOL_ACTION_REQUIRED", "expectedFailClosedEligible": true }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "digital-interaction", "coursePackVersion": "1", "question": "未提供设备，Filter CHOP 的具体参数到底设多少？" },
+      "scoring": { "caseId": "t44-route-digital-n2a", "familyId": "digital-missing-filter-context", "stratum": "NO_ANSWER_PARAMETER_CODE_STEP_GAP", "expectation": "NO_ANSWER", "expectedDecision": "PARAMETER_CONTEXT_REQUIRED", "expectedFailClosedEligible": true }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "digital-interaction", "coursePackVersion": "1", "question": "没有给你输入范围，Math CHOP 的精确数值该填多少？" },
+      "scoring": { "caseId": "t44-route-digital-n2b", "familyId": "digital-missing-math-range", "stratum": "NO_ANSWER_PARAMETER_CODE_STEP_GAP", "expectation": "NO_ANSWER", "expectedDecision": "PARAMETER_CONTEXT_REQUIRED", "expectedFailClosedEligible": true }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "digital-interaction", "coursePackVersion": "1", "question": "此刻展厅传感器的噪声读数是多少？" },
+      "scoring": { "caseId": "t44-route-digital-n3a", "familyId": "digital-live-sensor-reading", "stratum": "NO_ANSWER_LIVE_EXTERNAL_FACT", "expectation": "NO_ANSWER", "expectedDecision": "EXTERNAL_STATE_REQUIRED", "expectedFailClosedEligible": true }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "digital-interaction", "coursePackVersion": "1", "question": "今天平台统计的互动成功率有多少？" },
+      "scoring": { "caseId": "t44-route-digital-n3b", "familyId": "digital-live-platform-rate", "stratum": "NO_ANSWER_LIVE_EXTERNAL_FACT", "expectation": "NO_ANSWER", "expectedDecision": "EXTERNAL_STATE_REQUIRED", "expectedFailClosedEligible": true }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "digital-interaction", "coursePackVersion": "1", "question": "双钻里的收敛阶段应该怎样整理证据？" },
+      "scoring": { "caseId": "t44-route-digital-n4a", "familyId": "digital-foreign-double-diamond", "stratum": "NO_ANSWER_OTHER_PACK_NEIGHBOR", "expectation": "NO_ANSWER", "expectedDecision": "COURSE_SCOPE_MISMATCH_CANDIDATE", "expectedFailClosedEligible": false }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "digital-interaction", "coursePackVersion": "1", "question": "InDesign 的 Layout Grid 和 Document Grid 怎么选？" },
+      "scoring": { "caseId": "t44-route-digital-n4b", "familyId": "digital-foreign-indesign-grid", "stratum": "NO_ANSWER_OTHER_PACK_NEIGHBOR", "expectation": "NO_ANSWER", "expectedDecision": "COURSE_SCOPE_MISMATCH_CANDIDATE", "expectedFailClosedEligible": false }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "digital-interaction", "coursePackVersion": "1", "question": "心灵感应怎样替代传感器给互动装置输入？" },
+      "scoring": { "caseId": "t44-route-digital-n5a", "familyId": "digital-gap-telepathy-input", "stratum": "NO_ANSWER_CORPUS_GAP_LEXICAL_OVERLAP", "expectation": "NO_ANSWER", "expectedDecision": "STATIC_CORPUS_ELIGIBLE", "expectedFailClosedEligible": false }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "digital-interaction", "coursePackVersion": "1", "question": "月相变化和 Feedback TOP 的拖影强度有什么设计关系？" },
+      "scoring": { "caseId": "t44-route-digital-n5b", "familyId": "digital-gap-moon-feedback", "stratum": "NO_ANSWER_CORPUS_GAP_LEXICAL_OVERLAP", "expectation": "NO_ANSWER", "expectedDecision": "STATIC_CORPUS_ELIGIBLE", "expectedFailClosedEligible": false }
+    },
+
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "book-design", "coursePackVersion": "1", "question": "出血线和最终裁切边界到底是什么关系？" },
+      "scoring": { "caseId": "t44-route-book-p1a", "familyId": "book-bleed-trim", "stratum": "ANSWERABLE_SINGLE_PRIMARY_DIRECT", "expectation": "ANSWERABLE", "expectedDecision": "STATIC_CORPUS_ELIGIBLE", "expectedFailClosedEligible": false }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "book-design", "coursePackVersion": "1", "question": "图片链接丢失时，交付印刷前应该先检查什么？" },
+      "scoring": { "caseId": "t44-route-book-p1b", "familyId": "book-linked-assets", "stratum": "ANSWERABLE_SINGLE_PRIMARY_DIRECT", "expectation": "ANSWERABLE", "expectedDecision": "STATIC_CORPUS_ELIGIBLE", "expectedFailClosedEligible": false }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "book-design", "coursePackVersion": "1", "question": "正文贴边不是加边距的话，哪些画面才需要延伸出去？" },
+      "scoring": { "caseId": "t44-route-book-p2a", "familyId": "book-bleed-paraphrase", "stratum": "ANSWERABLE_PARAPHRASE_ALIAS", "expectation": "ANSWERABLE", "expectedDecision": "STATIC_CORPUS_ELIGIBLE", "expectedFailClosedEligible": false }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "book-design", "coursePackVersion": "1", "question": "字母看着忽松忽紧，应该先分清字偶距还是整体字距吗？" },
+      "scoring": { "caseId": "t44-route-book-p2b", "familyId": "book-kerning-tracking", "stratum": "ANSWERABLE_PARAPHRASE_ALIAS", "expectation": "ANSWERABLE", "expectedDecision": "STATIC_CORPUS_ELIGIBLE", "expectedFailClosedEligible": false }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "book-design", "coursePackVersion": "1", "question": "做跨页图时，怎样同时检查出血、安全区和装订影响？" },
+      "scoring": { "caseId": "t44-route-book-p3a", "familyId": "book-spread-production-check", "stratum": "ANSWERABLE_MULTI_PRIMARY_COMPOSITION", "expectation": "ANSWERABLE", "expectedDecision": "STATIC_CORPUS_ELIGIBLE", "expectedFailClosedEligible": false }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "book-design", "coursePackVersion": "1", "question": "目录页既要对齐又要分层，Layout Grid 和信息层级怎么配合？" },
+      "scoring": { "caseId": "t44-route-book-p3b", "familyId": "book-grid-hierarchy", "stratum": "ANSWERABLE_MULTI_PRIMARY_COMPOSITION", "expectation": "ANSWERABLE", "expectedDecision": "STATIC_CORPUS_ELIGIBLE", "expectedFailClosedEligible": false }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "book-design", "coursePackVersion": "1", "question": "页面看起来很整齐却不方便读，为什么网格不能代替阅读顺序？" },
+      "scoring": { "caseId": "t44-route-book-p4a", "familyId": "book-grid-hard-distractor", "stratum": "ANSWERABLE_IN_PACK_HARD_DISTRACTOR", "expectation": "ANSWERABLE", "expectedDecision": "STATIC_CORPUS_ELIGIBLE", "expectedFailClosedEligible": false }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "book-design", "coursePackVersion": "1", "question": "Printer Marks 选得越多越安全吗，还是要按交付要求判断？" },
+      "scoring": { "caseId": "t44-route-book-p4b", "familyId": "book-printer-marks-choice", "stratum": "ANSWERABLE_IN_PACK_HARD_DISTRACTOR", "expectation": "ANSWERABLE", "expectedDecision": "STATIC_CORPUS_ELIGIBLE", "expectedFailClosedEligible": false }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "book-design", "coursePackVersion": "1", "question": "封面和内页都讲层级，它们在整本书里怎样保持一致？" },
+      "scoring": { "caseId": "t44-route-book-p5a", "familyId": "book-system-hierarchy", "stratum": "ANSWERABLE_CROSS_PACK_TERM_OVERLAP", "expectation": "ANSWERABLE", "expectedDecision": "STATIC_CORPUS_ELIGIBLE", "expectedFailClosedEligible": false }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "book-design", "coursePackVersion": "1", "question": "Document Grid 和版面网格都叫网格，判断时先看什么任务？" },
+      "scoring": { "caseId": "t44-route-book-p5b", "familyId": "book-grid-term-overlap", "stratum": "ANSWERABLE_CROSS_PACK_TERM_OVERLAP", "expectation": "ANSWERABLE", "expectedDecision": "STATIC_CORPUS_ELIGIBLE", "expectedFailClosedEligible": false }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "book-design", "coursePackVersion": "1", "question": "帮我看看这份源文件里哪张图片的链接已经断了。" },
+      "scoring": { "caseId": "t44-route-book-n1a", "familyId": "book-missing-source-file", "stratum": "NO_ANSWER_ENTITY_OPERATION_GAP", "expectation": "NO_ANSWER", "expectedDecision": "USER_ASSET_REQUIRED", "expectedFailClosedEligible": true }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "book-design", "coursePackVersion": "1", "question": "请你在 InDesign 里直接替我打开这个文件并导出 PDF。" },
+      "scoring": { "caseId": "t44-route-book-n1b", "familyId": "book-local-indesign-export", "stratum": "NO_ANSWER_ENTITY_OPERATION_GAP", "expectation": "NO_ANSWER", "expectedDecision": "LOCAL_TOOL_ACTION_REQUIRED", "expectedFailClosedEligible": true }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "book-design", "coursePackVersion": "1", "question": "未提供成品尺寸，出血的精确数值到底设多少？" },
+      "scoring": { "caseId": "t44-route-book-n2a", "familyId": "book-missing-trim-size", "stratum": "NO_ANSWER_PARAMETER_CODE_STEP_GAP", "expectation": "NO_ANSWER", "expectedDecision": "PARAMETER_CONTEXT_REQUIRED", "expectedFailClosedEligible": true }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "book-design", "coursePackVersion": "1", "question": "没有给你纸张信息，正文的具体字号该填多少？" },
+      "scoring": { "caseId": "t44-route-book-n2b", "familyId": "book-missing-paper-font-size", "stratum": "NO_ANSWER_PARAMETER_CODE_STEP_GAP", "expectation": "NO_ANSWER", "expectedDecision": "PARAMETER_CONTEXT_REQUIRED", "expectedFailClosedEligible": true }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "book-design", "coursePackVersion": "1", "question": "今天这家印厂给这本书的报价是多少？" },
+      "scoring": { "caseId": "t44-route-book-n3a", "familyId": "book-live-printer-quote", "stratum": "NO_ANSWER_LIVE_EXTERNAL_FACT", "expectation": "NO_ANSWER", "expectedDecision": "EXTERNAL_STATE_REQUIRED", "expectedFailClosedEligible": true }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "book-design", "coursePackVersion": "1", "question": "本周印厂的装订排期到哪一步了？" },
+      "scoring": { "caseId": "t44-route-book-n3b", "familyId": "book-live-binding-schedule", "stratum": "NO_ANSWER_LIVE_EXTERNAL_FACT", "expectation": "NO_ANSWER", "expectedDecision": "EXTERNAL_STATE_REQUIRED", "expectedFailClosedEligible": true }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "book-design", "coursePackVersion": "1", "question": "酸性风格的文字为什么常故意做得不稳定？" },
+      "scoring": { "caseId": "t44-route-book-n4a", "familyId": "book-foreign-acid-style", "stratum": "NO_ANSWER_OTHER_PACK_NEIGHBOR", "expectation": "NO_ANSWER", "expectedDecision": "COURSE_SCOPE_MISMATCH_CANDIDATE", "expectedFailClosedEligible": false }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "book-design", "coursePackVersion": "1", "question": "状态反馈应该怎样告诉使用者操作有没有成功？" },
+      "scoring": { "caseId": "t44-route-book-n4b", "familyId": "book-foreign-status-feedback", "stratum": "NO_ANSWER_OTHER_PACK_NEIGHBOR", "expectation": "NO_ANSWER", "expectedDecision": "COURSE_SCOPE_MISMATCH_CANDIDATE", "expectedFailClosedEligible": false }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "book-design", "coursePackVersion": "1", "question": "哪种纸闻起来更专业，判断依据是什么？" },
+      "scoring": { "caseId": "t44-route-book-n5a", "familyId": "book-gap-paper-smell", "stratum": "NO_ANSWER_CORPUS_GAP_LEXICAL_OVERLAP", "expectation": "NO_ANSWER", "expectedDecision": "STATIC_CORPUS_ELIGIBLE", "expectedFailClosedEligible": false }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "book-design", "coursePackVersion": "1", "question": "作者的生肖怎样决定装订方式？" },
+      "scoring": { "caseId": "t44-route-book-n5b", "familyId": "book-gap-zodiac-binding", "stratum": "NO_ANSWER_CORPUS_GAP_LEXICAL_OVERLAP", "expectation": "NO_ANSWER", "expectedDecision": "STATIC_CORPUS_ELIGIBLE", "expectedFailClosedEligible": false }
+    },
+
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "layout-design", "coursePackVersion": "1", "question": "内容很多时，栅格和信息层级分别解决什么问题？" },
+      "scoring": { "caseId": "t44-route-layout-p1a", "familyId": "layout-grid-hierarchy", "stratum": "ANSWERABLE_SINGLE_PRIMARY_DIRECT", "expectation": "ANSWERABLE", "expectedDecision": "STATIC_CORPUS_ELIGIBLE", "expectedFailClosedEligible": false }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "layout-design", "coursePackVersion": "1", "question": "国际主义风格适合什么阅读任务，不能只看哪些表面特征？" },
+      "scoring": { "caseId": "t44-route-layout-p1b", "familyId": "layout-international-fit", "stratum": "ANSWERABLE_SINGLE_PRIMARY_DIRECT", "expectation": "ANSWERABLE", "expectedDecision": "STATIC_CORPUS_ELIGIBLE", "expectedFailClosedEligible": false }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "layout-design", "coursePackVersion": "1", "question": "所有东西都对齐了还是没重点，应该先重新分哪几类信息？" },
+      "scoring": { "caseId": "t44-route-layout-p2a", "familyId": "layout-aligned-no-focus", "stratum": "ANSWERABLE_PARAPHRASE_ALIAS", "expectation": "ANSWERABLE", "expectedDecision": "STATIC_CORPUS_ELIGIBLE", "expectedFailClosedEligible": false }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "layout-design", "coursePackVersion": "1", "question": "拼贴不是随便堆素材的话，画面关系要怎么建立？" },
+      "scoring": { "caseId": "t44-route-layout-p2b", "familyId": "layout-collage-relationship", "stratum": "ANSWERABLE_PARAPHRASE_ALIAS", "expectation": "ANSWERABLE", "expectedDecision": "STATIC_CORPUS_ELIGIBLE", "expectedFailClosedEligible": false }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "layout-design", "coursePackVersion": "1", "question": "先分主要和次要信息后，怎样用栏位、间距和留白把阅读路线做出来？" },
+      "scoring": { "caseId": "t44-route-layout-p3a", "familyId": "layout-role-to-reading-path", "stratum": "ANSWERABLE_MULTI_PRIMARY_COMPOSITION", "expectation": "ANSWERABLE", "expectedDecision": "STATIC_CORPUS_ELIGIBLE", "expectedFailClosedEligible": false }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "layout-design", "coursePackVersion": "1", "question": "选设计书参考时，怎样一起核对版本、版权页和目录？" },
+      "scoring": { "caseId": "t44-route-layout-p3b", "familyId": "layout-book-reference-check", "stratum": "ANSWERABLE_MULTI_PRIMARY_COMPOSITION", "expectation": "ANSWERABLE", "expectedDecision": "STATIC_CORPUS_ELIGIBLE", "expectedFailClosedEligible": false }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "layout-design", "coursePackVersion": "1", "question": "酸性风格很抢眼，但怎样判断它是不是只在装饰？" },
+      "scoring": { "caseId": "t44-route-layout-p4a", "familyId": "layout-acid-hard-distractor", "stratum": "ANSWERABLE_IN_PACK_HARD_DISTRACTOR", "expectation": "ANSWERABLE", "expectedDecision": "STATIC_CORPUS_ELIGIBLE", "expectedFailClosedEligible": false }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "layout-design", "coursePackVersion": "1", "question": "留白很多不一定高级，应该回到什么阅读任务判断？" },
+      "scoring": { "caseId": "t44-route-layout-p4b", "familyId": "layout-whitespace-task", "stratum": "ANSWERABLE_IN_PACK_HARD_DISTRACTOR", "expectation": "ANSWERABLE", "expectedDecision": "STATIC_CORPUS_ELIGIBLE", "expectedFailClosedEligible": false }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "layout-design", "coursePackVersion": "1", "question": "页面也讲反馈的话，视觉层级怎样帮助读者找到下一步？" },
+      "scoring": { "caseId": "t44-route-layout-p5a", "familyId": "layout-feedback-term-overlap", "stratum": "ANSWERABLE_CROSS_PACK_TERM_OVERLAP", "expectation": "ANSWERABLE", "expectedDecision": "STATIC_CORPUS_ELIGIBLE", "expectedFailClosedEligible": false }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "layout-design", "coursePackVersion": "1", "question": "新中式和国际主义都能用网格时，选择依据应该落在哪？" },
+      "scoring": { "caseId": "t44-route-layout-p5b", "familyId": "layout-style-grid-overlap", "stratum": "ANSWERABLE_CROSS_PACK_TERM_OVERLAP", "expectation": "ANSWERABLE", "expectedDecision": "STATIC_CORPUS_ELIGIBLE", "expectedFailClosedEligible": false }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "layout-design", "coursePackVersion": "1", "question": "帮我看看这张海报里具体哪个标题没有对齐。" },
+      "scoring": { "caseId": "t44-route-layout-n1a", "familyId": "layout-missing-poster-asset", "stratum": "NO_ANSWER_ENTITY_OPERATION_GAP", "expectation": "NO_ANSWER", "expectedDecision": "USER_ASSET_REQUIRED", "expectedFailClosedEligible": true }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "layout-design", "coursePackVersion": "1", "question": "请你在 Photoshop 里直接替我打开这张图片并排好文字。" },
+      "scoring": { "caseId": "t44-route-layout-n1b", "familyId": "layout-local-photoshop-action", "stratum": "NO_ANSWER_ENTITY_OPERATION_GAP", "expectation": "NO_ANSWER", "expectedDecision": "LOCAL_TOOL_ACTION_REQUIRED", "expectedFailClosedEligible": true }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "layout-design", "coursePackVersion": "1", "question": "未提供成品尺寸，栅格的精确栏数到底设多少？" },
+      "scoring": { "caseId": "t44-route-layout-n2a", "familyId": "layout-missing-size-columns", "stratum": "NO_ANSWER_PARAMETER_CODE_STEP_GAP", "expectation": "NO_ANSWER", "expectedDecision": "PARAMETER_CONTEXT_REQUIRED", "expectedFailClosedEligible": true }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "layout-design", "coursePackVersion": "1", "question": "没有给你观看距离，标题的具体字号该填多少？" },
+      "scoring": { "caseId": "t44-route-layout-n2b", "familyId": "layout-missing-distance-title-size", "stratum": "NO_ANSWER_PARAMETER_CODE_STEP_GAP", "expectation": "NO_ANSWER", "expectedDecision": "PARAMETER_CONTEXT_REQUIRED", "expectedFailClosedEligible": true }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "layout-design", "coursePackVersion": "1", "question": "今天展览现场把主标题读错的人有多少？" },
+      "scoring": { "caseId": "t44-route-layout-n3a", "familyId": "layout-live-title-error-count", "stratum": "NO_ANSWER_LIVE_EXTERNAL_FACT", "expectation": "NO_ANSWER", "expectedDecision": "EXTERNAL_STATE_REQUIRED", "expectedFailClosedEligible": true }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "layout-design", "coursePackVersion": "1", "question": "这门版式训练营现在收费多少钱？" },
+      "scoring": { "caseId": "t44-route-layout-n3b", "familyId": "layout-live-course-price", "stratum": "NO_ANSWER_LIVE_EXTERNAL_FACT", "expectation": "NO_ANSWER", "expectedDecision": "EXTERNAL_STATE_REQUIRED", "expectedFailClosedEligible": true }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "layout-design", "coursePackVersion": "1", "question": "Wordmark 的名称识别应该怎样测试？" },
+      "scoring": { "caseId": "t44-route-layout-n4a", "familyId": "layout-foreign-wordmark", "stratum": "NO_ANSWER_OTHER_PACK_NEIGHBOR", "expectation": "NO_ANSWER", "expectedDecision": "COURSE_SCOPE_MISMATCH_CANDIDATE", "expectedFailClosedEligible": false }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "layout-design", "coursePackVersion": "1", "question": "OSC Out CHOP 的网络地址应该在哪儿检查？" },
+      "scoring": { "caseId": "t44-route-layout-n4b", "familyId": "layout-foreign-osc-out", "stratum": "NO_ANSWER_OTHER_PACK_NEIGHBOR", "expectation": "NO_ANSWER", "expectedDecision": "COURSE_SCOPE_MISMATCH_CANDIDATE", "expectedFailClosedEligible": false }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "layout-design", "coursePackVersion": "1", "question": "读者的星座和页面栏数之间有什么设计依据？" },
+      "scoring": { "caseId": "t44-route-layout-n5a", "familyId": "layout-gap-zodiac-columns", "stratum": "NO_ANSWER_CORPUS_GAP_LEXICAL_OVERLAP", "expectation": "NO_ANSWER", "expectedDecision": "STATIC_CORPUS_ELIGIBLE", "expectedFailClosedEligible": false }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "layout-design", "coursePackVersion": "1", "question": "风水方位怎样决定标题放在左边还是右边？" },
+      "scoring": { "caseId": "t44-route-layout-n5b", "familyId": "layout-gap-fengshui-title", "stratum": "NO_ANSWER_CORPUS_GAP_LEXICAL_OVERLAP", "expectation": "NO_ANSWER", "expectedDecision": "STATIC_CORPUS_ELIGIBLE", "expectedFailClosedEligible": false }
+    },
+
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "brand-vi-design", "coursePackVersion": "1", "question": "纯字体字标适合品牌时，最先要验证什么？" },
+      "scoring": { "caseId": "t44-route-brand-p1a", "familyId": "brand-wordmark-fit", "stratum": "ANSWERABLE_SINGLE_PRIMARY_DIRECT", "expectation": "ANSWERABLE", "expectedDecision": "STATIC_CORPUS_ELIGIBLE", "expectedFailClosedEligible": false }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "brand-vi-design", "coursePackVersion": "1", "question": "字标单独用和图形加字标，怎样做一个公平比较？" },
+      "scoring": { "caseId": "t44-route-brand-p1b", "familyId": "brand-wordmark-comparison", "stratum": "ANSWERABLE_SINGLE_PRIMARY_DIRECT", "expectation": "ANSWERABLE", "expectedDecision": "STATIC_CORPUS_ELIGIBLE", "expectedFailClosedEligible": false }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "brand-vi-design", "coursePackVersion": "1", "question": "只用文字做标识不一定更高级，那我该看哪些真实表现？" },
+      "scoring": { "caseId": "t44-route-brand-p2a", "familyId": "brand-wordmark-paraphrase", "stratum": "ANSWERABLE_PARAPHRASE_ALIAS", "expectation": "ANSWERABLE", "expectedDecision": "STATIC_CORPUS_ELIGIBLE", "expectedFailClosedEligible": false }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "brand-vi-design", "coursePackVersion": "1", "question": "这个字标感觉太冷，怎么判断是字形问题还是受众不合适？" },
+      "scoring": { "caseId": "t44-route-brand-p2b", "familyId": "brand-tone-audience-paraphrase", "stratum": "ANSWERABLE_PARAPHRASE_ALIAS", "expectation": "ANSWERABLE", "expectedDecision": "STATIC_CORPUS_ELIGIBLE", "expectedFailClosedEligible": false }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "brand-vi-design", "coursePackVersion": "1", "question": "比较两个字标时，怎样一起记录识别、缩小清晰度和单色表现？" },
+      "scoring": { "caseId": "t44-route-brand-p3a", "familyId": "brand-multi-variable-test", "stratum": "ANSWERABLE_MULTI_PRIMARY_COMPOSITION", "expectation": "ANSWERABLE", "expectedDecision": "STATIC_CORPUS_ELIGIBLE", "expectedFailClosedEligible": false }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "brand-vi-design", "coursePackVersion": "1", "question": "先做低保真版本后，怎样用同一名称、尺寸和位置比较？" },
+      "scoring": { "caseId": "t44-route-brand-p3b", "familyId": "brand-low-fi-controlled-test", "stratum": "ANSWERABLE_MULTI_PRIMARY_COMPOSITION", "expectation": "ANSWERABLE", "expectedDecision": "STATIC_CORPUS_ELIGIBLE", "expectedFailClosedEligible": false }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "brand-vi-design", "coursePackVersion": "1", "question": "品牌名很长时，纯字标看着简洁就一定合适吗？" },
+      "scoring": { "caseId": "t44-route-brand-p4a", "familyId": "brand-long-name-distractor", "stratum": "ANSWERABLE_IN_PACK_HARD_DISTRACTOR", "expectation": "ANSWERABLE", "expectedDecision": "STATIC_CORPUS_ELIGIBLE", "expectedFailClosedEligible": false }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "brand-vi-design", "coursePackVersion": "1", "question": "包装上看着很醒目，为什么还要换到小尺寸和单色里测？" },
+      "scoring": { "caseId": "t44-route-brand-p4b", "familyId": "brand-packaging-distractor", "stratum": "ANSWERABLE_IN_PACK_HARD_DISTRACTOR", "expectation": "ANSWERABLE", "expectedDecision": "STATIC_CORPUS_ELIGIBLE", "expectedFailClosedEligible": false }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "brand-vi-design", "coursePackVersion": "1", "question": "字标也有版式适配问题，横版和竖版应该怎么一起测？" },
+      "scoring": { "caseId": "t44-route-brand-p5a", "familyId": "brand-layout-adaptation-overlap", "stratum": "ANSWERABLE_CROSS_PACK_TERM_OVERLAP", "expectation": "ANSWERABLE", "expectedDecision": "STATIC_CORPUS_ELIGIBLE", "expectedFailClosedEligible": false }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "brand-vi-design", "coursePackVersion": "1", "question": "标志缩小后仍清楚，和名称能不能被认出来是一回事吗？" },
+      "scoring": { "caseId": "t44-route-brand-p5b", "familyId": "brand-clarity-recognition-overlap", "stratum": "ANSWERABLE_CROSS_PACK_TERM_OVERLAP", "expectation": "ANSWERABLE", "expectedDecision": "STATIC_CORPUS_ELIGIBLE", "expectedFailClosedEligible": false }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "brand-vi-design", "coursePackVersion": "1", "question": "帮我看看这张字标图片里具体哪一笔太细。" },
+      "scoring": { "caseId": "t44-route-brand-n1a", "familyId": "brand-missing-wordmark-asset", "stratum": "NO_ANSWER_ENTITY_OPERATION_GAP", "expectation": "NO_ANSWER", "expectedDecision": "USER_ASSET_REQUIRED", "expectedFailClosedEligible": true }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "brand-vi-design", "coursePackVersion": "1", "question": "请你在 Illustrator 里直接替我打开这个文件并改字形。" },
+      "scoring": { "caseId": "t44-route-brand-n1b", "familyId": "brand-local-illustrator-action", "stratum": "NO_ANSWER_ENTITY_OPERATION_GAP", "expectation": "NO_ANSWER", "expectedDecision": "LOCAL_TOOL_ACTION_REQUIRED", "expectedFailClosedEligible": true }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "brand-vi-design", "coursePackVersion": "1", "question": "未提供应用尺寸，字标的精确字距到底设多少？" },
+      "scoring": { "caseId": "t44-route-brand-n2a", "familyId": "brand-missing-usage-size", "stratum": "NO_ANSWER_PARAMETER_CODE_STEP_GAP", "expectation": "NO_ANSWER", "expectedDecision": "PARAMETER_CONTEXT_REQUIRED", "expectedFailClosedEligible": true }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "brand-vi-design", "coursePackVersion": "1", "question": "没有给你包装尺寸，标志的具体宽度该填多少？" },
+      "scoring": { "caseId": "t44-route-brand-n2b", "familyId": "brand-missing-package-size", "stratum": "NO_ANSWER_PARAMETER_CODE_STEP_GAP", "expectation": "NO_ANSWER", "expectedDecision": "PARAMETER_CONTEXT_REQUIRED", "expectedFailClosedEligible": true }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "brand-vi-design", "coursePackVersion": "1", "question": "今天顾客把这个字标认成别家的比例有多少？" },
+      "scoring": { "caseId": "t44-route-brand-n3a", "familyId": "brand-live-confusion-rate", "stratum": "NO_ANSWER_LIVE_EXTERNAL_FACT", "expectation": "NO_ANSWER", "expectedDecision": "EXTERNAL_STATE_REQUIRED", "expectedFailClosedEligible": true }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "brand-vi-design", "coursePackVersion": "1", "question": "这个商标的版权归谁所有？" },
+      "scoring": { "caseId": "t44-route-brand-n3b", "familyId": "brand-live-rights-owner", "stratum": "NO_ANSWER_LIVE_EXTERNAL_FACT", "expectation": "NO_ANSWER", "expectedDecision": "EXTERNAL_STATE_REQUIRED", "expectedFailClosedEligible": true }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "brand-vi-design", "coursePackVersion": "1", "question": "Layout Grid 和 Document Grid 应该怎样选择？" },
+      "scoring": { "caseId": "t44-route-brand-n4a", "familyId": "brand-foreign-layout-grid", "stratum": "NO_ANSWER_OTHER_PACK_NEIGHBOR", "expectation": "NO_ANSWER", "expectedDecision": "COURSE_SCOPE_MISMATCH_CANDIDATE", "expectedFailClosedEligible": false }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "brand-vi-design", "coursePackVersion": "1", "question": "双钻里的发散和收敛怎样安排？" },
+      "scoring": { "caseId": "t44-route-brand-n4b", "familyId": "brand-foreign-double-diamond", "stratum": "NO_ANSWER_OTHER_PACK_NEIGHBOR", "expectation": "NO_ANSWER", "expectedDecision": "COURSE_SCOPE_MISMATCH_CANDIDATE", "expectedFailClosedEligible": false }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "brand-vi-design", "coursePackVersion": "1", "question": "创始人的生日怎样决定字标骨架？" },
+      "scoring": { "caseId": "t44-route-brand-n5a", "familyId": "brand-gap-founder-birthday", "stratum": "NO_ANSWER_CORPUS_GAP_LEXICAL_OVERLAP", "expectation": "NO_ANSWER", "expectedDecision": "STATIC_CORPUS_ELIGIBLE", "expectedFailClosedEligible": false }
+    },
+    {
+      "runtime": { "mode": "TEXT_TO_TEXT", "coursePackId": "brand-vi-design", "coursePackVersion": "1", "question": "品牌颜色的五行属性怎样决定字形粗细？" },
+      "scoring": { "caseId": "t44-route-brand-n5b", "familyId": "brand-gap-five-elements-weight", "stratum": "NO_ANSWER_CORPUS_GAP_LEXICAL_OVERLAP", "expectation": "NO_ANSWER", "expectedDecision": "STATIC_CORPUS_ELIGIBLE", "expectedFailClosedEligible": false }
+    }
+  ]
+}

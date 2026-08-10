@@ -1,0 +1,212 @@
+{
+  "schemaVersion": 1,
+  "id": "lumi-t45-post-remediation-selector-acceptance-qrels",
+  "version": "2026-07-30.1",
+  "split": "POST_REMEDIATION_ACCEPTANCE",
+  "runtimeSuite": {
+    "id": "lumi-t45-post-remediation-selector-acceptance-runtime",
+    "version": "2026-07-30.1",
+    "suiteHash": "51b07465b27cdb0d29fbb229595b56c0251b5d33978e99b2cda5c260db2f9e70"
+  },
+  "corpusSnapshot": {
+    "path": "data/knowledge-v2/knowledge-corpus.v2.json",
+    "bundleHash": "82db90934afaffa3d227b6b0d11ab5efdb88009fd8b9274845567de4888079f8"
+  },
+  "capabilityInventory": {
+    "id": "lumi-t45-capability-inventory",
+    "inventoryHash": "fd199dfe6f49ce1249f20a04be580dc1b1b31fff2d831b88d4bd13e022082d67"
+  },
+  "cases": [
+    {
+      "caseId": "t45-remacc-book-grid-direct",
+      "familyId": "frozen-t44-book-layout-grid",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {"groupId": "group-1", "acceptableNodeIds": ["node-05a9ca64244b072f5cf90a5d3a5f9a2a1a9c073f50c7b8b3057ac9c17f6e2ef8"]}
+      ],
+      "hardNegativeNodeIds": ["node-5e93871cc053ce8ad1b64eec9d19c260a4cfa7b1aaa16f1e7de99220d153c82b"]
+    },
+    {
+      "caseId": "t45-remacc-book-grid-compose",
+      "familyId": "frozen-t44-book-layout-grid",
+      "multiClaim": true,
+      "requiredEvidenceGroups": [
+        {"groupId": "group-1", "acceptableNodeIds": ["node-ae672ab8a93a9a46c92ca6e9274b15425bddfbd4952beafad82be54abd2a8c80"]},
+        {"groupId": "group-2", "acceptableNodeIds": ["node-05a9ca64244b072f5cf90a5d3a5f9a2a1a9c073f50c7b8b3057ac9c17f6e2ef8"]}
+      ],
+      "hardNegativeNodeIds": ["node-5e93871cc053ce8ad1b64eec9d19c260a4cfa7b1aaa16f1e7de99220d153c82b"]
+    },
+    {
+      "caseId": "t45-remacc-book-links-direct",
+      "familyId": "frozen-t44-book-linked-assets",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {"groupId": "group-1", "acceptableNodeIds": ["node-344c940195b318f812f00cfbf77196b39ed6bd5bf402fc9ea9951499696b9886"]}
+      ],
+      "hardNegativeNodeIds": ["node-a0740bf707218a8e1fc771cf1723e185ea4b81eaa526bf11418beee06195be5a"]
+    },
+    {
+      "caseId": "t45-remacc-book-links-compose",
+      "familyId": "frozen-t44-book-linked-assets",
+      "multiClaim": true,
+      "requiredEvidenceGroups": [
+        {"groupId": "group-1", "acceptableNodeIds": ["node-dc3ee510bfeb118277dac61a9f9b8ef0f7fb1e0ce4b4afdb6032ab59252c7f31"]},
+        {"groupId": "group-2", "acceptableNodeIds": ["node-ea409d46615906f15ffba735eef31e4ef7bf1446eb08d6c7a041a54eee7c8526"]}
+      ],
+      "hardNegativeNodeIds": ["node-a0740bf707218a8e1fc771cf1723e185ea4b81eaa526bf11418beee06195be5a"]
+    },
+    {
+      "caseId": "t45-remacc-brand-wordmark-direct",
+      "familyId": "frozen-t44-brandvi-001-assess-wordmark-fit",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {"groupId": "group-1", "acceptableNodeIds": ["node-bf0161b9d74485b764f1a213badacc848d5d069738ec7fb5f0321bd76ef06f51", "node-5627ee319393fc0c4f79ea46bdd1499a7bba90764ef3db919007639b54889653"]}
+      ],
+      "hardNegativeNodeIds": ["node-d92e3f3f71ccfadcc6a5512b82f14b636ac35d5e3bb4d6f1e57a18d5282bced5"]
+    },
+    {
+      "caseId": "t45-remacc-brand-wordmark-compose",
+      "familyId": "frozen-t44-brandvi-001-assess-wordmark-fit",
+      "multiClaim": true,
+      "requiredEvidenceGroups": [
+        {"groupId": "group-1", "acceptableNodeIds": ["node-d92e3f3f71ccfadcc6a5512b82f14b636ac35d5e3bb4d6f1e57a18d5282bced5", "node-a49cf60c7899950cdc7107ae1ffdd01f8792bcc24f4d1ea281e88ebf273ed5d9", "node-53c80e95103fab6792d67fda8d31bb6a302ea96817c744d184f3da14f264be8a"]},
+        {"groupId": "group-2", "acceptableNodeIds": ["node-f610525180d34d088d7cee888b0c33cdebb37754a477a6845ab1aac8e9d329ea", "node-4168b1c560cca4d5b0456c1e330c37ae0994f1d1c2e62dcffbc93ee9037eff70"]}
+      ],
+      "hardNegativeNodeIds": ["node-bf0161b9d74485b764f1a213badacc848d5d069738ec7fb5f0321bd76ef06f51"]
+    },
+    {
+      "caseId": "t45-remacc-brand-tone-direct",
+      "familyId": "frozen-t44-brandvi-002-test-wordmark-tone-and-audience",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {"groupId": "group-1", "acceptableNodeIds": ["node-c91a3b45d823885dcb9b2d30543e05c22fc85a79a6d2eb08354509ccab9ec605", "node-d041cd4f202218fab5f50b42affd8b85836abc681698e89682cf652b6ad24fa6", "node-c6215e544eb276a4de9e0de482fe48b4c33b5904277bc1faff0eace072305ff6"]}
+      ],
+      "hardNegativeNodeIds": ["node-ac8f4874a241ab12e7648238244a39233d78aaf0fc5ed69e7273e36f3499edb4"]
+    },
+    {
+      "caseId": "t45-remacc-brand-tone-compose",
+      "familyId": "frozen-t44-brandvi-002-test-wordmark-tone-and-audience",
+      "multiClaim": true,
+      "requiredEvidenceGroups": [
+        {"groupId": "group-1", "acceptableNodeIds": ["node-1dc5c9d8915391e73efb765e1a442506bce5a35a3facbc71a87e85a338211584", "node-c6215e544eb276a4de9e0de482fe48b4c33b5904277bc1faff0eace072305ff6", "node-07b85210e0070fe4e279088598b05374d884edcc79607884ab7b34a9f51c8ece"]},
+        {"groupId": "group-2", "acceptableNodeIds": ["node-f132726cede26c51a61c47dc0d153516eec8497e89f559050447e6bce0ffdd3e", "node-cc743f296077853ac938b921ea070fca192b90f911fb3900a3a8afbc3048fb8b"]}
+      ],
+      "hardNegativeNodeIds": ["node-ac8f4874a241ab12e7648238244a39233d78aaf0fc5ed69e7273e36f3499edb4"]
+    },
+    {
+      "caseId": "t45-remacc-signal-chain-direct",
+      "familyId": "frozen-t44-dicd-001-signal-chain-troubleshooting",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {"groupId": "group-1", "acceptableNodeIds": ["node-17a280d57ae767e51f94fd33f27324ee0965543aa97296e1093e1ee32d3d15c0", "node-f9e56778f2f8b7b916e8e655fed75f4dce351e19667b4884776c9a66b0033142"]}
+      ],
+      "hardNegativeNodeIds": ["node-15e0af41fe3b67db5b295f88bade8f316702dae786d0565201bbad1483e72fa3"]
+    },
+    {
+      "caseId": "t45-remacc-signal-chain-compose",
+      "familyId": "frozen-t44-dicd-001-signal-chain-troubleshooting",
+      "multiClaim": true,
+      "requiredEvidenceGroups": [
+        {"groupId": "group-1", "acceptableNodeIds": ["node-17a280d57ae767e51f94fd33f27324ee0965543aa97296e1093e1ee32d3d15c0"]},
+        {"groupId": "group-2", "acceptableNodeIds": ["node-0080a9e4bc3c7348680576d3af722c9d5ec3c9f92b4adb5ab99aadc465ad351c", "node-4ce6b297751881a594b946aa74296f2cb9846f0d0f96d6ee99f277f5599c63b4"]}
+      ],
+      "hardNegativeNodeIds": ["node-15e0af41fe3b67db5b295f88bade8f316702dae786d0565201bbad1483e72fa3"]
+    },
+    {
+      "caseId": "t45-remacc-audio-reactive-direct",
+      "familyId": "frozen-t44-audio-reactive-visual",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {"groupId": "group-1", "acceptableNodeIds": ["node-b6cc84d3ddd02d609c2935692287b83dcf1a537d29f1e71e6aa84c0371b85f35", "node-749f0b30d0fecd735db800f5cb7a689313d486cf901a7b3f5b18cabb9b0a0e1c"]}
+      ],
+      "hardNegativeNodeIds": ["node-931885b63d9584df28ef9ebed35517cf9ca7bef66d90db9d8548fdd2857dbcf3"]
+    },
+    {
+      "caseId": "t45-remacc-audio-reactive-compose",
+      "familyId": "frozen-t44-audio-reactive-visual",
+      "multiClaim": true,
+      "requiredEvidenceGroups": [
+        {"groupId": "group-1", "acceptableNodeIds": ["node-125c49efdd9c0e4d6dae65b80ce314d37df9def0b371553b4d9067215dfaa88e"]},
+        {"groupId": "group-2", "acceptableNodeIds": ["node-e5f23504a777e2a5659ef42a44915387fbb3fb2291cfb534b2ae58617960a091"]}
+      ],
+      "hardNegativeNodeIds": ["node-5458e1db5147fb7f36edea4c77cf8b4b267f8bc150b46dabcd03299c32ff61df"]
+    },
+    {
+      "caseId": "t45-remacc-double-diamond-direct",
+      "familyId": "frozen-t44-design-double-diamond",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {"groupId": "group-1", "acceptableNodeIds": ["node-f6ad5388c9d2ce4f4faa679c17ed464f22169dad2a81a49539b5c246fc3310ce", "node-e1f6fca581593c438dbf61e8c4c9847039188dcad3a16649e8f3a445c3e71e11"]}
+      ],
+      "hardNegativeNodeIds": ["node-5a5d0ef237858b75d84344a06225a7bd7bbda618f4d482a5e450163bf199bd44"]
+    },
+    {
+      "caseId": "t45-remacc-double-diamond-compose",
+      "familyId": "frozen-t44-design-double-diamond",
+      "multiClaim": true,
+      "requiredEvidenceGroups": [
+        {"groupId": "group-1", "acceptableNodeIds": ["node-28e557f3c3b64347c6cfafbf5f91f261cecaf3cea4c5be0fde34205636671001"]},
+        {"groupId": "group-2", "acceptableNodeIds": ["node-bc0db8c85ebe3ab7dab0ce7adf580c048ceda1f8e6c7929d81bc10b052a01e47"]}
+      ],
+      "hardNegativeNodeIds": ["node-5a5d0ef237858b75d84344a06225a7bd7bbda618f4d482a5e450163bf199bd44"]
+    },
+    {
+      "caseId": "t45-remacc-prototype-direct",
+      "familyId": "frozen-t44-design-prototype-test",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {"groupId": "group-1", "acceptableNodeIds": ["node-754692f4157073a2e70b09ec999066f6264a1ec50131a6cf6ec86a6e7642b4f2", "node-a16b43143b54d081c67d86ca166ef6fd1474c369e0455d52d87bbc0ff3c486fc"]}
+      ],
+      "hardNegativeNodeIds": ["node-c70b91a847461b912d3a59c4c1d3f051ce0b9ebe9f8a2b66a89dfc1a99f03050"]
+    },
+    {
+      "caseId": "t45-remacc-prototype-compose",
+      "familyId": "frozen-t44-design-prototype-test",
+      "multiClaim": true,
+      "requiredEvidenceGroups": [
+        {"groupId": "group-1", "acceptableNodeIds": ["node-754692f4157073a2e70b09ec999066f6264a1ec50131a6cf6ec86a6e7642b4f2"]},
+        {"groupId": "group-2", "acceptableNodeIds": ["node-a16b43143b54d081c67d86ca166ef6fd1474c369e0455d52d87bbc0ff3c486fc"]}
+      ],
+      "hardNegativeNodeIds": ["node-938a1cdc948aa6da4a952941bce70314d8522e997490fb4bc4b8a01f873ac476"]
+    },
+    {
+      "caseId": "t45-remacc-layout-hierarchy-direct",
+      "familyId": "frozen-t44-layout-001-grid-and-hierarchy",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {"groupId": "group-1", "acceptableNodeIds": ["node-04a437018bb4c3e6f57f356e21121d9748f6dd5dc1ac755805ed957cfc7cc002", "node-3e9dfaafb1f52046ef2aadec2dbfb1fab9d0b3b75855eaa5f6f7fe75bd2a6377"]}
+      ],
+      "hardNegativeNodeIds": ["node-46b9f9116c48c399d15d552e1b30414788a5badca0c90422cb2cbd1ef2be04a0"]
+    },
+    {
+      "caseId": "t45-remacc-layout-hierarchy-compose",
+      "familyId": "frozen-t44-layout-001-grid-and-hierarchy",
+      "multiClaim": true,
+      "requiredEvidenceGroups": [
+        {"groupId": "group-1", "acceptableNodeIds": ["node-02fbbd4d25bbe2eeb47d2d0e7a72e154f6c2c9adcf23d82a71385898957fea74", "node-19489142179e955df6542033a90d7e7275c6f83d0852ecf1543f19008d240efa"]},
+        {"groupId": "group-2", "acceptableNodeIds": ["node-64dd7941ae2cf7c84a8007ab83f952dc6a544199e5b2842227cd0bdf44cec1a4"]}
+      ],
+      "hardNegativeNodeIds": ["node-46b9f9116c48c399d15d552e1b30414788a5badca0c90422cb2cbd1ef2be04a0"]
+    },
+    {
+      "caseId": "t45-remacc-layout-review-direct",
+      "familyId": "frozen-t44-layout-041-review-layout-with-observable-evidence",
+      "multiClaim": false,
+      "requiredEvidenceGroups": [
+        {"groupId": "group-1", "acceptableNodeIds": ["node-d830aa69684ad2118d6738c7d1a9ed05ece278a6733efae2f71c49bdba0c1a25"]}
+      ],
+      "hardNegativeNodeIds": ["node-a1e2e530cebcd24b6990957d79f52eccd688e97aa8ff4db20db232876782fe70"]
+    },
+    {
+      "caseId": "t45-remacc-layout-review-compose",
+      "familyId": "frozen-t44-layout-041-review-layout-with-observable-evidence",
+      "multiClaim": true,
+      "requiredEvidenceGroups": [
+        {"groupId": "group-1", "acceptableNodeIds": ["node-1d363f31c704514a5e504a3a9b18f7a912c4689df9cbcc4435bad42831ad501a", "node-9b516927c64e254493e7c47f7bddda5b1f8ac99fbaef878a25112a771d661460"]},
+        {"groupId": "group-2", "acceptableNodeIds": ["node-22e2ba8dbfb181bb21754e19bf47407397e86fbde646bc5127e5b8b2b85a5de1", "node-dc9e6d90208bdf8c8d935b4ee481903ccd090f6005f69cbad0e4a44d3a20dff2"]}
+      ],
+      "hardNegativeNodeIds": ["node-a1e2e530cebcd24b6990957d79f52eccd688e97aa8ff4db20db232876782fe70"]
+    }
+  ],
+  "suiteHash": "9d62f17f60342307d1b1afc2ed24b53cbaa5ee7cfcae0685c4068fa2d3988987"
+}

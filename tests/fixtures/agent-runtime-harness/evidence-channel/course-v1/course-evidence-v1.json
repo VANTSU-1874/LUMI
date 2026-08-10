@@ -1,0 +1,170 @@
+{
+  "schemaVersion": 1,
+  "fixtureStatus": "FIXTURE_CONTRACT_READY",
+  "sourceManifestVersion": "course-evidence-fixture-v1",
+  "cases": [
+    {
+      "schemaVersion": 1,
+      "caseId": "course-evidence-hit-layout-grid",
+      "caseKind": "HIT",
+      "channel": "course",
+      "queryKind": "text",
+      "collectionId": "course-v2-text",
+      "namespaceId": "layout-design",
+      "providerId": "lumi-course-text-v2",
+      "providerVersion": "fixture-provider-v1",
+      "modelVersion": "fixture-bge-text-v1",
+      "indexVersion": "fixture-index-v1",
+      "sourceManifestVersion": "course-evidence-fixture-v1",
+      "availability": "AVAILABLE",
+      "degradedReason": null,
+      "candidateCount": 1,
+      "candidates": [
+        {
+          "candidateStableId": "candidate-layout-grid-primary",
+          "evidenceId": "evidence-layout-grid-primary",
+          "objectId": "object-layout-grid-principles",
+          "source": {
+            "sourceId": "source-layout-grid-course",
+            "authority": "COURSE_DESIGN",
+            "rights": "COURSE_INTERNAL",
+            "status": "ACTIVE",
+            "verifiedDate": "2026-07-31"
+          },
+          "confidence": 0.94,
+          "disposition": "SELECTED"
+        }
+      ],
+      "selectedEvidenceIds": ["evidence-layout-grid-primary"],
+      "optionalDependencies": [
+        { "capability": "VISUAL_RETRIEVAL", "availability": "UNAVAILABLE", "degradedReason": "OPTIONAL_VISUAL_UNAVAILABLE" },
+        { "capability": "EXTERNAL_VISUAL_ENCODER", "availability": "UNAVAILABLE", "degradedReason": "EXTERNAL_VISUAL_ENCODER_UNAVAILABLE" },
+        { "capability": "EXTERNAL_VECTOR_STORE", "availability": "UNAVAILABLE", "degradedReason": "EXTERNAL_VECTOR_STORE_UNAVAILABLE" }
+      ],
+      "latencyBucket": "NOT_RECORDED",
+      "costBucket": "FREE_LOCAL"
+    },
+    {
+      "schemaVersion": 1,
+      "caseId": "course-evidence-no-answer-brand-budget",
+      "caseKind": "NO_ANSWER",
+      "channel": "course",
+      "queryKind": "text",
+      "collectionId": "course-v2-text",
+      "namespaceId": "brand-vi-design",
+      "providerId": "lumi-course-text-v2",
+      "providerVersion": "fixture-provider-v1",
+      "modelVersion": "fixture-bge-text-v1",
+      "indexVersion": "fixture-index-v1",
+      "sourceManifestVersion": "course-evidence-fixture-v1",
+      "availability": "AVAILABLE",
+      "degradedReason": "EMPTY_RESULT",
+      "candidateCount": 0,
+      "candidates": [],
+      "selectedEvidenceIds": [],
+      "optionalDependencies": [
+        { "capability": "VISUAL_RETRIEVAL", "availability": "UNAVAILABLE", "degradedReason": "OPTIONAL_VISUAL_UNAVAILABLE" },
+        { "capability": "EXTERNAL_VISUAL_ENCODER", "availability": "UNAVAILABLE", "degradedReason": "EXTERNAL_VISUAL_ENCODER_UNAVAILABLE" },
+        { "capability": "EXTERNAL_VECTOR_STORE", "availability": "UNAVAILABLE", "degradedReason": "EXTERNAL_VECTOR_STORE_UNAVAILABLE" }
+      ],
+      "latencyBucket": "NOT_RECORDED",
+      "costBucket": "FREE_LOCAL"
+    },
+    {
+      "schemaVersion": 1,
+      "caseId": "course-evidence-similar-hierarchy",
+      "caseKind": "SIMILAR_DISTRACTOR",
+      "channel": "course",
+      "queryKind": "text",
+      "collectionId": "course-v2-text",
+      "namespaceId": "general-design",
+      "providerId": "lumi-course-text-v2",
+      "providerVersion": "fixture-provider-v1",
+      "modelVersion": "fixture-bge-text-v1",
+      "indexVersion": "fixture-index-v1",
+      "sourceManifestVersion": "course-evidence-fixture-v1",
+      "availability": "AVAILABLE",
+      "degradedReason": null,
+      "candidateCount": 2,
+      "candidates": [
+        {
+          "candidateStableId": "candidate-information-hierarchy-primary",
+          "evidenceId": "evidence-information-hierarchy-primary",
+          "objectId": "object-information-hierarchy-principles",
+          "source": {
+            "sourceId": "source-information-hierarchy-course",
+            "authority": "COURSE_DESIGN",
+            "rights": "COURSE_INTERNAL",
+            "status": "ACTIVE",
+            "verifiedDate": "2026-07-31"
+          },
+          "confidence": 0.88,
+          "disposition": "SELECTED"
+        },
+        {
+          "candidateStableId": "candidate-color-hierarchy-similar",
+          "evidenceId": "evidence-color-hierarchy-similar",
+          "objectId": "object-color-hierarchy-reference",
+          "source": {
+            "sourceId": "source-color-hierarchy-course",
+            "authority": "COURSE_DESIGN",
+            "rights": "COURSE_INTERNAL",
+            "status": "ACTIVE",
+            "verifiedDate": "2026-07-31"
+          },
+          "confidence": 0.75,
+          "disposition": "REJECTED_SIMILAR"
+        }
+      ],
+      "selectedEvidenceIds": ["evidence-information-hierarchy-primary"],
+      "optionalDependencies": [
+        { "capability": "VISUAL_RETRIEVAL", "availability": "UNAVAILABLE", "degradedReason": "OPTIONAL_VISUAL_UNAVAILABLE" },
+        { "capability": "EXTERNAL_VISUAL_ENCODER", "availability": "UNAVAILABLE", "degradedReason": "EXTERNAL_VISUAL_ENCODER_UNAVAILABLE" },
+        { "capability": "EXTERNAL_VECTOR_STORE", "availability": "UNAVAILABLE", "degradedReason": "EXTERNAL_VECTOR_STORE_UNAVAILABLE" }
+      ],
+      "latencyBucket": "NOT_RECORDED",
+      "costBucket": "FREE_LOCAL"
+    },
+    {
+      "schemaVersion": 1,
+      "caseId": "course-evidence-source-trace-touchdesigner",
+      "caseKind": "SOURCE_TRACE",
+      "channel": "course",
+      "queryKind": "text",
+      "collectionId": "course-v2-text",
+      "namespaceId": "digital-interaction",
+      "providerId": "lumi-course-text-v2",
+      "providerVersion": "fixture-provider-v1",
+      "modelVersion": "fixture-bge-text-v1",
+      "indexVersion": "fixture-index-v1",
+      "sourceManifestVersion": "course-evidence-fixture-v1",
+      "availability": "AVAILABLE",
+      "degradedReason": null,
+      "candidateCount": 1,
+      "candidates": [
+        {
+          "candidateStableId": "candidate-touchdesigner-source-trace",
+          "evidenceId": "evidence-touchdesigner-source-trace",
+          "objectId": "object-touchdesigner-official-reference",
+          "source": {
+            "sourceId": "source-touchdesigner-official-reference",
+            "authority": "OFFICIAL",
+            "rights": "PUBLIC_REFERENCE",
+            "status": "ACTIVE",
+            "verifiedDate": "2026-07-31"
+          },
+          "confidence": 0.91,
+          "disposition": "SELECTED"
+        }
+      ],
+      "selectedEvidenceIds": ["evidence-touchdesigner-source-trace"],
+      "optionalDependencies": [
+        { "capability": "VISUAL_RETRIEVAL", "availability": "UNAVAILABLE", "degradedReason": "OPTIONAL_VISUAL_UNAVAILABLE" },
+        { "capability": "EXTERNAL_VISUAL_ENCODER", "availability": "UNAVAILABLE", "degradedReason": "EXTERNAL_VISUAL_ENCODER_UNAVAILABLE" },
+        { "capability": "EXTERNAL_VECTOR_STORE", "availability": "UNAVAILABLE", "degradedReason": "EXTERNAL_VECTOR_STORE_UNAVAILABLE" }
+      ],
+      "latencyBucket": "NOT_RECORDED",
+      "costBucket": "FREE_LOCAL"
+    }
+  ]
+}

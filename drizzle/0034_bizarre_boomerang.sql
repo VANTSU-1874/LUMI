@@ -1,0 +1,42 @@
+CREATE TABLE `agent_runtime_events` (
+	`id` text PRIMARY KEY NOT NULL,
+	`turn_id` text NOT NULL,
+	`event_sequence` integer NOT NULL,
+	`runtime_id` text NOT NULL,
+	`runtime_version` text NOT NULL,
+	`kind` text NOT NULL,
+	`status` text NOT NULL,
+	`label` text NOT NULL,
+	`summary` text NOT NULL,
+	`tool_call_id` text,
+	`tool_id` text,
+	`source_ids_json` text NOT NULL,
+	`policy_rule` text,
+	`error_code` text,
+	`model_provider` text,
+	`model_id` text,
+	`usage_status` text NOT NULL,
+	`input_tokens` integer,
+	`output_tokens` integer,
+	`total_tokens` integer,
+	`latency_ms` integer NOT NULL,
+	`created_at` integer NOT NULL,
+	`data_type` text NOT NULL,
+	FOREIGN KEY (`turn_id`) REFERENCES `agent_turns`(`id`) ON UPDATE no action ON DELETE cascade,
+	FOREIGN KEY (`tool_call_id`) REFERENCES `agent_tool_calls`(`id`) ON UPDATE no action ON DELETE set null,
+	CONSTRAINT "agent_runtime_events_kind_check" CHECK("agent_runtime_events"."kind" in ('CONTEXT_PREPARATION','RETRIEVAL','POLICY_CHECK','MODEL_DECISION','TOOL_CALL','TOOL_OBSERVATION','SOURCE_SELECTION','PERSISTENCE','FINAL_RESPONSE','DEGRADED')),
+	CONSTRAINT "agent_runtime_events_status_check" CHECK("agent_runtime_events"."status" in ('SUCCEEDED','FAILED','EMPTY','SKIPPED')),
+	CONSTRAINT "agent_runtime_events_runtime_id_check" CHECK(length("agent_runtime_events"."runtime_id") between 2 and 64),
+	CONSTRAINT "agent_runtime_events_runtime_version_check" CHECK(length("agent_runtime_events"."runtime_version") between 1 and 16),
+	CONSTRAINT "agent_runtime_events_label_check" CHECK(length("agent_runtime_events"."label") between 1 and 100),
+	CONSTRAINT "agent_runtime_events_summary_check" CHECK(length("agent_runtime_events"."summary") between 1 and 300),
+	CONSTRAINT "agent_runtime_events_source_ids_check" CHECK(json_valid("agent_runtime_events"."source_ids_json") and json_type("agent_runtime_events"."source_ids_json") = 'array'),
+	CONSTRAINT "agent_runtime_events_usage_status_check" CHECK("agent_runtime_events"."usage_status" in ('RECORDED','UNAVAILABLE')),
+	CONSTRAINT "agent_runtime_events_usage_check" CHECK(("agent_runtime_events"."usage_status" = 'RECORDED' and "agent_runtime_events"."input_tokens" is not null and "agent_runtime_events"."output_tokens" is not null and "agent_runtime_events"."total_tokens" = "agent_runtime_events"."input_tokens" + "agent_runtime_events"."output_tokens") or ("agent_runtime_events"."usage_status" = 'UNAVAILABLE' and "agent_runtime_events"."input_tokens" is null and "agent_runtime_events"."output_tokens" is null and "agent_runtime_events"."total_tokens" is null)),
+	CONSTRAINT "agent_runtime_events_latency_check" CHECK("agent_runtime_events"."latency_ms" between 0 and 60000),
+	CONSTRAINT "agent_runtime_events_data_type_check" CHECK("agent_runtime_events"."data_type" in ('REAL','DEMONSTRATION_DATA'))
+);
+--> statement-breakpoint
+CREATE UNIQUE INDEX `agent_runtime_events_turn_sequence_unique` ON `agent_runtime_events` (`turn_id`,`event_sequence`);--> statement-breakpoint
+CREATE INDEX `agent_runtime_events_kind_idx` ON `agent_runtime_events` (`kind`,`created_at`);--> statement-breakpoint
+CREATE INDEX `agent_runtime_events_tool_call_idx` ON `agent_runtime_events` (`tool_call_id`);

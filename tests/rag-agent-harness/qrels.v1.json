@@ -1,0 +1,141 @@
+{
+  "schemaVersion": 1,
+  "suiteVersion": "2026-07-30.1",
+  "cases": [
+    {
+      "caseId": "rag-standalone-text-evidence",
+      "answerable": true,
+      "requiredGroups": [
+        {
+          "groupId": "hierarchy-diagnosis",
+          "sourceIds": [
+            "node-layout-hierarchy"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "rag-context-reference-resolution",
+      "answerable": true,
+      "requiredGroups": [
+        {
+          "groupId": "international-context",
+          "sourceIds": [
+            "node-international-grid"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "rag-multi-obligation-coverage",
+      "answerable": true,
+      "requiredGroups": [
+        {
+          "groupId": "cause",
+          "sourceIds": [
+            "node-multi-cause"
+          ]
+        },
+        {
+          "groupId": "first-action",
+          "sourceIds": [
+            "node-multi-action"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "rag-visual-region-evidence",
+      "answerable": true,
+      "requiredGroups": [
+        {
+          "groupId": "visual-region",
+          "sourceIds": [
+            "node-visual-region"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "rag-cross-modal-evidence",
+      "answerable": true,
+      "requiredGroups": [
+        {
+          "groupId": "text-rule",
+          "sourceIds": [
+            "node-cross-text"
+          ]
+        },
+        {
+          "groupId": "visual-example",
+          "sourceIds": [
+            "node-cross-image"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "rag-no-answer-no-fabrication",
+      "answerable": false,
+      "requiredGroups": []
+    },
+    {
+      "caseId": "rag-memory-conflict-course-wins",
+      "answerable": true,
+      "requiredGroups": [
+        {
+          "groupId": "course-fact",
+          "sourceIds": [
+            "node-course-conflict"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "rag-disputed-memory-excluded",
+      "answerable": true,
+      "requiredGroups": [
+        {
+          "groupId": "course-grid-fact",
+          "sourceIds": [
+            "node-dispute-course"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "rag-cross-student-project-isolated",
+      "answerable": true,
+      "requiredGroups": [
+        {
+          "groupId": "current-project-step",
+          "sourceIds": [
+            "node-isolation"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "rag-cross-pack-isolated",
+      "answerable": true,
+      "requiredGroups": [
+        {
+          "groupId": "brand-wordmark",
+          "sourceIds": [
+            "node-brand-wordmark"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "rag-provider-failure-honest-degrade",
+      "answerable": false,
+      "requiredGroups": []
+    },
+    {
+      "caseId": "rag-v2-off-legacy-compatible",
+      "answerable": false,
+      "requiredGroups": []
+    }
+  ]
+}

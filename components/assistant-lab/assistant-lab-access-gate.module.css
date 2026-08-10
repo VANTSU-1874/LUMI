@@ -1,0 +1,301 @@
+.gate {
+  display: grid;
+  min-height: 100dvh;
+  place-items: center;
+  padding: 1.5rem;
+  background: #fff;
+  color: #1f1f1f;
+}
+
+.checkingGate {
+  display: grid;
+  min-height: 100dvh;
+  grid-template-columns: 16.5rem minmax(0, 1fr);
+  overflow: hidden;
+  background: #fff;
+  color: #1f1f1f;
+  opacity: 0;
+  transition: opacity 160ms ease;
+}
+
+.checkingGate[data-visible="true"] {
+  opacity: 1;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+  margin: -1px;
+  white-space: nowrap;
+}
+
+.checkingSidebar {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  padding: 1.15rem 0.9rem;
+  border-right: 1px solid #ececec;
+  background: #fafafa;
+}
+
+.checkingBrand {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.2rem 0.35rem 1.15rem;
+}
+
+.checkingBrand span:first-child {
+  width: 2rem;
+  height: 2rem;
+  flex: 0 0 2rem;
+  border-radius: 0.65rem;
+}
+
+.checkingBrand span:last-child {
+  width: 5.5rem;
+  height: 0.65rem;
+  border-radius: 999px;
+}
+
+.checkingNav {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.checkingNav span {
+  display: block;
+  height: 2.35rem;
+  border-radius: 0.65rem;
+}
+
+.checkingNav span:nth-child(2) {
+  width: 88%;
+}
+
+.checkingNav span:nth-child(3) {
+  width: 72%;
+}
+
+.checkingWorkspace {
+  display: grid;
+  min-width: 0;
+  min-height: 100dvh;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  background: #fff;
+}
+
+.checkingHeader {
+  display: flex;
+  min-height: 4rem;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.35rem;
+  border-bottom: 1px solid #efefef;
+}
+
+.checkingHeader span:first-child {
+  width: 8rem;
+  height: 0.72rem;
+  border-radius: 999px;
+}
+
+.checkingHeader span:last-child {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+}
+
+.checkingCanvas {
+  display: grid;
+  min-height: 0;
+  place-items: center;
+  padding: 2rem;
+}
+
+.checkingMessage {
+  display: grid;
+  width: min(24rem, 64%);
+  gap: 0.65rem;
+}
+
+.checkingMessage span {
+  display: block;
+  height: 0.7rem;
+  border-radius: 999px;
+}
+
+.checkingMessage span:nth-child(2) {
+  width: 82%;
+}
+
+.checkingMessage span:nth-child(3) {
+  width: 54%;
+}
+
+.checkingComposer {
+  display: flex;
+  width: min(46rem, calc(100% - 2rem));
+  min-height: 4rem;
+  align-items: center;
+  justify-content: space-between;
+  justify-self: center;
+  gap: 1rem;
+  padding: 0.7rem 0.8rem 0.7rem 1rem;
+  border: 1px solid #e2e2e2;
+  border-radius: 2rem;
+  margin-bottom: 1rem;
+  background: #fff;
+  box-shadow: 0 0.35rem 1.2rem rgb(0 0 0 / 5%);
+}
+
+.checkingComposer span:first-child {
+  width: min(17rem, 55%);
+  height: 0.68rem;
+  border-radius: 999px;
+}
+
+.checkingComposer span:last-child {
+  width: 2.5rem;
+  height: 2.5rem;
+  flex: 0 0 2.5rem;
+  border-radius: 50%;
+}
+
+.checkingBrand span,
+.checkingNav span,
+.checkingHeader span,
+.checkingMessage span,
+.checkingComposer span {
+  background: linear-gradient(90deg, #f0f0f0 0%, #f7f7f7 45%, #ededed 100%);
+  background-size: 220% 100%;
+  animation: checkingPulse 1.35s ease-in-out infinite;
+}
+
+@keyframes checkingPulse {
+  from {
+    background-position: 100% 0;
+  }
+
+  to {
+    background-position: -100% 0;
+  }
+}
+
+.panel {
+  width: min(100%, 29rem);
+  padding: clamp(1.6rem, 4vw, 2.4rem);
+  border: 1px solid #e3e3e3;
+  border-radius: 1.5rem;
+  background: #fff;
+  box-shadow: 0 1rem 2.8rem rgb(0 0 0 / 7%);
+}
+
+.eyebrow {
+  margin: 0;
+  color: #747474;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+}
+
+.panel h1 {
+  margin: 0.65rem 0 0;
+  font-size: clamp(1.45rem, 3vw, 1.9rem);
+  letter-spacing: -0.04em;
+}
+
+.panel p:not(.eyebrow) {
+  margin: 0.75rem 0 0;
+  color: #6a6a6a;
+  font-size: 0.9rem;
+  line-height: 1.65;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-top: 1.35rem;
+}
+
+.primaryAction,
+.secondaryAction {
+  display: inline-flex;
+  min-height: 2.5rem;
+  align-items: center;
+  justify-content: center;
+  padding: 0.55rem 0.9rem;
+  border-radius: 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 650;
+  text-decoration: none;
+}
+
+.primaryAction {
+  border: 1px solid #1f1f1f;
+  background: #1f1f1f;
+  color: #fff;
+}
+
+.primaryAction:hover {
+  background: #3a3a3a;
+}
+
+.secondaryAction {
+  border: 1px solid #dedede;
+  background: #fff;
+  color: #303030;
+}
+
+.secondaryAction:hover {
+  background: #f5f5f5;
+}
+
+@media (max-width: 800px) {
+  .checkingGate {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .checkingSidebar {
+    display: none;
+  }
+
+  .checkingHeader {
+    min-height: 3.5rem;
+    padding: 0 1rem;
+  }
+
+  .checkingCanvas {
+    padding: 1.25rem;
+  }
+
+  .checkingMessage {
+    width: min(20rem, 80%);
+  }
+
+  .checkingComposer {
+    width: calc(100% - 1.5rem);
+    min-height: 3.5rem;
+    margin-bottom: 0.75rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .checkingGate {
+    transition: none;
+  }
+
+  .checkingBrand span,
+  .checkingNav span,
+  .checkingHeader span,
+  .checkingMessage span,
+  .checkingComposer span {
+    animation: none;
+  }
+}

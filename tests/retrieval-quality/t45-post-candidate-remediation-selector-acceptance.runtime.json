@@ -1,0 +1,197 @@
+{
+  "schemaVersion": 1,
+  "id": "lumi-t45-post-candidate-remediation-selector-acceptance-runtime",
+  "version": "2026-07-30.3",
+  "split": "POST_CANDIDATE_REMEDIATION_ACCEPTANCE",
+  "corpusSnapshot": {
+    "path": "data/knowledge-v2/knowledge-corpus.v2.json",
+    "bundleHash": "82db90934afaffa3d227b6b0d11ab5efdb88009fd8b9274845567de4888079f8"
+  },
+  "capabilityInventory": {
+    "id": "lumi-t45-capability-inventory",
+    "inventoryHash": "fd199dfe6f49ce1249f20a04be580dc1b1b31fff2d831b88d4bd13e022082d67"
+  },
+  "cases": [
+    {
+      "caseId": "t45-candacc-book-system-direct",
+      "familyId": "frozen-t44-book-001-book-as-complete-system",
+      "stratum": "DIRECT_PARAPHRASE",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "book-design",
+      "coursePackVersion": "1",
+      "question": "我只把封面做得很好看，老师却说不像一本完整的书。除了封面，我还应该拿哪些页面一起检查？"
+    },
+    {
+      "caseId": "t45-candacc-book-system-compose",
+      "familyId": "frozen-t44-book-001-book-as-complete-system",
+      "stratum": "COMPOSITION_HARD_DISTRACTOR",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "book-design",
+      "coursePackVersion": "1",
+      "question": "封面、书脊和内页各自都能看，但翻起来不像一套。我该怎么找重复规则，又怎么判断纸张装订是不是只在做装饰？"
+    },
+    {
+      "caseId": "t45-candacc-book-marks-direct",
+      "familyId": "frozen-t44-book-printer-marks",
+      "stratum": "DIRECT_PARAPHRASE",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "book-design",
+      "coursePackVersion": "1",
+      "question": "导出印刷 PDF 时那一堆裁切线、色条、套准标记，是不是全部勾上才保险？"
+    },
+    {
+      "caseId": "t45-candacc-book-marks-compose",
+      "familyId": "frozen-t44-book-printer-marks",
+      "stratum": "COMPOSITION_HARD_DISTRACTOR",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "book-design",
+      "coursePackVersion": "1",
+      "question": "一本既要送印又要放网上，我该先问印厂哪些标记要求，再怎么给两个用途分别导出，避免标记乱加？"
+    },
+    {
+      "caseId": "t45-candacc-brand-small-direct",
+      "familyId": "frozen-t44-brandvi-001-assess-wordmark-fit",
+      "stratum": "DIRECT_PARAPHRASE",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "brand-vi-design",
+      "coursePackVersion": "1",
+      "question": "我的品牌名很长，缩到胸针和网页头像上总认不清，是不是说明只做字标不合适？"
+    },
+    {
+      "caseId": "t45-candacc-brand-small-compose",
+      "familyId": "frozen-t44-brandvi-001-assess-wordmark-fit",
+      "stratum": "COMPOSITION_HARD_DISTRACTOR",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "brand-vi-design",
+      "coursePackVersion": "1",
+      "question": "字标小尺寸能读，但放进同类产品货架就没区别。我该做哪两组对照，再决定是否补一个图形？"
+    },
+    {
+      "caseId": "t45-candacc-brand-tone-direct",
+      "familyId": "frozen-t44-brandvi-002-test-wordmark-tone-and-audience",
+      "stratum": "DIRECT_PARAPHRASE",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "brand-vi-design",
+      "coursePackVersion": "1",
+      "question": "我说这款字体很亲和，别人却只说普通。怎么把“亲和”拆成能比较的字形差异？"
+    },
+    {
+      "caseId": "t45-candacc-brand-tone-compose",
+      "familyId": "frozen-t44-brandvi-002-test-wordmark-tone-and-audience",
+      "stratum": "COMPOSITION_HARD_DISTRACTOR",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "brand-vi-design",
+      "coursePackVersion": "1",
+      "question": "想测两款字标的气质，我该怎么保持颜色和版式不变，再让不熟悉品牌的人做同一个识别任务？"
+    },
+    {
+      "caseId": "t45-candacc-filter-direct",
+      "familyId": "frozen-t44-td-filter-chop",
+      "stratum": "DIRECT_PARAPHRASE",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "digital-interaction",
+      "coursePackVersion": "1",
+      "question": "传感器数值抖得厉害，我把 Filter Width 一口气拉大，是不是越稳越好？"
+    },
+    {
+      "caseId": "t45-candacc-filter-compose",
+      "familyId": "frozen-t44-td-filter-chop",
+      "stratum": "COMPOSITION_HARD_DISTRACTOR",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "digital-interaction",
+      "coursePackVersion": "1",
+      "question": "画面终于不抖了却慢半拍。我该先保留哪些原始数据，再怎样并排看滤波前后，找到不太抖也不迟钝的范围？"
+    },
+    {
+      "caseId": "t45-candacc-feedback-direct",
+      "familyId": "frozen-t44-td-feedback-top",
+      "stratum": "DIRECT_PARAPHRASE",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "digital-interaction",
+      "coursePackVersion": "1",
+      "question": "我做了反馈残影，但一开就整屏越叠越花，先看输入还是 Target TOP？"
+    },
+    {
+      "caseId": "t45-candacc-feedback-compose",
+      "familyId": "frozen-t44-td-feedback-top",
+      "stratum": "COMPOSITION_HARD_DISTRACTOR",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "digital-interaction",
+      "coursePackVersion": "1",
+      "question": "反馈回路能出画面，但我不知道有没有真正闭环，也清不干净。怎么先搭最小回路，再用哪项操作验证它能重置？"
+    },
+    {
+      "caseId": "t45-candacc-contrast-direct",
+      "familyId": "frozen-t44-design-text-contrast",
+      "stratum": "DIRECT_PARAPHRASE",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "general-design",
+      "coursePackVersion": "1",
+      "question": "正文是浅灰字配白底，看起来挺柔和，但我怎么确认它真的读得清？"
+    },
+    {
+      "caseId": "t45-candacc-contrast-compose",
+      "familyId": "frozen-t44-design-text-contrast",
+      "stratum": "COMPOSITION_HARD_DISTRACTOR",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "general-design",
+      "coursePackVersion": "1",
+      "question": "页面里有正文、超大标题和品牌字，测出的数又刚好卡在临界附近。我该先怎么分类，再怎么记录，避免四舍五入后误判？"
+    },
+    {
+      "caseId": "t45-candacc-illustrator-direct",
+      "familyId": "frozen-t44-illustrator-001-grid-guides-and-format-reuse",
+      "stratum": "DIRECT_PARAPHRASE",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "general-design",
+      "coursePackVersion": "1",
+      "question": "Illustrator 里的参考线看得见，我怎么确认它真锁住了，不会被我误拖？"
+    },
+    {
+      "caseId": "t45-candacc-illustrator-compose",
+      "familyId": "frozen-t44-illustrator-001-grid-guides-and-format-reuse",
+      "stratum": "COMPOSITION_HARD_DISTRACTOR",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "general-design",
+      "coursePackVersion": "1",
+      "question": "我想把网格和文字样式复用到另一个页面。怎么分别确认参考线锁定、文字参数一致，复用后还要抽查什么？"
+    },
+    {
+      "caseId": "t45-candacc-international-direct",
+      "familyId": "frozen-t44-layout-010-international-style-fit",
+      "stratum": "DIRECT_PARAPHRASE",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "layout-design",
+      "coursePackVersion": "1",
+      "question": "客户说想要干净专业，我是不是换成无衬线、加网格就算国际主义？"
+    },
+    {
+      "caseId": "t45-candacc-international-compose",
+      "familyId": "frozen-t44-layout-010-international-style-fit",
+      "stratum": "COMPOSITION_HARD_DISTRACTOR",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "layout-design",
+      "coursePackVersion": "1",
+      "question": "这个文化展信息很多，但又不能把地域感全删掉。我该怎么判断国际主义适不适合，再做什么小样验证阅读顺序？"
+    },
+    {
+      "caseId": "t45-candacc-grid-direct",
+      "familyId": "frozen-t44-layout-040-six-step-grid-layout-check",
+      "stratum": "DIRECT_PARAPHRASE",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "layout-design",
+      "coursePackVersion": "1",
+      "question": "我一上来就画了很复杂的网格，文案还没分组，应该退回哪一步？"
+    },
+    {
+      "caseId": "t45-candacc-grid-compose",
+      "familyId": "frozen-t44-layout-040-six-step-grid-layout-check",
+      "stratum": "COMPOSITION_HARD_DISTRACTOR",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "layout-design",
+      "coursePackVersion": "1",
+      "question": "标题和正文已经放进网格了，但我怕只是开着参考线时显得齐。接下来怎么检查层级，又怎么留前后证据？"
+    }
+  ],
+  "suiteHash": "6aadd2b4612ace4c65d7d9176ad1628b28f65b91ba0208e7cd8cbc80a97002cd"
+}

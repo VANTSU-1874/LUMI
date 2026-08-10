@@ -1,0 +1,197 @@
+{
+  "schemaVersion": 1,
+  "id": "lumi-t45-post-completion-selector-acceptance-runtime",
+  "version": "2026-07-30.2",
+  "split": "POST_COMPLETION_ACCEPTANCE",
+  "corpusSnapshot": {
+    "path": "data/knowledge-v2/knowledge-corpus.v2.json",
+    "bundleHash": "82db90934afaffa3d227b6b0d11ab5efdb88009fd8b9274845567de4888079f8"
+  },
+  "capabilityInventory": {
+    "id": "lumi-t45-capability-inventory",
+    "inventoryHash": "fd199dfe6f49ce1249f20a04be580dc1b1b31fff2d831b88d4bd13e022082d67"
+  },
+  "cases": [
+    {
+      "caseId": "t45-compacc-book-bleed-direct",
+      "familyId": "frozen-t44-book-bleed-output",
+      "stratum": "DIRECT_PARAPHRASE",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "book-design",
+      "coursePackVersion": "1",
+      "question": "做的是商业印刷，背景要铺到纸边，出血到底该加在哪些东西上，正文也要一起拉出去吗？"
+    },
+    {
+      "caseId": "t45-compacc-book-bleed-compose",
+      "familyId": "frozen-t44-book-bleed-output",
+      "stratum": "COMPOSITION_HARD_DISTRACTOR",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "book-design",
+      "coursePackVersion": "1",
+      "question": "印厂只说按他们的要求做，我还没确认数值。输出前先问清什么，再怎么检查贴边图片，才能避免裁完露白？"
+    },
+    {
+      "caseId": "t45-compacc-book-spacing-direct",
+      "familyId": "frozen-t44-book-kerning-tracking",
+      "stratum": "DIRECT_PARAPHRASE",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "book-design",
+      "coursePackVersion": "1",
+      "question": "标题里只有两三个字挤得怪，其他地方都正常，我该调整整行还是只动那几个字？"
+    },
+    {
+      "caseId": "t45-compacc-book-spacing-compose",
+      "familyId": "frozen-t44-book-kerning-tracking",
+      "stratum": "COMPOSITION_HARD_DISTRACTOR",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "book-design",
+      "coursePackVersion": "1",
+      "question": "整段正文太松，标题里又只有一对字不匀。怎样分两步调，避免用很大的字距把真正的问题盖住？"
+    },
+    {
+      "caseId": "t45-compacc-brand-readable-direct",
+      "familyId": "frozen-t44-brandvi-001-assess-wordmark-fit",
+      "stratum": "DIRECT_PARAPHRASE",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "brand-vi-design",
+      "coursePackVersion": "1",
+      "question": "我把几个字改得很有个性，可同学开始读错名字了，怎么判断是不是改过头？"
+    },
+    {
+      "caseId": "t45-compacc-brand-readable-compose",
+      "familyId": "frozen-t44-brandvi-001-assess-wordmark-fit",
+      "stratum": "COMPOSITION_HARD_DISTRACTOR",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "brand-vi-design",
+      "coursePackVersion": "1",
+      "question": "这个名字比较长，既要在小标签上看清，又担心放到一排同类品牌里不够区分。该做哪两种测试再决定只用文字还是加图形？"
+    },
+    {
+      "caseId": "t45-compacc-brand-audience-direct",
+      "familyId": "frozen-t44-brandvi-002-test-wordmark-tone-and-audience",
+      "stratum": "DIRECT_PARAPHRASE",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "brand-vi-design",
+      "coursePackVersion": "1",
+      "question": "测试的人都早就认识这个品牌，会不会把字体本身的问题看漏？我该怎么换一组人测？"
+    },
+    {
+      "caseId": "t45-compacc-brand-audience-compose",
+      "familyId": "frozen-t44-brandvi-002-test-wordmark-tone-and-audience",
+      "stratum": "COMPOSITION_HARD_DISTRACTOR",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "brand-vi-design",
+      "coursePackVersion": "1",
+      "question": "两款字标我想比较亲和还是理性，但又不想被颜色带偏。怎样先把感觉拆成可看的差异，再让受众完成同一个任务？"
+    },
+    {
+      "caseId": "t45-compacc-interaction-intent-direct",
+      "familyId": "frozen-t44-dicd-002-interaction-scheme-six-clarifications",
+      "stratum": "DIRECT_PARAPHRASE",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "digital-interaction",
+      "coursePackVersion": "1",
+      "question": "我只想到了一个很酷的画面，观众到底要做什么还没想清，先补哪一项最关键？"
+    },
+    {
+      "caseId": "t45-compacc-interaction-intent-compose",
+      "familyId": "frozen-t44-dicd-002-interaction-scheme-six-clarifications",
+      "stratum": "COMPOSITION_HARD_DISTRACTOR",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "digital-interaction",
+      "coursePackVersion": "1",
+      "question": "我想让人靠近石刻投影后纹样亮起来，但不知道距离数据怎么变成画面，也不确定观众能不能意识到是自己触发的。该分别补清哪两件事？"
+    },
+    {
+      "caseId": "t45-compacc-osc-sender-direct",
+      "familyId": "frozen-t44-osc-out-chop",
+      "stratum": "DIRECT_PARAPHRASE",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "digital-interaction",
+      "coursePackVersion": "1",
+      "question": "通道里有数值，但另一台电脑一点都没收到，发送端先查哪三个设置？"
+    },
+    {
+      "caseId": "t45-compacc-osc-sender-compose",
+      "familyId": "frozen-t44-osc-out-chop",
+      "stratum": "COMPOSITION_HARD_DISTRACTOR",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "digital-interaction",
+      "coursePackVersion": "1",
+      "question": "两台电脑间想先用固定值和单通道把 OSC 跑通。发送和接收两边各要核对什么，之后再恢复复杂通道？"
+    },
+    {
+      "caseId": "t45-compacc-color-cue-direct",
+      "familyId": "frozen-t44-design-color-redundancy",
+      "stratum": "DIRECT_PARAPHRASE",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "general-design",
+      "coursePackVersion": "1",
+      "question": "我的成功和失败只用绿、红来区分，去掉颜色后完全看不懂，应该补什么线索？"
+    },
+    {
+      "caseId": "t45-compacc-color-cue-compose",
+      "familyId": "frozen-t44-design-color-redundancy",
+      "stratum": "COMPOSITION_HARD_DISTRACTOR",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "general-design",
+      "coursePackVersion": "1",
+      "question": "图表类别只靠不同颜色，我想保留配色，又要让辨色不稳定的人看懂。先怎么检查，再怎么补一套不靠颜色的提示？"
+    },
+    {
+      "caseId": "t45-compacc-text-spacing-direct",
+      "familyId": "frozen-t44-design-text-spacing",
+      "stratum": "DIRECT_PARAPHRASE",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "general-design",
+      "coursePackVersion": "1",
+      "question": "网页文字一把行距调大就被框裁掉了，是不是应该把行距锁死，还是检查容器？"
+    },
+    {
+      "caseId": "t45-compacc-text-spacing-compose",
+      "familyId": "frozen-t44-design-text-spacing",
+      "stratum": "COMPOSITION_HARD_DISTRACTOR",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "general-design",
+      "coursePackVersion": "1",
+      "question": "我想验证页面能不能扛住用户放大行距和字距。应该改哪些间距，再检查哪些故障，而不是把页面固定成某组数值？"
+    },
+    {
+      "caseId": "t45-compacc-type-groups-direct",
+      "familyId": "frozen-t44-layout-002-type-hierarchy-and-whitespace",
+      "stratum": "DIRECT_PARAPHRASE",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "layout-design",
+      "coursePackVersion": "1",
+      "question": "我用了三四种字体，页面还是没有主次，是不是字体越多越容易分层？"
+    },
+    {
+      "caseId": "t45-compacc-type-groups-compose",
+      "familyId": "frozen-t44-layout-002-type-hierarchy-and-whitespace",
+      "stratum": "COMPOSITION_HARD_DISTRACTOR",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "layout-design",
+      "coursePackVersion": "1",
+      "question": "页面很挤，我想先把标题、正文和注释分成组，再检查正文为什么读着累。该先怎么整理角色和留白，再比较哪些阅读变量？"
+    },
+    {
+      "caseId": "t45-compacc-visual-align-direct",
+      "familyId": "frozen-t44-layout-042-review-alignment-with-guides-hidden",
+      "stratum": "DIRECT_PARAPHRASE",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "layout-design",
+      "coursePackVersion": "1",
+      "question": "开着参考线很齐，关掉就显得歪，我该按什么来判断是真的对齐还是只吸附了？"
+    },
+    {
+      "caseId": "t45-compacc-visual-align-compose",
+      "familyId": "frozen-t44-layout-042-review-alignment-with-guides-hidden",
+      "stratum": "COMPOSITION_HARD_DISTRACTOR",
+      "mode": "TEXT_TO_TEXT",
+      "coursePackId": "layout-design",
+      "coursePackVersion": "1",
+      "question": "中英文标题几何上同宽却看着不齐。我想区分是文本框、字形还是字距，再只改一项做前后对照，怎么查？"
+    }
+  ],
+  "suiteHash": "8b3e43cbbaa21ef9bca6b9648db123beef0108508eba06c3a38b490141f00881"
+}

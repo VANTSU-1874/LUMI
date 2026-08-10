@@ -1,0 +1,100 @@
+.page {
+  --claude-bg-0: #faf9f5;
+  --claude-bg-000: #faf9f5;
+  --claude-bg-100: #ffffff;
+  --claude-bg-200: #f0eee6;
+  --claude-bg-300: #dddddd;
+  --claude-text-100: #1f1e1d;
+  --claude-text-200: #3d3d3a;
+  --claude-text-300: #73726c;
+  --claude-text-400: #888888;
+  --claude-text-500: #999999;
+  --claude-accent: #d97757;
+  --claude-accent-hover: #c6613f;
+  display: grid;
+  min-height: 100dvh;
+  place-items: center;
+  padding: clamp(1.5rem, 5vw, 4rem);
+  background:
+    radial-gradient(circle at 50% 0%, rgb(217 119 87 / 10%), transparent 31rem),
+    var(--claude-bg-0);
+  color: var(--claude-text-100);
+  font-family: var(--lumi-font-sans);
+}
+
+.stage {
+  width: min(100%, 50rem);
+}
+
+.eyebrow {
+  margin: 0 0 0.75rem;
+  color: var(--claude-accent);
+  font-size: 0.75rem;
+  font-weight: 750;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.stage h1 {
+  margin: 0;
+  color: var(--claude-text-100);
+  font-family: var(--lumi-font-serif);
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  line-height: 1.12;
+}
+
+.intro {
+  max-width: 40rem;
+  margin: 1rem 0 2.25rem;
+  color: var(--claude-text-300);
+  font-size: 0.98rem;
+  line-height: 1.8;
+}
+
+.composerFrame {
+  width: 100%;
+}
+
+.composerFrame :global(input[type="file"]) {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  clip-path: inset(50%);
+}
+
+.composerFrame :global(textarea) {
+  font-family: var(--lumi-font-sans);
+}
+
+/* The app-wide focus ring would otherwise draw a red line through the source component. */
+.composerFrame :global(textarea:focus-visible) {
+  outline: none;
+}
+
+.disclaimer {
+  margin: 1.25rem 0 0;
+  color: var(--claude-text-400);
+  font-size: 0.78rem;
+  line-height: 1.65;
+  text-align: center;
+}
+
+@media (max-width: 640px) {
+  .page {
+    align-items: end;
+    padding: 1.25rem 1rem 2rem;
+  }
+
+  .stage h1 {
+    font-size: 2rem;
+  }
+
+  .intro {
+    margin-bottom: 1.5rem;
+  }
+}

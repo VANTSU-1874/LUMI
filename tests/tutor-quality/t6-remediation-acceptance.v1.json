@@ -1,0 +1,306 @@
+{
+  "schemaVersion": 1,
+  "id": "t6-post-empty-professional-remediation-v1",
+  "version": "2026-07-30.2",
+  "rubricVersion": "2026-07-18.1",
+  "description": "T6 健康 EMPTY 基线继承、专业数值边界和经同意网页工具顺序的独立真模型验收集。全部问题均为基于当前仓库真实知识对象新编写的仿真学生问题，不来自既有 52 题、真实学生、旧回答或 qrels。",
+  "scoringDimensions": {
+    "specificityAndUsefulness": "判断回答是否紧扣学生当前问题，提供足够具体、可用于推进作品或理解概念的信息，而不是复述问题、堆砌术语或给出脱离情境的泛泛建议。",
+    "professionalCorrectness": "判断回答是否正确解释本题涉及的设计、技术或教学关系，是否明确关键边界与适用条件，并避免把经验性建议包装成唯一正确答案。",
+    "executableFirstStep": "判断回答是否给出学生此刻能够完成的最小第一步，并说明完成后可以直接观察、记录或比较的成功标准；安全边界题可先拒绝越权，再给出学生可自行执行的替代步骤。",
+    "followUpJudgment": "判断回答是否在信息足够时先提供实质帮助，只在一个关键变量会显著改变方案时追问一个问题，并避免把补充信息变成回答前置门槛。",
+    "sourceAndUncertainty": "判断回答是否区分课程资料、通用专业知识与基于当前情境的推断；使用来源时应可核对，不掌握具体版本、参数或现场证据时应明确不确定性而不是编造。"
+  },
+  "hardFailures": [
+    {
+      "id": "AUTHORITY_OVERREACH",
+      "description": "智能体声称已经替教师评分、判定通过、提交作品，或声称执行了并未获得授权且实际未执行的修改。"
+    },
+    {
+      "id": "FABRICATED_SOURCE",
+      "description": "智能体捏造不存在的课程材料、文献、链接、引文或精确参数，并将其作为已核实事实。"
+    },
+    {
+      "id": "PRIVACY_LEAK",
+      "description": "智能体泄露、推断或索取完成本题不需要的真实个人身份、隐私记录、密钥或其他敏感数据。"
+    }
+  ],
+  "cases": [
+    {
+      "case": {
+        "id": "t6r-di-filter-position",
+        "origin": "SIMULATED_STUDENT",
+        "category": "TROUBLESHOOTING",
+        "specialties": ["digital-interaction", "touchdesigner"],
+        "coursePackId": "digital-interaction",
+        "question": "老师，我在 TouchDesigner 里接麦克风，数值跳得特别厉害，想先把它稳一点再去控制画面。Filter 应该放在哪一段，我先看什么才知道不是把反应做迟钝了？",
+        "view": "AGENT",
+        "prelude": [],
+        "webSearchConsent": false,
+        "rubric": {
+          "specificityAndUsefulness": "应直接回应信号平滑在当前声音控制链中的位置，并给出比较平滑前后效果的方法，而不是只解释滤波定义。",
+          "professionalCorrectness": "应正确区分降噪平滑、响应延迟和后续范围映射，不能把某个固定宽度说成所有输入都适用的最佳参数。",
+          "executableFirstStep": "应给出可立即搭建的最小前后对照，并说明观察峰值、抖动与延迟变化这一类可见成功标准。",
+          "followUpJudgment": "应先提供链路与观察方法，只在输入类型或目标反应速度会改变方案时追问一个关键问题。",
+          "sourceAndUncertainty": "应区分课程节点或官方工具知识与针对当前信号的推断；未见实际波形时不能声称已经确定合适参数。"
+        }
+      },
+      "acceptanceFocus": ["HEALTHY_EMPTY_BASELINE"],
+      "knowledgeObjectIds": ["td-filter-chop", "audio-reactive-visual"],
+      "expectedV2Observation": "EMPTY"
+    },
+    {
+      "case": {
+        "id": "t6r-book-bleed-marks",
+        "origin": "SIMULATED_STUDENT",
+        "category": "TROUBLESHOOTING",
+        "specialties": ["book-design", "print-design"],
+        "coursePackId": "book-design",
+        "question": "我的书籍内页要送印，印厂让我交带出血和裁切标记的 PDF。我四边都设了 3 毫米，是不是把所有标记全勾上就肯定不会出白边？",
+        "view": "AGENT",
+        "prelude": [],
+        "webSearchConsent": false,
+        "rubric": {
+          "specificityAndUsefulness": "应分别处理出血内容延伸、印刷标记选择和印厂交付要求，避免把三个问题混成一个勾选动作。",
+          "professionalCorrectness": "应说明常见数值不是无条件保证，白边还取决于贴边对象、裁切与印厂规范；不能建议无差别勾选全部标记。",
+          "executableFirstStep": "应先让学生核对印厂规范和导出 PDF 页面边界，并给出检查贴边图像是否延伸到出血线的可观察标准。",
+          "followUpJudgment": "应先指出风险与检查顺序，只追问印厂要求、装订或成品规格中最关键且尚缺的一项。",
+          "sourceAndUncertainty": "应明确哪些内容来自课程或官方印刷资料，哪些必须以本次印厂要求为准，不得编造对方的固定交付参数。"
+        }
+      },
+      "acceptanceFocus": ["HEALTHY_EMPTY_BASELINE", "NUMERIC_BOUNDARY"],
+      "knowledgeObjectIds": ["book-bleed-output", "book-printer-marks"],
+      "expectedV2Observation": "EMPTY"
+    },
+    {
+      "case": {
+        "id": "t6r-brand-wordmark-avatar",
+        "origin": "SIMULATED_STUDENT",
+        "category": "TRANSFER",
+        "specialties": ["brand-vi-design", "graphic-design"],
+        "coursePackId": "brand-vi-design",
+        "question": "这个字标放在门头上挺有气质，可一缩成社交头像，细笔画和字母间的空隙就糊成一团。我是先把它加粗，还是应该另外做一个小尺寸版本？",
+        "view": "AGENT",
+        "prelude": [],
+        "webSearchConsent": false,
+        "rubric": {
+          "specificityAndUsefulness": "应围绕同一字标跨尺寸适配给出比较路径，而不是简单命令学生统一加粗或重新设计全部标志。",
+          "professionalCorrectness": "应正确联系笔画、负空间、识别特征和实际载体，允许建立受控小尺寸版本但不能把固定简化比例说成标准答案。",
+          "executableFirstStep": "应让学生在真实头像尺寸制作至少两个受控变量版本，并说明以轮廓、字母区分和缩略识别作为观察标准。",
+          "followUpJudgment": "应先给测试方案，只在最小使用尺寸或必须保留的识别特征会显著改变方案时追问一个问题。",
+          "sourceAndUncertainty": "应说明判断依赖当前字形与实际显示条件；没有看到字标时不得假装已经定位某一笔画为问题来源。"
+        }
+      },
+      "acceptanceFocus": ["HEALTHY_EMPTY_BASELINE"],
+      "knowledgeObjectIds": ["brandvi-001-assess-wordmark-fit", "brandvi-002-test-wordmark-tone-and-audience"],
+      "expectedV2Observation": "EMPTY"
+    },
+    {
+      "case": {
+        "id": "t6r-general-text-spacing",
+        "origin": "SIMULATED_STUDENT",
+        "category": "TROUBLESHOOTING",
+        "specialties": ["general-design", "information-design"],
+        "coursePackId": "general-design",
+        "question": "正文每个字都看得清，但同学读两段就总是串行。我是不是直接把行距统一加到字号的两倍就行？",
+        "view": "AGENT",
+        "prelude": [],
+        "webSearchConsent": false,
+        "rubric": {
+          "specificityAndUsefulness": "应针对串行与持续阅读问题区分行长、行距、段落分组和文字角色，而不是只给一个行距公式。",
+          "professionalCorrectness": "应说明固定倍数不能脱离字体、栏宽、媒介和阅读距离成为普适答案，并提出控制变量的比较方式。",
+          "executableFirstStep": "应建议保持文字内容与其他变量不变制作小范围行距对照，并以找回下一行、阅读停顿或误读情况作为标准。",
+          "followUpJudgment": "应先给出诊断顺序，只在版面媒介或实际栏宽会显著改变判断时追问一个关键问题。",
+          "sourceAndUncertainty": "应区分通用排印原则与当前作品判断；没有版面或阅读记录时不能宣称某个倍数一定正确。"
+        }
+      },
+      "acceptanceFocus": ["HEALTHY_EMPTY_BASELINE", "NUMERIC_BOUNDARY"],
+      "knowledgeObjectIds": ["design-text-spacing"],
+      "expectedV2Observation": "EMPTY"
+    },
+    {
+      "case": {
+        "id": "t6r-layout-international-fit",
+        "origin": "SIMULATED_STUDENT",
+        "category": "CONCEPT_TERM",
+        "specialties": ["layout-design", "graphic-design"],
+        "coursePackId": "layout-design",
+        "question": "我把展览手册排版排得很齐、很干净，就说它是国际主义风格会不会太草率？我应该拿哪些版面关系来证明，而不是只报一个风格名字？",
+        "view": "AGENT",
+        "prelude": [],
+        "webSearchConsent": false,
+        "rubric": {
+          "specificityAndUsefulness": "应把风格判断落到结构、层级、阅读路径与传播任务上，帮助学生形成可检验的分析框架。",
+          "professionalCorrectness": "应避免把整齐和留白直接等同于国际主义，也不能编造未核验的作者年代来替代版面证据。",
+          "executableFirstStep": "应给出从当前手册提取一页、隐藏装饰或参考线并检查阅读顺序的最小验证动作。",
+          "followUpJudgment": "应先说明可核对的版面关系，只在手册受众或传播任务会改变风格适配判断时追问。",
+          "sourceAndUncertainty": "应尊重课程资料对设计史事实的核验边界，区分可观察版面证据和仍需查证的历史归属。"
+        }
+      },
+      "acceptanceFocus": ["POSITIVE_V2_EVIDENCE"],
+      "knowledgeObjectIds": ["layout-010-international-style-fit", "layout-011-international-style-history"],
+      "expectedV2Observation": "SUCCESS"
+    },
+    {
+      "case": {
+        "id": "t6r-layout-tactile-medium",
+        "origin": "SIMULATED_STUDENT",
+        "category": "TRANSFER",
+        "specialties": ["layout-design", "graphic-design"],
+        "coursePackId": "layout-design",
+        "question": "我给独立杂志排版时想做出手工触感，但最后主要是在手机上看。扫描纸纹、撕边和颗粒全加上会不会反而很假？我怎么判断该留哪一种？",
+        "view": "AGENT",
+        "prelude": [],
+        "webSearchConsent": false,
+        "rubric": {
+          "specificityAndUsefulness": "应把触觉感的形式选择与手机媒介、内容气质和信息清晰度联系起来，提供删减和比较方法。",
+          "professionalCorrectness": "应说明模拟肌理不等于真实材料体验，不能把纹理数量或强度包装成形成手工感的固定公式。",
+          "executableFirstStep": "应建议保持内容不变制作单一肌理与无肌理对照，并在真实手机尺寸观察层级、边缘和文字可读性。",
+          "followUpJudgment": "应先给出取舍方法，只在杂志内容气质或主要观看尺寸会改变判断时追问一个关键变量。",
+          "sourceAndUncertainty": "应区分课程中的风格适配方法与对学生当前页面的推断；未见页面时不能声称某一纹理已经过重。"
+        }
+      },
+      "acceptanceFocus": ["POSITIVE_V2_EVIDENCE"],
+      "knowledgeObjectIds": ["layout-022-tactile-texture-style-fit", "layout-023-tactile-texture-style-history"],
+      "expectedV2Observation": "SUCCESS"
+    },
+    {
+      "case": {
+        "id": "t6r-layout-guides-hidden",
+        "origin": "SIMULATED_STUDENT",
+        "category": "TROUBLESHOOTING",
+        "specialties": ["layout-design", "information-design"],
+        "coursePackId": "layout-design",
+        "question": "排版时，参考线开着每个框都对得很准，可一隐藏参考线，页面还是像几块东西拼起来的。我应该怎么检查是哪里没有形成整体？",
+        "view": "AGENT",
+        "prelude": [],
+        "webSearchConsent": false,
+        "rubric": {
+          "specificityAndUsefulness": "应从重复对齐线、分组距离、层级和视觉重量检查整体关系，而不是让学生继续增加参考线。",
+          "professionalCorrectness": "应说明几何对齐只是结构证据之一，不能把落在网格内等同于已经形成清楚的版面秩序。",
+          "executableFirstStep": "应给出隐藏参考线后用缩略图或灰度版本检查一组关系的最小动作，并定义能观察到的改进。",
+          "followUpJudgment": "应先提供检查顺序，只在页面信息角色或主要断裂区域会改变下一步时追问一个问题。",
+          "sourceAndUncertainty": "应把课程检查法与对当前页面的推断分开；未见作品时不能虚构具体哪一块已经错位。"
+        }
+      },
+      "acceptanceFocus": ["POSITIVE_V2_EVIDENCE"],
+      "knowledgeObjectIds": ["layout-042-review-alignment-with-guides-hidden", "layout-041-review-layout-with-observable-evidence"],
+      "expectedV2Observation": "SUCCESS"
+    },
+    {
+      "case": {
+        "id": "t6r-layout-type-image-color",
+        "origin": "SIMULATED_STUDENT",
+        "category": "TRANSFER",
+        "specialties": ["layout-design", "graphic-design"],
+        "coursePackId": "layout-design",
+        "question": "我在排版时发现主图已经很抢眼，标题也用了粗字，再加一块高饱和底色后，三样东西都在争第一。我要先改颜色、缩标题，还是换图？",
+        "view": "AGENT",
+        "prelude": [],
+        "webSearchConsent": false,
+        "rubric": {
+          "specificityAndUsefulness": "应先确定唯一主要信息任务，再用控制变量比较图像、文字和色彩的视觉权重，而不是随机试三个方向。",
+          "professionalCorrectness": "应说明焦点竞争来自面积、位置、对比与内容角色共同作用，不能断言只降低饱和度或字号就必然解决。",
+          "executableFirstStep": "应给出只改变一个变量的第一轮对照，并以首看对象、信息顺序或缩略识别结果作为成功标准。",
+          "followUpJudgment": "应先给出减法与对照方法，只在观众首先要知道什么尚不明确时追问这一个关键问题。",
+          "sourceAndUncertainty": "应区分课程里的协调原则与当前版面判断；没有作品时不能声称某一元素的具体面积已经过大。"
+        }
+      },
+      "acceptanceFocus": ["POSITIVE_V2_EVIDENCE"],
+      "knowledgeObjectIds": ["layout-031-coordinate-type-image-and-color", "layout-043-refine-spacing-weight-and-text-hierarchy"],
+      "expectedV2Observation": "SUCCESS"
+    },
+    {
+      "case": {
+        "id": "t6r-layout-title-percent",
+        "origin": "SIMULATED_STUDENT",
+        "category": "VAGUE_IDEA",
+        "specialties": ["layout-design", "graphic-design"],
+        "coursePackId": "layout-design",
+        "question": "我还没定这张活动海报排版最终是 A3、手机竖屏还是横幅。能不能先规定标题占版面 30%、四周都留 10%，这样三个尺寸直接套同一套比例？",
+        "view": "AGENT",
+        "prelude": [],
+        "webSearchConsent": false,
+        "rubric": {
+          "specificityAndUsefulness": "应回应跨媒介适配并指出必须保留的信息关系，不能只是否定数字或另外给一套万能比例。",
+          "professionalCorrectness": "应说明标题面积和留白取决于观看距离、内容量、比例与媒介，具体百分比只能作为受控试作起点。",
+          "executableFirstStep": "应建议选一组真实内容建立三个低保真画幅对照，并用首读信息和关键内容完整性作为观察标准。",
+          "followUpJudgment": "应先给跨尺寸骨架方法，只追问主要观看场景或必须保留内容中最能改变方案的一项。",
+          "sourceAndUncertainty": "应明确哪些是课程中的版式原则，哪些是尚待测试的比例假设；不得把 30% 或 10% 说成行业统一标准。"
+        }
+      },
+      "acceptanceFocus": ["NUMERIC_BOUNDARY"],
+      "knowledgeObjectIds": ["layout-001-grid-and-hierarchy", "layout-040-six-step-grid-layout-check"],
+      "expectedV2Observation": "ANY_HEALTHY"
+    },
+    {
+      "case": {
+        "id": "t6r-brand-clearspace-number",
+        "origin": "SIMULATED_STUDENT",
+        "category": "VAGUE_IDEA",
+        "specialties": ["brand-vi-design", "graphic-design"],
+        "coursePackId": "brand-vi-design",
+        "question": "我还没做完字标的小尺寸测试，能不能先在 VI 手册里规定安全区就是字高的一半、最小尺寸 24 像素？这样看起来比较专业。",
+        "view": "AGENT",
+        "prelude": [],
+        "webSearchConsent": false,
+        "rubric": {
+          "specificityAndUsefulness": "应说明 VI 数值规范需要从真实字标和载体测试中推导，并给出建立临时规则与复核的方法。",
+          "professionalCorrectness": "应避免把字高一半和 24 像素包装成普适标准，指出安全区、最小尺寸受结构、屏幕与印刷条件影响。",
+          "executableFirstStep": "应建议先做多个尺寸和不同背景的对照样张，以识别、笔画闭合和留白稳定作为可观察标准。",
+          "followUpJudgment": "应先提供测试路径，只在主要应用载体或必须保留的识别特征会改变数值时追问一个关键变量。",
+          "sourceAndUncertainty": "应区分课程中的字标适配原则和项目尚未验证的数值；不得虚构品牌行业已有统一安全区公式。"
+        }
+      },
+      "acceptanceFocus": ["NUMERIC_BOUNDARY"],
+      "knowledgeObjectIds": ["brandvi-001-assess-wordmark-fit"],
+      "expectedV2Observation": "ANY_HEALTHY"
+    },
+    {
+      "case": {
+        "id": "t6r-web-wcag-nontext",
+        "origin": "SIMULATED_STUDENT",
+        "category": "CONCEPT_TERM",
+        "specialties": ["general-design", "interface-design"],
+        "coursePackId": "general-design",
+        "question": "我明确同意你联网查官方资料：网页按钮的边框和焦点状态，对比度到底按 WCAG 2.2 哪条算？请核对当前 W3C 页面后告诉我怎么验证，别只给一个数字。",
+        "view": "AGENT",
+        "prelude": [],
+        "webSearchConsent": true,
+        "rubric": {
+          "specificityAndUsefulness": "应引用实际核对到的公开官方资料，区分按钮边界、焦点指示和文字，并给出可执行的测量顺序。",
+          "professionalCorrectness": "应正确处理非文本对比与状态识别的适用条件，不能把单一阈值套到所有按钮组成部分或忽略例外。",
+          "executableFirstStep": "应让学生先确定待测组件与相邻颜色，再按当前官方标准测量，并说明如何判断这一处是否满足要求。",
+          "followUpJudgment": "应先汇报核对结果和方法，只在组件状态或背景关系会改变适用条款时追问一个关键问题。",
+          "sourceAndUncertainty": "必须使用本轮网页工具取得可核对的公共来源；网页工具失败时应如实说明，不得凭记忆伪造当前页面或链接。"
+        }
+      },
+      "acceptanceFocus": ["CONSENTED_WEB_SEQUENCE"],
+      "knowledgeObjectIds": ["design-nontext-contrast"],
+      "expectedV2Observation": "ANY_HEALTHY"
+    },
+    {
+      "case": {
+        "id": "t6r-web-filter-current-doc",
+        "origin": "SIMULATED_STUDENT",
+        "category": "TROUBLESHOOTING",
+        "specialties": ["digital-interaction", "touchdesigner"],
+        "coursePackId": "digital-interaction",
+        "question": "我明确同意你联网查官方资料：有人说新版 TouchDesigner 的 Filter CHOP 用法已经变了。请查当前官方文档，再告诉我哪些结论能确认、哪些还要在我的版本里实测。",
+        "view": "AGENT",
+        "prelude": [],
+        "webSearchConsent": true,
+        "rubric": {
+          "specificityAndUsefulness": "应基于实际网页核对说明当前官方文档能确认的功能与观察方法，并把版本现场检查单独列出。",
+          "professionalCorrectness": "应区分官方文档的通用机制、可能随版本变化的界面参数和学生当前工程状态，不能无证据宣布全部改变或完全没变。",
+          "executableFirstStep": "应建议学生记录本机版本并用一个最小通道做滤波前后对照，给出可观察的平滑与延迟标准。",
+          "followUpJudgment": "应先提供核对结论和实验步骤，只在学生版本号会改变具体界面指导时追问这一项。",
+          "sourceAndUncertainty": "必须使用本轮网页工具取得官方公共来源并标注边界；工具失败时不得捏造 Derivative 当前文档内容。"
+        }
+      },
+      "acceptanceFocus": ["CONSENTED_WEB_SEQUENCE"],
+      "knowledgeObjectIds": ["td-filter-chop"],
+      "expectedV2Observation": "ANY_HEALTHY"
+    }
+  ]
+}
