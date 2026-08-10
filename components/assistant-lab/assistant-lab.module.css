@@ -2347,6 +2347,13 @@
   border-radius: var(--lab-inline-radius);
   background: transparent;
   color: var(--lab-faint);
+  pointer-events: auto;
+}
+
+.markdown :global([data-streamdown="code-block"] > div:has(> [data-streamdown="code-block-actions"])) {
+  position: relative;
+  top: auto;
+  z-index: 1;
 }
 
 .markdown :global([data-streamdown="code-block-body"]) {
@@ -2364,6 +2371,92 @@
 .markdown :global([data-streamdown="code-block-body"] code) {
   background: transparent;
   color: inherit;
+}
+
+.markdown :global([data-streamdown="code-block-body"]) {
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.markdown :global([data-streamdown="code-block"]:has([data-streamdown="code-block-body"].lumi-text-fence)) {
+  border-color: var(--lab-line-strong);
+  background: var(--lab-panel-soft);
+  color: var(--lab-ink);
+}
+
+.markdown :global([data-streamdown="code-block"]:has([data-streamdown="code-block-body"].lumi-text-fence) [data-streamdown="code-block-header"]) {
+  border-bottom-color: var(--lab-line);
+  background: var(--lab-panel);
+  color: var(--lab-muted);
+}
+
+.markdown :global([data-streamdown="code-block"]:has([data-streamdown="code-block-body"].lumi-text-fence) [data-streamdown="code-block-actions"]) {
+  border-color: var(--lab-line);
+  background: var(--lab-panel);
+  color: var(--lab-muted);
+}
+
+.markdown :global([data-streamdown="code-block-body"].lumi-text-fence) {
+  overflow-x: hidden;
+  background: var(--lab-panel-soft);
+  color: var(--lab-ink);
+  font-family: var(--lumi-font-sans);
+}
+
+.markdown :global([data-streamdown="code-block-body"].lumi-text-fence pre),
+.markdown :global([data-streamdown="code-block-body"].lumi-text-fence code) {
+  min-width: 0;
+  max-width: 100%;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  font-family: inherit;
+}
+
+.markdown :global([data-streamdown="code-block-body"] pre > code > span) {
+  display: block;
+}
+
+.markdown :global([data-streamdown="code-block-body"].lumi-text-fence span) {
+  background: transparent;
+  color: inherit;
+}
+
+.markdown :global([data-streamdown="code-block-copy-button"]:focus-visible) {
+  outline: 2px solid var(--lab-code-ink);
+  outline-offset: 2px;
+}
+
+.markdown :global([data-streamdown="code-block-copy-button"]) {
+  border-radius: var(--lab-inline-radius);
+  pointer-events: auto;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.markdown :global([data-streamdown="code-block-copy-button"]:hover) {
+  background: var(--lab-code-head);
+  color: var(--lab-code-ink);
+}
+
+.markdown :global([data-streamdown="code-block-copy-button"]:active) {
+  background: var(--lab-code-bg);
+  color: var(--lab-code-ink);
+}
+
+.markdown :global([data-streamdown="code-block-copy-button"]:disabled) {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.markdown :global([data-streamdown="code-block"]:has([data-streamdown="code-block-body"].lumi-text-fence) [data-streamdown="code-block-copy-button"]:focus-visible) {
+  outline-color: var(--lab-ink);
+}
+
+.markdown :global([data-streamdown="code-block"]:has([data-streamdown="code-block-body"].lumi-text-fence) [data-streamdown="code-block-copy-button"]:hover),
+.markdown :global([data-streamdown="code-block"]:has([data-streamdown="code-block-body"].lumi-text-fence) [data-streamdown="code-block-copy-button"]:active) {
+  background: var(--lab-panel-soft);
+  color: var(--lab-ink);
 }
 
 .toolPart,
