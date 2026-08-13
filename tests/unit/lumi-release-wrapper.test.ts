@@ -64,8 +64,11 @@ describe("constrained Lumi release wrapper", () => {
     expect(wrapper).toContain("inherit_knowledge_v2_runtime_for_d27()");
     expect(wrapper).toContain("reconstruct_knowledge_v2_corpus_for_d27()");
     expect(wrapper).toContain("KNOWLEDGE_V2_CORPUS_REPAIR=PASS");
+    expect(wrapper).toContain("KNOWLEDGE_V2_CORPUS_REPAIR_STRUCTURE_INVALID");
     expect(wrapper).toContain("KNOWLEDGE_V2_CORPUS_REPAIR_HASH_DRIFT");
     expect(wrapper).toContain("WHERE bundle_hash=?");
+    expect(wrapper).toContain("corpusRecord.schemaVersion !== 2");
+    expect(wrapper).not.toContain("pathToFileURL");
     expect(wrapper).toContain('repair if relative == corpus_path else source');
     expect(wrapper).toContain("KNOWLEDGE_V2_RUNTIME_INHERIT=PASS");
     expect(wrapper).toContain('"$RELEASE_ROOT/$expected_current" "$release"');

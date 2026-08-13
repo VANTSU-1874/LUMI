@@ -621,7 +621,6 @@ import { createHash } from "node:crypto";
 import { createRequire } from "node:module";
 import { closeSync, fsyncSync, mkdirSync, openSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
-import { pathToFileURL } from "node:url";
 
 const [currentRelease, targetRelease, repairRoot] = process.argv.slice(2);
 if (!currentRelease || !targetRelease || !repairRoot || !process.env.DATABASE_PATH) {
@@ -647,13 +646,14 @@ const row = database.prepare(`
 database.close();
 if (!row?.canonicalJson) throw new Error("KNOWLEDGE_V2_CORPUS_REPAIR_DATABASE_ROW_MISSING");
 
-const moduleUrl = pathToFileURL(path.join(
-  currentRelease,
-  "lib/knowledge/knowledge-object-v2.ts",
-)).href;
-const { verifyKnowledgeCorpusBundleV2 } = await import(moduleUrl);
-const corpus = verifyKnowledgeCorpusBundleV2(JSON.parse(row.canonicalJson));
-if (corpus.bundleHash !== corpusHash) throw new Error("KNOWLEDGE_V2_CORPUS_REPAIR_BINDING_DRIFT");
+const corpus: unknown = JSON.parse(row.canonicalJson);
+if (!corpus || typeof corpus !== "object" || Array.isArray(corpus)) {
+  throw new Error("KNOWLEDGE_V2_CORPUS_REPAIR_STRUCTURE_INVALID");
+}
+const corpusRecord = corpus as Record<string, unknown>;
+if (corpusRecord.schemaVersion !== 2 || corpusRecord.bundleHash !== corpusHash) {
+  throw new Error("KNOWLEDGE_V2_CORPUS_REPAIR_BINDING_DRIFT");
+}
 const bytes = Buffer.from(`${JSON.stringify(corpus, null, 2)}\n`, "utf8");
 const sha256 = createHash("sha256").update(bytes).digest("hex");
 if (bytes.length !== expected.bytes || sha256 !== expected.sha256) {
