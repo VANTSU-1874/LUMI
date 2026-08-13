@@ -1039,6 +1039,19 @@ print(f"EXECUTABLE_FILE_COUNT={len(paths)}")
 PY
 }
 
+repair_knowledge_v2_python_permission() {
+  local release=$1
+  local python="$release/.runtime/knowledge-v2-linux/python/bin/python3"
+  [[ -d "$release" && ! -L "$release" ]]
+  [[ -f "$python" && ! -L "$python" ]]
+  [[ "$(realpath -e -- "$python")" == "$python" ]]
+  chown root:"$SERVICE_GROUP" "$python"
+  chmod 0750 "$python"
+  [[ "$(stat -c '%U:%G:%a' -- "$python")" == "root:$SERVICE_GROUP:750" ]]
+  runuser -u "$SERVICE_USER" -- test -x "$python"
+  printf 'KNOWLEDGE_V2_PYTHON_PERMISSION=PASS\n'
+}
+
 validate_manifest() {
   local manifest=$1
   local commit=$2
@@ -1302,6 +1315,9 @@ prepare() {
   find "$release" -xdev -type d -exec chmod 0750 {} +
   find "$release" -xdev -type f -exec chmod 0640 {} +
   repair_executable_permissions "$release" "$stage/source.executables" "$stage/built.executables" "$ACTIVE_EVIDENCE/executable-permissions.tsv" | tee -a "$ACTIVE_EVIDENCE/summary.log"
+  if [[ "$database_migration" == "$DATABASE_MIGRATION_INSPIRATION_D27" ]]; then
+    repair_knowledge_v2_python_permission "$release" | tee -a "$ACTIVE_EVIDENCE/summary.log"
+  fi
   install -d -o "$SERVICE_USER" -g "$SERVICE_GROUP" -m 0770 "$release/.next/cache"
   write_release_marker "$release" "$commit" "$build_id" "$esbuild_version"
   verify_release "$commit" "$build_id" "$esbuild_version"
@@ -1478,6 +1494,530 @@ backup() {
   ACTIVE_EVIDENCE=''
   printf 'BACKUP=SUCCEEDED\n'
   printf 'RUN_ID=%s\n' "$run_id"
+  printf 'EVIDENCE=%s\n' "$EVIDENCE_ROOT/$run_id"
+}
+
+failed_cutover_evidence_count() {
+  local commit=$1
+  python3 - "$EVIDENCE_ROOT" "$commit" <<'PY'
+from pathlib import Path
+import stat
+import sys
+
+root = Path(sys.argv[1])
+commit = sys.argv[2]
+count = 0
+for candidate in root.iterdir():
+    result = candidate / "FAILED.result"
+    try:
+        mode = result.lstat().st_mode
+    except FileNotFoundError:
+        continue
+    if not stat.S_ISREG(mode):
+        continue
+    fields = {}
+    for line in result.read_text(encoding="utf-8").splitlines():
+        if "=" in line:
+            key, value = line.split("=", 1)
+            fields[key] = value
+    if (
+        fields.get("SOURCE_COMMIT") == commit
+        and fields.get("PHASE") == "cutover"
+        and fields.get("STATUS") == "FAILED"
+    ):
+        count += 1
+print(count)
+PY
+}
+
+successful_cutover_evidence_count() {
+  local commit=$1
+  python3 - "$EVIDENCE_ROOT" "$commit" <<'PY'
+from pathlib import Path
+import stat
+import sys
+
+root = Path(sys.argv[1])
+commit = sys.argv[2]
+count = 0
+for candidate in root.iterdir():
+    result = candidate / "SUCCEEDED.result"
+    summary = candidate / "summary.log"
+    try:
+        result_mode = result.lstat().st_mode
+        summary_mode = summary.lstat().st_mode
+    except FileNotFoundError:
+        continue
+    if not stat.S_ISREG(result_mode) or not stat.S_ISREG(summary_mode):
+        continue
+    fields = {}
+    for line in result.read_text(encoding="utf-8").splitlines():
+        if "=" in line:
+            key, value = line.split("=", 1)
+            fields[key] = value
+    phases = {
+        line.split("=", 1)[1]
+        for line in summary.read_text(encoding="utf-8").splitlines()
+        if line.startswith("PHASE=")
+    }
+    if (
+        fields.get("SOURCE_COMMIT") == commit
+        and fields.get("STATUS") == "SUCCEEDED"
+        and "cutover" in phases
+    ):
+        count += 1
+print(count)
+PY
+}
+
+release_reference_count() {
+  local release=$1
+  local candidate
+  local resolved
+  local count=0
+
+  shopt -s nullglob
+  for candidate in /proc/[0-9]*/exe /proc/[0-9]*/cwd /proc/[0-9]*/root /proc/[0-9]*/fd/*; do
+    resolved=$(readlink -f -- "$candidate" 2>/dev/null || true)
+    if [[ "$resolved" == "$release" || "$resolved" == "$release/"* ]]; then
+      count=$((count + 1))
+    fi
+  done
+  shopt -u nullglob
+
+  while IFS= read -r -d '' candidate; do
+    resolved=$(readlink -f -- "$candidate" 2>/dev/null || true)
+    if [[ "$resolved" == "$release" || "$resolved" == "$release/"* ]]; then
+      count=$((count + 1))
+    fi
+  done < <(find /opt/lumi -xdev -maxdepth 2 -type l -print0)
+
+  printf '%s\n' "$count"
+}
+
+release_seal_count() {
+  local commit=$1
+  local seal
+  local count=0
+
+  shopt -s nullglob
+  for seal in "$SEAL_ROOT"/*.seal; do
+    [[ -f "$seal" && ! -L "$seal" ]]
+    if [[ "$(seal_field "$seal" source_commit)" == "$commit" ]]; then
+      count=$((count + 1))
+    fi
+  done
+  shopt -u nullglob
+  printf '%s\n' "$count"
+}
+
+release_inventory() {
+  local current
+  local release
+  local name
+  local bytes
+  local marker
+  local marker_commit='NONE'
+  local complete='NO'
+  local successful_cutovers=0
+  local failed_cutovers=0
+  local references
+  local is_current
+
+  assert_operations_roots
+  [[ -d "$RELEASE_ROOT" && ! -L "$RELEASE_ROOT" ]]
+  [[ -L "$CURRENT_LINK" ]]
+  current=$(readlink -f "$CURRENT_LINK")
+  [[ "$current" == "$RELEASE_ROOT/"* ]]
+  printf 'CURRENT=%s\n' "$current"
+
+  while IFS= read -r -d '' release; do
+    name=$(basename -- "$release")
+    bytes=$(du -sb -- "$release" | awk '{print $1}')
+    [[ "$bytes" =~ ^[1-9][0-9]*$ ]]
+    marker="$release/.lumi-deploy-complete"
+    marker_commit='NONE'
+    complete='NO'
+    successful_cutovers=0
+    failed_cutovers=0
+    if [[ -f "$marker" && ! -L "$marker" ]]; then
+      marker_commit=$(awk -F= '$1 == "source_commit" { print $2 }' "$marker")
+      if [[ "$marker_commit" =~ ^[0-9a-f]{40}$ ]]; then
+        complete='YES'
+        successful_cutovers=$(successful_cutover_evidence_count "$marker_commit")
+        failed_cutovers=$(failed_cutover_evidence_count "$marker_commit")
+      fi
+    fi
+    references=$(release_reference_count "$release")
+    if [[ "$release" == "$current" ]]; then
+      is_current='YES'
+    else
+      is_current='NO'
+    fi
+    printf 'RELEASE=%s|BYTES=%s|COMPLETE=%s|MARKER_COMMIT=%s|SUCCESSFUL_CUTOVERS=%s|FAILED_CUTOVERS=%s|REFERENCES=%s|CURRENT=%s\n' \
+      "$name" "$bytes" "$complete" "$marker_commit" "$successful_cutovers" "$failed_cutovers" "$references" "$is_current"
+  done < <(find "$RELEASE_ROOT" -mindepth 1 -maxdepth 1 -type d -print0 | sort -z)
+
+  systemctl is-active --quiet "$SERVICE"
+  status_health
+}
+
+prune_retired_releases() {
+  [[ "$#" -ge 1 && "$#" -le 32 ]] || die 'PRUNE_RETIRED_REQUIRES_ONE_TO_32_COMMITS'
+
+  local current
+  local current_commit
+  local current_success_count
+  local commit
+  local release
+  local marker
+  local success_count
+  local reference_count
+  local seal_count
+  local released_bytes
+  local total_released_bytes=0
+  local removed_releases=0
+  local run_id
+  local -a commits=()
+  declare -A seen=()
+
+  assert_operations_roots
+  [[ -d "$RELEASE_ROOT" && ! -L "$RELEASE_ROOT" ]]
+  [[ -L "$CURRENT_LINK" ]]
+  current=$(readlink -f "$CURRENT_LINK")
+  [[ "$current" == "$RELEASE_ROOT/"* ]]
+  current_commit=$(basename -- "$current")
+  assert_commit "$current_commit"
+  current_success_count=$(successful_cutover_evidence_count "$current_commit")
+  [[ "$current_success_count" =~ ^[1-9][0-9]*$ ]] || die 'CURRENT_RELEASE_HAS_NO_SUCCESSFUL_CUTOVER_EVIDENCE'
+
+  for commit in "$@"; do
+    assert_commit "$commit"
+    [[ -z "${seen[$commit]:-}" ]] || die "PRUNE_RETIRED_DUPLICATE_COMMIT:$commit"
+    seen[$commit]=1
+    release="$RELEASE_ROOT/$commit"
+    marker="$release/.lumi-deploy-complete"
+    [[ "$release" != "$current" ]] || die 'PRUNE_RETIRED_REFUSES_CURRENT'
+    [[ -d "$release" && ! -L "$release" ]] || die "PRUNE_RETIRED_RELEASE_UNSAFE:$commit"
+    [[ "$(realpath -e -- "$release")" == "$release" ]] || die "PRUNE_RETIRED_RELEASE_PATH_MISMATCH:$commit"
+    ! mountpoint -q -- "$release" || die "PRUNE_RETIRED_RELEASE_IS_MOUNTPOINT:$commit"
+    [[ "$(stat -c '%U:%G:%a' -- "$release")" == "root:$SERVICE_GROUP:750" ]] || die "PRUNE_RETIRED_RELEASE_METADATA_UNEXPECTED:$commit"
+    [[ -f "$marker" && ! -L "$marker" ]] || die "PRUNE_RETIRED_MARKER_UNSAFE:$commit"
+    [[ "$(stat -c '%U:%G:%a' -- "$marker")" == "root:$SERVICE_GROUP:640" ]] || die "PRUNE_RETIRED_MARKER_METADATA_UNEXPECTED:$commit"
+    grep -Fqx "source_commit=$commit" "$marker" || die "PRUNE_RETIRED_MARKER_COMMIT_MISMATCH:$commit"
+    success_count=$(successful_cutover_evidence_count "$commit")
+    [[ "$success_count" =~ ^[1-9][0-9]*$ ]] || die "PRUNE_RETIRED_HAS_NO_SUCCESSFUL_CUTOVER_EVIDENCE:$commit"
+    reference_count=$(release_reference_count "$release")
+    [[ "$reference_count" == '0' ]] || die "PRUNE_RETIRED_RELEASE_STILL_REFERENCED:$commit:$reference_count"
+    seal_count=$(release_seal_count "$commit")
+    [[ "$seal_count" == '0' ]] || die "PRUNE_RETIRED_RELEASE_STILL_SEALED:$commit:$seal_count"
+    commits+=("$commit")
+  done
+
+  run_id="prune-retired-$(date -u +%Y%m%dT%H%M%SZ)-$$-$RANDOM"
+  make_evidence prune-retired "$run_id"
+  ACTIVE_COMMIT="$current_commit"
+  service_preflight "$ACTIVE_EVIDENCE/before-prune-base-health.json"
+  capture_health "$ACTIVE_EVIDENCE/before-prune-health.json" | tee -a "$ACTIVE_EVIDENCE/summary.log"
+
+  for commit in "${commits[@]}"; do
+    release="$RELEASE_ROOT/$commit"
+    released_bytes=$(du -sb -- "$release" | awk '{print $1}')
+    [[ "$released_bytes" =~ ^[1-9][0-9]*$ ]]
+    printf 'SOURCE_COMMIT=%s|RELEASED_BYTES=%s\n' "$commit" "$released_bytes" >> "$ACTIVE_EVIDENCE/pruned-releases.txt"
+    rm -rf --one-file-system -- "$release"
+    [[ ! -e "$release" && ! -L "$release" ]]
+    total_released_bytes=$((total_released_bytes + released_bytes))
+    removed_releases=$((removed_releases + 1))
+  done
+
+  [[ "$(readlink -f "$CURRENT_LINK")" == "$current" ]]
+  systemctl is-active --quiet "$SERVICE"
+  capture_health "$ACTIVE_EVIDENCE/after-prune-health.json" | tee -a "$ACTIVE_EVIDENCE/summary.log"
+  {
+    printf 'CURRENT_COMMIT=%s\n' "$current_commit"
+    printf 'REMOVED_RELEASES=%s\n' "$removed_releases"
+    printf 'RELEASED_BYTES=%s\n' "$total_released_bytes"
+    printf 'CURRENT_UNCHANGED=%s\n' "$current"
+    printf 'PRODUCTION_CHANGED=NO\n'
+    printf 'STATUS=SUCCEEDED\n'
+  } > "$ACTIVE_EVIDENCE/SUCCEEDED.result"
+  finalize_evidence
+  ACTIVE_EVIDENCE=''
+
+  printf 'RETIRED_RELEASES_PRUNED=YES\n'
+  printf 'REMOVED_RELEASES=%s\n' "$removed_releases"
+  printf 'RELEASED_BYTES=%s\n' "$total_released_bytes"
+  printf 'CURRENT=%s\n' "$(readlink -f "$CURRENT_LINK")"
+  printf 'PRODUCTION_CHANGED=NO\n'
+  printf 'EVIDENCE=%s\n' "$EVIDENCE_ROOT/$run_id"
+}
+
+failed_prepare_evidence_count() {
+  local commit=$1
+  python3 - "$EVIDENCE_ROOT" "$commit" <<'PY'
+from pathlib import Path
+import stat
+import sys
+
+root = Path(sys.argv[1])
+commit = sys.argv[2]
+count = 0
+for candidate in root.iterdir():
+    result = candidate / "FAILED.result"
+    preflight = candidate / "PREFLIGHT.txt"
+    prepared = candidate / "PREPARED.result"
+    summary = candidate / "summary.log"
+    try:
+        mode = result.lstat().st_mode
+    except FileNotFoundError:
+        continue
+    if not stat.S_ISREG(mode):
+        continue
+    fields = {}
+    for line in result.read_text(encoding="utf-8").splitlines():
+        if "=" in line:
+            key, value = line.split("=", 1)
+            fields[key] = value
+    if (
+        fields.get("SOURCE_COMMIT") == commit
+        and fields.get("PHASE") == "prepare"
+        and fields.get("STATUS") == "FAILED"
+    ):
+        count += 1
+        continue
+    if result.stat().st_size != 0 or prepared.exists():
+        continue
+    try:
+        preflight_mode = preflight.lstat().st_mode
+        summary_mode = summary.lstat().st_mode
+    except FileNotFoundError:
+        continue
+    if not stat.S_ISREG(preflight_mode) or not stat.S_ISREG(summary_mode):
+        continue
+    preflight_fields = {}
+    for line in preflight.read_text(encoding="utf-8").splitlines():
+        if "=" in line:
+            key, value = line.split("=", 1)
+            preflight_fields[key] = value
+    summary_text = summary.read_text(encoding="utf-8")
+    if (
+        preflight_fields.get("SOURCE_COMMIT") == commit
+        and "STAGE=PREPARE_RELEASE" in summary_text
+    ):
+        count += 1
+print(count)
+PY
+}
+
+discard_incomplete_prepare_release() {
+  local commit=$1
+  local release
+  local current
+  local failed_evidence_count
+  local released_bytes
+  local run_id
+  local seal
+  local marker
+
+  assert_commit "$commit"
+  assert_operations_roots
+  release="$RELEASE_ROOT/$commit"
+  current=$(readlink -f "$CURRENT_LINK")
+  [[ "$release" != "$current" ]]
+  [[ -d "$release" && ! -L "$release" ]]
+  [[ "$(realpath -e -- "$release")" == "$release" ]]
+  [[ "$(stat -c '%U:%G:%a' -- "$release")" == "root:$SERVICE_GROUP:750" ]]
+  ! mountpoint -q -- "$release"
+  marker="$release/.lumi-deploy-complete"
+  if [[ -e "$marker" || -L "$marker" ]]; then
+    [[ -f "$marker" && ! -L "$marker" ]] || die 'INCOMPLETE_PREPARE_MARKER_UNSAFE'
+    [[ "$(stat -c '%U:%G:%a' -- "$marker")" == "root:$SERVICE_GROUP:640" ]] \
+      || die 'INCOMPLETE_PREPARE_MARKER_METADATA_UNEXPECTED'
+    grep -Fqx "source_commit=$commit" "$marker" \
+      || die 'INCOMPLETE_PREPARE_MARKER_COMMIT_MISMATCH'
+  fi
+  failed_evidence_count=$(failed_prepare_evidence_count "$commit")
+  [[ "$failed_evidence_count" =~ ^[1-9][0-9]*$ ]]
+
+  shopt -s nullglob
+  for seal in "$SEAL_ROOT"/*.seal; do
+    [[ -f "$seal" && ! -L "$seal" ]]
+    if [[ "$(seal_field "$seal" source_commit)" == "$commit" ]]; then
+      die 'INCOMPLETE_PREPARE_HAS_SEAL'
+    fi
+  done
+  shopt -u nullglob
+
+  run_id="discard-incomplete-prepare-$(date -u +%Y%m%dT%H%M%SZ)-$$-$RANDOM"
+  make_evidence discard-incomplete-prepare "$run_id"
+  ACTIVE_COMMIT="$commit"
+  service_preflight "$ACTIVE_EVIDENCE/before-discard-health.json"
+  released_bytes=$(du -sb -- "$release" | awk '{print $1}')
+  [[ "$released_bytes" =~ ^[1-9][0-9]*$ ]]
+
+  rm -rf --one-file-system -- "$release"
+  [[ ! -e "$release" && ! -L "$release" ]]
+  [[ "$(readlink -f "$CURRENT_LINK")" == "$current" ]]
+  systemctl is-active --quiet "$SERVICE"
+  capture_base_health "$ACTIVE_EVIDENCE/after-discard-health.json" | tee -a "$ACTIVE_EVIDENCE/summary.log"
+  {
+    printf 'SOURCE_COMMIT=%s\n' "$commit"
+    printf 'FAILED_PREPARE_EVIDENCE_COUNT=%s\n' "$failed_evidence_count"
+    printf 'RELEASED_BYTES=%s\n' "$released_bytes"
+    printf 'CURRENT_UNCHANGED=%s\n' "$current"
+    printf 'PRODUCTION_CHANGED=NO\n'
+    printf 'STATUS=SUCCEEDED\n'
+  } > "$ACTIVE_EVIDENCE/SUCCEEDED.result"
+  finalize_evidence
+  ACTIVE_EVIDENCE=''
+
+  printf 'INCOMPLETE_PREPARE_DISCARDED=YES\n'
+  printf 'SOURCE_COMMIT=%s\n' "$commit"
+  printf 'FAILED_PREPARE_EVIDENCE_COUNT=%s\n' "$failed_evidence_count"
+  printf 'RELEASED_BYTES=%s\n' "$released_bytes"
+  printf 'CURRENT=%s\n' "$(readlink -f "$CURRENT_LINK")"
+  printf 'PRODUCTION_CHANGED=NO\n'
+  printf 'EVIDENCE=%s\n' "$EVIDENCE_ROOT/$run_id"
+}
+
+discard_failed_release() {
+  local commit=$1
+  local release
+  local current
+  local run_id
+  local released_bytes
+  local failed_evidence_count
+  local removed_seals=0
+  local seal
+
+  assert_commit "$commit"
+  assert_operations_roots
+  release="$RELEASE_ROOT/$commit"
+  current=$(readlink -f "$CURRENT_LINK")
+  [[ "$release" != "$current" ]]
+  [[ -d "$release" && ! -L "$release" ]]
+  [[ "$(realpath -e -- "$release")" == "$release" ]]
+  ! mountpoint -q -- "$release"
+  [[ -f "$release/.lumi-deploy-complete" && ! -L "$release/.lumi-deploy-complete" ]]
+  grep -Fqx "source_commit=$commit" "$release/.lumi-deploy-complete"
+
+  failed_evidence_count=$(failed_cutover_evidence_count "$commit")
+  [[ "$failed_evidence_count" =~ ^[1-9][0-9]*$ ]]
+
+  run_id="discard-$(date -u +%Y%m%dT%H%M%SZ)-$$-$RANDOM"
+  make_evidence discard "$run_id"
+  ACTIVE_COMMIT="$commit"
+  service_preflight "$ACTIVE_EVIDENCE/before-discard-health.json"
+  released_bytes=$(du -sb -- "$release" | awk '{print $1}')
+  [[ "$released_bytes" =~ ^[1-9][0-9]*$ ]]
+
+  shopt -s nullglob
+  for seal in "$SEAL_ROOT"/*.seal; do
+    [[ -f "$seal" && ! -L "$seal" ]]
+    if [[ "$(seal_field "$seal" source_commit)" == "$commit" ]]; then
+      rm -f -- "$seal"
+      removed_seals=$((removed_seals + 1))
+    fi
+  done
+  shopt -u nullglob
+
+  rm -rf --one-file-system -- "$release"
+  [[ ! -e "$release" && ! -L "$release" ]]
+  [[ "$(readlink -f "$CURRENT_LINK")" == "$current" ]]
+  systemctl is-active --quiet "$SERVICE"
+  capture_base_health "$ACTIVE_EVIDENCE/after-discard-health.json" | tee -a "$ACTIVE_EVIDENCE/summary.log"
+  {
+    printf 'SOURCE_COMMIT=%s\n' "$commit"
+    printf 'FAILED_EVIDENCE_COUNT=%s\n' "$failed_evidence_count"
+    printf 'REMOVED_SEALS=%s\n' "$removed_seals"
+    printf 'RELEASED_BYTES=%s\n' "$released_bytes"
+    printf 'CURRENT_UNCHANGED=%s\n' "$current"
+    printf 'PRODUCTION_CHANGED=NO\n'
+    printf 'STATUS=SUCCEEDED\n'
+  } > "$ACTIVE_EVIDENCE/SUCCEEDED.result"
+  finalize_evidence
+  ACTIVE_EVIDENCE=''
+
+  printf 'FAILED_RELEASE_DISCARDED=YES\n'
+  printf 'SOURCE_COMMIT=%s\n' "$commit"
+  printf 'FAILED_EVIDENCE_COUNT=%s\n' "$failed_evidence_count"
+  printf 'REMOVED_SEALS=%s\n' "$removed_seals"
+  printf 'RELEASED_BYTES=%s\n' "$released_bytes"
+  printf 'CURRENT=%s\n' "$(readlink -f "$CURRENT_LINK")"
+  printf 'PRODUCTION_CHANGED=NO\n'
+  printf 'EVIDENCE=%s\n' "$EVIDENCE_ROOT/$run_id"
+}
+
+discard_failed_work() {
+  local commit=$1
+  local current
+  local failed_evidence_count
+  local candidate
+  local candidate_real
+  local manifest
+  local candidate_run_id
+  local released_bytes=0
+  local candidate_bytes
+  local removed_work_dirs=0
+  local run_id
+
+  assert_commit "$commit"
+  assert_operations_roots
+  current=$(readlink -f "$CURRENT_LINK")
+  [[ "$current" != "$RELEASE_ROOT/$commit" ]]
+  failed_evidence_count=$(failed_cutover_evidence_count "$commit")
+  [[ "$failed_evidence_count" =~ ^[1-9][0-9]*$ ]]
+
+  run_id="discard-work-$(date -u +%Y%m%dT%H%M%SZ)-$$-$RANDOM"
+  make_evidence discard-work "$run_id"
+  ACTIVE_COMMIT="$commit"
+  service_preflight "$ACTIVE_EVIDENCE/before-discard-work-health.json"
+
+  shopt -s nullglob
+  for candidate in "$WORK_ROOT"/prepare-*; do
+    [[ -d "$candidate" && ! -L "$candidate" ]]
+    candidate_real=$(realpath -e -- "$candidate")
+    [[ "$candidate_real" == "$candidate" ]]
+    manifest="$candidate/manifest"
+    [[ -f "$manifest" && ! -L "$manifest" ]] || continue
+    grep -Fqx "source_commit=$commit" "$manifest" || continue
+    candidate_run_id=$(basename -- "$candidate")
+    assert_run_id "$candidate_run_id"
+    [[ ! -e "$SEAL_ROOT/$candidate_run_id.seal" && ! -L "$SEAL_ROOT/$candidate_run_id.seal" ]]
+    [[ ! -e "$SEAL_ROOT/$candidate_run_id.token" && ! -L "$SEAL_ROOT/$candidate_run_id.token" ]]
+    candidate_bytes=$(du -sb -- "$candidate" | awk '{print $1}')
+    [[ "$candidate_bytes" =~ ^[1-9][0-9]*$ ]]
+    rm -rf --one-file-system -- "$candidate"
+    [[ ! -e "$candidate" && ! -L "$candidate" ]]
+    released_bytes=$((released_bytes + candidate_bytes))
+    removed_work_dirs=$((removed_work_dirs + 1))
+  done
+  shopt -u nullglob
+
+  [[ "$removed_work_dirs" -gt 0 ]]
+  [[ "$(readlink -f "$CURRENT_LINK")" == "$current" ]]
+  systemctl is-active --quiet "$SERVICE"
+  capture_base_health "$ACTIVE_EVIDENCE/after-discard-work-health.json" | tee -a "$ACTIVE_EVIDENCE/summary.log"
+  {
+    printf 'SOURCE_COMMIT=%s\n' "$commit"
+    printf 'FAILED_EVIDENCE_COUNT=%s\n' "$failed_evidence_count"
+    printf 'REMOVED_WORK_DIRS=%s\n' "$removed_work_dirs"
+    printf 'RELEASED_BYTES=%s\n' "$released_bytes"
+    printf 'CURRENT_UNCHANGED=%s\n' "$current"
+    printf 'PRODUCTION_CHANGED=NO\n'
+    printf 'STATUS=SUCCEEDED\n'
+  } > "$ACTIVE_EVIDENCE/SUCCEEDED.result"
+  finalize_evidence
+  ACTIVE_EVIDENCE=''
+
+  printf 'FAILED_WORK_DISCARDED=YES\n'
+  printf 'SOURCE_COMMIT=%s\n' "$commit"
+  printf 'FAILED_EVIDENCE_COUNT=%s\n' "$failed_evidence_count"
+  printf 'REMOVED_WORK_DIRS=%s\n' "$removed_work_dirs"
+  printf 'RELEASED_BYTES=%s\n' "$released_bytes"
+  printf 'CURRENT=%s\n' "$(readlink -f "$CURRENT_LINK")"
+  printf 'PRODUCTION_CHANGED=NO\n'
   printf 'EVIDENCE=%s\n' "$EVIDENCE_ROOT/$run_id"
 }
 

@@ -210,8 +210,10 @@ describe("constrained Lumi release wrapper", () => {
     expect(wrapper).toContain('result.stat().st_size != 0');
     expect(wrapper).toContain('"STAGE=PREPARE_RELEASE" in summary_text');
     expect(wrapper).toContain(
-      '[[ ! -e "$release/.lumi-deploy-complete"',
+      "INCOMPLETE_PREPARE_MARKER_COMMIT_MISMATCH",
     );
+    expect(wrapper).toContain("INCOMPLETE_PREPARE_MARKER_UNSAFE");
+    expect(wrapper).toContain("INCOMPLETE_PREPARE_MARKER_METADATA_UNEXPECTED");
     expect(wrapper).toContain(
       '"root:$SERVICE_GROUP:750"',
     );
@@ -219,6 +221,20 @@ describe("constrained Lumi release wrapper", () => {
     expect(wrapper).toContain('rm -rf --one-file-system -- "$release"');
     expect(wrapper).toContain("INCOMPLETE_PREPARE_DISCARDED=YES");
     expect(wrapper).toContain("PRODUCTION_CHANGED=NO");
+  });
+
+  it("restores only the sealed Knowledge V2 Python executable permission", () => {
+    const wrapper = readFileSync(wrapperPath, "utf8");
+
+    expect(wrapper).toContain("repair_knowledge_v2_python_permission()");
+    expect(wrapper).toContain(
+      '.runtime/knowledge-v2-linux/python/bin/python3',
+    );
+    expect(wrapper).toContain("KNOWLEDGE_V2_PYTHON_PERMISSION=PASS");
+    expect(wrapper).toContain('chmod 0750 "$python"');
+    expect(wrapper).toContain(
+      'runuser -u "$SERVICE_USER" -- test -x "$python"',
+    );
   });
 
   it("reserves failure evidence space before disk-heavy operations", () => {
