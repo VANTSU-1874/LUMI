@@ -69,6 +69,8 @@ describe("constrained Lumi release wrapper", () => {
       'test -x "$release/.runtime/knowledge-v2-linux/python/bin/python3"',
     );
     expect(wrapper).toContain("KNOWLEDGE_V2_INHERIT_SOURCE_HASH_DRIFT");
+    expect(wrapper).toContain("EXPECTED_BYTES=");
+    expect(wrapper).toContain("ACTUAL_SHA256=");
     expect(wrapper).toContain("KNOWLEDGE_V2_INHERIT_TARGET_ESCAPE");
   });
 

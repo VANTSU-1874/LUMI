@@ -641,12 +641,20 @@ def digest(path):
 
 def safe_file(root, relative, expected_bytes, expected_sha):
     candidate = root.joinpath(*PurePosixPath(relative).parts)
-    info = candidate.lstat()
-    resolved = candidate.resolve(strict=True)
+    try:
+        info = candidate.lstat()
+        resolved = candidate.resolve(strict=True)
+    except FileNotFoundError:
+        reject(f"KNOWLEDGE_V2_INHERIT_SOURCE_MISSING:{relative}")
     if stat.S_ISLNK(info.st_mode) or not stat.S_ISREG(info.st_mode) or not within(root, resolved):
-        reject("KNOWLEDGE_V2_INHERIT_SOURCE_UNSAFE")
-    if info.st_size != expected_bytes or digest(resolved) != expected_sha:
-        reject("KNOWLEDGE_V2_INHERIT_SOURCE_HASH_DRIFT")
+        reject(f"KNOWLEDGE_V2_INHERIT_SOURCE_UNSAFE:{relative}")
+    actual_sha = digest(resolved)
+    if info.st_size != expected_bytes or actual_sha != expected_sha:
+        reject(
+            "KNOWLEDGE_V2_INHERIT_SOURCE_HASH_DRIFT:"
+            f"{relative}:EXPECTED_BYTES={expected_bytes}:ACTUAL_BYTES={info.st_size}:"
+            f"EXPECTED_SHA256={expected_sha}:ACTUAL_SHA256={actual_sha}"
+        )
     return resolved
 
 manifest_path = source / "runtime-manifest.json"
