@@ -608,10 +608,88 @@ verify_inspiration_wiki_d27_release() {
   printf 'INSPIRATION_WIKI_D27_VERIFY=PASS\n'
 }
 
+reconstruct_knowledge_v2_corpus_for_d27() {
+  local current_release=$1
+  local target_release=$2
+  local repair_root=$3
+  local repair_script="$repair_root/reconstruct-corpus.mts"
+  [[ -d "$current_release" && ! -L "$current_release" ]]
+  [[ -d "$target_release" && ! -L "$target_release" ]]
+  install -d -o "$SERVICE_USER" -g "$SERVICE_GROUP" -m 0700 "$repair_root"
+  cat > "$repair_script" <<'TS'
+import { createHash } from "node:crypto";
+import { createRequire } from "node:module";
+import { closeSync, fsyncSync, mkdirSync, openSync, readFileSync, writeFileSync } from "node:fs";
+import path from "node:path";
+import { pathToFileURL } from "node:url";
+
+const [currentRelease, targetRelease, repairRoot] = process.argv.slice(2);
+if (!currentRelease || !targetRelease || !repairRoot || !process.env.DATABASE_PATH) {
+  throw new Error("KNOWLEDGE_V2_CORPUS_REPAIR_INPUT_INVALID");
+}
+const manifest = JSON.parse(readFileSync(path.join(currentRelease, "runtime-manifest.json"), "utf8"));
+const relative = "data/knowledge-v2/knowledge-corpus.v2.json";
+const expected = manifest.files.find((file: { path?: string }) => file.path === relative);
+if (!expected || typeof expected.bytes !== "number" || typeof expected.sha256 !== "string") {
+  throw new Error("KNOWLEDGE_V2_CORPUS_REPAIR_MANIFEST_INVALID");
+}
+const corpusHash = manifest.bindings?.corpusBundleHash;
+if (typeof corpusHash !== "string") throw new Error("KNOWLEDGE_V2_CORPUS_REPAIR_BINDING_INVALID");
+
+const requireFromRelease = createRequire(path.join(targetRelease, "package.json"));
+const Database = requireFromRelease("better-sqlite3") as typeof import("better-sqlite3");
+const database = new Database(process.env.DATABASE_PATH, { readonly: true, fileMustExist: true });
+const row = database.prepare(`
+  SELECT canonical_json canonicalJson
+  FROM knowledge_corpora_v2
+  WHERE bundle_hash=?
+`).get(corpusHash) as { canonicalJson?: string } | undefined;
+database.close();
+if (!row?.canonicalJson) throw new Error("KNOWLEDGE_V2_CORPUS_REPAIR_DATABASE_ROW_MISSING");
+
+const moduleUrl = pathToFileURL(path.join(
+  targetRelease,
+  "lib/knowledge/knowledge-object-v2.ts",
+)).href;
+const { verifyKnowledgeCorpusBundleV2 } = await import(moduleUrl);
+const corpus = verifyKnowledgeCorpusBundleV2(JSON.parse(row.canonicalJson));
+if (corpus.bundleHash !== corpusHash) throw new Error("KNOWLEDGE_V2_CORPUS_REPAIR_BINDING_DRIFT");
+const bytes = Buffer.from(`${JSON.stringify(corpus, null, 2)}\n`, "utf8");
+const sha256 = createHash("sha256").update(bytes).digest("hex");
+if (bytes.length !== expected.bytes || sha256 !== expected.sha256) {
+  throw new Error(
+    `KNOWLEDGE_V2_CORPUS_REPAIR_HASH_DRIFT:EXPECTED_BYTES=${expected.bytes}:ACTUAL_BYTES=${bytes.length}:`
+    + `EXPECTED_SHA256=${expected.sha256}:ACTUAL_SHA256=${sha256}`,
+  );
+}
+const output = path.join(repairRoot, relative);
+mkdirSync(path.dirname(output), { recursive: true });
+writeFileSync(output, bytes, { flag: "wx", mode: 0o600 });
+const descriptor = openSync(output, "r");
+try { fsyncSync(descriptor); } finally { closeSync(descriptor); }
+process.stdout.write(`KNOWLEDGE_V2_CORPUS_REPAIR=PASS:${bytes.length}:${sha256}\n`);
+TS
+  chown root:"$SERVICE_GROUP" "$repair_script"
+  chmod 0640 "$repair_script"
+  runuser -u "$SERVICE_USER" -- /bin/bash -c '
+    set -Eeuo pipefail
+    set -a
+    . "$1"
+    set +a
+    export CHUYING_SERVICE_ENV="$1"
+    export NODE_ENV=production
+    export PATH=/usr/sbin:/usr/bin:/sbin:/bin
+    unset BASH_ENV ENV GIT_DIR GIT_WORK_TREE NODE_OPTIONS npm_config_userconfig
+    cd "$3"
+    exec "$4" "$2/node_modules/tsx/dist/cli.mjs" "$5" "$2" "$3" "$6"
+  ' -- "$SERVICE_ENV" "$current_release" "$target_release" "$RUNTIME_NODE" "$repair_script" "$repair_root"
+}
+
 inherit_knowledge_v2_runtime_for_d27() {
   local source_release=$1
   local target_release=$2
-  python3 - "$source_release" "$target_release" <<'PY'
+  local repair_root=$3
+  python3 - "$source_release" "$target_release" "$repair_root" <<'PY'
 import hashlib
 import json
 import os
@@ -621,6 +699,8 @@ import sys
 
 source = Path(sys.argv[1]).resolve(strict=True)
 target = Path(sys.argv[2]).resolve(strict=True)
+repair = Path(sys.argv[3]).resolve(strict=True)
+corpus_path = "data/knowledge-v2/knowledge-corpus.v2.json"
 
 def reject(reason):
     raise SystemExit(reason)
@@ -686,16 +766,29 @@ for item in files:
     pure = PurePosixPath(relative)
     if pure.is_absolute() or not pure.parts or any(part in ("", ".", "..") for part in pure.parts):
         reject("KNOWLEDGE_V2_INHERIT_PATH_UNSAFE")
-    source_file = safe_file(source, relative, expected_bytes, expected_sha)
+    source_file = safe_file(
+        repair if relative == corpus_path else source,
+        relative,
+        expected_bytes,
+        expected_sha,
+    )
     destination = target.joinpath(*pure.parts)
     destination.parent.mkdir(parents=True, exist_ok=True)
     parent = destination.parent.resolve(strict=True)
     if not within(target, parent):
         reject("KNOWLEDGE_V2_INHERIT_TARGET_ESCAPE")
     if destination.exists() or destination.is_symlink():
-        safe_file(target, relative, expected_bytes, expected_sha)
-        reused += 1
-        continue
+        destination_info = destination.lstat()
+        destination_resolved = destination.resolve(strict=True)
+        if destination.is_symlink() or not destination.is_file() or not within(target, destination_resolved):
+            reject("KNOWLEDGE_V2_INHERIT_TARGET_UNSAFE")
+        actual_sha = digest(destination_resolved)
+        if destination_info.st_size == expected_bytes and actual_sha == expected_sha:
+            reused += 1
+            continue
+        if relative != corpus_path:
+            reject(f"KNOWLEDGE_V2_INHERIT_TARGET_CONFLICT:{relative}")
+        destination.unlink()
     source_fd = os.open(source_file, os.O_RDONLY | os.O_CLOEXEC | os.O_NOFOLLOW)
     try:
         destination_fd = os.open(
@@ -1189,9 +1282,14 @@ prepare() {
   tar --no-same-owner --no-same-permissions --delay-directory-restore -xf "$source_archive" -C "$release"
   tar --no-same-owner --no-same-permissions --delay-directory-restore -xzf "$built_archive" -C "$release"
   if [[ "$database_migration" == "$DATABASE_MIGRATION_INSPIRATION_D27" ]]; then
+    local knowledge_repair_root="$release/.lumi-d27-knowledge-repair"
+    reconstruct_knowledge_v2_corpus_for_d27 \
+      "$RELEASE_ROOT/$expected_current" "$release" "$knowledge_repair_root" \
+      | tee "$ACTIVE_EVIDENCE/knowledge-v2-corpus-repair.log"
     inherit_knowledge_v2_runtime_for_d27 \
-      "$RELEASE_ROOT/$expected_current" "$release" \
+      "$RELEASE_ROOT/$expected_current" "$release" "$knowledge_repair_root" \
       | tee "$ACTIVE_EVIDENCE/knowledge-v2-runtime-inherit.log"
+    rm -rf -- "$knowledge_repair_root"
   fi
   test -s "$release/.next/BUILD_ID"
   [[ "$(cat "$release/.next/BUILD_ID")" == "$build_id" ]]
