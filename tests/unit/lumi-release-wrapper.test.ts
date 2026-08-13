@@ -302,6 +302,20 @@ describe("constrained Lumi release wrapper", () => {
     expect(wrapper).not.toContain("cutover <prepare-run-id> <32-hex-confirmation-token>");
   });
 
+  it("accepts only the student workspace or its exact authenticated login redirect", () => {
+    const wrapper = readFileSync(wrapperPath, "utf8");
+
+    expect(wrapper).toContain("student_status=$(curl -sS");
+    expect(wrapper).toContain("student_status\" == '200'");
+    expect(wrapper).toContain("student_status\" == '307'");
+    expect(wrapper).toContain(
+      "student_location\" == '/login?returnTo=%2Fstudent'",
+    );
+    expect(wrapper).toContain("login_status\" == '200'");
+    expect(wrapper).toContain("AUTH_REDIRECT_307_LOGIN_200");
+    expect(wrapper).toContain("STUDENT_SMOKE_MODE=%s");
+  });
+
   it("audits a prepared Knowledge V2 release before promoting quality reports", () => {
     const wrapper = readFileSync(wrapperPath, "utf8");
     const agentEval = readFileSync(

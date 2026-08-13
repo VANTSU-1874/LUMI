@@ -1630,13 +1630,29 @@ cutover() {
   [[ "$(readlink -f "$CURRENT_LINK")" == "$release" ]]
   systemctl start "$SERVICE"
   systemctl is-active --quiet "$SERVICE"
-  capture_health "$ACTIVE_EVIDENCE/new-health.json" | tee -a "$ACTIVE_EVIDENCE/summary.log"
+  wait_for_health "$ACTIVE_EVIDENCE/new-health.json" | tee -a "$ACTIVE_EVIDENCE/summary.log"
+  local student_headers="$ACTIVE_EVIDENCE/student.headers"
   local student_temporary="$ACTIVE_EVIDENCE/student.html.tmp"
+  local student_location=''
+  local student_smoke_mode=''
   local student_status
-  student_status=$(curl -fsS --max-time 30 -o "$student_temporary" -w '%{http_code}' http://127.0.0.1:3100/student)
-  [[ "$student_status" == '200' ]]
+  student_status=$(curl -sS --max-time 30 -D "$student_headers" -o "$student_temporary" -w '%{http_code}' http://127.0.0.1:3100/student)
+  if [[ "$student_status" == '200' ]]; then
+    student_smoke_mode='WORKSPACE_200'
+  elif [[ "$student_status" == '307' ]]; then
+    student_location=$(awk 'BEGIN { IGNORECASE=1 } /^location:/ { sub(/^[^:]*:[[:space:]]*/, ""); sub(/\r$/, ""); print; exit }' "$student_headers")
+    [[ "$student_location" == '/login?returnTo=%2Fstudent' ]]
+    local login_status
+    login_status=$(curl -fsS --max-time 30 -o "$ACTIVE_EVIDENCE/login.html" -w '%{http_code}' "http://127.0.0.1:3100$student_location")
+    [[ "$login_status" == '200' ]]
+    student_smoke_mode='AUTH_REDIRECT_307_LOGIN_200'
+    printf 'STUDENT_LOGIN_HTTP_STATUS=%s\n' "$login_status" >> "$ACTIVE_EVIDENCE/summary.log"
+  else
+    return 1
+  fi
   mv -f -- "$student_temporary" "$ACTIVE_EVIDENCE/student.html"
   printf 'STUDENT_HTTP_STATUS=%s\n' "$student_status" >> "$ACTIVE_EVIDENCE/summary.log"
+  printf 'STUDENT_SMOKE_MODE=%s\n' "$student_smoke_mode" >> "$ACTIVE_EVIDENCE/summary.log"
 
   {
     printf 'SOURCE_COMMIT=%s\n' "$commit"
