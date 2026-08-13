@@ -749,6 +749,7 @@ if not isinstance(files, list) or not 8 <= len(files) <= 100:
 
 copied = 0
 reused = 0
+manifest_files = {}
 for item in files:
     if not isinstance(item, dict):
         reject("KNOWLEDGE_V2_INHERIT_FILE_INVALID")
@@ -766,6 +767,9 @@ for item in files:
     pure = PurePosixPath(relative)
     if pure.is_absolute() or not pure.parts or any(part in ("", ".", "..") for part in pure.parts):
         reject("KNOWLEDGE_V2_INHERIT_PATH_UNSAFE")
+    if relative in manifest_files:
+        reject("KNOWLEDGE_V2_INHERIT_FILE_DUPLICATED")
+    manifest_files[relative] = (expected_bytes, expected_sha)
     source_file = safe_file(
         repair if relative == corpus_path else source,
         relative,
@@ -821,7 +825,46 @@ else:
     with target_manifest.open("rb") as stream:
         os.fsync(stream.fileno())
 
-print(f"KNOWLEDGE_V2_RUNTIME_INHERIT=PASS:{len(files)}:{copied}:{reused}")
+python_relative = ".runtime/knowledge-v2-linux/python/bin/python3"
+source_python = source.joinpath(*PurePosixPath(python_relative).parts)
+try:
+    source_python_info = source_python.lstat()
+except FileNotFoundError:
+    reject("KNOWLEDGE_V2_INHERIT_PYTHON_ENTRYPOINT_MISSING")
+target_python = target.joinpath(*PurePosixPath(python_relative).parts)
+if stat.S_ISLNK(source_python_info.st_mode):
+    link_target = os.readlink(source_python)
+    if not link_target or os.path.isabs(link_target) or "\x00" in link_target:
+        reject("KNOWLEDGE_V2_INHERIT_PYTHON_LINK_UNSAFE")
+    source_python_resolved = source_python.resolve(strict=True)
+    if not source_python_resolved.is_file() or not within(source, source_python_resolved):
+        reject("KNOWLEDGE_V2_INHERIT_PYTHON_LINK_ESCAPE")
+    resolved_relative = source_python_resolved.relative_to(source).as_posix()
+    expected_target = manifest_files.get(resolved_relative)
+    if expected_target is None:
+        reject("KNOWLEDGE_V2_INHERIT_PYTHON_TARGET_UNMANIFESTED")
+    safe_file(source, resolved_relative, *expected_target)
+    target_python_resolved = safe_file(target, resolved_relative, *expected_target)
+    if target_python.exists() or target_python.is_symlink():
+        if not target_python.is_symlink() or os.readlink(target_python) != link_target:
+            reject("KNOWLEDGE_V2_INHERIT_PYTHON_TARGET_CONFLICT")
+    else:
+        target_python.parent.mkdir(parents=True, exist_ok=True)
+        if not within(target, target_python.parent.resolve(strict=True)):
+            reject("KNOWLEDGE_V2_INHERIT_PYTHON_TARGET_ESCAPE")
+        os.symlink(link_target, target_python)
+    if target_python.resolve(strict=True) != target_python_resolved:
+        reject("KNOWLEDGE_V2_INHERIT_PYTHON_LINK_DRIFT")
+elif stat.S_ISREG(source_python_info.st_mode):
+    expected_target = manifest_files.get(python_relative)
+    if expected_target is None:
+        reject("KNOWLEDGE_V2_INHERIT_PYTHON_TARGET_UNMANIFESTED")
+    safe_file(source, python_relative, *expected_target)
+    safe_file(target, python_relative, *expected_target)
+else:
+    reject("KNOWLEDGE_V2_INHERIT_PYTHON_ENTRYPOINT_UNSAFE")
+
+print(f"KNOWLEDGE_V2_RUNTIME_INHERIT=PASS:{len(files)}:{copied}:{reused}:PYTHON_ENTRYPOINT")
 PY
 }
 
@@ -1042,12 +1085,19 @@ PY
 repair_knowledge_v2_python_permission() {
   local release=$1
   local python="$release/.runtime/knowledge-v2-linux/python/bin/python3"
+  local runtime_root
+  local python_resolved
   [[ -d "$release" && ! -L "$release" ]]
-  [[ -f "$python" && ! -L "$python" ]]
-  [[ "$(realpath -e -- "$python")" == "$python" ]]
-  chown root:"$SERVICE_GROUP" "$python"
-  chmod 0750 "$python"
-  [[ "$(stat -c '%U:%G:%a' -- "$python")" == "root:$SERVICE_GROUP:750" ]]
+  runtime_root=$(realpath -e -- "$release/.runtime/knowledge-v2-linux/python")
+  python_resolved=$(realpath -e -- "$python")
+  [[ "$python_resolved" == "$runtime_root/"* ]]
+  [[ -f "$python_resolved" && ! -L "$python_resolved" ]]
+  if [[ -L "$python" ]]; then
+    chown -h root:"$SERVICE_GROUP" "$python"
+  fi
+  chown root:"$SERVICE_GROUP" "$python_resolved"
+  chmod 0750 "$python_resolved"
+  [[ "$(stat -c '%U:%G:%a' -- "$python_resolved")" == "root:$SERVICE_GROUP:750" ]]
   runuser -u "$SERVICE_USER" -- test -x "$python"
   printf 'KNOWLEDGE_V2_PYTHON_PERMISSION=PASS\n'
 }

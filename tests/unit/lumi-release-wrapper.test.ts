@@ -78,6 +78,11 @@ describe("constrained Lumi release wrapper", () => {
     expect(reconstruction).toBeGreaterThan(firstReadNormalization);
     expect(wrapper).toContain('repair if relative == corpus_path else source');
     expect(wrapper).toContain("KNOWLEDGE_V2_RUNTIME_INHERIT=PASS");
+    expect(wrapper).toContain(
+      "KNOWLEDGE_V2_INHERIT_PYTHON_TARGET_UNMANIFESTED",
+    );
+    expect(wrapper).toContain("KNOWLEDGE_V2_INHERIT_PYTHON_LINK_ESCAPE");
+    expect(wrapper).toContain("os.symlink(link_target, target_python)");
     expect(wrapper).toContain('"$RELEASE_ROOT/$expected_current" "$release"');
     expect(wrapper).toContain('test -r "$release/runtime-manifest.json"');
     expect(wrapper).toContain(
@@ -231,7 +236,7 @@ describe("constrained Lumi release wrapper", () => {
       '.runtime/knowledge-v2-linux/python/bin/python3',
     );
     expect(wrapper).toContain("KNOWLEDGE_V2_PYTHON_PERMISSION=PASS");
-    expect(wrapper).toContain('chmod 0750 "$python"');
+    expect(wrapper).toContain('chmod 0750 "$python_resolved"');
     expect(wrapper).toContain(
       'runuser -u "$SERVICE_USER" -- test -x "$python"',
     );
