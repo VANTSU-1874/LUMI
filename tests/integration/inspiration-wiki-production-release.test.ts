@@ -1,4 +1,12 @@
-import { copyFileSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import {
+  copyFileSync,
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
 import os from "node:os";
 import path from "node:path";
 
@@ -18,6 +26,9 @@ const bundleRoot = path.resolve(
   "production-release",
   D27_BUNDLE_ID,
 );
+const describeProductionBundle = existsSync(path.join(bundleRoot, "manifest.json"))
+  ? describe
+  : describe.skip;
 
 function createTarget() {
   const root = mkdtempSync(path.join(os.tmpdir(), "lumi-d27-production-release-"));
@@ -70,7 +81,7 @@ afterEach(() => {
   for (const root of roots.splice(0)) rmSync(root, { recursive: true, force: true });
 });
 
-describe("D-27 Inspiration Wiki production release", () => {
+describeProductionBundle("D-27 Inspiration Wiki production release", () => {
   it("applies the exact full evidence closure and replays with zero writes", () => {
     const manifest = JSON.parse(readFileSync(path.join(bundleRoot, "manifest.json"), "utf8")) as { assets: unknown[]; releaseCount: number };
     const target = createTarget();

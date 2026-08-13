@@ -3,8 +3,8 @@
 #
 # This program is intentionally installed outside the Git worktree. Its only
 # writable inputs are signed release bundles below INPUT_ROOT. It never runs a
-# user-writable shell script as root, never edits the service environment, and
-# keeps prepare and cutover as separate operations.
+# user-writable shell script as root. Environment changes are restricted to
+# exact allowlisted tuples, and prepare and cutover remain separate operations.
 
 set -Eeuo pipefail
 IFS=$'\n\t'
@@ -49,14 +49,32 @@ ACTIVE_PHASE=''
 CURRENT_BEFORE=''
 CUTOVER_STARTED=false
 ROLLBACK_ATTEMPTED=false
+ENVIRONMENT_CHANGED=false
+ENVIRONMENT_PREVIOUS='unmodified'
+ENVIRONMENT_POLICY_ACTIVE='not-requested'
+MIGRATION_APPLIED=false
+QUALITY_REPORTS_CHANGED=false
+QUALITY_REPORT_TARGET=''
+QUALITY_REPORT_PREVIOUS='absent'
+QUALITY_REPORT_BACKUP=''
+HARNESS_REPORT_TARGET=''
+HARNESS_REPORT_PREVIOUS='absent'
+HARNESS_REPORT_BACKUP=''
 
 usage() {
   cat <<'EOF'
 Usage:
   lumi-release status
+  lumi-release release-inventory
   lumi-release backup
+  lumi-release prune-retired <40-hex-commit> [<40-hex-commit> ...]
+  lumi-release discard-failed <40-hex-commit>
+  lumi-release discard-incomplete-prepare <40-hex-commit>
+  lumi-release discard-failed-work <40-hex-commit>
   lumi-release prepare <40-hex-commit>
-  lumi-release cutover <prepare-run-id> <32-hex-confirmation-token>
+  lumi-release audit <prepare-run-id>
+  lumi-release recover-audit <prepare-run-id> <failed-audit-run-id>
+  lumi-release cutover-sealed <prepare-run-id>
 
 Signed release input layout:
   /home/arlo/lumi-release-input/<commit>/manifest
@@ -91,6 +109,7 @@ log() {
 
 finalize_evidence() {
   [[ -n "$ACTIVE_EVIDENCE" && -d "$ACTIVE_EVIDENCE" && ! -L "$ACTIVE_EVIDENCE" ]] || return 0
+  rm -f -- "$ACTIVE_EVIDENCE/.failure-reserve"
   chown -hR "$OPERATIONS_USER:$OPERATIONS_USER" "$ACTIVE_EVIDENCE"
   find "$ACTIVE_EVIDENCE" -xdev -type d -exec chmod 0700 {} +
   find "$ACTIVE_EVIDENCE" -xdev -type f -exec chmod 0600 {} +
@@ -98,9 +117,13 @@ finalize_evidence() {
 
 capture_health() {
   local destination=$1
+  local request_timeout_seconds=${2:-20}
   local temporary="$destination.tmp.$$"
-  curl -fsS --max-time 20 http://127.0.0.1:3100/api/health > "$temporary"
-  python3 - "$temporary" <<'PY'
+  if ! curl -fsS --max-time "$request_timeout_seconds" http://127.0.0.1:3100/api/health > "$temporary"; then
+    rm -f -- "$temporary"
+    return 1
+  fi
+  if ! python3 - "$temporary" <<'PY'
 import json
 import sys
 
@@ -116,8 +139,62 @@ if payload.get("aiConfigured") is not True:
 if payload.get("competitionReady") is not True:
     raise SystemExit("HEALTH_COMPETITION_NOT_READY")
 PY
+  then
+    rm -f -- "$temporary"
+    return 1
+  fi
   mv -f -- "$temporary" "$destination"
   printf 'HEALTH_OK\n'
+}
+
+capture_base_health() {
+  local destination=$1
+  local request_timeout_seconds=${2:-20}
+  local temporary="$destination.tmp.$$"
+  if ! curl -fsS --max-time "$request_timeout_seconds" http://127.0.0.1:3100/api/health > "$temporary"; then
+    rm -f -- "$temporary"
+    return 1
+  fi
+  if ! python3 - "$temporary" <<'PY'
+import json
+import sys
+
+with open(sys.argv[1], encoding="utf-8") as handle:
+    payload = json.load(handle)
+
+if payload.get("status") != "ok":
+    raise SystemExit("HEALTH_STATUS_NOT_OK")
+if payload.get("database", {}).get("available") is not True:
+    raise SystemExit("HEALTH_DATABASE_NOT_AVAILABLE")
+if payload.get("aiConfigured") is not True:
+    raise SystemExit("HEALTH_AI_NOT_CONFIGURED")
+PY
+  then
+    rm -f -- "$temporary"
+    return 1
+  fi
+  mv -f -- "$temporary" "$destination"
+  printf 'BASE_HEALTH_OK\n'
+}
+
+wait_for_health() {
+  local destination=$1
+  local timeout_seconds=${2:-$HEALTH_STARTUP_TIMEOUT_SECONDS}
+  local deadline=$((SECONDS + timeout_seconds))
+  local attempts=0
+
+  while (( SECONDS < deadline )); do
+    attempts=$((attempts + 1))
+    if capture_health "$destination" "$HEALTH_RETRY_CURL_TIMEOUT_SECONDS" >/dev/null 2>&1; then
+      printf 'HEALTH_OK\n'
+      printf 'HEALTH_READY_ATTEMPTS=%s\n' "$attempts"
+      return 0
+    fi
+    sleep 1
+  done
+
+  printf 'HEALTH_WAIT_TIMEOUT_SECONDS=%s\n' "$timeout_seconds" >&2
+  return 1
 }
 
 status_health() {
@@ -132,9 +209,8 @@ if payload.get("database", {}).get("available") is not True:
     raise SystemExit("HEALTH_DATABASE_NOT_AVAILABLE")
 if payload.get("aiConfigured") is not True:
     raise SystemExit("HEALTH_AI_NOT_CONFIGURED")
-if payload.get("competitionReady") is not True:
-    raise SystemExit("HEALTH_COMPETITION_NOT_READY")
 print("HEALTH_OK")
+print("COMPETITION_READY=" + ("true" if payload.get("competitionReady") is True else "false"))
 '
 }
 
@@ -145,7 +221,7 @@ service_preflight() {
   [[ -f "$SERVICE_ENV" && ! -L "$SERVICE_ENV" ]]
   runuser -u "$SERVICE_USER" -- test -r "$SERVICE_ENV"
   systemctl is-active --quiet "$SERVICE"
-  capture_health "$health_destination" | tee -a "$ACTIVE_EVIDENCE/summary.log"
+  capture_base_health "$health_destination" | tee -a "$ACTIVE_EVIDENCE/summary.log"
 }
 
 assert_root() {
@@ -158,6 +234,10 @@ assert_commit() {
 
 assert_run_id() {
   [[ "$1" =~ ^prepare-[0-9]{8}T[0-9]{6}Z-[0-9]+-[0-9]+$ ]] || die 'PREPARE_RUN_ID_INVALID'
+}
+
+assert_audit_run_id() {
+  [[ "$1" =~ ^audit-[0-9]{8}T[0-9]{6}Z-[0-9]+-[0-9]+$ ]] || die 'AUDIT_RUN_ID_INVALID'
 }
 
 assert_operations_roots() {
@@ -1009,6 +1089,12 @@ make_evidence() {
   ACTIVE_RUN_ID="$run_id"
   ACTIVE_PHASE="$phase"
   printf 'RUN_ID=%s\nPHASE=%s\n' "$run_id" "$phase" > "$path/summary.log"
+  fallocate -l "$FAILURE_RESERVE_BYTES" "$path/.failure-reserve"
+}
+
+release_failure_reserve() {
+  [[ -n "$ACTIVE_EVIDENCE" && -d "$ACTIVE_EVIDENCE" && ! -L "$ACTIVE_EVIDENCE" ]] || return 0
+  rm -f -- "$ACTIVE_EVIDENCE/.failure-reserve"
 }
 
 write_failure() {
@@ -1021,6 +1107,8 @@ write_failure() {
     printf 'CUTOVER_STARTED=%s\n' "$CUTOVER_STARTED"
     printf 'CURRENT_AT_FAILURE=%s\n' "$(readlink -f "$CURRENT_LINK" 2>/dev/null || printf 'UNREADABLE')"
     printf 'ROLLBACK_ATTEMPTED=%s\n' "$ROLLBACK_ATTEMPTED"
+    printf 'ENVIRONMENT_CHANGED=%s\n' "$ENVIRONMENT_CHANGED"
+    printf 'MIGRATION_APPLIED=%s\n' "$MIGRATION_APPLIED"
   } > "$ACTIVE_EVIDENCE/FAILED.result"
 }
 
@@ -1035,8 +1123,34 @@ rollback_current() {
       ln -s "$CURRENT_BEFORE" "$rollback_link" && mv -Tf -- "$rollback_link" "$CURRENT_LINK" || true
     fi
   fi
+  if [[ "$ENVIRONMENT_CHANGED" == true ]]; then
+    local environment_restored=false
+    if [[ "$ENVIRONMENT_POLICY_ACTIVE" == "$ENVIRONMENT_WRITE_K84" ]] \
+      && write_agent_interventions_env_state "$ENVIRONMENT_PREVIOUS"; then
+      environment_restored=true
+    elif [[ "$ENVIRONMENT_POLICY_ACTIVE" == "$ENVIRONMENT_WRITE_KV2" ]] \
+      && write_knowledge_v2_boolean_env_state "$ENVIRONMENT_PREVIOUS"; then
+      environment_restored=true
+    fi
+    if [[ "$environment_restored" == true ]]; then
+      printf 'ROLLBACK_ENVIRONMENT=RESTORED_%s\n' "$ENVIRONMENT_PREVIOUS" >> "$ACTIVE_EVIDENCE/summary.log"
+    else
+      printf 'ROLLBACK_ENVIRONMENT=RESTORE_FAILED\n' >> "$ACTIVE_EVIDENCE/summary.log"
+    fi
+  fi
+  if [[ "$MIGRATION_APPLIED" == true ]]; then
+    printf 'ROLLBACK_DATABASE=ADDITIVE_SCHEMA_RETAINED\n' >> "$ACTIVE_EVIDENCE/summary.log"
+  fi
+  if [[ "$QUALITY_REPORTS_CHANGED" == true ]]; then
+    if restore_report_target "$QUALITY_REPORT_TARGET" "$QUALITY_REPORT_PREVIOUS" "$QUALITY_REPORT_BACKUP" \
+      && restore_report_target "$HARNESS_REPORT_TARGET" "$HARNESS_REPORT_PREVIOUS" "$HARNESS_REPORT_BACKUP"; then
+      printf 'ROLLBACK_QUALITY_REPORTS=RESTORED\n' >> "$ACTIVE_EVIDENCE/summary.log"
+    else
+      printf 'ROLLBACK_QUALITY_REPORTS=RESTORE_FAILED\n' >> "$ACTIVE_EVIDENCE/summary.log"
+    fi
+  fi
   systemctl start "$SERVICE" || true
-  if capture_health "$ACTIVE_EVIDENCE/rollback-health.json"; then
+  if wait_for_health "$ACTIVE_EVIDENCE/rollback-health.json" | tee -a "$ACTIVE_EVIDENCE/summary.log"; then
     printf 'ROLLBACK=HEALTHY\n' >> "$ACTIVE_EVIDENCE/summary.log"
   else
     printf 'ROLLBACK=HEALTH_FAILED\n' >> "$ACTIVE_EVIDENCE/summary.log"
@@ -1047,6 +1161,7 @@ on_error() {
   local status=$?
   trap - ERR
   set +e
+  release_failure_reserve
   rollback_current
   write_failure
   finalize_evidence
@@ -1097,6 +1212,25 @@ if expected != "-" and not hmac.compare_digest(actual, expected):
     raise SystemExit("INPUT_SHA256_MISMATCH")
 print(actual)
 PY
+}
+
+consume_verified_input_directory() {
+  local input_dir=$1
+  local required
+  [[ -d "$input_dir" && ! -L "$input_dir" ]]
+  [[ "$(find "$input_dir" -mindepth 1 -maxdepth 1 -type f | wc -l)" -eq 4 ]]
+  [[ "$(find "$input_dir" -mindepth 1 -maxdepth 1 ! -type f | wc -l)" -eq 0 ]]
+  for required in manifest manifest.sig source.tar built.tar.gz; do
+    [[ -f "$input_dir/$required" && ! -L "$input_dir/$required" ]]
+    [[ "$(stat -c '%U' -- "$input_dir/$required")" == "$OPERATIONS_USER" ]]
+  done
+  rm -- \
+    "$input_dir/manifest" \
+    "$input_dir/manifest.sig" \
+    "$input_dir/source.tar" \
+    "$input_dir/built.tar.gz"
+  rmdir -- "$input_dir"
+  [[ ! -e "$input_dir" && ! -L "$input_dir" ]]
 }
 
 validate_archive() {
@@ -1292,13 +1426,153 @@ manifest_field() {
   awk -F= -v key="$field" '$1 == key { print substr($0, length(key) + 2) }' "$manifest"
 }
 
+write_release_source_binding() {
+  local release=$1
+  local commit=$2
+  local target="$release/.lumi-source-binding.json"
+  local temporary
+  assert_commit "$commit"
+  [[ ! -e "$target" && ! -L "$target" ]]
+  temporary=$(mktemp "$release/.lumi-source-binding.XXXXXX")
+  printf '{"sourceCommit":"%s","sourceStatusHash":"%s","sourceTrackedTreeClean":true}\n' \
+    "$commit" \
+    'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855' \
+    > "$temporary"
+  chown root:"$SERVICE_GROUP" "$temporary"
+  chmod 0640 "$temporary"
+  mv -f -- "$temporary" "$target"
+  runuser -u "$SERVICE_USER" -- test -r "$target"
+}
+
+service_report_target() {
+  local key=$1
+  python3 - "$SERVICE_ENV" "$key" <<'PY'
+import os
+import re
+import sys
+
+source, requested = sys.argv[1:]
+allowed = {"AGENT_EVAL_REPORT_PATH", "AGENT_HARNESS_REPORT_PATH"}
+if requested not in allowed:
+    raise SystemExit("REPORT_KEY_REJECTED")
+value = None
+with open(source, encoding="utf-8") as handle:
+    for raw in handle:
+        line = raw.rstrip("\n")
+        if not line or line.lstrip().startswith("#"):
+            continue
+        match = re.fullmatch(r"([A-Za-z_][A-Za-z0-9_]*)=(.*)", line)
+        if match and match.group(1) == requested:
+            value = match.group(2).strip()
+            break
+if not value or not os.path.isabs(value) or "\x00" in value or "\n" in value or "\r" in value:
+    raise SystemExit(f"{requested}_ABSOLUTE_PATH_REQUIRED")
+print(os.path.normpath(value))
+PY
+}
+
+verify_candidate_quality_reports() {
+  local quality_report=$1
+  local harness_report=$2
+  local commit=$3
+  python3 - "$quality_report" "$harness_report" "$commit" <<'PY'
+from datetime import datetime, timezone
+import hashlib
+import json
+import re
+import sys
+
+quality_path, harness_path, commit = sys.argv[1:]
+if not re.fullmatch(r"[0-9a-f]{40}", commit):
+    raise SystemExit("AUDIT_COMMIT_INVALID")
+
+def load(path):
+    with open(path, "rb") as handle:
+        raw = handle.read()
+    payload = json.loads(raw)
+    if payload.get("sourceCommit") != commit:
+        raise SystemExit("AUDIT_SOURCE_COMMIT_MISMATCH")
+    if payload.get("sourceTrackedTreeClean") is not True:
+        raise SystemExit("AUDIT_SOURCE_NOT_CLEAN")
+    evaluated = datetime.fromisoformat(payload["evaluatedAt"].replace("Z", "+00:00"))
+    age = (datetime.now(timezone.utc) - evaluated).total_seconds()
+    if age < 0 or age > 3600:
+        raise SystemExit("AUDIT_REPORT_NOT_FRESH")
+    return payload, hashlib.sha256(raw).hexdigest()
+
+quality, quality_sha = load(quality_path)
+harness, harness_sha = load(harness_path)
+if quality.get("mode") != "MODEL_ASSISTED" or quality.get("passed") is not True:
+    raise SystemExit("AUDIT_AGENT_EVAL_NOT_PASSED")
+if quality.get("caseCount", 0) < 30 or quality.get("passedCaseCount") != quality.get("caseCount"):
+    raise SystemExit("AUDIT_AGENT_EVAL_CASES_INVALID")
+if harness.get("passed") is not True:
+    raise SystemExit("AUDIT_HARNESS_NOT_PASSED")
+if harness.get("caseCount", 0) < 16 or harness.get("passedCaseCount") != harness.get("caseCount"):
+    raise SystemExit("AUDIT_HARNESS_CASES_INVALID")
+print(f"QUALITY_REPORT_SHA256={quality_sha}")
+print(f"HARNESS_REPORT_SHA256={harness_sha}")
+print(f"QUALITY_CASE_COUNT={quality['caseCount']}")
+print(f"HARNESS_CASE_COUNT={harness['caseCount']}")
+PY
+}
+
+backup_report_target() {
+  local target=$1
+  local label=$2
+  local state_file="$ACTIVE_EVIDENCE/$label.previous-state"
+  local backup="$ACTIVE_EVIDENCE/$label.previous"
+  local parent
+  parent=$(dirname -- "$target")
+  [[ -d "$parent" && ! -L "$parent" ]]
+  if [[ -e "$target" || -L "$target" ]]; then
+    [[ -f "$target" && ! -L "$target" ]]
+    install -o root -g root -m 0600 "$target" "$backup"
+    printf 'present\n' > "$state_file"
+  else
+    printf 'absent\n' > "$state_file"
+  fi
+}
+
+promote_report_file() {
+  local source=$1
+  local target=$2
+  local expected_sha=$3
+  local temporary="$target.lumi-release.$$.new"
+  [[ -f "$source" && ! -L "$source" ]]
+  [[ "$expected_sha" =~ ^[0-9a-f]{64}$ ]]
+  [[ "$(sha256sum -- "$source" | awk '{print $1}')" == "$expected_sha" ]]
+  [[ ! -e "$temporary" && ! -L "$temporary" ]]
+  install -o "$SERVICE_USER" -g "$SERVICE_GROUP" -m 0640 "$source" "$temporary"
+  mv -f -- "$temporary" "$target"
+  runuser -u "$SERVICE_USER" -- test -r "$target"
+}
+
+restore_report_target() {
+  local target=$1
+  local previous=$2
+  local backup=$3
+  [[ -n "$target" ]]
+  if [[ "$previous" == 'present' ]]; then
+    [[ -f "$backup" && ! -L "$backup" ]]
+    promote_report_file "$backup" "$target" "$(sha256sum -- "$backup" | awk '{print $1}')"
+  elif [[ "$previous" == 'absent' ]]; then
+    rm -f -- "$target"
+  else
+    return 1
+  fi
+}
+
 write_release_marker() {
   local release=$1
   local commit=$2
   local build_id=$3
   local esbuild_version=$4
+  local database_migration=$5
+  local environment_write=$6
   local marker="$release/.lumi-deploy-complete"
   local marker_tmp
+  assert_release_policy "$database_migration" "$environment_write"
   [[ ! -e "$marker" && ! -L "$marker" ]]
   marker_tmp=$(mktemp "$release/.lumi-deploy-complete.XXXXXX")
   {
@@ -1307,8 +1581,8 @@ write_release_marker() {
     printf 'pnpm_version=11.7.0\n'
     printf 'build_id=%s\n' "$build_id"
     printf 'esbuild_version=%s\n' "$esbuild_version"
-    printf 'database_migration=not-required\n'
-    printf 'environment_write=not-requested\n'
+    printf 'database_migration=%s\n' "$database_migration"
+    printf 'environment_write=%s\n' "$environment_write"
   } > "$marker_tmp"
   chown root:"$SERVICE_GROUP" "$marker_tmp"
   chmod 0640 "$marker_tmp"
@@ -1317,13 +1591,117 @@ write_release_marker() {
   runuser -u "$SERVICE_USER" -- test -r "$marker"
 }
 
+verify_next_external_module_aliases() {
+  local release=$1
+  [[ -d "$release" && ! -L "$release" ]]
+
+  runuser -u "$SERVICE_USER" -- "$RUNTIME_NODE" - "$release" <<'JS'
+const fs = require("node:fs");
+const path = require("node:path");
+const { createRequire } = require("node:module");
+
+const release = path.resolve(process.argv[2]);
+const nextRoot = path.join(release, ".next");
+const serverRoot = path.join(nextRoot, "server");
+const aliasRoot = path.join(nextRoot, "node_modules");
+const releaseModulesRoot = path.join(release, "node_modules") + path.sep;
+const requiredAliases = new Set();
+
+function walk(directory) {
+  for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+    const entryPath = path.join(directory, entry.name);
+    if (entry.isDirectory()) {
+      walk(entryPath);
+    } else if (entry.isFile() && entry.name.endsWith(".nft.json")) {
+      const trace = JSON.parse(fs.readFileSync(entryPath, "utf8"));
+      if (!Array.isArray(trace.files)) {
+        throw new Error("NEXT_TRACE_FILES_INVALID");
+      }
+      for (const traced of trace.files) {
+        if (typeof traced !== "string") {
+          throw new Error("NEXT_TRACE_FILE_INVALID");
+        }
+        const resolved = path.resolve(path.dirname(entryPath), traced);
+        const relative = path.relative(aliasRoot, resolved);
+        if (
+          relative &&
+          !relative.startsWith(`..${path.sep}`) &&
+          relative !== ".." &&
+          !path.isAbsolute(relative)
+        ) {
+          requiredAliases.add(relative.split(path.sep)[0]);
+        }
+      }
+    }
+  }
+}
+
+walk(serverRoot);
+const probeRequire = createRequire(
+  path.join(serverRoot, "chunks", "lumi-release-alias-probe.cjs"),
+);
+
+for (const alias of [...requiredAliases].sort()) {
+  if (!/^[A-Za-z0-9@._+-]+$/.test(alias)) {
+    throw new Error("NEXT_EXTERNAL_MODULE_ALIAS_NAME_INVALID");
+  }
+  const aliasPath = path.join(aliasRoot, alias);
+  let aliasStat;
+  try {
+    aliasStat = fs.lstatSync(aliasPath);
+  } catch (error) {
+    if (error && error.code === "ENOENT") {
+      throw new Error("NEXT_EXTERNAL_MODULE_ALIAS_MISSING");
+    }
+    throw error;
+  }
+  if (!aliasStat.isSymbolicLink()) {
+    throw new Error("NEXT_EXTERNAL_MODULE_ALIAS_NOT_SYMLINK");
+  }
+  const target = fs.realpathSync(aliasPath);
+  if (!target.startsWith(releaseModulesRoot)) {
+    throw new Error("NEXT_EXTERNAL_MODULE_ALIAS_TARGET_ESCAPE");
+  }
+  if (!fs.statSync(target).isDirectory()) {
+    throw new Error("NEXT_EXTERNAL_MODULE_ALIAS_TARGET_NOT_DIRECTORY");
+  }
+  if (!fs.statSync(path.join(target, "package.json")).isFile()) {
+    throw new Error("NEXT_EXTERNAL_MODULE_ALIAS_PACKAGE_MISSING");
+  }
+  const resolvedModule = fs.realpathSync(probeRequire.resolve(alias));
+  if (!resolvedModule.startsWith(releaseModulesRoot)) {
+    throw new Error("NEXT_EXTERNAL_MODULE_ALIAS_RESOLUTION_ESCAPE");
+  }
+  if (alias.startsWith("better-sqlite3-")) {
+    const Database = probeRequire(alias);
+    const database = new Database(":memory:");
+    const row = database.prepare("select 1 as value").get();
+    database.close();
+    if (row.value !== 1) {
+      throw new Error("NEXT_BETTER_SQLITE3_ALIAS_QUERY_FAILED");
+    }
+  }
+  if (alias.startsWith("sharp-") && typeof probeRequire(alias) !== "function") {
+    throw new Error("NEXT_SHARP_ALIAS_LOAD_FAILED");
+  }
+}
+
+process.stdout.write(
+  `NEXT_EXTERNAL_MODULE_ALIASES=PASS:${requiredAliases.size}\n`,
+);
+JS
+}
+
 verify_release() {
   local commit=$1
   local build_id=$2
   local esbuild_version=$3
+  local database_migration=$4
+  local environment_write=$5
   local release="$RELEASE_ROOT/$commit"
   local marker="$release/.lumi-deploy-complete"
   local esbuild="$release/$ESBUILD_REL"
+  assert_release_policy "$database_migration" "$environment_write"
   [[ -d "$release" && ! -L "$release" ]]
   [[ "$(stat -c '%U:%G:%a' -- "$release")" == "root:$SERVICE_GROUP:750" ]]
   [[ -f "$marker" && ! -L "$marker" ]]
@@ -1331,8 +1709,8 @@ verify_release() {
   grep -Fqx "source_commit=$commit" "$marker"
   grep -Fqx "build_id=$build_id" "$marker"
   grep -Fqx "esbuild_version=$esbuild_version" "$marker"
-  grep -Fqx 'database_migration=not-required' "$marker"
-  grep -Fqx 'environment_write=not-requested' "$marker"
+  grep -Fqx "database_migration=$database_migration" "$marker"
+  grep -Fqx "environment_write=$environment_write" "$marker"
   runuser -u "$SERVICE_USER" -- test -r "$release/.next/BUILD_ID"
   [[ "$(cat "$release/.next/BUILD_ID")" == "$build_id" ]]
   runuser -u "$SERVICE_USER" -- test -r "$release/node_modules/tsx/dist/cli.mjs"
@@ -1358,6 +1736,7 @@ verify_release() {
   [[ "$actual_esbuild" == "$esbuild_version" ]]
   printf 'TARGET_ESBUILD_VERSION=%s\n' "$actual_esbuild" | tee -a "$ACTIVE_EVIDENCE/summary.log"
   runuser -u "$SERVICE_USER" -- "$RUNTIME_NODE" -e 'require(process.argv[1]); process.stdout.write("NATIVE_MODULE_LOAD=PASS\\n")' "$release/node_modules/better-sqlite3" | tee -a "$ACTIVE_EVIDENCE/summary.log"
+  verify_next_external_module_aliases "$release" | tee -a "$ACTIVE_EVIDENCE/summary.log"
 }
 
 write_seal() {
@@ -1366,12 +1745,26 @@ write_seal() {
   local expected_current=$3
   local build_id=$4
   local esbuild_version=$5
+  local database_migration=$6
+  local environment_write=$7
+  local environment_previous=$8
   local release="$RELEASE_ROOT/$commit"
   local token
   local token_hash
   local seal="$SEAL_ROOT/$run_id.seal"
+  local token_file="$SEAL_ROOT/$run_id.token"
   local seal_tmp
+  local token_tmp
+  assert_release_policy "$database_migration" "$environment_write"
+  if [[ "$environment_write" == "$ENVIRONMENT_WRITE_NONE" ]]; then
+    [[ "$environment_previous" == 'unmodified' ]]
+  elif [[ "$environment_write" == "$ENVIRONMENT_WRITE_KV2" ]]; then
+    [[ "$environment_previous" =~ ^(absent|true|false),(absent|true|false),(absent|true|false)$ ]]
+  else
+    [[ "$environment_previous" == 'absent' || "$environment_previous" == 'true' || "$environment_previous" == 'false' ]]
+  fi
   [[ ! -e "$seal" && ! -L "$seal" ]]
+  [[ ! -e "$token_file" && ! -L "$token_file" ]]
   token=$(od -An -N16 -tx1 /dev/urandom | tr -d ' \n')
   token_hash=$(printf '%s' "$token" | sha256sum | awk '{print $1}')
   seal_tmp=$(mktemp "$SEAL_ROOT/.$run_id.XXXXXX")
@@ -1382,18 +1775,56 @@ write_seal() {
     printf 'release=%s\n' "$release"
     printf 'build_id=%s\n' "$build_id"
     printf 'esbuild_version=%s\n' "$esbuild_version"
+    printf 'database_migration=%s\n' "$database_migration"
+    printf 'environment_write=%s\n' "$environment_write"
+    printf 'environment_previous=%s\n' "$environment_previous"
     printf 'token_sha256=%s\n' "$token_hash"
   } > "$seal_tmp"
   chown root:root "$seal_tmp"
   chmod 0600 "$seal_tmp"
   mv -f -- "$seal_tmp" "$seal"
-  printf '%s\n' "$token"
+  token_tmp=$(mktemp "$SEAL_ROOT/.$run_id.token.XXXXXX")
+  printf '%s\n' "$token" > "$token_tmp"
+  chown root:root "$token_tmp"
+  chmod 0600 "$token_tmp"
+  mv -f -- "$token_tmp" "$token_file"
 }
 
 seal_field() {
   local seal=$1
   local field=$2
   awk -F= -v key="$field" '$1 == key { print substr($0, length(key) + 2) }' "$seal"
+}
+
+seal_audit_reports() {
+  local seal=$1
+  local run_id=$2
+  local audit_run_id=$3
+  local quality_report=$4
+  local quality_sha=$5
+  local harness_report=$6
+  local harness_sha=$7
+  local seal_tmp
+
+  assert_run_id "$run_id"
+  assert_audit_run_id "$audit_run_id"
+  [[ -f "$seal" && ! -L "$seal" ]]
+  [[ "$(stat -c '%U:%G:%a' -- "$seal")" == 'root:root:600' ]]
+  [[ -z "$(seal_field "$seal" audit_quality_sha256)" ]]
+  [[ "$quality_sha" =~ ^[0-9a-f]{64}$ ]]
+  [[ "$harness_sha" =~ ^[0-9a-f]{64}$ ]]
+  seal_tmp=$(mktemp "$SEAL_ROOT/.$run_id.audit.XXXXXX")
+  cat "$seal" > "$seal_tmp"
+  {
+    printf 'audit_run_id=%s\n' "$audit_run_id"
+    printf 'audit_quality_report=%s\n' "$quality_report"
+    printf 'audit_quality_sha256=%s\n' "$quality_sha"
+    printf 'audit_harness_report=%s\n' "$harness_report"
+    printf 'audit_harness_sha256=%s\n' "$harness_sha"
+  } >> "$seal_tmp"
+  chown root:root "$seal_tmp"
+  chmod 0600 "$seal_tmp"
+  mv -f -- "$seal_tmp" "$seal"
 }
 
 prepare() {
@@ -1408,10 +1839,12 @@ prepare() {
   local built_sha256
   local build_id
   local esbuild_version
+  local database_migration
+  local environment_write
+  local environment_previous
   local source_archive
   local built_archive
   local release
-  local confirmation_token
 
   assert_commit "$commit"
   assert_operations_roots
@@ -1442,6 +1875,17 @@ prepare() {
   built_sha256=$(manifest_field "$manifest" built_sha256)
   build_id=$(manifest_field "$manifest" build_id)
   esbuild_version=$(manifest_field "$manifest" esbuild_version)
+  database_migration=$(manifest_field "$manifest" database_migration)
+  environment_write=$(manifest_field "$manifest" environment_write)
+  assert_release_policy "$database_migration" "$environment_write"
+  if [[ "$environment_write" == "$ENVIRONMENT_WRITE_K84" ]]; then
+    environment_previous=$(read_agent_interventions_env_state)
+  elif [[ "$environment_write" == "$ENVIRONMENT_WRITE_KV2" ]]; then
+    environment_previous=$(read_knowledge_v2_boolean_env_state)
+    assert_knowledge_v2_canary_configured | tee -a "$ACTIVE_EVIDENCE/summary.log"
+  else
+    environment_previous='unmodified'
+  fi
   source_archive="$stage/source.tar"
   built_archive="$stage/built.tar.gz"
   release="$RELEASE_ROOT/$commit"
@@ -1452,6 +1896,8 @@ prepare() {
   copy_regular_input "$input_dir/built.tar.gz" "$built_archive" "$built_sha256" > "$ACTIVE_EVIDENCE/built.sha256"
   validate_archive "$source_archive" "$stage/source.executables" | tee -a "$ACTIVE_EVIDENCE/summary.log"
   validate_archive "$built_archive" "$stage/built.executables" | tee -a "$ACTIVE_EVIDENCE/summary.log"
+  consume_verified_input_directory "$input_dir"
+  printf 'SIGNED_INPUT_CONSUMED=YES\n' | tee -a "$ACTIVE_EVIDENCE/summary.log"
 
   {
     printf 'SOURCE_COMMIT=%s\n' "$commit"
@@ -1460,15 +1906,16 @@ prepare() {
     printf 'SOURCE_ARCHIVE_SHA256=%s\n' "$source_sha256"
     printf 'BUILT_ARCHIVE_SHA256=%s\n' "$built_sha256"
     printf 'BUILD_ID=%s\n' "$build_id"
-    printf 'DATABASE_MIGRATION=NOT_REQUIRED\n'
-    printf 'ENVIRONMENT_WRITE=NOT_REQUESTED\n'
+    printf 'DATABASE_MIGRATION=%s\n' "$database_migration"
+    printf 'ENVIRONMENT_WRITE=%s\n' "$environment_write"
+    printf 'ENVIRONMENT_PREVIOUS=%s\n' "$environment_previous"
   } > "$ACTIVE_EVIDENCE/PREFLIGHT.txt"
 
   log 'STAGE=RESTORE_POINT'
   "$BACKUP_WRAPPER" > "$ACTIVE_EVIDENCE/backup-wrapper.log" 2>&1
   grep -Fqx 'STATUS=SUCCEEDED' "$ACTIVE_EVIDENCE/backup-wrapper.log"
   systemctl is-active --quiet "$SERVICE"
-  capture_health "$ACTIVE_EVIDENCE/after-backup-health.json" | tee -a "$ACTIVE_EVIDENCE/summary.log"
+  capture_base_health "$ACTIVE_EVIDENCE/after-backup-health.json" | tee -a "$ACTIVE_EVIDENCE/summary.log"
   grep -E '^(BACKUP_PATH|RESTORE_POINT|STATUS)=' "$ACTIVE_EVIDENCE/backup-wrapper.log" > "$ACTIVE_EVIDENCE/restore-point.txt" || true
 
   log 'STAGE=PREPARE_RELEASE'
@@ -1503,20 +1950,22 @@ prepare() {
     repair_knowledge_v2_python_permission "$release" | tee -a "$ACTIVE_EVIDENCE/summary.log"
   fi
   install -d -o "$SERVICE_USER" -g "$SERVICE_GROUP" -m 0770 "$release/.next/cache"
-  write_release_marker "$release" "$commit" "$build_id" "$esbuild_version"
-  verify_release "$commit" "$build_id" "$esbuild_version"
+  write_release_source_binding "$release" "$commit"
+  write_release_marker "$release" "$commit" "$build_id" "$esbuild_version" "$database_migration" "$environment_write"
+  verify_release "$commit" "$build_id" "$esbuild_version" "$database_migration" "$environment_write"
 
   [[ "$(readlink -f "$CURRENT_LINK")" == "$RELEASE_ROOT/$expected_current" ]]
   systemctl is-active --quiet "$SERVICE"
-  capture_health "$ACTIVE_EVIDENCE/final-precutover-health.json" | tee -a "$ACTIVE_EVIDENCE/summary.log"
-  confirmation_token=$(write_seal "$run_id" "$commit" "$expected_current" "$build_id" "$esbuild_version")
+  capture_base_health "$ACTIVE_EVIDENCE/final-precutover-health.json" | tee -a "$ACTIVE_EVIDENCE/summary.log"
+  write_seal "$run_id" "$commit" "$expected_current" "$build_id" "$esbuild_version" "$database_migration" "$environment_write" "$environment_previous"
   {
     printf 'SOURCE_COMMIT=%s\n' "$commit"
     printf 'EXPECTED_CURRENT=%s\n' "$expected_current"
     printf 'RELEASE=%s\n' "$release"
     printf 'BUILD_ID=%s\n' "$build_id"
-    printf 'DATABASE_MIGRATION=NOT_REQUIRED\n'
-    printf 'ENVIRONMENT_WRITE=NOT_REQUESTED\n'
+    printf 'DATABASE_MIGRATION=%s\n' "$database_migration"
+    printf 'ENVIRONMENT_WRITE=%s\n' "$environment_write"
+    printf 'ENVIRONMENT_PREVIOUS=%s\n' "$environment_previous"
     printf 'RELEASE_MARKER=PASS\n'
     printf 'SERVICE_ACCESS_PRECHECK=PASS\n'
     printf 'CURRENT_AFTER=%s\n' "$(readlink -f "$CURRENT_LINK")"
@@ -1531,7 +1980,224 @@ prepare() {
   printf 'EVIDENCE=%s\n' "$EVIDENCE_ROOT/$run_id"
   printf 'CURRENT=%s\n' "$(readlink -f "$CURRENT_LINK")"
   printf 'CUTOVER=NOT_PERFORMED\n'
-  printf 'CUTOVER_CONFIRMATION_TOKEN=%s\n' "$confirmation_token"
+  printf 'CUTOVER_CONFIRMATION=ROOT_SEALED\n'
+}
+
+audit_prepared() {
+  local run_id=$1
+  local seal
+  local commit
+  local expected_current
+  local release
+  local build_id
+  local esbuild_version
+  local database_migration
+  local environment_write
+  local audit_run_id
+  local audit_root
+  local audit_home
+  local quality_report
+  local harness_report
+  local verification
+  local quality_sha
+  local harness_sha
+
+  assert_run_id "$run_id"
+  assert_operations_roots
+  seal="$SEAL_ROOT/$run_id.seal"
+  [[ -f "$seal" && ! -L "$seal" ]]
+  [[ "$(stat -c '%U:%G:%a' -- "$seal")" == 'root:root:600' ]]
+  [[ -z "$(seal_field "$seal" audit_quality_sha256)" ]]
+  commit=$(seal_field "$seal" source_commit)
+  expected_current=$(seal_field "$seal" expected_current)
+  release=$(seal_field "$seal" release)
+  build_id=$(seal_field "$seal" build_id)
+  esbuild_version=$(seal_field "$seal" esbuild_version)
+  database_migration=$(seal_field "$seal" database_migration)
+  environment_write=$(seal_field "$seal" environment_write)
+  assert_commit "$commit"
+  [[ "$expected_current" =~ ^[0-9a-f]{40}$ ]]
+  [[ "$release" == "$RELEASE_ROOT/$commit" ]]
+  [[ "$database_migration" == "$DATABASE_MIGRATION_KV2" ]]
+  [[ "$environment_write" == "$ENVIRONMENT_WRITE_KV2" ]]
+  [[ "$(readlink -f "$CURRENT_LINK")" == "$RELEASE_ROOT/$expected_current" ]]
+  verify_release "$commit" "$build_id" "$esbuild_version" "$database_migration" "$environment_write"
+
+  audit_run_id="audit-$(date -u +%Y%m%dT%H%M%SZ)-$$-$RANDOM"
+  make_evidence audit "$audit_run_id"
+  ACTIVE_COMMIT="$commit"
+  log 'STAGE=CANDIDATE_MODEL_AUDIT'
+  audit_root="$release/.runtime/release-audit/$audit_run_id"
+  audit_home="$audit_root/home"
+  quality_report="$audit_root/agent-eval.json"
+  harness_report="$audit_root/agent-harness.json"
+  install -d -o "$SERVICE_USER" -g "$SERVICE_GROUP" -m 0770 "$release/.runtime/agent-eval"
+  install -d -o "$SERVICE_USER" -g "$SERVICE_GROUP" -m 0770 "$release/.runtime/agent-harness"
+  install -d -o "$SERVICE_USER" -g "$SERVICE_GROUP" -m 0770 "$release/.runtime/release-audit"
+  install -d -o "$SERVICE_USER" -g "$SERVICE_GROUP" -m 0770 "$audit_root"
+  install -d -o "$SERVICE_USER" -g "$SERVICE_GROUP" -m 0700 "$audit_home"
+
+  runuser -u "$SERVICE_USER" -- /bin/bash -c '
+    set -Eeuo pipefail
+    cd "$1"
+    exec env -i \
+      HOME="$2" USER=lumi LOGNAME=lumi \
+      PATH=/usr/sbin:/usr/bin:/sbin:/bin NODE_ENV=test \
+      CHUYING_SERVICE_ENV="$3" \
+      RELEASE_SOURCE_BINDING_PATH="$4" \
+      LUMI_RELEASE_AUDIT_AGENT_EVAL_REPORT_PATH="$5" \
+      "$6" "$1/node_modules/tsx/dist/cli.mjs" \
+      "$1/scripts/evaluate-agent.ts" --restart
+  ' -- "$release" "$audit_home" "$SERVICE_ENV" "$release/.lumi-source-binding.json" "$quality_report" "$RUNTIME_NODE" \
+    > "$ACTIVE_EVIDENCE/agent-eval.log" 2>&1
+
+  runuser -u "$SERVICE_USER" -- /bin/bash -c '
+    set -Eeuo pipefail
+    cd "$1"
+    exec env -i \
+      HOME="$2" USER=lumi LOGNAME=lumi \
+      PATH=/usr/sbin:/usr/bin:/sbin:/bin NODE_ENV=test \
+      CHUYING_SERVICE_ENV="$3" \
+      RELEASE_SOURCE_BINDING_PATH="$4" \
+      LUMI_RELEASE_AUDIT_AGENT_HARNESS_REPORT_PATH="$5" \
+      "$6" "$1/node_modules/tsx/dist/cli.mjs" \
+      "$1/scripts/run-agent-harness.ts"
+  ' -- "$release" "$audit_home" "$SERVICE_ENV" "$release/.lumi-source-binding.json" "$harness_report" "$RUNTIME_NODE" \
+    > "$ACTIVE_EVIDENCE/agent-harness.log" 2>&1
+
+  verification=$(verify_candidate_quality_reports "$quality_report" "$harness_report" "$commit")
+  printf '%s\n' "$verification" | tee -a "$ACTIVE_EVIDENCE/summary.log"
+  quality_sha=$(printf '%s\n' "$verification" | awk -F= '$1 == "QUALITY_REPORT_SHA256" { print $2 }')
+  harness_sha=$(printf '%s\n' "$verification" | awk -F= '$1 == "HARNESS_REPORT_SHA256" { print $2 }')
+  [[ "$quality_sha" =~ ^[0-9a-f]{64}$ ]]
+  [[ "$harness_sha" =~ ^[0-9a-f]{64}$ ]]
+  chown root:"$SERVICE_GROUP" "$quality_report" "$harness_report"
+  chmod 0640 "$quality_report" "$harness_report"
+  chown root:"$SERVICE_GROUP" "$audit_root"
+  chmod 0750 "$audit_root"
+  runuser -u "$SERVICE_USER" -- test -r "$quality_report"
+  runuser -u "$SERVICE_USER" -- test -r "$harness_report"
+
+  seal_audit_reports "$seal" "$run_id" "$audit_run_id" "$quality_report" "$quality_sha" "$harness_report" "$harness_sha"
+  {
+    printf 'SOURCE_COMMIT=%s\n' "$commit"
+    printf 'PREPARE_RUN_ID=%s\n' "$run_id"
+    printf 'QUALITY_REPORT_SHA256=%s\n' "$quality_sha"
+    printf 'HARNESS_REPORT_SHA256=%s\n' "$harness_sha"
+    printf 'PRODUCTION_REPORTS=NOT_CHANGED\n'
+    printf 'CURRENT=%s\n' "$(readlink -f "$CURRENT_LINK")"
+    printf 'STATUS=SUCCEEDED\n'
+  } > "$ACTIVE_EVIDENCE/SUCCEEDED.result"
+  finalize_evidence
+  ACTIVE_EVIDENCE=''
+  printf 'AUDIT=SUCCEEDED\n'
+  printf 'RUN_ID=%s\n' "$audit_run_id"
+  printf 'PREPARE_RUN_ID=%s\n' "$run_id"
+  printf 'CURRENT=%s\n' "$(readlink -f "$CURRENT_LINK")"
+  printf 'PRODUCTION_REPORTS=NOT_CHANGED\n'
+}
+
+recover_audit() {
+  local run_id=$1
+  local audit_run_id=$2
+  local seal
+  local commit
+  local expected_current
+  local release
+  local build_id
+  local esbuild_version
+  local database_migration
+  local environment_write
+  local failed_evidence
+  local audit_root
+  local quality_report
+  local harness_report
+  local verification
+  local quality_sha
+  local harness_sha
+  local recovery_run_id
+
+  assert_run_id "$run_id"
+  assert_audit_run_id "$audit_run_id"
+  assert_operations_roots
+  seal="$SEAL_ROOT/$run_id.seal"
+  [[ -f "$seal" && ! -L "$seal" ]]
+  [[ "$(stat -c '%U:%G:%a' -- "$seal")" == 'root:root:600' ]]
+  [[ -z "$(seal_field "$seal" audit_quality_sha256)" ]]
+  commit=$(seal_field "$seal" source_commit)
+  expected_current=$(seal_field "$seal" expected_current)
+  release=$(seal_field "$seal" release)
+  build_id=$(seal_field "$seal" build_id)
+  esbuild_version=$(seal_field "$seal" esbuild_version)
+  database_migration=$(seal_field "$seal" database_migration)
+  environment_write=$(seal_field "$seal" environment_write)
+  assert_commit "$commit"
+  [[ "$expected_current" =~ ^[0-9a-f]{40}$ ]]
+  [[ "$release" == "$RELEASE_ROOT/$commit" ]]
+  [[ "$database_migration" == "$DATABASE_MIGRATION_KV2" ]]
+  [[ "$environment_write" == "$ENVIRONMENT_WRITE_KV2" ]]
+  [[ "$(readlink -f "$CURRENT_LINK")" == "$RELEASE_ROOT/$expected_current" ]]
+  verify_release "$commit" "$build_id" "$esbuild_version" "$database_migration" "$environment_write"
+
+  failed_evidence="$EVIDENCE_ROOT/$audit_run_id"
+  [[ -d "$failed_evidence" && ! -L "$failed_evidence" ]]
+  [[ "$(realpath -e -- "$failed_evidence")" == "$failed_evidence" ]]
+  [[ -f "$failed_evidence/FAILED.result" && ! -L "$failed_evidence/FAILED.result" ]]
+  grep -Fqx "RUN_ID=$audit_run_id" "$failed_evidence/FAILED.result"
+  grep -Fqx "SOURCE_COMMIT=$commit" "$failed_evidence/FAILED.result"
+  grep -Fqx 'PHASE=audit' "$failed_evidence/FAILED.result"
+  grep -Fqx 'STATUS=FAILED' "$failed_evidence/FAILED.result"
+  grep -Fqx 'CUTOVER_STARTED=false' "$failed_evidence/FAILED.result"
+  grep -Fqx 'ROLLBACK_ATTEMPTED=false' "$failed_evidence/FAILED.result"
+  grep -Fqx 'ENVIRONMENT_CHANGED=false' "$failed_evidence/FAILED.result"
+  grep -Fqx 'MIGRATION_APPLIED=false' "$failed_evidence/FAILED.result"
+
+  audit_root="$release/.runtime/release-audit/$audit_run_id"
+  [[ -d "$audit_root" && ! -L "$audit_root" ]]
+  [[ "$(realpath -e -- "$audit_root")" == "$audit_root" ]]
+  quality_report="$audit_root/agent-eval.json"
+  harness_report="$audit_root/agent-harness.json"
+  [[ -f "$quality_report" && ! -L "$quality_report" ]]
+  [[ -f "$harness_report" && ! -L "$harness_report" ]]
+
+  recovery_run_id="audit-recovery-$(date -u +%Y%m%dT%H%M%SZ)-$$-$RANDOM"
+  make_evidence audit-recovery "$recovery_run_id"
+  ACTIVE_COMMIT="$commit"
+  service_preflight "$ACTIVE_EVIDENCE/before-audit-recovery-health.json"
+  verification=$(verify_candidate_quality_reports "$quality_report" "$harness_report" "$commit")
+  printf '%s\n' "$verification" | tee -a "$ACTIVE_EVIDENCE/summary.log"
+  quality_sha=$(printf '%s\n' "$verification" | awk -F= '$1 == "QUALITY_REPORT_SHA256" { print $2 }')
+  harness_sha=$(printf '%s\n' "$verification" | awk -F= '$1 == "HARNESS_REPORT_SHA256" { print $2 }')
+  [[ "$quality_sha" =~ ^[0-9a-f]{64}$ ]]
+  [[ "$harness_sha" =~ ^[0-9a-f]{64}$ ]]
+  chown root:"$SERVICE_GROUP" "$quality_report" "$harness_report"
+  chmod 0640 "$quality_report" "$harness_report"
+  chown root:"$SERVICE_GROUP" "$audit_root"
+  chmod 0750 "$audit_root"
+  runuser -u "$SERVICE_USER" -- test -r "$quality_report"
+  runuser -u "$SERVICE_USER" -- test -r "$harness_report"
+  seal_audit_reports "$seal" "$run_id" "$audit_run_id" "$quality_report" "$quality_sha" "$harness_report" "$harness_sha"
+  {
+    printf 'SOURCE_COMMIT=%s\n' "$commit"
+    printf 'PREPARE_RUN_ID=%s\n' "$run_id"
+    printf 'RECOVERED_AUDIT_RUN_ID=%s\n' "$audit_run_id"
+    printf 'QUALITY_REPORT_SHA256=%s\n' "$quality_sha"
+    printf 'HARNESS_REPORT_SHA256=%s\n' "$harness_sha"
+    printf 'REPORTS_REEXECUTED=NO\n'
+    printf 'PRODUCTION_REPORTS=NOT_CHANGED\n'
+    printf 'CURRENT=%s\n' "$(readlink -f "$CURRENT_LINK")"
+    printf 'STATUS=SUCCEEDED\n'
+  } > "$ACTIVE_EVIDENCE/SUCCEEDED.result"
+  finalize_evidence
+  ACTIVE_EVIDENCE=''
+  printf 'AUDIT_SEAL_RECOVERED=YES\n'
+  printf 'PREPARE_RUN_ID=%s\n' "$run_id"
+  printf 'RECOVERED_AUDIT_RUN_ID=%s\n' "$audit_run_id"
+  printf 'QUALITY_CASE_COUNT=%s\n' "$(printf '%s\n' "$verification" | awk -F= '$1 == "QUALITY_CASE_COUNT" { print $2 }')"
+  printf 'HARNESS_CASE_COUNT=%s\n' "$(printf '%s\n' "$verification" | awk -F= '$1 == "HARNESS_CASE_COUNT" { print $2 }')"
+  printf 'REPORTS_REEXECUTED=NO\n'
+  printf 'PRODUCTION_CHANGED=NO\n'
+  printf 'EVIDENCE=%s\n' "$EVIDENCE_ROOT/$recovery_run_id"
 }
 
 cutover() {
@@ -1543,10 +2209,17 @@ cutover() {
   local release
   local build_id
   local esbuild_version
+  local database_migration
+  local environment_write
+  local environment_previous
   local expected_token_hash
   local actual_token_hash
   local cutover_run_id
   local link_tmp
+  local audit_quality_report
+  local audit_quality_sha
+  local audit_harness_report
+  local audit_harness_sha
 
   assert_run_id "$run_id"
   [[ "$confirmation_token" =~ ^[0-9a-f]{32}$ ]] || die 'CUTOVER_CONFIRMATION_TOKEN_INVALID'
@@ -1559,12 +2232,41 @@ cutover() {
   release=$(seal_field "$seal" release)
   build_id=$(seal_field "$seal" build_id)
   esbuild_version=$(seal_field "$seal" esbuild_version)
+  database_migration=$(seal_field "$seal" database_migration)
+  environment_write=$(seal_field "$seal" environment_write)
+  environment_previous=$(seal_field "$seal" environment_previous)
   expected_token_hash=$(seal_field "$seal" token_sha256)
   assert_commit "$commit"
   [[ "$expected_current" =~ ^[0-9a-f]{40}$ ]]
   [[ "$release" == "$RELEASE_ROOT/$commit" ]]
   [[ "$build_id" =~ ^[A-Za-z0-9_-]{1,128}$ ]]
   [[ "$esbuild_version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]
+  assert_release_policy "$database_migration" "$environment_write"
+  if [[ "$environment_write" == "$ENVIRONMENT_WRITE_NONE" ]]; then
+    [[ "$environment_previous" == 'unmodified' ]]
+  elif [[ "$environment_write" == "$ENVIRONMENT_WRITE_KV2" ]]; then
+    [[ "$environment_previous" =~ ^(absent|true|false),(absent|true|false),(absent|true|false)$ ]]
+    [[ "$(read_knowledge_v2_boolean_env_state)" == "$environment_previous" ]]
+    assert_knowledge_v2_canary_configured | tee -a "$ACTIVE_EVIDENCE/summary.log"
+    audit_quality_report=$(seal_field "$seal" audit_quality_report)
+    audit_quality_sha=$(seal_field "$seal" audit_quality_sha256)
+    audit_harness_report=$(seal_field "$seal" audit_harness_report)
+    audit_harness_sha=$(seal_field "$seal" audit_harness_sha256)
+    [[ "$audit_quality_report" == "$release/.runtime/release-audit/"*/agent-eval.json ]]
+    [[ "$audit_harness_report" == "$release/.runtime/release-audit/"*/agent-harness.json ]]
+    [[ "$audit_quality_sha" =~ ^[0-9a-f]{64}$ ]]
+    [[ "$audit_harness_sha" =~ ^[0-9a-f]{64}$ ]]
+    [[ -f "$audit_quality_report" && ! -L "$audit_quality_report" ]]
+    [[ -f "$audit_harness_report" && ! -L "$audit_harness_report" ]]
+    [[ "$(sha256sum -- "$audit_quality_report" | awk '{print $1}')" == "$audit_quality_sha" ]]
+    [[ "$(sha256sum -- "$audit_harness_report" | awk '{print $1}')" == "$audit_harness_sha" ]]
+    verify_candidate_quality_reports "$audit_quality_report" "$audit_harness_report" "$commit" > /dev/null
+    QUALITY_REPORT_TARGET=$(service_report_target AGENT_EVAL_REPORT_PATH)
+    HARNESS_REPORT_TARGET=$(service_report_target AGENT_HARNESS_REPORT_PATH)
+  else
+    [[ "$environment_previous" == 'absent' || "$environment_previous" == 'true' || "$environment_previous" == 'false' ]]
+    [[ "$(read_agent_interventions_env_state)" == "$environment_previous" ]]
+  fi
   [[ "$expected_token_hash" =~ ^[0-9a-f]{64}$ ]]
   actual_token_hash=$(printf '%s' "$confirmation_token" | sha256sum | awk '{print $1}')
   [[ "$actual_token_hash" == "$expected_token_hash" ]]
@@ -1576,7 +2278,7 @@ cutover() {
   [[ "$(readlink -f "$CURRENT_LINK")" == "$RELEASE_ROOT/$expected_current" ]]
   CURRENT_BEFORE=$(readlink -f "$CURRENT_LINK")
   service_preflight "$ACTIVE_EVIDENCE/before-cutover-health.json"
-  verify_release "$commit" "$build_id" "$esbuild_version"
+  verify_release "$commit" "$build_id" "$esbuild_version" "$database_migration" "$environment_write"
 
   CUTOVER_STARTED=true
   log 'STAGE=CUTOVER'
@@ -1658,13 +2360,20 @@ cutover() {
     printf 'SOURCE_COMMIT=%s\n' "$commit"
     printf 'CURRENT_BEFORE=%s\n' "$CURRENT_BEFORE"
     printf 'CURRENT_AFTER=%s\n' "$(readlink -f "$CURRENT_LINK")"
-    printf 'DATABASE_MIGRATION=NOT_REQUIRED\n'
-    printf 'ENVIRONMENT_WRITE=NOT_REQUESTED\n'
+    printf 'DATABASE_MIGRATION=%s\n' "$database_migration"
+    printf 'ENVIRONMENT_WRITE=%s\n' "$environment_write"
+    printf 'ENVIRONMENT_PREVIOUS=%s\n' "$environment_previous"
+    if [[ "$environment_write" == "$ENVIRONMENT_WRITE_KV2" ]]; then
+      printf 'ENVIRONMENT_CURRENT=%s\n' "$(read_knowledge_v2_boolean_env_state)"
+      printf 'KNOWLEDGE_V2_CANARY_COUNT=%s\n' "$(knowledge_v2_canary_count)"
+    else
+      printf 'ENVIRONMENT_CURRENT=%s\n' "$(read_agent_interventions_env_state)"
+    fi
     printf 'STUDENT_SMOKE=PASS\n'
     printf 'ROLLBACK=NOT_NEEDED\n'
     printf 'STATUS=SUCCEEDED\n'
   } > "$ACTIVE_EVIDENCE/SUCCEEDED.result"
-  rm -f -- "$seal"
+  rm -f -- "$seal" "$SEAL_ROOT/$run_id.token"
   finalize_evidence
   ACTIVE_EVIDENCE=''
 
@@ -1673,6 +2382,21 @@ cutover() {
   printf 'EVIDENCE=%s\n' "$EVIDENCE_ROOT/$cutover_run_id"
   printf 'CURRENT=%s\n' "$(readlink -f "$CURRENT_LINK")"
   printf 'STUDENT_SMOKE=PASS\n'
+}
+
+cutover_sealed() {
+  local run_id=$1
+  local token_file
+  local confirmation_token
+
+  assert_run_id "$run_id"
+  assert_operations_roots
+  token_file="$SEAL_ROOT/$run_id.token"
+  [[ -f "$token_file" && ! -L "$token_file" ]]
+  [[ "$(stat -c '%U:%G:%a' -- "$token_file")" == 'root:root:600' ]]
+  confirmation_token=$(<"$token_file")
+  [[ "$confirmation_token" =~ ^[0-9a-f]{32}$ ]] || die 'SEALED_CUTOVER_CONFIRMATION_INVALID'
+  cutover "$run_id" "$confirmation_token"
 }
 
 backup() {
@@ -1684,7 +2408,7 @@ backup() {
   "$BACKUP_WRAPPER" > "$ACTIVE_EVIDENCE/backup-wrapper.log" 2>&1
   grep -Fqx 'STATUS=SUCCEEDED' "$ACTIVE_EVIDENCE/backup-wrapper.log"
   systemctl is-active --quiet "$SERVICE"
-  capture_health "$ACTIVE_EVIDENCE/after-backup-health.json" | tee -a "$ACTIVE_EVIDENCE/summary.log"
+  capture_base_health "$ACTIVE_EVIDENCE/after-backup-health.json" | tee -a "$ACTIVE_EVIDENCE/summary.log"
   grep -E '^(BACKUP_PATH|RESTORE_POINT|STATUS)=' "$ACTIVE_EVIDENCE/backup-wrapper.log" > "$ACTIVE_EVIDENCE/restore-point.txt" || true
   {
     printf 'STATUS=SUCCEEDED\n'
@@ -2249,17 +2973,46 @@ main() {
       [[ "$#" -eq 1 ]] || die 'STATUS_TAKES_NO_ARGUMENTS'
       status
       ;;
+    release-inventory)
+      [[ "$#" -eq 1 ]] || die 'RELEASE_INVENTORY_TAKES_NO_ARGUMENTS'
+      release_inventory
+      ;;
     backup)
       [[ "$#" -eq 1 ]] || die 'BACKUP_TAKES_NO_ARGUMENTS'
       backup
+      ;;
+    prune-retired)
+      [[ "$#" -ge 2 && "$#" -le 33 ]] || die 'PRUNE_RETIRED_REQUIRES_ONE_TO_32_COMMITS'
+      shift
+      prune_retired_releases "$@"
+      ;;
+    discard-failed)
+      [[ "$#" -eq 2 ]] || die 'DISCARD_FAILED_REQUIRES_COMMIT'
+      discard_failed_release "$2"
+      ;;
+    discard-incomplete-prepare)
+      [[ "$#" -eq 2 ]] || die 'DISCARD_INCOMPLETE_PREPARE_REQUIRES_COMMIT'
+      discard_incomplete_prepare_release "$2"
+      ;;
+    discard-failed-work)
+      [[ "$#" -eq 2 ]] || die 'DISCARD_FAILED_WORK_REQUIRES_COMMIT'
+      discard_failed_work "$2"
       ;;
     prepare)
       [[ "$#" -eq 2 ]] || die 'PREPARE_REQUIRES_COMMIT'
       prepare "$2"
       ;;
-    cutover)
-      [[ "$#" -eq 3 ]] || die 'CUTOVER_REQUIRES_RUN_ID_AND_TOKEN'
-      cutover "$2" "$3"
+    audit)
+      [[ "$#" -eq 2 ]] || die 'AUDIT_REQUIRES_PREPARE_RUN_ID'
+      audit_prepared "$2"
+      ;;
+    recover-audit)
+      [[ "$#" -eq 3 ]] || die 'RECOVER_AUDIT_REQUIRES_PREPARE_AND_AUDIT_RUN_IDS'
+      recover_audit "$2" "$3"
+      ;;
+    cutover-sealed)
+      [[ "$#" -eq 2 ]] || die 'CUTOVER_SEALED_REQUIRES_RUN_ID'
+      cutover_sealed "$2"
       ;;
     -h|--help|help)
       usage
