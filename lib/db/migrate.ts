@@ -1,10 +1,14 @@
-import { mkdirSync } from "node:fs";
+import { createHash } from "node:crypto";
+import { mkdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
-import { loadEnvConfig } from "@next/env";
 import { readMigrationFiles } from "drizzle-orm/migrator";
 
+import {
+  loadRuntimeEnvironment,
+  writeEffectiveDatabaseConfigNotice,
+} from "../config/runtime-environment";
 import { createDb } from "./client";
 
 const defaultMigrationsFolder = path.resolve(
@@ -143,7 +147,18 @@ export function runMigrations(
     // rebuild migrations can safely replace referenced parent tables, then
     // audit the completed schema before accepting it.
     connection.sqlite.pragma("foreign_keys = OFF");
-    const migrations = readMigrationFiles({ migrationsFolder: path.resolve(migrationsFolder) });
+    const resolvedMigrationsFolder = path.resolve(migrationsFolder);
+    const migrations = readMigrationFiles({
+      migrationsFolder: resolvedMigrationsFolder,
+    });
+    const journal = JSON.parse(readFileSync(
+      path.join(resolvedMigrationsFolder, "meta", "_journal.json"),
+      "utf8",
+    )) as MigrationJournal;
+    const acceptedHashes = acceptedMigrationHashes(
+      resolvedMigrationsFolder,
+      journal,
+    );
     connection.sqlite.exec(`
       CREATE TABLE IF NOT EXISTS __drizzle_migrations (
         id SERIAL PRIMARY KEY,
@@ -191,7 +206,6 @@ export function runMigrations(
         connection.sqlite.prepare(
           "INSERT INTO __drizzle_migrations (hash, created_at) VALUES (?, ?)",
         ).run(migration.hash, migration.folderMillis);
-        latest = { created_at: migration.folderMillis };
       }
       const violations = connection.sqlite.pragma("foreign_key_check") as unknown[];
       if (violations.length > 0) {
@@ -207,6 +221,18 @@ export function runMigrations(
 const invokedPath = process.argv[1] ? pathToFileURL(path.resolve(process.argv[1])).href : "";
 
 if (invokedPath === import.meta.url) {
-  loadEnvConfig(process.cwd(), process.env.NODE_ENV !== "production");
-  runMigrations(process.env.DATABASE_PATH ?? "./data/tonggan.sqlite");
+  void loadRuntimeEnvironment({ mode: "EXPLICIT_SERVICE_OR_PROJECT" })
+    .then((loaded) => {
+      const databasePath = loaded.environment.DATABASE_PATH ?? "./data/tonggan.sqlite";
+      writeEffectiveDatabaseConfigNotice(
+        { databasePath },
+        loaded.provenance,
+        loaded.environment,
+      );
+      runMigrations(databasePath);
+    })
+    .catch((error: unknown) => {
+      process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`);
+      process.exitCode = 1;
+    });
 }

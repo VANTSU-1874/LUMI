@@ -4,6 +4,7 @@ import {
   foreignKey,
   index,
   integer,
+  primaryKey,
   sqliteTable,
   text,
   uniqueIndex,
@@ -77,6 +78,8 @@ const agentRunEventKinds = [
   "RUN_CREATED", "STATUS_CHANGED", "RUN_CLAIMED", "STEP", "TOOL", "APPROVAL",
   "COMPLETION", "ERROR", "CANCELLED", "TOKEN",
 ] as const;
+const previewScenarioIds = ["S1_INTENT", "S3_TRANSFER", "S5_BOOK_KNOWLEDGE"] as const;
+const previewRunStatuses = ["RUNNING", "COMPLETED", "FAILED"] as const;
 const agentRunControlKinds = ["CANCEL", "RETRY"] as const;
 const agentRunInterventionModes = ["FOLLOW_UP", "STEER"] as const;
 const agentRunInterventionStatuses = [
@@ -1173,6 +1176,523 @@ export const knowledgeChunks = sqliteTable(
   ],
 );
 
+export const knowledgeCorporaV2 = sqliteTable(
+  "knowledge_corpora_v2",
+  {
+    bundleHash: text("bundle_hash").primaryKey(),
+    schemaVersion: integer("schema_version").notNull(),
+    corpusVersion: text("corpus_version").notNull(),
+    parserId: text("parser_id").notNull(),
+    parserVersion: text("parser_version").notNull(),
+    contentVersion: text("content_version").notNull(),
+    objectCount: integer("object_count").notNull(),
+    assetCount: integer("asset_count").notNull(),
+    canonicalJson: text("canonical_json", { mode: "json" }).$type<JsonRecord>().notNull(),
+    createdAt: integer("created_at").notNull(),
+  },
+  (table) => [
+    uniqueIndex("knowledge_corpora_v2_version_unique").on(table.corpusVersion),
+    check("knowledge_corpora_v2_schema_check", sql`${table.schemaVersion} = 2`),
+    check("knowledge_corpora_v2_hash_check", sql`length(${table.bundleHash}) = 64 and ${table.bundleHash} not glob '*[^0-9a-f]*'`),
+    check("knowledge_corpora_v2_counts_check", sql`${table.objectCount} >= 0 and ${table.assetCount} >= 0`),
+    check("knowledge_corpora_v2_json_check", sql`json_valid(${table.canonicalJson}) and json_type(${table.canonicalJson}) = 'object'`),
+  ],
+);
+
+export const knowledgeActiveCorpusV2 = sqliteTable(
+  "knowledge_active_corpus_v2",
+  {
+    id: integer("id").primaryKey(),
+    bundleHash: text("bundle_hash").notNull().unique().references(() => knowledgeCorporaV2.bundleHash, { onDelete: "restrict" }),
+    activatedAt: integer("activated_at").notNull(),
+  },
+  (table) => [
+    check("knowledge_active_corpus_v2_singleton_check", sql`${table.id} = 1`),
+  ],
+);
+
+export const knowledgeDocumentsV2 = sqliteTable(
+  "knowledge_documents_v2",
+  {
+    corpusHash: text("corpus_hash").notNull().references(() => knowledgeCorporaV2.bundleHash, { onDelete: "cascade" }),
+    id: text("id").notNull(),
+    title: text("title").notNull(),
+    topic: text("topic").notNull(),
+    tagsJson: text("tags_json", { mode: "json" }).$type<string[]>().notNull(),
+    sourceCoursePackId: text("source_course_pack_id").notNull(),
+    sourceCoursePackVersion: text("source_course_pack_version").notNull(),
+    sourceIdentityBasis: text("source_identity_basis").notNull(),
+    legacyCoursePackId: text("legacy_course_pack_id").notNull(),
+    legacyCoursePackVersion: text("legacy_course_pack_version").notNull(),
+    legacyNamespace: text("legacy_namespace").notNull(),
+    provenanceJson: text("provenance_json", { mode: "json" }).$type<JsonRecord>().notNull(),
+    parserId: text("parser_id").notNull(),
+    parserVersion: text("parser_version").notNull(),
+    contentVersion: text("content_version").notNull(),
+    rootNodeId: text("root_node_id").notNull(),
+    contentHash: text("content_hash").notNull(),
+    annotationHash: text("annotation_hash").notNull(),
+    legacyItemJson: text("legacy_item_json", { mode: "json" }).$type<JsonRecord>().notNull(),
+    canonicalJson: text("canonical_json", { mode: "json" }).$type<JsonRecord>().notNull(),
+  },
+  (table) => [
+    primaryKey({ columns: [table.corpusHash, table.id], name: "knowledge_documents_v2_pk" }),
+    index("knowledge_documents_v2_source_pack_idx").on(
+      table.corpusHash,
+      table.sourceCoursePackId,
+      table.sourceCoursePackVersion,
+    ),
+    index("knowledge_documents_v2_legacy_pack_idx").on(
+      table.corpusHash,
+      table.legacyCoursePackId,
+      table.legacyCoursePackVersion,
+    ),
+    check("knowledge_documents_v2_tags_json_check", sql`json_valid(${table.tagsJson}) and json_type(${table.tagsJson}) = 'array'`),
+    check("knowledge_documents_v2_provenance_json_check", sql`json_valid(${table.provenanceJson}) and json_type(${table.provenanceJson}) = 'object'`),
+    check("knowledge_documents_v2_legacy_json_check", sql`json_valid(${table.legacyItemJson}) and json_type(${table.legacyItemJson}) = 'object'`),
+    check("knowledge_documents_v2_canonical_json_check", sql`json_valid(${table.canonicalJson}) and json_type(${table.canonicalJson}) = 'object'`),
+    check("knowledge_documents_v2_hashes_check", sql`
+      length(${table.contentHash}) = 64 and ${table.contentHash} not glob '*[^0-9a-f]*'
+      and length(${table.annotationHash}) = 64 and ${table.annotationHash} not glob '*[^0-9a-f]*'
+    `),
+  ],
+);
+
+export const knowledgeAssetsV2 = sqliteTable(
+  "knowledge_assets_v2",
+  {
+    corpusHash: text("corpus_hash").notNull().references(() => knowledgeCorporaV2.bundleHash, { onDelete: "cascade" }),
+    id: text("id").notNull(),
+    kind: text("kind").notNull(),
+    locatorRoot: text("locator_root").notNull(),
+    locatorPath: text("locator_path").notNull(),
+    mimeType: text("mime_type").notNull(),
+    sizeBytes: integer("size_bytes").notNull(),
+    widthPx: integer("width_px").notNull(),
+    heightPx: integer("height_px").notNull(),
+    sha256: text("sha256").notNull(),
+    explicitlyUnreferenced: integer("explicitly_unreferenced", { mode: "boolean" }).notNull(),
+    canonicalJson: text("canonical_json", { mode: "json" }).$type<JsonRecord>().notNull(),
+  },
+  (table) => [
+    primaryKey({ columns: [table.corpusHash, table.id], name: "knowledge_assets_v2_pk" }),
+    uniqueIndex("knowledge_assets_v2_corpus_path_unique").on(table.corpusHash, table.locatorRoot, table.locatorPath),
+    index("knowledge_assets_v2_hash_idx").on(table.sha256),
+    check("knowledge_assets_v2_kind_check", sql`${table.kind} = 'IMAGE'`),
+    check("knowledge_assets_v2_mime_check", sql`${table.mimeType} = 'image/png'`),
+    check("knowledge_assets_v2_size_check", sql`${table.sizeBytes} > 0 and ${table.widthPx} > 0 and ${table.heightPx} > 0`),
+    check("knowledge_assets_v2_hash_check", sql`length(${table.sha256}) = 64 and ${table.sha256} not glob '*[^0-9a-f]*'`),
+    check("knowledge_assets_v2_unreferenced_check", sql`${table.explicitlyUnreferenced} in (0,1)`),
+    check("knowledge_assets_v2_json_check", sql`json_valid(${table.canonicalJson}) and json_type(${table.canonicalJson}) = 'object'`),
+  ],
+);
+
+export const knowledgeDocumentAssetsV2 = sqliteTable(
+  "knowledge_document_assets_v2",
+  {
+    corpusHash: text("corpus_hash").notNull(),
+    documentId: text("document_id").notNull(),
+    assetId: text("asset_id").notNull(),
+    ordinal: integer("ordinal").notNull(),
+  },
+  (table) => [
+    primaryKey({
+      columns: [table.corpusHash, table.documentId, table.assetId],
+      name: "knowledge_document_assets_v2_pk",
+    }),
+    uniqueIndex("knowledge_document_assets_v2_document_ordinal_unique").on(
+      table.corpusHash,
+      table.documentId,
+      table.ordinal,
+    ),
+    foreignKey({
+      columns: [table.corpusHash, table.documentId],
+      foreignColumns: [knowledgeDocumentsV2.corpusHash, knowledgeDocumentsV2.id],
+      name: "knowledge_document_assets_v2_document_corpus_fk",
+    }).onDelete("cascade"),
+    foreignKey({
+      columns: [table.corpusHash, table.assetId],
+      foreignColumns: [knowledgeAssetsV2.corpusHash, knowledgeAssetsV2.id],
+      name: "knowledge_document_assets_v2_asset_corpus_fk",
+    }).onDelete("cascade"),
+    check("knowledge_document_assets_v2_ordinal_check", sql`${table.ordinal} >= 0`),
+  ],
+);
+
+export const knowledgeNodesV2 = sqliteTable(
+  "knowledge_nodes_v2",
+  {
+    corpusHash: text("corpus_hash").notNull(),
+    id: text("id").notNull(),
+    documentId: text("document_id").notNull(),
+    kind: text("kind").notNull(),
+    assetId: text("asset_id"),
+    contentHash: text("content_hash").notNull(),
+    canonicalJson: text("canonical_json", { mode: "json" }).$type<JsonRecord>().notNull(),
+  },
+  (table) => [
+    primaryKey({ columns: [table.corpusHash, table.id], name: "knowledge_nodes_v2_pk" }),
+    index("knowledge_nodes_v2_document_kind_idx").on(table.corpusHash, table.documentId, table.kind),
+    foreignKey({
+      columns: [table.corpusHash, table.documentId],
+      foreignColumns: [knowledgeDocumentsV2.corpusHash, knowledgeDocumentsV2.id],
+      name: "knowledge_nodes_v2_document_corpus_fk",
+    }).onDelete("cascade"),
+    foreignKey({
+      columns: [table.corpusHash, table.assetId],
+      foreignColumns: [knowledgeAssetsV2.corpusHash, knowledgeAssetsV2.id],
+      name: "knowledge_nodes_v2_asset_corpus_fk",
+    }).onDelete("restrict"),
+    check("knowledge_nodes_v2_kind_check", sql`${table.kind} in ('DOCUMENT','SECTION','TEXT','IMAGE','TABLE','REGION')`),
+    check("knowledge_nodes_v2_asset_kind_check", sql`
+      (${table.kind} in ('IMAGE','REGION') and ${table.assetId} is not null)
+      or (${table.kind} not in ('IMAGE','REGION') and ${table.assetId} is null)
+    `),
+    check("knowledge_nodes_v2_json_check", sql`json_valid(${table.canonicalJson}) and json_type(${table.canonicalJson}) = 'object'`),
+    check("knowledge_nodes_v2_hash_check", sql`length(${table.contentHash}) = 64 and ${table.contentHash} not glob '*[^0-9a-f]*'`),
+  ],
+);
+
+export const knowledgeNodeRelationsV2 = sqliteTable(
+  "knowledge_node_relations_v2",
+  {
+    corpusHash: text("corpus_hash").notNull(),
+    sourceNodeId: text("source_node_id").notNull(),
+    targetNodeId: text("target_node_id").notNull(),
+    kind: text("kind").notNull(),
+    ordinal: integer("ordinal").notNull(),
+  },
+  (table) => [
+    primaryKey({
+      columns: [
+        table.corpusHash,
+        table.sourceNodeId,
+        table.kind,
+        table.targetNodeId,
+      ],
+      name: "knowledge_node_relations_v2_pk",
+    }),
+    uniqueIndex("knowledge_node_relations_v2_parent_target_unique")
+      .on(table.corpusHash, table.targetNodeId)
+      .where(sql`${table.kind} = 'PARENT_CHILD'`),
+    uniqueIndex("knowledge_node_relations_v2_source_ordinal_unique").on(
+      table.corpusHash,
+      table.sourceNodeId,
+      table.kind,
+      table.ordinal,
+    ),
+    foreignKey({
+      columns: [table.corpusHash, table.sourceNodeId],
+      foreignColumns: [knowledgeNodesV2.corpusHash, knowledgeNodesV2.id],
+      name: "knowledge_node_relations_v2_source_corpus_fk",
+    }).onDelete("cascade"),
+    foreignKey({
+      columns: [table.corpusHash, table.targetNodeId],
+      foreignColumns: [knowledgeNodesV2.corpusHash, knowledgeNodesV2.id],
+      name: "knowledge_node_relations_v2_target_corpus_fk",
+    }).onDelete("cascade"),
+    check("knowledge_node_relations_v2_kind_check", sql`${table.kind} in ('PARENT_CHILD','RELATED')`),
+    check("knowledge_node_relations_v2_self_check", sql`${table.sourceNodeId} <> ${table.targetNodeId}`),
+    check("knowledge_node_relations_v2_ordinal_check", sql`${table.ordinal} >= 0`),
+  ],
+);
+
+export const knowledgeAnnotationsV2 = sqliteTable(
+  "knowledge_annotations_v2",
+  {
+    corpusHash: text("corpus_hash").notNull(),
+    id: text("id").notNull(),
+    documentId: text("document_id").notNull(),
+    targetNodeId: text("target_node_id").notNull(),
+    kind: text("kind").notNull(),
+    origin: text("origin").notNull(),
+    producerId: text("producer_id").notNull(),
+    producerVersion: text("producer_version").notNull(),
+    modelId: text("model_id"),
+    modelRevision: text("model_revision"),
+    annotationHash: text("annotation_hash").notNull(),
+    canonicalJson: text("canonical_json", { mode: "json" }).$type<JsonRecord>().notNull(),
+  },
+  (table) => [
+    primaryKey({ columns: [table.corpusHash, table.id], name: "knowledge_annotations_v2_pk" }),
+    index("knowledge_annotations_v2_target_idx").on(table.corpusHash, table.targetNodeId, table.kind),
+    foreignKey({
+      columns: [table.corpusHash, table.documentId],
+      foreignColumns: [knowledgeDocumentsV2.corpusHash, knowledgeDocumentsV2.id],
+      name: "knowledge_annotations_v2_document_corpus_fk",
+    }).onDelete("cascade"),
+    foreignKey({
+      columns: [table.corpusHash, table.targetNodeId],
+      foreignColumns: [knowledgeNodesV2.corpusHash, knowledgeNodesV2.id],
+      name: "knowledge_annotations_v2_target_corpus_fk",
+    }).onDelete("cascade"),
+    check("knowledge_annotations_v2_kind_check", sql`${table.kind} in ('CAPTION','OCR','VISUAL_TAGS')`),
+    check("knowledge_annotations_v2_origin_check", sql`${table.origin} in ('SOURCE','MODEL_DERIVED','HUMAN_REVIEWED')`),
+    check("knowledge_annotations_v2_model_pair_check", sql`
+      (${table.modelId} is null and ${table.modelRevision} is null)
+      or (${table.modelId} is not null and ${table.modelRevision} is not null)
+    `),
+    check("knowledge_annotations_v2_json_check", sql`json_valid(${table.canonicalJson}) and json_type(${table.canonicalJson}) = 'object'`),
+    check("knowledge_annotations_v2_hash_check", sql`length(${table.annotationHash}) = 64 and ${table.annotationHash} not glob '*[^0-9a-f]*'`),
+  ],
+);
+
+export const knowledgeAnnotationInputsV2 = sqliteTable(
+  "knowledge_annotation_inputs_v2",
+  {
+    corpusHash: text("corpus_hash").notNull(),
+    annotationId: text("annotation_id").notNull(),
+    ordinal: integer("ordinal").notNull(),
+    kind: text("kind").notNull(),
+    inputHash: text("input_hash").notNull(),
+    assetId: text("asset_id"),
+    canonicalJson: text("canonical_json", { mode: "json" }).$type<JsonRecord>().notNull(),
+  },
+  (table) => [
+    primaryKey({
+      columns: [table.corpusHash, table.annotationId, table.ordinal],
+      name: "knowledge_annotation_inputs_v2_pk",
+    }),
+    foreignKey({
+      columns: [table.corpusHash, table.annotationId],
+      foreignColumns: [knowledgeAnnotationsV2.corpusHash, knowledgeAnnotationsV2.id],
+      name: "knowledge_annotation_inputs_v2_annotation_corpus_fk",
+    }).onDelete("cascade"),
+    foreignKey({
+      columns: [table.corpusHash, table.assetId],
+      foreignColumns: [knowledgeAssetsV2.corpusHash, knowledgeAssetsV2.id],
+      name: "knowledge_annotation_inputs_v2_asset_corpus_fk",
+    }).onDelete("restrict"),
+    check("knowledge_annotation_inputs_v2_ordinal_check", sql`${table.ordinal} >= 0`),
+    check("knowledge_annotation_inputs_v2_kind_check", sql`${table.kind} in ('SOURCE_DOCUMENT','SOURCE_SECTION','ASSET')`),
+    check("knowledge_annotation_inputs_v2_asset_kind_check", sql`
+      (${table.kind} = 'ASSET' and ${table.assetId} is not null)
+      or (${table.kind} <> 'ASSET' and ${table.assetId} is null)
+    `),
+    check("knowledge_annotation_inputs_v2_hash_check", sql`length(${table.inputHash}) = 64 and ${table.inputHash} not glob '*[^0-9a-f]*'`),
+    check("knowledge_annotation_inputs_v2_json_check", sql`json_valid(${table.canonicalJson}) and json_type(${table.canonicalJson}) = 'object'`),
+  ],
+);
+
+export const knowledgeIndexBundlesV2 = sqliteTable(
+  "knowledge_index_bundles_v2",
+  {
+    indexBundleHash: text("index_bundle_hash").primaryKey(),
+    corpusHash: text("corpus_hash").notNull().references(() => knowledgeCorporaV2.bundleHash, { onDelete: "cascade" }),
+    representationCount: integer("representation_count").notNull(),
+    sharedPayloadCount: integer("shared_payload_count").notNull().default(0),
+    canonicalJson: text("canonical_json", { mode: "json" }).$type<JsonRecord>().notNull(),
+    createdAt: integer("created_at").notNull(),
+  },
+  (table) => [
+    uniqueIndex("knowledge_index_bundles_v2_corpus_hash_unique").on(table.corpusHash, table.indexBundleHash),
+    check("knowledge_index_bundles_v2_hash_check", sql`length(${table.indexBundleHash}) = 64 and ${table.indexBundleHash} not glob '*[^0-9a-f]*'`),
+    check("knowledge_index_bundles_v2_count_check", sql`
+      ${table.representationCount} >= 0
+      and (${table.sharedPayloadCount} = 0 or ${table.sharedPayloadCount} >= 2)
+    `),
+    check("knowledge_index_bundles_v2_json_check", sql`json_valid(${table.canonicalJson}) and json_type(${table.canonicalJson}) = 'object'`),
+  ],
+);
+
+export const knowledgeIndexVersionsV2 = sqliteTable(
+  "knowledge_index_versions_v2",
+  {
+    indexBundleHash: text("index_bundle_hash").notNull(),
+    id: text("id").notNull(),
+    builderId: text("builder_id").notNull(),
+    builderVersion: text("builder_version").notNull(),
+    modelId: text("model_id"),
+    modelRevision: text("model_revision"),
+    configJson: text("config_json", { mode: "json" }).$type<JsonRecord>().notNull(),
+    configHash: text("config_hash").notNull(),
+  },
+  (table) => [
+    primaryKey({
+      columns: [table.indexBundleHash, table.id],
+      name: "knowledge_index_versions_v2_pk",
+    }),
+    foreignKey({
+      columns: [table.indexBundleHash],
+      foreignColumns: [knowledgeIndexBundlesV2.indexBundleHash],
+      name: "knowledge_index_versions_v2_bundle_fk",
+    }).onDelete("cascade"),
+    check("knowledge_index_versions_v2_model_pair_check", sql`
+      (${table.modelId} is null and ${table.modelRevision} is null)
+      or (${table.modelId} is not null and ${table.modelRevision} is not null)
+    `),
+    check("knowledge_index_versions_v2_hash_check", sql`length(${table.configHash}) = 64 and ${table.configHash} not glob '*[^0-9a-f]*'`),
+    check("knowledge_index_versions_v2_config_json_check", sql`json_valid(${table.configJson}) and json_type(${table.configJson}) = 'object'`),
+  ],
+);
+
+export const knowledgeIndexPayloadsV2 = sqliteTable(
+  "knowledge_index_payloads_v2",
+  {
+    indexBundleHash: text("index_bundle_hash").notNull(),
+    id: text("id").notNull(),
+    role: text("role").notNull(),
+    format: text("format").notNull(),
+    providerIndexHash: text("provider_index_hash"),
+    storageKind: text("storage_kind").notNull(),
+    storageKey: text("storage_key").notNull(),
+    byteLength: integer("byte_length").notNull(),
+    payloadSha256: text("payload_sha256").notNull(),
+    tensorLayoutJson: text("tensor_layout_json", { mode: "json" }).$type<JsonRecord[]>(),
+  },
+  (table) => [
+    primaryKey({
+      columns: [table.indexBundleHash, table.id],
+      name: "knowledge_index_payloads_v2_pk",
+    }),
+    foreignKey({
+      columns: [table.indexBundleHash],
+      foreignColumns: [knowledgeIndexBundlesV2.indexBundleHash],
+      name: "knowledge_index_payloads_v2_bundle_fk",
+    }).onDelete("cascade"),
+    uniqueIndex("knowledge_index_payloads_v2_storage_key_unique").on(
+      table.indexBundleHash,
+      table.storageKey,
+    ),
+    check("knowledge_index_payloads_v2_role_format_check", sql`
+      (
+        ${table.role} = 'PROVIDER_MANIFEST'
+        and ${table.format} = 'JSON'
+        and ${table.providerIndexHash} is not null
+        and ${table.tensorLayoutJson} is null
+      )
+      or (
+        ${table.role} = 'VECTOR_TENSORS'
+        and ${table.format} = 'SAFETENSORS'
+        and ${table.providerIndexHash} is null
+        and json_valid(${table.tensorLayoutJson})
+        and json_type(${table.tensorLayoutJson}) = 'array'
+        and json_array_length(${table.tensorLayoutJson}) > 0
+      )
+    `),
+    check("knowledge_index_payloads_v2_storage_check", sql`${table.storageKind} = 'CONTROLLED_FILE' and ${table.byteLength} > 0`),
+    check("knowledge_index_payloads_v2_hash_check", sql`
+      length(${table.payloadSha256}) = 64
+      and ${table.payloadSha256} not glob '*[^0-9a-f]*'
+      and (
+        ${table.providerIndexHash} is null
+        or (
+          length(${table.providerIndexHash}) = 64
+          and ${table.providerIndexHash} not glob '*[^0-9a-f]*'
+        )
+      )
+    `),
+  ],
+);
+
+export const knowledgeIndexEntriesV2 = sqliteTable(
+  "knowledge_index_entries_v2",
+  {
+    indexBundleHash: text("index_bundle_hash").notNull(),
+    id: text("id").notNull(),
+    indexVersionId: text("index_version_id").notNull(),
+    channel: text("channel").notNull(),
+    targetKind: text("target_kind").notNull(),
+    targetId: text("target_id").notNull(),
+    representationJson: text("representation_json", { mode: "json" }).$type<JsonRecord>().notNull(),
+    dimensions: integer("dimensions"),
+    vectorCount: integer("vector_count").notNull(),
+    storageKind: text("storage_kind"),
+    storageKey: text("storage_key"),
+    byteLength: integer("byte_length"),
+    payloadSha256: text("payload_sha256"),
+    manifestPayloadId: text("manifest_payload_id"),
+    tensorPayloadId: text("tensor_payload_id"),
+    locatorJson: text("locator_json", { mode: "json" }).$type<JsonRecord>(),
+  },
+  (table) => [
+    primaryKey({
+      columns: [table.indexBundleHash, table.id],
+      name: "knowledge_index_entries_v2_pk",
+    }),
+    foreignKey({
+      columns: [table.indexBundleHash, table.indexVersionId],
+      foreignColumns: [knowledgeIndexVersionsV2.indexBundleHash, knowledgeIndexVersionsV2.id],
+      name: "knowledge_index_entries_v2_version_bundle_fk",
+    }).onDelete("cascade"),
+    foreignKey({
+      columns: [table.indexBundleHash, table.manifestPayloadId],
+      foreignColumns: [knowledgeIndexPayloadsV2.indexBundleHash, knowledgeIndexPayloadsV2.id],
+      name: "knowledge_index_entries_v2_manifest_payload_fk",
+    }).onDelete("cascade"),
+    foreignKey({
+      columns: [table.indexBundleHash, table.tensorPayloadId],
+      foreignColumns: [knowledgeIndexPayloadsV2.indexBundleHash, knowledgeIndexPayloadsV2.id],
+      name: "knowledge_index_entries_v2_tensor_payload_fk",
+    }).onDelete("cascade"),
+    uniqueIndex("knowledge_index_entries_v2_version_target_unique").on(
+      table.indexBundleHash,
+      table.indexVersionId,
+      table.channel,
+      table.targetKind,
+      table.targetId,
+    ),
+    index("knowledge_index_entries_v2_target_idx").on(
+      table.indexBundleHash,
+      table.channel,
+      table.targetKind,
+      table.targetId,
+    ),
+    check("knowledge_index_entries_v2_channel_check", sql`${table.channel} in ('LEXICAL','TEXT_VECTOR','VISUAL_VECTOR','MULTIMODAL_VECTOR')`),
+    check("knowledge_index_entries_v2_target_kind_check", sql`${table.targetKind} in ('OBJECT','NODE','ASSET','ANNOTATION')`),
+    check("knowledge_index_entries_v2_json_check", sql`json_valid(${table.representationJson}) and json_type(${table.representationJson}) = 'object'`),
+    check("knowledge_index_entries_v2_vector_count_check", sql`${table.vectorCount} > 0 and (${table.dimensions} is null or ${table.dimensions} > 0)`),
+    check("knowledge_index_entries_v2_storage_check", sql`
+      (
+        ${table.manifestPayloadId} is null
+        and ${table.tensorPayloadId} is null
+        and ${table.locatorJson} is null
+        and ${table.storageKind} = 'CONTROLLED_FILE'
+        and ${table.storageKey} is not null
+        and ${table.byteLength} > 0
+        and ${table.payloadSha256} is not null
+      )
+      or (
+        ${table.manifestPayloadId} is not null
+        and ${table.tensorPayloadId} is not null
+        and json_valid(${table.locatorJson})
+        and json_type(${table.locatorJson}) = 'object'
+        and ${table.storageKind} is null
+        and ${table.storageKey} is null
+        and ${table.byteLength} is null
+        and ${table.payloadSha256} is null
+      )
+    `),
+    check("knowledge_index_entries_v2_hash_check", sql`
+      ${table.payloadSha256} is null
+      or (length(${table.payloadSha256}) = 64 and ${table.payloadSha256} not glob '*[^0-9a-f]*')
+    `),
+  ],
+);
+
+export const knowledgeActiveIndexBundleV2 = sqliteTable(
+  "knowledge_active_index_bundle_v2",
+  {
+    id: integer("id").primaryKey(),
+    corpusHash: text("corpus_hash").notNull(),
+    indexBundleHash: text("index_bundle_hash").notNull().unique(),
+    activatedAt: integer("activated_at").notNull(),
+  },
+  (table) => [
+    foreignKey({
+      columns: [table.corpusHash, table.indexBundleHash],
+      foreignColumns: [knowledgeIndexBundlesV2.corpusHash, knowledgeIndexBundlesV2.indexBundleHash],
+      name: "knowledge_active_index_bundle_v2_corpus_bundle_fk",
+    }).onDelete("restrict"),
+    foreignKey({
+      columns: [table.corpusHash],
+      foreignColumns: [knowledgeActiveCorpusV2.bundleHash],
+      name: "knowledge_active_index_bundle_v2_active_corpus_fk",
+    }).onDelete("restrict"),
+    check("knowledge_active_index_bundle_v2_singleton_check", sql`${table.id} = 1`),
+  ],
+);
+
 export const coursePackProfiles = sqliteTable(
   "course_pack_profiles",
   {
@@ -1467,6 +1987,8 @@ export const agentStudentMemories = sqliteTable(
     sourceTurnId: text("source_turn_id").references(() => agentTurns.id, { onDelete: "set null" }),
     createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
     lastUsedAt: integer("last_used_at", { mode: "timestamp" }),
+    // Compatibility-only legacy columns from the currently deployed schema.
+    // New student disputes are authoritative in agentStudentMemoryDisputes.
     studentDisputed: integer("student_disputed", { mode: "boolean" }).notNull().default(false),
     studentDisputeNote: text("student_dispute_note"),
     studentDisputedAt: integer("student_disputed_at", { mode: "timestamp" }),
@@ -1474,6 +1996,13 @@ export const agentStudentMemories = sqliteTable(
       .generatedAlwaysAs(sql`case when ${sql.raw("student_id")} glob 'demo-*' then 'DEMONSTRATION_DATA' else 'REAL' end`),
   },
   (table) => [
+    uniqueIndex(
+      "agent_student_memory_owner_unique",
+    ).on(
+      table.id,
+      table.studentId,
+      table.classId,
+    ),
     index("agent_student_memory_student_created_idx").on(table.studentId, table.classId, table.createdAt),
     index("agent_student_memory_student_kind_idx").on(table.studentId, table.classId, table.kind, table.salience),
     index("agent_student_memory_source_turn_idx").on(table.sourceTurnId),
@@ -1516,6 +2045,55 @@ export const agentStudentMemories = sqliteTable(
       or length(trim(${table.studentDisputeNote})) between 1 and 500
     `),
     check("agent_student_memory_data_type_check", sql`${table.dataType} in ('REAL','DEMONSTRATION_DATA')`),
+  ],
+);
+
+export const agentStudentMemoryDisputes = sqliteTable(
+  "agent_student_memory_disputes",
+  {
+    memoryId: text("memory_id").primaryKey(),
+    studentId: text("student_id").notNull(),
+    classId: text("class_id").notNull(),
+    reason: text("reason"),
+    createdAt:
+      integer("created_at", { mode: "timestamp" })
+        .notNull(),
+    dataType: text("data_type", { enum: dataTypes })
+      .generatedAlwaysAs(sql`
+        case when ${sql.raw("student_id")} glob 'demo-*'
+        then 'DEMONSTRATION_DATA' else 'REAL' end
+      `),
+  },
+  (table) => [
+    foreignKey({
+      columns: [
+        table.memoryId,
+        table.studentId,
+        table.classId,
+      ],
+      foreignColumns: [
+        agentStudentMemories.id,
+        agentStudentMemories.studentId,
+        agentStudentMemories.classId,
+      ],
+      name:
+        "agent_student_memory_disputes_owner_fk",
+    }).onDelete("cascade"),
+    index(
+      "agent_student_memory_disputes_owner_idx",
+    ).on(
+      table.studentId,
+      table.classId,
+      table.createdAt,
+    ),
+    check(
+      "agent_student_memory_disputes_reason_check",
+      sql`${table.reason} is null or length(trim(${table.reason})) between 1 and 500`,
+    ),
+    check(
+      "agent_student_memory_disputes_data_type_check",
+      sql`${table.dataType} in ('REAL','DEMONSTRATION_DATA')`,
+    ),
   ],
 );
 
@@ -1762,6 +2340,86 @@ export const agentMessages = sqliteTable(
       or (${table.role} = 'assistant' and ${table.turnId} is not null and ${table.attachmentId} is null)
     `),
     check("agent_messages_data_type_check", sql`${table.dataType} in ('REAL','DEMONSTRATION_DATA')`),
+  ],
+);
+
+export const agentRunInterventions = sqliteTable(
+  "agent_run_interventions",
+  {
+    id: text("id").primaryKey(),
+    taskId: text("task_id").notNull(),
+    studentId: text("student_id").notNull(),
+    classId: text("class_id").notNull(),
+    sourceRunId: text("source_run_id").notNull()
+      .references(() => agentRuns.id, { onDelete: "cascade" }),
+    predecessorRunId: text("predecessor_run_id").notNull()
+      .references(() => agentRuns.id, { onDelete: "cascade" }),
+    userMessageId: text("user_message_id").notNull()
+      .references(() => agentMessages.id, { onDelete: "cascade" }),
+    requestedMode: text("requested_mode", { enum: agentRunInterventionModes }).notNull(),
+    actualMode: text("actual_mode", { enum: agentRunInterventionModes }).notNull(),
+    queueSequence: integer("queue_sequence").notNull(),
+    nextRunId: text("next_run_id").notNull()
+      .references(() => agentRuns.id, { onDelete: "cascade" }),
+    status: text("status", { enum: agentRunInterventionStatuses }).notNull().default("QUEUED"),
+    idempotencyKey: text("idempotency_key").notNull(),
+    requestHash: text("request_hash").notNull(),
+    createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
+    updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
+    activatedAt: integer("activated_at", { mode: "timestamp" }),
+    completedAt: integer("completed_at", { mode: "timestamp" }),
+    dataType: text("data_type", { enum: dataTypes }).notNull(),
+  },
+  (table) => [
+    uniqueIndex("agent_run_interventions_student_key_unique")
+      .on(table.studentId, table.idempotencyKey),
+    uniqueIndex("agent_run_interventions_task_sequence_unique")
+      .on(table.taskId, table.queueSequence),
+    uniqueIndex("agent_run_interventions_message_unique").on(table.userMessageId),
+    uniqueIndex("agent_run_interventions_next_run_unique").on(table.nextRunId),
+    index("agent_run_interventions_task_status_idx")
+      .on(table.taskId, table.status, table.queueSequence),
+    foreignKey({
+      columns: [table.taskId, table.studentId, table.classId],
+      foreignColumns: [designProjectTasks.id, designProjectTasks.studentId, designProjectTasks.classId],
+      name: "agent_run_interventions_task_owner_fk",
+    }).onDelete("cascade"),
+    check(
+      "agent_run_interventions_requested_mode_check",
+      sql`${table.requestedMode} in ('FOLLOW_UP','STEER')`,
+    ),
+    check(
+      "agent_run_interventions_actual_mode_check",
+      sql`${table.actualMode} in ('FOLLOW_UP','STEER')`,
+    ),
+    check(
+      "agent_run_interventions_status_check",
+      sql`${table.status} in ('QUEUED','ACTIVE','COMPLETED','FAILED','CANCELLED')`,
+    ),
+    check("agent_run_interventions_sequence_check", sql`${table.queueSequence} > 0`),
+    check(
+      "agent_run_interventions_key_check",
+      sql`length(${table.idempotencyKey}) between 1 and 128`,
+    ),
+    check(
+      "agent_run_interventions_hash_check",
+      sql`length(${table.requestHash}) = 64 and ${table.requestHash} not glob '*[^0-9a-f]*'`,
+    ),
+    check(
+      "agent_run_interventions_timeline_check",
+      sql`
+        ${table.updatedAt} >= ${table.createdAt}
+        and (
+          (${table.status} = 'QUEUED' and ${table.activatedAt} is null and ${table.completedAt} is null)
+          or (${table.status} = 'ACTIVE' and ${table.activatedAt} is not null and ${table.completedAt} is null)
+          or (${table.status} in ('COMPLETED','FAILED','CANCELLED') and ${table.completedAt} is not null)
+        )
+      `,
+    ),
+    check(
+      "agent_run_interventions_data_type_check",
+      sql`${table.dataType} in ('REAL','DEMONSTRATION_DATA')`,
+    ),
   ],
 );
 
