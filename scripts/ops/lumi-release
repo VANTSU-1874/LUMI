@@ -636,7 +636,7 @@ if (!expected || typeof expected.bytes !== "number" || typeof expected.sha256 !=
 const corpusHash = manifest.bindings?.corpusBundleHash;
 if (typeof corpusHash !== "string") throw new Error("KNOWLEDGE_V2_CORPUS_REPAIR_BINDING_INVALID");
 
-const requireFromRelease = createRequire(path.join(targetRelease, "package.json"));
+const requireFromRelease = createRequire(path.join(currentRelease, "package.json"));
 const Database = requireFromRelease("better-sqlite3") as typeof import("better-sqlite3");
 const database = new Database(process.env.DATABASE_PATH, { readonly: true, fileMustExist: true });
 const row = database.prepare(`
