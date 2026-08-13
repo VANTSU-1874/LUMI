@@ -10,14 +10,15 @@ import {
 } from "@/lib/config/runtime-environment";
 import {
   buildTrustedProxyHeaders,
+  LOCAL_APP_UPSTREAM_ORIGIN,
+  LOCAL_APP_UPSTREAM_PORT,
   stripProxyHeaders,
 } from "@/lib/operations/local-host";
 import { recoverPendingAgentRuns } from "@/lib/agent/runtime/agent-run-recovery";
 import { runEvidenceRecovery } from "@/scripts/recover-evidence";
 
 const APP_HOST = "127.0.0.1";
-const APP_PORT = 3000;
-const APP_INTERNAL_ORIGIN = `http://localhost:${APP_PORT}`;
+const APP_PORT = LOCAL_APP_UPSTREAM_PORT;
 const PROXY_HOST = "127.0.0.1";
 const PROXY_PORT = 3100;
 const PROXY_TIMEOUT_MS = 65_000;
@@ -110,7 +111,7 @@ async function main() {
           peerAddress: incoming.socket.remoteAddress,
           secret: config.authProxySecret,
           publicUrl,
-          upstreamOrigin: APP_INTERNAL_ORIGIN,
+          upstreamOrigin: LOCAL_APP_UPSTREAM_ORIGIN,
           allowQuickTunnelOrigin,
         });
       } catch {

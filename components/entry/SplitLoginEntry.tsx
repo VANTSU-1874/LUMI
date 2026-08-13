@@ -89,6 +89,9 @@ function betterAuthErrorMessage(error: { code?: string; message?: string }) {
   if (error.code === "TOO_MANY_REQUESTS") {
     return "尝试次数过多，请稍后再试";
   }
+  if (error.code === "INVALID_ORIGIN") {
+    return "登录请求来源无效，请刷新页面后重试";
+  }
   return error.message || "暂时无法完成登录，请稍后重试";
 }
 
