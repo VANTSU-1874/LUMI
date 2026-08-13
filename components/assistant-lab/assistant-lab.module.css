@@ -118,7 +118,8 @@
   margin: 0.2rem 0 0.35rem;
 }
 
-.sidebarTools button {
+.sidebarTools button,
+.sidebarTools a {
   display: flex;
   width: 100%;
   height: 2.35rem;
@@ -130,10 +131,13 @@
   background: transparent;
   font-size: 0.84rem;
   text-align: left;
+  text-decoration: none;
 }
 
 .sidebarTools button:hover,
-.sidebarTools button[aria-current="page"] {
+.sidebarTools button[aria-current="page"],
+.sidebarTools a:hover,
+.sidebarTools a[aria-current="page"] {
   background: #e9e9eb;
 }
 
@@ -912,6 +916,49 @@
   overflow: hidden;
 }
 
+.inspirationStage {
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+  background: var(--lab-panel);
+}
+
+.inspirationHeader {
+  display: flex;
+  width: min(100%, 76rem);
+  min-width: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.85rem;
+  margin: 0 auto;
+}
+
+.inspirationHeader > div {
+  min-width: 0;
+}
+
+.inspirationHeader p,
+.inspirationHeader span {
+  display: block;
+  overflow: hidden;
+  margin: 0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.inspirationHeader p {
+  color: var(--lab-title);
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.inspirationHeader span {
+  margin-top: 0.04rem;
+  color: var(--lab-muted);
+  font-size: 0.67rem;
+}
+
 .utilityView {
   min-height: 0;
   height: 100%;
@@ -1562,6 +1609,96 @@
   font-size: clamp(1.45rem, 2.4vw, 1.75rem);
   font-weight: 600;
   line-height: 1.25;
+}
+
+.inspirationWelcomeCard {
+  width: min(100%, 35rem);
+  margin-top: 1rem;
+  text-align: left;
+}
+
+.inspirationContext {
+  width: min(100%, 43rem);
+  margin: 0 auto 0.65rem;
+}
+
+.inspirationContextActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+}
+
+.inspirationContextActions button {
+  min-height: 2rem;
+  padding: 0.28rem 0.58rem;
+  border: 1px solid var(--lab-line);
+  border-radius: 0.5rem;
+  background: var(--lab-panel);
+  color: var(--lab-ink);
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+.inspirationContextActions button:first-child {
+  border-color: var(--lab-ink);
+  background: var(--lab-ink);
+  color: #fff;
+}
+
+.inspirationContextActions button:hover,
+.inspirationContextActions button:focus-visible {
+  border-color: var(--lab-line-strong);
+  background: var(--lab-panel-soft);
+  outline: 0;
+}
+
+.inspirationContextActions button:first-child:hover,
+.inspirationContextActions button:first-child:focus-visible {
+  background: #333;
+}
+
+.inspirationEntry {
+  display: inline-flex;
+  min-height: 2.25rem;
+  align-items: center;
+  gap: 0.38rem;
+  margin-top: 0.85rem;
+  padding: 0.32rem 0.6rem;
+  border: 1px solid var(--lab-line);
+  border-radius: var(--lab-chip-radius);
+  background: var(--lab-panel);
+  color: var(--lab-ink);
+  font-size: 0.74rem;
+  font-weight: 620;
+  text-decoration: none;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.inspirationEntry svg {
+  color: var(--lab-accent);
+}
+
+.inspirationEntry small {
+  color: var(--lab-muted);
+  font-size: 0.64rem;
+  font-weight: 500;
+}
+
+.inspirationEntry:hover,
+.inspirationEntry:focus-visible {
+  border-color: var(--lab-line-strong);
+  background: var(--lab-panel-soft);
+  outline: 0;
+}
+
+@media (max-width: 640px) {
+  .inspirationEntry {
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 0.42rem 0.6rem;
+  }
 }
 
 .welcomeSuggestions {

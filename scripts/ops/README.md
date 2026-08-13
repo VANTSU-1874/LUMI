@@ -53,6 +53,37 @@ database_migration=not-required
 environment_write=not-requested
 ~~~
 
+普通无迁移发布继续使用上面的值。K8.4 发布必须成对使用下面两个精确值；
+入口拒绝任意其他迁移名、任意环境键或两者只出现一个：
+
+~~~text
+database_migration=agent-interventions-0048-additive
+environment_write=enable-agent-interventions
+~~~
+
+Knowledge V2 文本生产 generation 必须成对使用：
+
+~~~text
+database_migration=knowledge-v2-0050-additive
+environment_write=enable-knowledge-v2-text
+~~~
+
+该组合只有在 `KNOWLEDGE_V2_CANARY_USER_IDS` 已由独立受控流程配置为 1–8 个
+内部学生账号时才允许准备；发布器不读取或打印账号本身，只记录数量。切换阶段仅把
+`KNOWLEDGE_OBJECT_V2/EVIDENCE_BUNDLE_V2/VISUAL_RETRIEVAL` 原子设为
+`true/true/false`，运行并核验 0050 与封存 generation（808 documents、5164 nodes、
+156 assets、5164 representations），失败时恢复原三元组。模型辅助质量与 harness
+仍是最终健康硬门；报告过期时会回退，不能以数据安装成功代替比赛健康通过。
+
+灵感 Wiki D-27 五条正式案例使用下面的精确组合：
+
+~~~text
+database_migration=inspiration-wiki-0051-0063-d27
+environment_write=not-requested
+~~~
+
+该组合保留生产 0050 Knowledge V2，顺序执行 0051–0063，并从签名发布包中事务化导入恰好五条已授权案例及其受控媒体。Browse、Search、Preview 开启；R2、Embedding、Lumi 自动引用继续关闭。导入支持精确幂等重放，任何行、媒体哈希、教师身份或能力边界冲突都会阻断切换。
+
 在**本机**对 `manifest` 签名，不上传私钥：
 
 ~~~powershell

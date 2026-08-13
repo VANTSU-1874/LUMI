@@ -78,6 +78,27 @@ const agentRunEventKinds = [
   "COMPLETION", "ERROR", "CANCELLED", "TOKEN",
 ] as const;
 const agentRunControlKinds = ["CANCEL", "RETRY"] as const;
+const agentRunInterventionModes = ["FOLLOW_UP", "STEER"] as const;
+const agentRunInterventionStatuses = [
+  "QUEUED",
+  "ACTIVE",
+  "COMPLETED",
+  "FAILED",
+  "CANCELLED",
+] as const;
+const inspirationCandidateStates = [
+  "DISCOVERED", "DOWNLOADED/IMPORTED", "NORMALIZED/DEDUPED", "VISUALLY_ANALYZED",
+  "READY_FOR_TEACHER_REVIEW", "APPROVED", "AUTO_ADMITTED/INDEXED", "ACTIVE", "REJECTED", "WITHDRAWN",
+] as const;
+const inspirationReviewDecisionKinds = ["APPROVE", "REJECT", "DEFER"] as const;
+const inspirationWikiReviewerRoles = [
+  "CANDIDATE_PROPOSER", "WIKI_EDITOR", "CURATION_REVIEWER", "TEACHING_REVIEWER",
+  "RIGHTS_REVIEWER", "SAFETY_REVIEWER", "RELEASE_APPROVER", "WITHDRAWAL_OPERATOR",
+] as const;
+const inspirationWikiReviewDomains = ["CURATION", "TEACHING", "RIGHTS", "SAFETY"] as const;
+const inspirationWikiReviewDecisions = ["APPROVE", "REJECT", "HOLD"] as const;
+const inspirationWikiReviewStatuses = ["ACTIVE", "REVOKED", "EXPIRED"] as const;
+const inspirationWikiCatalogStates = ["INTERNAL_CATALOG_ACTIVE", "REVIEW_HOLD"] as const;
 const projectStageSql = sql.raw(PROJECT_STAGES.map((stage) => `'${stage}'`).join(", "));
 const maxAgentTurnLatencySql = sql.raw(String(MAX_AGENT_TURN_LATENCY_MS));
 
@@ -2015,6 +2036,42 @@ export const previewRuns = sqliteTable(
     check("preview_runs_data_type_check", sql`${table.dataType} = 'DEMONSTRATION_DATA'`),
   ],
 );
+
+/** Private-only acquisition and teacher-review records for the Inspiration Wiki. */
+export const inspirationSources = sqliteTable("inspiration_sources", {
+  id: text("id").primaryKey(),
+  label: text("label").notNull(),
+  adapterId: text("adapter_id").notNull(),
+  configurationJson: text("configuration_json", { mode: "json" }).$type<JsonRecord>().notNull(),
+  enabled: integer("enabled", { mode: "boolean" }).notNull().default(false),
+  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
+}, (table) => [
+  check("inspiration_sources_configuration_json_check", sql`json_valid(${table.configurationJson})`),
+  check("inspiration_sources_private_only_check", sql`json_extract(${table.configurationJson}, '$.scope') = 'PRIVATE_CANDIDATE_ONLY'`),
+]);
+
+export const inspirationCandidates = sqliteTable("inspiration_candidates", {
+  id: text("id").primaryKey(),
+  sourceId: text("source_id").notNull().references(() => inspirationSources.id, { onDelete: "restrict" }),
+  state: text("state", { enum: inspirationCandidateStates }).notNull(),
+  revision: integer("revision").notNull().default(1),
+  curationJson: text("curation_json", { mode: "json" }).$type<JsonRecord>().notNull(),
+  assetJson: text("asset_json", { mode: "json" }).$type<JsonRecord>().notNull(),
+  rightsJson: text("rights_json", { mode: "json" }).$type<JsonRecord>().notNull(),
+  analysisJson: text("analysis_json", { mode: "json" }).$type<JsonRecord>().notNull(),
+  reviewPackageJson: text("review_package_json", { mode: "json" }).$type<JsonRecord>().notNull(),
+  withdrawalStatus: text("withdrawal_status").notNull(),
+  contentHash: text("content_hash"),
+  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
+}, (table) => [
+  uniqueIndex("inspiration_candidates_source_content_hash_unique").on(table.sourceId, table.contentHash),
+  index("inspiration_candidates_review_queue_idx").on(table.state, table.updatedAt),
+  check("inspiration_candidates_state_check", sql`${table.state} in ('DISCOVERED','DOWNLOADED/IMPORTED','NORMALIZED/DEDUPED','VISUALLY_ANALYZED','READY_FOR_TEACHER_REVIEW','APPROVED','AUTO_ADMITTED/INDEXED','ACTIVE','REJECTED','WITHDRAWN')`),
+  check("inspiration_candidates_revision_check", sql`${table.revision} > 0`),
+  check("inspiration_candidates_json_check", sql`json_valid(${table.curationJson}) and json_valid(${table.assetJson}) and json_valid(${table.rightsJson}) and json_valid(${table.analysisJson}) and json_valid(${table.reviewPackageJson})`),
+]);
 
 export const inspirationCandidateAnalyses = sqliteTable("inspiration_candidate_analyses", {
   candidateId: text("candidate_id").primaryKey().references(() => inspirationCandidates.id, { onDelete: "restrict" }),

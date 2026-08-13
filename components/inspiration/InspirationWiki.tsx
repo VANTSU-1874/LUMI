@@ -9,7 +9,6 @@ import {
   ExternalLinkIcon,
   LibraryBigIcon,
   SearchIcon,
-  SparklesIcon,
   XIcon,
 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -23,12 +22,10 @@ import type {
   InspirationEntry,
 } from "./inspiration-wiki-data";
 import { InspirationBrowseResponseSchema, type InspirationBrowseItem } from "@/lib/domain/inspiration-browser";
-import { InspirationBridgeResponseSchema, type InspirationBridgeResponse } from "@/lib/domain/inspiration-bridge";
 import styles from "./inspiration-wiki.module.css";
 
 const topics = ["全部", "构成", "网格", "字体", "色彩", "材质", "动势", "系统"] as const;
 type Topic = (typeof topics)[number];
-type BridgeStatus = "IDLE" | "LOADING" | "RESULTS" | "EMPTY" | "ERROR";
 const topicItems: CarouselItem[] = topics.map((topic) => ({ id: topic, title: topic }));
 
 function stableCardHeight(entry: InspirationEntry) {
@@ -160,7 +157,6 @@ type InspirationWikiProps = {
   onUseInChat?: (entry: InspirationEntry) => void;
   savedEntryIds?: readonly string[];
   fetcher?: typeof fetch;
-  currentThreadId?: string | null;
 };
 
 function placeholderArtwork(id: string): InspirationArtwork {
@@ -203,9 +199,6 @@ function LiveInspirationWiki({ fetcher = fetch, ...props }: Omit<InspirationWiki
   const [status, setStatus] = useState<"LOADING" | "READY" | "ERROR">("LOADING");
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [bridgeStatus, setBridgeStatus] = useState<BridgeStatus>("IDLE");
-  const [bridgeResult, setBridgeResult] = useState<InspirationBridgeResponse | null>(null);
-  const [bridgeError, setBridgeError] = useState<string | null>(null);
   const [reloadVersion, setReloadVersion] = useState(0);
   const [resolvedRequestKey, setResolvedRequestKey] = useState<string | null>(null);
   const requestId = useRef(0);
@@ -260,25 +253,10 @@ function LiveInspirationWiki({ fetcher = fetch, ...props }: Omit<InspirationWiki
     return () => observer.disconnect();
   }, [currentStatus, loadMore, loadingMore, nextCursor]);
 
-  const useCurrentConversation = async () => {
-    if (!props.currentThreadId) { setBridgeStatus("ERROR"); setBridgeError("请先打开一个本人可访问的对话，再使用它查找参考。"); return; }
-    setBridgeStatus("LOADING"); setBridgeError(null);
-    try {
-      const contextResponse = await fetcher("/api/inspiration/context-summary", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ type: "THREAD", threadId: props.currentThreadId }), cache: "no-store" });
-      const contextPayload: unknown = await contextResponse.json();
-      if (!contextResponse.ok) throw new Error(typeof contextPayload === "object" && contextPayload && "error" in contextPayload && typeof contextPayload.error === "string" ? contextPayload.error : "无法读取所选对话上下文");
-      const bridgeResponse = await fetcher("/api/inspiration/bridge", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ message: `@灵感 Wiki ${query.trim() || "请根据我主动选择的当前对话找参考"}`, contextRef: { type: "THREAD", threadId: props.currentThreadId } }), cache: "no-store" });
-      const payload: unknown = await bridgeResponse.json();
-      if (!bridgeResponse.ok) throw new Error(typeof payload === "object" && payload && "error" in payload && typeof payload.error === "string" ? payload.error : "灵感案例检索失败");
-      const parsed = InspirationBridgeResponseSchema.parse(payload);
-      setBridgeResult(parsed); setBridgeStatus(parsed.status === "RESULTS" ? "RESULTS" : "EMPTY");
-    } catch (caught) { setBridgeStatus("ERROR"); setBridgeError(caught instanceof Error ? caught.message : "灵感案例检索失败"); }
-  };
-
   if (currentStatus === "LOADING") return <BrowserState embedded={props.embedded} kind="loading" onBackToChat={props.onBackToChat} showEmbeddedTopbar={props.showEmbeddedTopbar} />;
   if (currentStatus === "ERROR") return <BrowserState embedded={props.embedded} error={error} kind="error" onBackToChat={props.onBackToChat} onRetry={retry} showEmbeddedTopbar={props.showEmbeddedTopbar} />;
   const entries = items.map(liveEntry);
-  return <><InspirationWikiContents {...props} appliedFacets={appliedFacets} bridgeError={bridgeError} bridgeResult={bridgeResult} bridgeStatus={bridgeStatus} controlledQuery={query} controlledTopic={topic} entries={entries as unknown as InspirationEntries} onQueryChange={setQuery} onTopicChange={setTopic} onUseCurrentConversation={useCurrentConversation} serverSearch />
+  return <><InspirationWikiContents {...props} appliedFacets={appliedFacets} controlledQuery={query} controlledTopic={topic} entries={entries as unknown as InspirationEntries} onQueryChange={setQuery} onTopicChange={setTopic} serverSearch />
     <div aria-live="polite" className={styles.loadMore} ref={sentinel}>{loadingMore ? "正在加载更多案例…" : nextCursor ? <button onClick={() => void loadMore()} type="button">继续浏览更多案例</button> : "已显示全部可浏览案例"}</div>
   </>;
 }
@@ -351,12 +329,8 @@ function InspirationWikiContents({
   onQueryChange?: (value: string) => void;
   onTopicChange?: (value: Topic) => void;
   serverSearch?: boolean;
-  bridgeStatus?: BridgeStatus;
-  bridgeResult?: InspirationBridgeResponse | null;
-  bridgeError?: string | null;
-  onUseCurrentConversation?: () => void;
 }) {
-  const { embedded = false, onBackToChat, onToggleSaved, onUseInChat, savedEntryIds, bridgeStatus = "IDLE", bridgeResult, bridgeError, onUseCurrentConversation } = props;
+  const { embedded = false, onBackToChat, onToggleSaved, onUseInChat, savedEntryIds } = props;
   const [localQuery, setLocalQuery] = useState("");
   const [localTopic, setLocalTopic] = useState<Topic>("全部");
   const query = controlledQuery ?? localQuery;
@@ -376,9 +350,6 @@ function InspirationWikiContents({
     id: entry.id,
     itemIndex: index,
   })), [visibleEntries]);
-  const surfaceSearchState = bridgeStatus === "LOADING" || bridgeStatus === "RESULTS" || bridgeStatus === "EMPTY"
-    ? "CONTEXT_ASSISTED_SEARCH"
-    : searchResult.state;
 
   function toggleSaved(id: string) {
     if (onToggleSaved) {
@@ -394,7 +365,7 @@ function InspirationWikiContents({
   }
 
   return (
-    <main className={styles.page} data-embedded={embedded || undefined} data-search-state={surfaceSearchState}>
+    <main className={styles.page} data-embedded={embedded || undefined} data-search-state={searchResult.state}>
       <InspirationSurfaceTopbar embedded={embedded} onBackToChat={onBackToChat} serverSearch={serverSearch} showEmbeddedTopbar={showEmbeddedTopbar} />
       <div className={styles.wikiWorkspace}>
         <RulerCarousel
@@ -419,24 +390,11 @@ function InspirationWikiContents({
             {query ? <button aria-label="清空搜索" onClick={() => setQuery("")} type="button"><XIcon aria-hidden="true" size={15} /></button> : null}
           </label>
           <span aria-live="polite" className={styles.wikiCount}>{visibleEntries.length} 个正式案例</span>
-          {onUseCurrentConversation ? (
-            <button className={styles.contextSearchButton} disabled={bridgeStatus === "LOADING"} onClick={onUseCurrentConversation} type="button">
-              <SparklesIcon aria-hidden="true" size={15} />
-              {bridgeStatus === "LOADING" ? "正在使用当前对话…" : "使用当前对话找参考"}
-            </button>
-          ) : null}
         </section>
 
         {searchResult.appliedFacets.length ? (
           <p className={styles.wikiFacetNote}>已识别：{searchResult.appliedFacets.join(" · ")}</p>
         ) : null}
-
-        {bridgeStatus !== "IDLE" ? <section aria-live="polite" className={styles.contextResults} data-state={bridgeStatus}>
-          <p><SparklesIcon aria-hidden="true" size={14} /> 上下文检索：仅使用你主动选择的当前对话摘要</p>
-          {bridgeStatus === "RESULTS" && bridgeResult ? <><strong>已从正式灵感 Wiki 推荐 {bridgeResult.inspirationCaseCards.length} 个案例；课程引用未参与此通道。</strong><ul>{bridgeResult.inspirationCaseCards.map((card) => <li key={card.id}><span>{card.title}</span><small>{card.matchingExplanation}</small></li>)}</ul></> : null}
-          {bridgeStatus === "EMPTY" ? <strong>正式灵感 Wiki 中没有匹配案例；不会回退为课程检索。</strong> : null}
-          {bridgeStatus === "ERROR" ? <strong>{bridgeError ?? "无法读取这个对话上下文。"}</strong> : null}
-        </section> : null}
 
         {visibleEntries.length ? (
           <div className={styles.wikiMasonry}>

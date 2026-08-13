@@ -29,6 +29,7 @@ import {
 import Link from "next/link";
 import {
   ArrowDownIcon,
+  ArrowLeftIcon,
   ArrowUpIcon,
   CheckIcon,
   ChevronDownIcon,
@@ -53,6 +54,7 @@ import {
   PlusIcon,
   RefreshCwIcon,
   SearchIcon,
+  SparklesIcon,
   SquareIcon,
   ThumbsDownIcon,
   ThumbsUpIcon,
@@ -77,6 +79,17 @@ import {
 } from "react";
 
 import { MessageResponse } from "@/components/ai-elements/message";
+import {
+  InspirationCitationCard,
+  type CourseReference,
+  type InspirationCitation,
+} from "@/components/inspiration/InspirationCitationCard";
+import { inspirationCitationPreviewFor } from "@/components/inspiration/inspiration-citation-mocks";
+import { InspirationWiki } from "@/components/inspiration/InspirationWiki";
+import type {
+  InspirationEntries,
+  InspirationEntry,
+} from "@/components/inspiration/inspiration-wiki-data";
 import {
   Sources,
   SourcesContent,
@@ -562,24 +575,57 @@ const groupAssistantMessageParts = groupPartByType({
   "generative-ui": ["group-next-step"],
 });
 
-export function AssistantUiLab() {
+type AssistantUiLabProps = {
+  inspirationCase?: string;
+  /** Development/test-only fixture mode. Production Browser data loads from the authenticated API. */
+  inspirationEntries?: InspirationEntries;
+  inspirationMode?: boolean;
+};
+
+type AssistantLabSurface = AssistantLabSection | "inspiration";
+
+export function AssistantUiLab({
+  inspirationCase,
+  inspirationEntries,
+  inspirationMode = false,
+}: AssistantUiLabProps) {
+  const inspirationCitation = inspirationCitationPreviewFor(inspirationCase);
   return (
     <AssistantLabRuntimeProvider>
       <KnowledgeSearchToolUI />
       <FiveDimensionToolUI />
       <ConfirmActionToolUI />
-      <AssistantLabShell />
+      <AssistantLabShell
+        initialInspirationCaseId={inspirationCase}
+        initialInspirationCitation={inspirationCitation}
+        inspirationEntries={inspirationEntries}
+        inspirationMode={inspirationMode}
+      />
     </AssistantLabRuntimeProvider>
   );
 }
 
-function AssistantLabShell() {
+function AssistantLabShell({
+  initialInspirationCaseId,
+  initialInspirationCitation,
+  inspirationEntries,
+  inspirationMode,
+}: {
+  initialInspirationCaseId?: string;
+  initialInspirationCitation?: InspirationCitation;
+  inspirationEntries?: InspirationEntries;
+  inspirationMode: boolean;
+}) {
   const aui = useAui();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
-  const [activeSection, setActiveSection] = useState<AssistantLabSection>("chat");
+  const [activeSection, setActiveSection] = useState<AssistantLabSurface>(
+    inspirationMode ? "inspiration" : "chat",
+  );
   const [activeProjectId, setActiveProjectIdState] = useState<string | null>(null);
+  const [inspirationCitation, setInspirationCitation] = useState(initialInspirationCitation);
+  const [savedInspirationIds, setSavedInspirationIds] = useState<string[]>([]);
   const sharedThreadHandled = useRef(false);
   const threadIsEmpty = useAuiState((state) => state.thread.isEmpty);
   useEffect(() => {
@@ -611,7 +657,7 @@ function AssistantLabShell() {
     setSearchOpen(!searchOpen);
   };
 
-  const navigateTo = (section: AssistantLabSection) => {
+  const navigateTo = (section: AssistantLabSurface) => {
     setActiveSection(section);
     setSidebarOpen(false);
   };
@@ -635,6 +681,34 @@ function AssistantLabShell() {
     setActiveSection("chat");
     setSidebarOpen(false);
     void aui.threads().switchToNewThread();
+  };
+
+  const toggleSavedInspiration = (entryId: string) => {
+    setSavedInspirationIds((current) => (
+      current.includes(entryId)
+        ? current.filter((id) => id !== entryId)
+        : [...current, entryId]
+    ));
+  };
+
+  const bringInspirationToChat = (entry: InspirationEntry) => {
+    const citation = inspirationCitationPreviewFor(entry.id);
+    if (!citation) return;
+    setInspirationCitation(citation);
+    setActiveSection("chat");
+    setSidebarOpen(false);
+    const url = new URL(window.location.href);
+    url.searchParams.delete("inspiration");
+    url.searchParams.delete("entry");
+    url.searchParams.set("inspirationCase", entry.id);
+    window.history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
+  };
+
+  const clearInspirationFromChat = () => {
+    setInspirationCitation(undefined);
+    const url = new URL(window.location.href);
+    url.searchParams.delete("inspirationCase");
+    window.history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
   };
 
   return (
@@ -694,7 +768,7 @@ function AssistantLabShell() {
         />
       ) : null}
 
-      <section aria-label="与 Lumi 对话" className={styles.workspace}>
+      <section aria-label={activeSection === "inspiration" ? "Lumi 灵感 Wiki" : "与 Lumi 对话"} className={styles.workspace}>
         <header className={styles.topbar}>
           <button
             aria-label="打开历史对话"
@@ -705,7 +779,9 @@ function AssistantLabShell() {
           >
             <MenuIcon aria-hidden="true" size={18} />
           </button>
-          {activeSection === "chat" && threadIsEmpty ? (
+          {activeSection === "inspiration" ? (
+            <LabInspirationHeader onBackToChat={() => navigateTo("chat")} />
+          ) : activeSection === "chat" && threadIsEmpty ? (
             <div className={styles.topbarSpacer} aria-hidden="true" />
           ) : activeSection === "chat" ? (
             <LabThreadHeader />
@@ -715,7 +791,6 @@ function AssistantLabShell() {
         </header>
         <div className={styles.inspirationStage} hidden={activeSection !== "inspiration"}>
           <InspirationWiki
-            currentThreadId={activeThreadId}
             embedded
             entries={inspirationEntries}
             initialSelectedId={inspirationCitation?.entryId ?? initialInspirationCaseId}
@@ -730,18 +805,37 @@ function AssistantLabShell() {
           <div
             className={styles.threadStage}
           >
-            <LabThread />
+            <LabThread
+              inspirationCitation={inspirationCitation}
+              onClearInspiration={clearInspirationFromChat}
+              onOpenInspiration={() => navigateTo("inspiration")}
+            />
           </div>
-        ) : (
+        ) : activeSection !== "inspiration" ? (
           <AssistantLabSectionView
             activeProjectId={activeProjectId}
             onBackToChat={() => navigateTo("chat")}
             onOpenProject={openProject}
             section={activeSection}
           />
-        )}
+        ) : null}
       </section>
     </main>
+  );
+}
+
+function LabInspirationHeader({ onBackToChat }: { onBackToChat: () => void }) {
+  return (
+    <div className={styles.inspirationHeader}>
+      <div>
+        <p>灵感 Wiki</p>
+        <span>浏览案例、搜索主题，或带回当前对话继续讨论。</span>
+      </div>
+      <button className={styles.topbarTextButton} onClick={onBackToChat} type="button">
+        <ArrowLeftIcon aria-hidden="true" size={15} />
+        <span>返回对话</span>
+      </button>
+    </div>
   );
 }
 
@@ -754,8 +848,8 @@ function LabThreadList({
   searchOpen,
   setQuery,
 }: {
-  activeSection: AssistantLabSection;
-  onNavigate: (section: AssistantLabSection) => void;
+  activeSection: AssistantLabSurface;
+  onNavigate: (section: AssistantLabSurface) => void;
   onNewChat: () => void;
   onSelectThread: (threadId: string | undefined) => void;
   query: string;
@@ -781,6 +875,14 @@ function LabThreadList({
       </ThreadListPrimitive.New>
 
       <nav aria-label="Lumi 工具" className={styles.sidebarTools}>
+        <button
+          aria-current={activeSection === "inspiration" ? "page" : undefined}
+          onClick={() => onNavigate("inspiration")}
+          type="button"
+        >
+          <SparklesIcon aria-hidden="true" size={17} />
+          <span>灵感 Wiki</span>
+        </button>
         <button
           aria-current={activeSection === "library" ? "page" : undefined}
           onClick={() => onNavigate("library")}
@@ -899,7 +1001,15 @@ function LabArchivedThreadListItem() {
   );
 }
 
-function LabThread() {
+function LabThread({
+  inspirationCitation,
+  onClearInspiration,
+  onOpenInspiration,
+}: {
+  inspirationCitation?: InspirationCitation;
+  onClearInspiration: () => void;
+  onOpenInspiration: () => void;
+}) {
   const isEmpty = useAuiState((state) => state.thread.isEmpty);
 
   return (
@@ -913,7 +1023,7 @@ function LabThread() {
       >
         <div className={styles.threadInner}>
           <AuiIf condition={(state) => state.thread.isEmpty}>
-            <LabWelcome />
+            <LabWelcome onOpenInspiration={onOpenInspiration} />
           </AuiIf>
 
           <div className={styles.messageList}>
@@ -936,6 +1046,11 @@ function LabThread() {
             <AuiIf condition={(state) => state.thread.isEmpty}>
               <LabWelcomeSuggestions />
             </AuiIf>
+            {inspirationCitation ? <LabInspirationContext
+              citation={inspirationCitation}
+              onClear={onClearInspiration}
+              onOpenInspiration={onOpenInspiration}
+            /> : null}
             <LabComposer />
           </ThreadPrimitive.ViewportFooter>
         </div>
@@ -944,11 +1059,40 @@ function LabThread() {
   );
 }
 
-function LabWelcome() {
+function LabWelcome({ onOpenInspiration }: { onOpenInspiration: () => void }) {
   return (
     <div className={styles.welcome}>
       <h1>你今天想一起把什么设计清楚？</h1>
+      <button className={styles.inspirationEntry} onClick={onOpenInspiration} type="button">
+        <SparklesIcon aria-hidden="true" size={15} />
+        <span>浏览灵感案例</span>
+        <small>查看来源、许可与可迁移的规则</small>
+      </button>
     </div>
+  );
+}
+
+function LabInspirationContext({
+  citation,
+  onClear,
+  onOpenInspiration,
+}: {
+  citation: InspirationCitation;
+  onClear: () => void;
+  onOpenInspiration: () => void;
+}) {
+  const prompt = `我想讨论灵感案例《${citation.title}》。它与当前问题的关联是：${citation.relevance}。请区分案例观察与课程原理，解释其中哪些版式、配色或交互判断值得迁移；不要建议直接复刻。`;
+  return (
+    <section aria-label="已带回当前对话的灵感案例" className={styles.inspirationContext}>
+      <InspirationCitationCard citations={[citation]} presentation="context" />
+      <div className={styles.inspirationContextActions}>
+        <ThreadPrimitive.Suggestion asChild prompt={prompt} send>
+          <button type="button">讨论这个案例</button>
+        </ThreadPrimitive.Suggestion>
+        <button onClick={onOpenInspiration} type="button">更换案例</button>
+        <button onClick={onClear} type="button">移除</button>
+      </div>
+    </section>
   );
 }
 
@@ -978,6 +1122,16 @@ function LabThreadMessage() {
 }
 
 function LabAssistantMessage() {
+  const messageParts = useAuiState((state) => state.message.parts);
+  const legacyCourseReferences = useMemo(() => messageParts.flatMap((part, index) => (
+    part.type === "source" && part.sourceType === "document"
+      ? [{
+        id: `course:${index}:${part.title ?? "untitled"}`,
+        title: part.title ?? "未命名课程资料",
+        detail: "本回答使用的课程资料",
+      } satisfies CourseReference]
+      : []
+  )), [messageParts]);
   const incomplete = useAuiState((state) => Boolean(partialResponseReason(
     state.message.parts as readonly { type: string; name?: string; data?: unknown }[],
   )));
@@ -986,6 +1140,10 @@ function LabAssistantMessage() {
       <div className={styles.assistantBody}>
         <LabAssistantParts />
         <LabAnswerGroup />
+        <InspirationCitationCard
+          citations={[]}
+          courseReferences={legacyCourseReferences}
+        />
         <LabPartialAnswerNotice />
         <LabMessageError />
         <div className={styles.messageFooter}>
@@ -2531,7 +2689,7 @@ function LabComposer() {
     setExtensionsOpen(true);
   };
 
-  const continueIncompleteAnswer = (event: FormEvent<HTMLFormElement>) => {
+  const submitComposer = (event: FormEvent<HTMLFormElement>) => {
     if (!incompleteAssistantId || hasAttachments || !isContinuationIntent(draft)) return;
     event.preventDefault();
     clear();
@@ -2540,7 +2698,7 @@ function LabComposer() {
   };
 
   return (
-    <ComposerPrimitive.Root className={styles.composer} onSubmit={continueIncompleteAnswer}>
+    <ComposerPrimitive.Root className={styles.composer} onSubmit={submitComposer}>
       <ComposerPrimitive.AttachmentDropzone asChild>
         <div
           className={styles.composerShell}

@@ -72,21 +72,4 @@ describe("live InspirationWiki", () => {
     });
   });
 
-  it("only performs context-assisted search after the learner explicitly selects the current conversation", async () => {
-    const threadId = "11111111-1111-4111-8111-111111111111";
-    const fetcher = vi.fn((url: RequestInfo | URL) => {
-      const address = String(url);
-      if (address.startsWith("/api/inspiration/browse")) return response({ items: [item], nextCursor: null, appliedFacets: [] });
-      if (address === "/api/inspiration/context-summary") return response({ contextRef: { type: "THREAD", threadId }, label: "我的书籍项目", summary: "书籍装帧方向", messageCount: 1 });
-      if (address === "/api/inspiration/bridge") return response({ status: "RESULTS", inspirationCaseCards: [{ ...item, matchingExplanation: "匹配你主动选择的对话上下文。" }], trace: { channel: "INSPIRATION_BRIDGE", invocation: "EXPLICIT_AT_MENTION", query: "请根据我主动选择的当前对话找参考", contextRef: { type: "THREAD", threadId }, contextUsed: true } });
-      throw new Error(`Unexpected URL ${address}`);
-    });
-    render(<InspirationWiki currentThreadId={threadId} embedded fetcher={fetcher} />);
-    await screen.findAllByText("已审核书籍版式");
-    expect(fetcher).toHaveBeenCalledTimes(1);
-    fireEvent.click(screen.getByRole("button", { name: "使用当前对话找参考" }));
-    expect(await screen.findByText(/仅使用你主动选择的当前对话摘要/)).toBeInTheDocument();
-    expect(screen.getByText(/课程引用未参与此通道/)).toBeInTheDocument();
-    await waitFor(() => expect(fetcher).toHaveBeenCalledWith("/api/inspiration/bridge", expect.objectContaining({ method: "POST" })));
-  });
 });
