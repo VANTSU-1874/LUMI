@@ -1,0 +1,92 @@
+import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { afterEach, describe, expect, it, vi } from "vitest";
+
+import { InspirationWiki } from "@/components/inspiration/InspirationWiki";
+import { inspirationEntries, type InspirationEntries } from "@/components/inspiration/inspiration-wiki-data";
+
+afterEach(() => cleanup());
+const item = { id: "inspiration:0123456789abcdef01234567", title: "已审核书籍版式", description: "用于测试的安全元数据", tags: ["书籍设计", "版式"], courseAssociations: [{ coursePackId: "book-design", facets: ["书籍设计"] }], source: { label: "合规来源", url: "https://example.org/source" }, attributionNotice: "来源已按可展示范围披露。", preview: "METADATA_ONLY", previewUrl: null };
+const response = (payload: unknown, status = 200) => Promise.resolve(new Response(JSON.stringify(payload), { status, headers: { "content-type": "application/json" } }));
+
+describe("live InspirationWiki", () => {
+  it("keeps the approved Wiki layout when the live student channel has no visible cases", async () => {
+    const fetcher = vi.fn(() => response({ items: [], nextCursor: null, appliedFacets: [] }));
+    render(<InspirationWiki embedded fetcher={fetcher} />);
+
+    await screen.findByText("暂无可浏览的已审核案例");
+    expect(screen.getByRole("tablist", { name: "案例分类" })).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: "全部" })).toHaveAttribute("aria-selected", "true");
+    expect(screen.getByRole("searchbox", { name: "搜索灵感资料" })).toBeEnabled();
+    expect(screen.getByText("0 个正式案例")).toBeInTheDocument();
+    expect(screen.getByText("暂无可浏览的已审核案例")).toBeInTheDocument();
+    expect(screen.getByText(/案例通过学生展示门禁后/)).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: /看见参考/ })).not.toBeInTheDocument();
+  });
+
+  it("does not duplicate the Wiki topbar when the existing student shell owns navigation", async () => {
+    const fetcher = vi.fn(() => response({ items: [], nextCursor: null, appliedFacets: [] }));
+    render(<InspirationWiki embedded fetcher={fetcher} showEmbeddedTopbar={false} />);
+
+    await screen.findByText("暂无可浏览的已审核案例");
+    expect(screen.queryByRole("button", { name: "返回对话" })).not.toBeInTheDocument();
+    expect(screen.getByRole("tablist", { name: "案例分类" })).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: /看见参考/ })).not.toBeInTheDocument();
+  });
+
+  it("uses the browse API, shows metadata-only active cases, and does not substitute fixtures", async () => {
+    const fetcher = vi.fn(() => response({ items: [item], nextCursor: null, appliedFacets: ["书籍设计"] }));
+    render(<InspirationWiki embedded fetcher={fetcher} />);
+    expect((await screen.findAllByText("已审核书籍版式")).length).toBeGreaterThan(0);
+    expect(screen.getByText("仅展示受控元数据")).toBeInTheDocument();
+    fireEvent.change(screen.getByRole("searchbox", { name: "搜索灵感资料" }), { target: { value: "书籍设计参考" } });
+    expect(await screen.findByText(/已识别：书籍设计/)).toBeInTheDocument();
+    await waitFor(() => expect(fetcher).toHaveBeenCalledWith(expect.stringContaining("q=%E4%B9%A6%E7%B1%8D%E8%AE%BE%E8%AE%A1%E5%8F%82%E8%80%83"), expect.anything()));
+  });
+
+  it("shows an API failure instead of fixture content", async () => {
+    render(<InspirationWiki embedded fetcher={vi.fn(() => response({ error: "请先登录后浏览灵感 Wiki" }, 401))} />);
+    expect(await screen.findByText("请先登录后浏览灵感 Wiki")).toBeInTheDocument();
+    expect(screen.queryByText("留白与重心的非对称平衡")).not.toBeInTheDocument();
+  });
+
+  it("renders a same-origin controlled preview and falls back safely when its delivery fails", async () => {
+    const controlled = { ...item, preview: "CONTROLLED" as const, previewUrl: "/api/inspiration/previews/inspiration:0123456789abcdef01234567" };
+    render(<InspirationWiki embedded fetcher={vi.fn(() => response({ items: [controlled], nextCursor: null, appliedFacets: [] }))} />);
+    const [preview] = await screen.findAllByAltText("已审核书籍版式 的受保护预览");
+    expect(preview.getAttribute("src")).toContain(controlled.previewUrl);
+    fireEvent.error(preview);
+    expect(await screen.findByText("安全预览不可用")).toBeInTheDocument();
+  });
+
+  it("recovers a failed controlled preview when the same case receives a new preview URL", async () => {
+    const protectedEntry = { ...inspirationEntries[0], id: "controlled-preview", protectedPreviewUrl: "/api/inspiration/previews/inspiration:first" };
+    const firstEntries = [protectedEntry] as InspirationEntries;
+    const view = render(<InspirationWiki embedded entries={firstEntries} />);
+    for (const preview of await screen.findAllByAltText(`${protectedEntry.title} 的受保护预览`)) fireEvent.error(preview);
+    expect((await screen.findAllByText("安全预览不可用")).length).toBeGreaterThan(0);
+
+    const replacementUrl = "/api/inspiration/previews/inspiration:fedcba9876543210fedcba98";
+    view.rerender(<InspirationWiki embedded entries={[{ ...protectedEntry, protectedPreviewUrl: replacementUrl }] as InspirationEntries} />);
+    await waitFor(() => {
+      for (const preview of screen.getAllByAltText(`${protectedEntry.title} 的受保护预览`)) expect(preview.getAttribute("src")).toContain(replacementUrl);
+    });
+  });
+
+  it("only performs context-assisted search after the learner explicitly selects the current conversation", async () => {
+    const threadId = "11111111-1111-4111-8111-111111111111";
+    const fetcher = vi.fn((url: RequestInfo | URL) => {
+      const address = String(url);
+      if (address.startsWith("/api/inspiration/browse")) return response({ items: [item], nextCursor: null, appliedFacets: [] });
+      if (address === "/api/inspiration/context-summary") return response({ contextRef: { type: "THREAD", threadId }, label: "我的书籍项目", summary: "书籍装帧方向", messageCount: 1 });
+      if (address === "/api/inspiration/bridge") return response({ status: "RESULTS", inspirationCaseCards: [{ ...item, matchingExplanation: "匹配你主动选择的对话上下文。" }], trace: { channel: "INSPIRATION_BRIDGE", invocation: "EXPLICIT_AT_MENTION", query: "请根据我主动选择的当前对话找参考", contextRef: { type: "THREAD", threadId }, contextUsed: true } });
+      throw new Error(`Unexpected URL ${address}`);
+    });
+    render(<InspirationWiki currentThreadId={threadId} embedded fetcher={fetcher} />);
+    await screen.findAllByText("已审核书籍版式");
+    expect(fetcher).toHaveBeenCalledTimes(1);
+    fireEvent.click(screen.getByRole("button", { name: "使用当前对话找参考" }));
+    expect(await screen.findByText(/仅使用你主动选择的当前对话摘要/)).toBeInTheDocument();
+    expect(screen.getByText(/课程引用未参与此通道/)).toBeInTheDocument();
+    await waitFor(() => expect(fetcher).toHaveBeenCalledWith("/api/inspiration/bridge", expect.objectContaining({ method: "POST" })));
+  });
+});

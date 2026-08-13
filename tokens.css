@@ -1,0 +1,38 @@
+/* Hallmark · pre-emit critique: P5 H5 E4 S5 R5 V4 · genre: editorial · tone: austere/utilitarian · palette: student-workbench monochrome · macrostructure: Workbench · design-system: design.md · designed-as-app · theme: studied-DNA (source: current Lumi student workspace) · contrast: pass (40–41) · nav: N3 · footer: none · slop: pass (42–45) · honest: pass (46) · chrome: pass (47) · tokens: pass (48) · responsive: pass (49) · icons: pass (30) · mobile: pass (34,49,50–57) */
+.teacherApp {
+  --color-paper: var(--lumi-workbench-bg);
+  --color-paper-raised: var(--lumi-workbench-bg);
+  --color-paper-muted: var(--lumi-workbench-surface);
+  --color-ink: var(--lumi-workbench-ink);
+  --color-ink-muted: var(--lumi-workbench-muted);
+  --color-rail: var(--lumi-workbench-surface);
+  --color-rail-muted: var(--lumi-workbench-surface-active);
+  --color-accent: var(--lumi-workbench-accent);
+  --color-accent-soft: var(--lumi-workbench-accent-soft);
+  --color-amber: var(--lumi-workbench-warning);
+  --color-amber-soft: var(--lumi-workbench-warning-soft);
+  --color-danger: var(--lumi-workbench-danger);
+  --color-danger-soft: var(--lumi-workbench-danger-soft);
+  --color-rule: var(--lumi-workbench-line);
+  --color-rule-strong: var(--lumi-workbench-line-strong);
+  --color-on-dark: var(--lumi-workbench-ink);
+  --color-accent-ink: var(--lumi-workbench-on-accent);
+  --color-inverse: var(--lumi-workbench-title);
+  --color-on-inverse: var(--lumi-workbench-surface-soft);
+  --color-overlay: var(--lumi-workbench-overlay);
+  --font-body: var(--lumi-font-sans);
+  --font-display: var(--lumi-font-serif);
+  --font-code: var(--lumi-font-mono);
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --border-rule: 1px solid var(--color-rule);
+  --duration-fast: 140ms;
+  --easing-standard: cubic-bezier(0.2, 0, 0, 1);
+}

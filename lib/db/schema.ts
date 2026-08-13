@@ -1957,3 +1957,1198 @@ export const teacherDecisions = sqliteTable(
         and json_type(${table.originalSnapshotJson}, '$.passed') in ('true','false')))),0)`),
   ],
 );
+
+/** Anonymous evaluator sessions are deliberately outside users/classes. */
+export const previewSessions = sqliteTable(
+  "preview_sessions",
+  {
+    id: text("id").primaryKey(),
+    createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
+    expiresAt: integer("expires_at", { mode: "timestamp" }).notNull(),
+    dataType: text("data_type", { enum: dataTypes }).notNull().default("DEMONSTRATION_DATA"),
+  },
+  (table) => [
+    index("preview_sessions_expiry_idx").on(table.expiresAt),
+    check("preview_sessions_expiry_check", sql`${table.expiresAt} > ${table.createdAt}`),
+    check("preview_sessions_data_type_check", sql`${table.dataType} = 'DEMONSTRATION_DATA'`),
+  ],
+);
+
+export const previewScenarioUsage = sqliteTable(
+  "preview_scenario_usage",
+  {
+    id: text("id").primaryKey(),
+    sessionId: text("session_id").notNull().references(() => previewSessions.id, { onDelete: "cascade" }),
+    scenarioId: text("scenario_id", { enum: previewScenarioIds }).notNull(),
+    runCount: integer("run_count").notNull().default(0),
+    updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
+    dataType: text("data_type", { enum: dataTypes }).notNull().default("DEMONSTRATION_DATA"),
+  },
+  (table) => [
+    uniqueIndex("preview_scenario_usage_session_scenario_unique").on(table.sessionId, table.scenarioId),
+    check("preview_scenario_usage_count_check", sql`${table.runCount} between 0 and 3`),
+    check("preview_scenario_usage_data_type_check", sql`${table.dataType} = 'DEMONSTRATION_DATA'`),
+  ],
+);
+
+export const previewRuns = sqliteTable(
+  "preview_runs",
+  {
+    id: text("id").primaryKey(),
+    sessionId: text("session_id").notNull().references(() => previewSessions.id, { onDelete: "cascade" }),
+    scenarioId: text("scenario_id", { enum: previewScenarioIds }).notNull(),
+    status: text("status", { enum: previewRunStatuses }).notNull(),
+    responseJson: text("response_json", { mode: "json" }).$type<JsonRecord>(),
+    errorCode: text("error_code"),
+    createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
+    updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
+    expiresAt: integer("expires_at", { mode: "timestamp" }).notNull(),
+    dataType: text("data_type", { enum: dataTypes }).notNull().default("DEMONSTRATION_DATA"),
+  },
+  (table) => [
+    index("preview_runs_session_created_idx").on(table.sessionId, table.createdAt),
+    index("preview_runs_expiry_idx").on(table.expiresAt),
+    check("preview_runs_status_check", sql`${table.status} in ('RUNNING','COMPLETED','FAILED')`),
+    check("preview_runs_response_check", sql`${table.responseJson} is null or (json_valid(${table.responseJson}) and json_type(${table.responseJson}) = 'object')`),
+    check("preview_runs_error_code_check", sql`${table.errorCode} is null or (${table.errorCode} not glob '*[^A-Z0-9_]*' and length(${table.errorCode}) between 3 and 64)`),
+    check("preview_runs_expiry_check", sql`${table.expiresAt} > ${table.createdAt}`),
+    check("preview_runs_data_type_check", sql`${table.dataType} = 'DEMONSTRATION_DATA'`),
+  ],
+);
+
+export const inspirationCandidateAnalyses = sqliteTable("inspiration_candidate_analyses", {
+  candidateId: text("candidate_id").primaryKey().references(() => inspirationCandidates.id, { onDelete: "restrict" }),
+  candidateRevision: integer("candidate_revision").notNull(),
+  analysisJson: text("analysis_json", { mode: "json" }).$type<JsonRecord>().notNull(),
+  actualChannel: text("actual_channel").notNull(),
+  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
+}, (table) => [
+  check("inspiration_candidate_analyses_json_check", sql`json_valid(${table.analysisJson})`),
+  check("inspiration_candidate_analyses_revision_check", sql`${table.candidateRevision} > 0`),
+  check("inspiration_candidate_analyses_channel_check", sql`${table.actualChannel} in ('NONE','LOCAL','REMOTE')`),
+]);
+
+export const inspirationReviewDecisions = sqliteTable("inspiration_review_decisions", {
+  id: text("id").primaryKey(),
+  candidateId: text("candidate_id").notNull().references(() => inspirationCandidates.id, { onDelete: "restrict" }),
+  candidateRevision: integer("candidate_revision").notNull(),
+  teacherId: text("teacher_id").notNull().references(() => users.id, { onDelete: "restrict" }),
+  decision: text("decision", { enum: inspirationReviewDecisionKinds }).notNull(),
+  courseTagsJson: text("course_tags_json", { mode: "json" }).$type<string[]>().notNull(),
+  notes: text("notes").notNull(),
+  idempotencyKey: text("idempotency_key").notNull(),
+  requestHash: text("request_hash").notNull(),
+  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
+}, (table) => [
+  uniqueIndex("inspiration_review_decisions_teacher_idempotency_unique").on(table.teacherId, table.idempotencyKey),
+  index("inspiration_review_decisions_candidate_created_idx").on(table.candidateId, table.createdAt),
+  check("inspiration_review_decisions_check", sql`${table.decision} in ('APPROVE','REJECT','DEFER')`),
+  check("inspiration_review_decisions_revision_check", sql`${table.candidateRevision} > 0`),
+  check("inspiration_review_decisions_tags_json_check", sql`json_valid(${table.courseTagsJson}) and json_type(${table.courseTagsJson}) = 'array'`),
+  check("inspiration_review_decisions_notes_check", sql`length(${table.notes}) <= 1000`),
+]);
+
+export const inspirationAdmissions = sqliteTable("inspiration_admissions", {
+  candidateId: text("candidate_id").primaryKey().references(() => inspirationCandidates.id, { onDelete: "restrict" }),
+  candidateRevision: integer("candidate_revision").notNull(),
+  status: text("status", { enum: ["AUTO_ADMITTED/INDEXED", "ACTIVE"] }).notNull(),
+  readModelJson: text("read_model_json", { mode: "json" }).$type<JsonRecord>().notNull(),
+  publicationScope: text("publication_scope", { enum: ["INTERNAL_CATALOG_ONLY", "AUTHENTICATED_STUDENT_ONLY"] })
+    .notNull().default("INTERNAL_CATALOG_ONLY"),
+  studentVisible: integer("student_visible", { mode: "boolean" }).notNull().default(false),
+  studentDisplayDecision: text("student_display_decision", { enum: ["PENDING", "ALLOW"] }).notNull().default("PENDING"),
+  sourceDisclosureDecision: text("source_disclosure_decision", { enum: ["PENDING", "ALLOW"] }).notNull().default("PENDING"),
+  teachingDecision: text("teaching_decision", { enum: ["PENDING", "ALLOW"] }).notNull().default("PENDING"),
+  safetyDecision: text("safety_decision", { enum: ["PENDING", "ALLOW"] }).notNull().default("PENDING"),
+  qualityDecision: text("quality_decision", { enum: ["PENDING", "ALLOW"] }).notNull().default("PENDING"),
+  withdrawalReadiness: text("withdrawal_readiness", { enum: ["PENDING", "READY"] }).notNull().default("PENDING"),
+  browserChannel: text("browser_channel", { enum: ["DISABLED", "ACTIVE"] }).notNull().default("DISABLED"),
+  bridgeChannel: text("bridge_channel", { enum: ["DISABLED", "ACTIVE"] }).notNull().default("DISABLED"),
+  publicationRevision: integer("publication_revision").notNull().default(0),
+  publishedBy: text("published_by").references(() => users.id, { onDelete: "restrict" }),
+  publishedAt: integer("published_at", { mode: "timestamp" }),
+  // Physical column name is retained for migration compatibility. It is true
+  // only after the explicit, auditable student-publication decision below.
+  formalWikiActivationRecorded: integer("citation_eligibility_recorded", { mode: "boolean" }).notNull(),
+  indexedAt: integer("indexed_at", { mode: "timestamp" }).notNull(),
+  activatedAt: integer("activated_at", { mode: "timestamp" }).notNull(),
+}, (table) => [
+  check("inspiration_admissions_status_check", sql`${table.status} in ('AUTO_ADMITTED/INDEXED','ACTIVE')`),
+  check("inspiration_admissions_read_model_json_check", sql`json_valid(${table.readModelJson})`),
+  check("inspiration_admissions_publication_revision_check", sql`${table.publicationRevision} >= 0`),
+  check("inspiration_admissions_publication_contract_check", sql`
+    (
+      ${table.publicationScope} = 'INTERNAL_CATALOG_ONLY'
+      and ${table.studentVisible} = 0
+      and ${table.studentDisplayDecision} = 'PENDING'
+      and ${table.sourceDisclosureDecision} = 'PENDING'
+      and ${table.teachingDecision} = 'PENDING'
+      and ${table.safetyDecision} = 'PENDING'
+      and ${table.qualityDecision} = 'PENDING'
+      and ${table.withdrawalReadiness} = 'PENDING'
+      and ${table.browserChannel} = 'DISABLED'
+      and ${table.bridgeChannel} = 'DISABLED'
+      and ${table.publicationRevision} = 0
+      and ${table.publishedBy} is null
+      and ${table.publishedAt} is null
+      and ${table.formalWikiActivationRecorded} = 0
+    ) or (
+      ${table.publicationScope} = 'AUTHENTICATED_STUDENT_ONLY'
+      and ${table.studentVisible} = 1
+      and ${table.studentDisplayDecision} = 'ALLOW'
+      and ${table.sourceDisclosureDecision} = 'ALLOW'
+      and ${table.teachingDecision} = 'ALLOW'
+      and ${table.safetyDecision} = 'ALLOW'
+      and ${table.qualityDecision} = 'ALLOW'
+      and ${table.withdrawalReadiness} = 'READY'
+      and ${table.browserChannel} = 'ACTIVE'
+      and ${table.bridgeChannel} = 'ACTIVE'
+      and ${table.publicationRevision} > 0
+      and ${table.publishedBy} is not null
+      and ${table.publishedAt} is not null
+      and ${table.formalWikiActivationRecorded} = 1
+    )
+  `),
+]);
+
+export const inspirationCandidateAuditEvents = sqliteTable("inspiration_candidate_audit_events", {
+  id: text("id").primaryKey(),
+  candidateId: text("candidate_id").notNull().references(() => inspirationCandidates.id, { onDelete: "restrict" }),
+  eventType: text("event_type").notNull(),
+  actorId: text("actor_id").references(() => users.id, { onDelete: "restrict" }),
+  payloadJson: text("payload_json", { mode: "json" }).$type<JsonRecord>().notNull(),
+  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
+}, (table) => [
+  index("inspiration_candidate_audit_events_candidate_created_idx").on(table.candidateId, table.createdAt),
+  check("inspiration_candidate_audit_events_payload_json_check", sql`json_valid(${table.payloadJson})`),
+]);
+
+/** S2-local LLM Wiki persistence. These records remain internal-only and are not wired to student routes. */
+export const inspirationWikiRolePolicies = sqliteTable("inspiration_wiki_role_policies", {
+  revisionId: text("revision_id").primaryKey(),
+  revisionHash: text("revision_hash").notNull(),
+  version: text("version").notNull(),
+  policyJson: text("policy_json", { mode: "json" }).$type<JsonRecord>().notNull(),
+  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
+}, (table) => [
+  uniqueIndex("inspiration_wiki_role_policies_version_unique").on(table.version),
+  check("inspiration_wiki_role_policies_json_check", sql`json_valid(${table.policyJson}) and json_type(${table.policyJson}) = 'object'`),
+  check("inspiration_wiki_role_policies_hash_check", sql`length(${table.revisionHash}) = 71 and ${table.revisionHash} like 'sha256:%'`),
+]);
+
+export const inspirationWikiReviewerAssignments = sqliteTable("inspiration_wiki_reviewer_assignments", {
+  assignmentId: text("assignment_id").primaryKey(),
+  actorId: text("actor_id").notNull(),
+  role: text("role", { enum: inspirationWikiReviewerRoles }).notNull(),
+  status: text("status", { enum: inspirationWikiReviewStatuses }).notNull(),
+  policyVersion: text("policy_version").notNull(),
+  policyRevisionId: text("policy_revision_id").notNull()
+    .references(() => inspirationWikiRolePolicies.revisionId, { onDelete: "restrict" }),
+  policyRevisionHash: text("policy_revision_hash").notNull(),
+  assignmentJson: text("assignment_json", { mode: "json" }).$type<JsonRecord>().notNull(),
+  validFrom: integer("valid_from", { mode: "timestamp" }).notNull(),
+  validUntil: integer("valid_until", { mode: "timestamp" }),
+  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
+}, (table) => [
+  index("inspiration_wiki_reviewer_assignments_actor_status_idx").on(table.actorId, table.status),
+  index("inspiration_wiki_reviewer_assignments_policy_idx").on(table.policyRevisionId, table.status),
+  check("inspiration_wiki_reviewer_assignments_json_check", sql`json_valid(${table.assignmentJson}) and json_type(${table.assignmentJson}) = 'object'`),
+  check("inspiration_wiki_reviewer_assignments_hash_check", sql`length(${table.policyRevisionHash}) = 71 and ${table.policyRevisionHash} like 'sha256:%'`),
+  check("inspiration_wiki_reviewer_assignments_validity_check", sql`${table.validUntil} is null or ${table.validUntil} >= ${table.validFrom}`),
+]);
+
+export const inspirationWikiDraftRevisions = sqliteTable("inspiration_wiki_draft_revisions", {
+  draftMaterialReceiptId: text("draft_material_receipt_id").primaryKey(),
+  draftMaterialReceiptHash: text("draft_material_receipt_hash").notNull(),
+  candidateId: text("candidate_id").notNull()
+    .references(() => inspirationCandidates.id, { onDelete: "restrict" }),
+  candidateRevision: integer("candidate_revision").notNull(),
+  pageId: text("page_id").notNull(),
+  pageDraftRevisionId: text("page_draft_revision_id").notNull(),
+  pageDraftRevisionHash: text("page_draft_revision_hash").notNull(),
+  canonicalInputBundleId: text("canonical_input_bundle_id").notNull(),
+  canonicalInputBundleHash: text("canonical_input_bundle_hash").notNull(),
+  pageRevisionId: text("page_revision_id").notNull(),
+  pageRevisionHash: text("page_revision_hash").notNull(),
+  compilationReceiptId: text("compilation_receipt_id").notNull(),
+  compilationReceiptHash: text("compilation_receipt_hash").notNull(),
+  reviewPackageRevisionId: text("review_package_revision_id").notNull(),
+  reviewPackageRevisionHash: text("review_package_revision_hash").notNull(),
+  policyRevisionId: text("policy_revision_id").notNull()
+    .references(() => inspirationWikiRolePolicies.revisionId, { onDelete: "restrict" }),
+  policyRevisionHash: text("policy_revision_hash").notNull(),
+  riskScopeRevisionId: text("risk_scope_revision_id").notNull(),
+  riskScopeRevisionHash: text("risk_scope_revision_hash").notNull(),
+  targetHash: text("target_hash").notNull(),
+  draftMaterialJson: text("draft_material_json", { mode: "json" }).$type<JsonRecord>().notNull(),
+  riskScopeJson: text("risk_scope_json", { mode: "json" }).$type<JsonRecord>().notNull(),
+  proposerEditorActorIdsJson: text("proposer_editor_actor_ids_json", { mode: "json" }).$type<string[]>().notNull(),
+  state: text("state", { enum: ["LINTED"] }).notNull(),
+  studentVisible: integer("student_visible", { mode: "boolean" }).notNull().default(false),
+  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
+}, (table) => [
+  uniqueIndex("inspiration_wiki_draft_revisions_page_draft_unique").on(table.pageDraftRevisionId),
+  index("inspiration_wiki_draft_revisions_candidate_idx").on(table.candidateId, table.candidateRevision),
+  index("inspiration_wiki_draft_revisions_page_idx").on(table.pageId, table.createdAt),
+  check("inspiration_wiki_draft_revisions_candidate_revision_check", sql`${table.candidateRevision} > 0`),
+  check("inspiration_wiki_draft_revisions_json_check", sql`json_valid(${table.draftMaterialJson}) and json_type(${table.draftMaterialJson}) = 'object' and json_valid(${table.riskScopeJson}) and json_type(${table.riskScopeJson}) = 'object' and json_valid(${table.proposerEditorActorIdsJson}) and json_type(${table.proposerEditorActorIdsJson}) = 'array'`),
+  check("inspiration_wiki_draft_revisions_internal_only_check", sql`${table.state} = 'LINTED' and ${table.studentVisible} = 0`),
+  check("inspiration_wiki_draft_revisions_hash_check", sql`length(${table.draftMaterialReceiptHash}) = 71 and ${table.draftMaterialReceiptHash} like 'sha256:%' and length(${table.targetHash}) = 71 and ${table.targetHash} like 'sha256:%'`),
+]);
+
+export const inspirationWikiDomainReviewDecisions = sqliteTable("inspiration_wiki_domain_review_decisions", {
+  decisionId: text("decision_id").primaryKey(),
+  decisionRevisionId: text("decision_revision_id").notNull(),
+  decisionRevisionHash: text("decision_revision_hash").notNull(),
+  draftMaterialReceiptId: text("draft_material_receipt_id").notNull()
+    .references(() => inspirationWikiDraftRevisions.draftMaterialReceiptId, { onDelete: "restrict" }),
+  reviewDomain: text("review_domain", { enum: inspirationWikiReviewDomains }).notNull(),
+  decision: text("decision", { enum: inspirationWikiReviewDecisions }).notNull(),
+  actorId: text("actor_id").notNull(),
+  actorRoleAssignmentId: text("actor_role_assignment_id").notNull()
+    .references(() => inspirationWikiReviewerAssignments.assignmentId, { onDelete: "restrict" }),
+  policyRevisionId: text("policy_revision_id").notNull()
+    .references(() => inspirationWikiRolePolicies.revisionId, { onDelete: "restrict" }),
+  policyRevisionHash: text("policy_revision_hash").notNull(),
+  targetHash: text("target_hash").notNull(),
+  requiredReviewerCount: integer("required_reviewer_count").notNull(),
+  coReviewerDecisionIdsJson: text("co_reviewer_decision_ids_json", { mode: "json" }).$type<string[]>().notNull(),
+  reviewJson: text("review_json", { mode: "json" }).$type<JsonRecord>().notNull(),
+  status: text("status", { enum: inspirationWikiReviewStatuses }).notNull(),
+  validUntil: integer("valid_until", { mode: "timestamp" }),
+  decidedAt: integer("decided_at", { mode: "timestamp" }).notNull(),
+  supersedesDecisionId: text("supersedes_decision_id")
+    .references((): AnySQLiteColumn => inspirationWikiDomainReviewDecisions.decisionId, { onDelete: "restrict" }),
+  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
+}, (table) => [
+  uniqueIndex("inspiration_wiki_domain_review_decisions_revision_unique").on(table.decisionRevisionId),
+  index("inspiration_wiki_domain_review_decisions_draft_domain_idx").on(table.draftMaterialReceiptId, table.reviewDomain, table.decidedAt),
+  check("inspiration_wiki_domain_review_decisions_count_check", sql`${table.requiredReviewerCount} between 1 and 2`),
+  check("inspiration_wiki_domain_review_decisions_json_check", sql`json_valid(${table.coReviewerDecisionIdsJson}) and json_type(${table.coReviewerDecisionIdsJson}) = 'array' and json_valid(${table.reviewJson}) and json_type(${table.reviewJson}) = 'object'`),
+  check("inspiration_wiki_domain_review_decisions_hash_check", sql`length(${table.decisionRevisionHash}) = 71 and ${table.decisionRevisionHash} like 'sha256:%' and length(${table.policyRevisionHash}) = 71 and ${table.policyRevisionHash} like 'sha256:%' and length(${table.targetHash}) = 71 and ${table.targetHash} like 'sha256:%'`),
+]);
+
+export const inspirationWikiInternalCatalogEntries = sqliteTable("inspiration_wiki_internal_catalog_entries", {
+  draftMaterialReceiptId: text("draft_material_receipt_id").primaryKey()
+    .references(() => inspirationWikiDraftRevisions.draftMaterialReceiptId, { onDelete: "restrict" }),
+  pageId: text("page_id").notNull(),
+  candidateId: text("candidate_id").notNull()
+    .references(() => inspirationCandidates.id, { onDelete: "restrict" }),
+  state: text("state", { enum: inspirationWikiCatalogStates }).notNull(),
+  holdReason: text("hold_reason"),
+  acceptedDecisionIdsJson: text("accepted_decision_ids_json", { mode: "json" }).$type<string[]>().notNull(),
+  acceptedDecisionSetHash: text("accepted_decision_set_hash").notNull(),
+  policyRevisionId: text("policy_revision_id").notNull()
+    .references(() => inspirationWikiRolePolicies.revisionId, { onDelete: "restrict" }),
+  policyRevisionHash: text("policy_revision_hash").notNull(),
+  targetHash: text("target_hash").notNull(),
+  studentVisible: integer("student_visible", { mode: "boolean" }).notNull().default(false),
+  browseRelease: text("browse_release", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  studentSearch: text("student_search", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  wikiRetrieval: text("wiki_retrieval", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  activatedAt: integer("activated_at", { mode: "timestamp" }).notNull(),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
+}, (table) => [
+  index("inspiration_wiki_internal_catalog_entries_page_state_idx").on(table.pageId, table.state),
+  check("inspiration_wiki_internal_catalog_entries_json_check", sql`json_valid(${table.acceptedDecisionIdsJson}) and json_type(${table.acceptedDecisionIdsJson}) = 'array'`),
+  check("inspiration_wiki_internal_catalog_entries_state_check", sql`(${table.state} = 'INTERNAL_CATALOG_ACTIVE' and ${table.holdReason} is null) or (${table.state} = 'REVIEW_HOLD' and length(${table.holdReason}) > 0)`),
+  check("inspiration_wiki_internal_catalog_entries_internal_only_check", sql`${table.studentVisible} = 0 and ${table.browseRelease} = 'DISABLED' and ${table.studentSearch} = 'DISABLED' and ${table.wikiRetrieval} = 'DISABLED'`),
+  check("inspiration_wiki_internal_catalog_entries_hash_check", sql`length(${table.acceptedDecisionSetHash}) = 71 and ${table.acceptedDecisionSetHash} like 'sha256:%' and length(${table.policyRevisionHash}) = 71 and ${table.policyRevisionHash} like 'sha256:%' and length(${table.targetHash}) = 71 and ${table.targetHash} like 'sha256:%'`),
+]);
+
+/** D-18 private Hermes intake. These tables cannot represent a release or student-visible record. */
+export const inspirationWikiHermesBatches = sqliteTable("inspiration_wiki_hermes_batches", {
+  batchId: text("batch_id").primaryKey(),
+  contractVersion: text("contract_version", { enum: ["LEGACY_V1"] }).notNull(),
+  packageDigest: text("package_digest").notNull(),
+  manifestJson: text("manifest_json", { mode: "json" }).$type<JsonRecord>().notNull(),
+  doneJson: text("done_json", { mode: "json" }).$type<JsonRecord>().notNull(),
+  candidateCount: integer("candidate_count").notNull(),
+  failureCount: integer("failure_count").notNull(),
+  intakeState: text("intake_state", { enum: ["VALIDATED_PRIVATE"] }).notNull(),
+  studentVisible: integer("student_visible", { mode: "boolean" }).notNull().default(false),
+  currentPage: text("current_page", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  r2: text("r2", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  embedding: text("embedding", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  lumiRetrieval: text("lumi_retrieval", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  importedAt: integer("imported_at", { mode: "timestamp" }).notNull(),
+}, (table) => [
+  uniqueIndex("inspiration_wiki_hermes_batches_digest_unique").on(table.packageDigest),
+  check("inspiration_wiki_hermes_batches_digest_check", sql`length(${table.packageDigest}) = 64 and ${table.packageDigest} not glob '*[^0-9a-f]*'`),
+  check("inspiration_wiki_hermes_batches_counts_check", sql`${table.candidateCount} between 0 and 10000 and ${table.failureCount} between 0 and 10000`),
+  check("inspiration_wiki_hermes_batches_json_check", sql`json_valid(${table.manifestJson}) and json_type(${table.manifestJson}) = 'object' and json_valid(${table.doneJson}) and json_type(${table.doneJson}) = 'object'`),
+  check("inspiration_wiki_hermes_batches_private_check", sql`${table.contractVersion} = 'LEGACY_V1' and ${table.intakeState} = 'VALIDATED_PRIVATE' and ${table.studentVisible} = 0 and ${table.currentPage} = 'DISABLED' and ${table.r2} = 'DISABLED' and ${table.embedding} = 'DISABLED' and ${table.lumiRetrieval} = 'DISABLED'`),
+]);
+
+export const inspirationWikiHermesCandidates = sqliteTable("inspiration_wiki_hermes_candidates", {
+  id: text("id").primaryKey(),
+  batchId: text("batch_id").notNull()
+    .references(() => inspirationWikiHermesBatches.batchId, { onDelete: "restrict" }),
+  sourceCandidateId: text("source_candidate_id").notNull(),
+  revision: integer("revision").notNull().default(1),
+  contractState: text("contract_state", { enum: ["V1_UPGRADE_REQUIRED"] }).notNull(),
+  reviewState: text("review_state", { enum: [
+    "PENDING_REVIEW",
+    "NORMALIZATION_REQUIRED",
+    "DUPLICATE_HOLD",
+    "RIGHTS_HOLD",
+    "REJECTED",
+  ] }).notNull().default("PENDING_REVIEW"),
+  sourceId: text("source_id").notNull(),
+  sourcePlatform: text("source_platform").notNull(),
+  pageUrl: text("page_url").notNull(),
+  canonicalUrl: text("canonical_url"),
+  title: text("title"),
+  description: text("description"),
+  authorJson: text("author_json", { mode: "json" }).$type<JsonRecord>(),
+  licenseJson: text("license_json", { mode: "json" }).$type<JsonRecord>(),
+  mediaJson: text("media_json", { mode: "json" }).$type<JsonRecord[]>().notNull(),
+  designCategoriesJson: text("design_categories_json", { mode: "json" }).$type<string[]>().notNull(),
+  screeningJson: text("screening_json", { mode: "json" }).$type<JsonRecord>().notNull(),
+  rawCandidateJson: text("raw_candidate_json", { mode: "json" }).$type<JsonRecord>().notNull(),
+  rawDigest: text("raw_digest").notNull(),
+  dedupeFingerprint: text("dedupe_fingerprint").notNull(),
+  scope: text("scope", { enum: ["PRIVATE_CANDIDATE"] }).notNull().default("PRIVATE_CANDIDATE"),
+  studentVisible: integer("student_visible", { mode: "boolean" }).notNull().default(false),
+  wikiDraft: text("wiki_draft", { enum: ["NOT_CREATED"] }).notNull().default("NOT_CREATED"),
+  currentPage: text("current_page", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  r2: text("r2", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  embedding: text("embedding", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  lumiRetrieval: text("lumi_retrieval", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
+}, (table) => [
+  uniqueIndex("inspiration_wiki_hermes_candidates_batch_source_unique").on(table.batchId, table.sourceCandidateId),
+  index("inspiration_wiki_hermes_candidates_queue_idx").on(table.reviewState, table.updatedAt),
+  index("inspiration_wiki_hermes_candidates_fingerprint_idx").on(table.dedupeFingerprint),
+  index("inspiration_wiki_hermes_candidates_page_idx").on(table.pageUrl),
+  check("inspiration_wiki_hermes_candidates_revision_check", sql`${table.revision} > 0`),
+  check("inspiration_wiki_hermes_candidates_url_check", sql`${table.pageUrl} like 'https://%' and (${table.canonicalUrl} is null or ${table.canonicalUrl} like 'https://%')`),
+  check("inspiration_wiki_hermes_candidates_digest_check", sql`length(${table.rawDigest}) = 64 and ${table.rawDigest} not glob '*[^0-9a-f]*' and length(${table.dedupeFingerprint}) = 64 and ${table.dedupeFingerprint} not glob '*[^0-9a-f]*'`),
+  check("inspiration_wiki_hermes_candidates_json_check", sql`(${table.authorJson} is null or (json_valid(${table.authorJson}) and json_type(${table.authorJson}) = 'object')) and (${table.licenseJson} is null or (json_valid(${table.licenseJson}) and json_type(${table.licenseJson}) = 'object')) and json_valid(${table.mediaJson}) and json_type(${table.mediaJson}) = 'array' and json_array_length(${table.mediaJson}) > 0 and json_valid(${table.designCategoriesJson}) and json_type(${table.designCategoriesJson}) = 'array' and json_array_length(${table.designCategoriesJson}) > 0 and json_valid(${table.screeningJson}) and json_type(${table.screeningJson}) = 'object' and json_valid(${table.rawCandidateJson}) and json_type(${table.rawCandidateJson}) = 'object'`),
+  check("inspiration_wiki_hermes_candidates_state_check", sql`${table.contractState} = 'V1_UPGRADE_REQUIRED' and ${table.reviewState} in ('PENDING_REVIEW','NORMALIZATION_REQUIRED','DUPLICATE_HOLD','RIGHTS_HOLD','REJECTED')`),
+  check("inspiration_wiki_hermes_candidates_private_check", sql`${table.scope} = 'PRIVATE_CANDIDATE' and ${table.studentVisible} = 0 and ${table.wikiDraft} = 'NOT_CREATED' and ${table.currentPage} = 'DISABLED' and ${table.r2} = 'DISABLED' and ${table.embedding} = 'DISABLED' and ${table.lumiRetrieval} = 'DISABLED'`),
+]);
+
+export const inspirationWikiHermesTriageDecisions = sqliteTable("inspiration_wiki_hermes_triage_decisions", {
+  id: text("id").primaryKey(),
+  candidateId: text("candidate_id").notNull()
+    .references(() => inspirationWikiHermesCandidates.id, { onDelete: "restrict" }),
+  candidateRevision: integer("candidate_revision").notNull(),
+  teacherId: text("teacher_id").notNull().references(() => users.id, { onDelete: "restrict" }),
+  decision: text("decision", { enum: [
+    "RESTORE_PENDING",
+    "REQUEST_NORMALIZATION",
+    "HOLD_DUPLICATE",
+    "HOLD_RIGHTS",
+    "REJECT",
+  ] }).notNull(),
+  previousState: text("previous_state").notNull(),
+  nextState: text("next_state").notNull(),
+  note: text("note").notNull(),
+  idempotencyKey: text("idempotency_key").notNull(),
+  requestHash: text("request_hash").notNull(),
+  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
+}, (table) => [
+  uniqueIndex("inspiration_wiki_hermes_triage_teacher_key_unique").on(table.teacherId, table.idempotencyKey),
+  index("inspiration_wiki_hermes_triage_candidate_created_idx").on(table.candidateId, table.createdAt),
+  check("inspiration_wiki_hermes_triage_revision_check", sql`${table.candidateRevision} > 0`),
+  check("inspiration_wiki_hermes_triage_note_check", sql`length(${table.note}) <= 1000`),
+  check("inspiration_wiki_hermes_triage_key_check", sql`length(${table.idempotencyKey}) between 8 and 128`),
+  check("inspiration_wiki_hermes_triage_hash_check", sql`length(${table.requestHash}) = 64 and ${table.requestHash} not glob '*[^0-9a-f]*'`),
+  check("inspiration_wiki_hermes_triage_state_check", sql`${table.previousState} in ('PENDING_REVIEW','NORMALIZATION_REQUIRED','DUPLICATE_HOLD','RIGHTS_HOLD','REJECTED') and ${table.nextState} in ('PENDING_REVIEW','NORMALIZATION_REQUIRED','DUPLICATE_HOLD','RIGHTS_HOLD','REJECTED')`),
+  check("inspiration_wiki_hermes_triage_transition_check", sql`(${table.decision} = 'RESTORE_PENDING' and ${table.nextState} = 'PENDING_REVIEW') or (${table.decision} = 'REQUEST_NORMALIZATION' and ${table.nextState} = 'NORMALIZATION_REQUIRED') or (${table.decision} = 'HOLD_DUPLICATE' and ${table.nextState} = 'DUPLICATE_HOLD') or (${table.decision} = 'HOLD_RIGHTS' and ${table.nextState} = 'RIGHTS_HOLD') or (${table.decision} = 'REJECT' and ${table.nextState} = 'REJECTED')`),
+]);
+
+/** Teacher-private ReviewPacks. A row can never represent a release or student-visible object. */
+export const inspirationWikiReviewPacks = sqliteTable("inspiration_wiki_review_packs", {
+  reviewPackId: text("review_pack_id").primaryKey(),
+  candidateId: text("candidate_id").notNull()
+    .references(() => inspirationWikiHermesCandidates.id, { onDelete: "restrict" }),
+  revision: integer("revision").notNull().default(1),
+  stage: text("stage", { enum: [
+    "READY_FOR_TEACHER_REVIEW",
+    "RETURNED_TO_CODEX",
+    "REJECTED",
+    "PRIVATE_WIKIDRAFT",
+  ] }).notNull(),
+  materialHash: text("material_hash").notNull(),
+  packJson: text("pack_json", { mode: "json" }).$type<JsonRecord>().notNull(),
+  mediaAssetsJson: text("media_assets_json", { mode: "json" }).$type<JsonRecord[]>().notNull(),
+  primaryPreviewUrl: text("primary_preview_url").notNull(),
+  title: text("title").notNull(),
+  sourceSummary: text("source_summary").notNull(),
+  teacherPrivate: integer("teacher_private", { mode: "boolean" }).notNull().default(true),
+  studentVisible: integer("student_visible", { mode: "boolean" }).notNull().default(false),
+  currentPage: text("current_page", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  r2: text("r2", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  embedding: text("embedding", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  lumiRetrieval: text("lumi_retrieval", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
+}, (table) => [
+  uniqueIndex("inspiration_wiki_review_packs_candidate_unique").on(table.candidateId),
+  index("inspiration_wiki_review_packs_queue_idx").on(table.stage, table.updatedAt),
+  check("inspiration_wiki_review_packs_revision_check", sql`${table.revision} > 0`),
+  check("inspiration_wiki_review_packs_hash_check", sql`length(${table.materialHash}) = 64 and ${table.materialHash} not glob '*[^0-9a-f]*'`),
+  check("inspiration_wiki_review_packs_json_check", sql`json_valid(${table.packJson}) and json_type(${table.packJson}) = 'object' and json_valid(${table.mediaAssetsJson}) and json_type(${table.mediaAssetsJson}) = 'array' and json_array_length(${table.mediaAssetsJson}) > 0`),
+  check("inspiration_wiki_review_packs_stage_check", sql`${table.stage} in ('READY_FOR_TEACHER_REVIEW','RETURNED_TO_CODEX','REJECTED','PRIVATE_WIKIDRAFT')`),
+  check("inspiration_wiki_review_packs_private_check", sql`${table.teacherPrivate} = 1 and ${table.studentVisible} = 0 and ${table.currentPage} = 'DISABLED' and ${table.r2} = 'DISABLED' and ${table.embedding} = 'DISABLED' and ${table.lumiRetrieval} = 'DISABLED'`),
+]);
+
+export const inspirationWikiReviewPackDecisions = sqliteTable("inspiration_wiki_review_pack_decisions", {
+  id: text("id").primaryKey(),
+  reviewPackId: text("review_pack_id").notNull()
+    .references(() => inspirationWikiReviewPacks.reviewPackId, { onDelete: "restrict" }),
+  reviewPackRevision: integer("review_pack_revision").notNull(),
+  teacherId: text("teacher_id").notNull().references(() => users.id, { onDelete: "restrict" }),
+  assessmentJson: text("assessment_json", { mode: "json" }).$type<JsonRecord>().notNull(),
+  finalAction: text("final_action", { enum: [
+    "RETURN_TO_CODEX",
+    "REJECT_CANDIDATE",
+    "ENTER_PRIVATE_WIKIDRAFT",
+  ] }).notNull(),
+  previousStage: text("previous_stage").notNull(),
+  nextStage: text("next_stage").notNull(),
+  note: text("note").notNull(),
+  idempotencyKey: text("idempotency_key").notNull(),
+  requestHash: text("request_hash").notNull(),
+  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
+}, (table) => [
+  uniqueIndex("inspiration_wiki_review_pack_decisions_teacher_key_unique").on(table.teacherId, table.idempotencyKey),
+  index("inspiration_wiki_review_pack_decisions_pack_created_idx").on(table.reviewPackId, table.createdAt),
+  check("inspiration_wiki_review_pack_decisions_revision_check", sql`${table.reviewPackRevision} > 0`),
+  check("inspiration_wiki_review_pack_decisions_json_check", sql`json_valid(${table.assessmentJson}) and json_type(${table.assessmentJson}) = 'object'`),
+  check("inspiration_wiki_review_pack_decisions_note_check", sql`length(${table.note}) <= 300`),
+  check("inspiration_wiki_review_pack_decisions_key_check", sql`length(${table.idempotencyKey}) between 8 and 128`),
+  check("inspiration_wiki_review_pack_decisions_hash_check", sql`length(${table.requestHash}) = 64 and ${table.requestHash} not glob '*[^0-9a-f]*'`),
+  check("inspiration_wiki_review_pack_decisions_transition_check", sql`(${table.finalAction} = 'RETURN_TO_CODEX' and ${table.nextStage} = 'RETURNED_TO_CODEX') or (${table.finalAction} = 'REJECT_CANDIDATE' and ${table.nextStage} = 'REJECTED') or (${table.finalAction} = 'ENTER_PRIVATE_WIKIDRAFT' and ${table.nextStage} = 'PRIVATE_WIKIDRAFT')`),
+]);
+
+/** Teacher-private evidence-gap review. These rows never claim the strict nine-gate contract. */
+export const inspirationWikiEvidenceGapReviewPacks = sqliteTable("inspiration_wiki_evidence_gap_review_packs", {
+  reviewPackId: text("review_pack_id").primaryKey(),
+  candidateId: text("candidate_id").notNull()
+    .references(() => inspirationWikiHermesCandidates.id, { onDelete: "restrict" }),
+  revision: integer("revision").notNull().default(1),
+  contractKind: text("contract_kind", { enum: ["EVIDENCE_GAP_REVIEW"] }).notNull(),
+  stage: text("stage", { enum: [
+    "READY_FOR_TEACHER_TRIAGE",
+    "RETURNED_TO_CODEX",
+    "REJECTED",
+    "PRIVATE_WIKIDRAFT_WITH_GAPS",
+  ] }).notNull(),
+  materialHash: text("material_hash").notNull(),
+  packJson: text("pack_json", { mode: "json" }).$type<JsonRecord>().notNull(),
+  mediaAssetsJson: text("media_assets_json", { mode: "json" }).$type<JsonRecord[]>().notNull(),
+  readinessJson: text("readiness_json", { mode: "json" }).$type<JsonRecord>().notNull(),
+  verifiedGateCount: integer("verified_gate_count").notNull(),
+  primaryPreviewUrl: text("primary_preview_url"),
+  title: text("title"),
+  sourceSummary: text("source_summary"),
+  teacherPrivate: integer("teacher_private", { mode: "boolean" }).notNull().default(true),
+  studentVisible: integer("student_visible", { mode: "boolean" }).notNull().default(false),
+  currentPage: text("current_page", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  r2: text("r2", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  embedding: text("embedding", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  lumiRetrieval: text("lumi_retrieval", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
+}, (table) => [
+  uniqueIndex("inspiration_wiki_evidence_gap_review_packs_candidate_unique").on(table.candidateId),
+  index("inspiration_wiki_evidence_gap_review_packs_queue_idx").on(table.stage, table.updatedAt),
+  check("inspiration_wiki_evidence_gap_review_packs_revision_check", sql`${table.revision} > 0`),
+  check("inspiration_wiki_evidence_gap_review_packs_contract_check", sql`${table.contractKind} = 'EVIDENCE_GAP_REVIEW'`),
+  check("inspiration_wiki_evidence_gap_review_packs_hash_check", sql`length(${table.materialHash}) = 64 and ${table.materialHash} not glob '*[^0-9a-f]*'`),
+  check("inspiration_wiki_evidence_gap_review_packs_json_check", sql`json_valid(${table.packJson}) and json_type(${table.packJson}) = 'object' and json_valid(${table.mediaAssetsJson}) and json_type(${table.mediaAssetsJson}) = 'array' and json_valid(${table.readinessJson}) and json_type(${table.readinessJson}) = 'object'`),
+  check("inspiration_wiki_evidence_gap_review_packs_gate_count_check", sql`${table.verifiedGateCount} between 0 and 8`),
+  check("inspiration_wiki_evidence_gap_review_packs_preview_check", sql`${table.primaryPreviewUrl} is null or ${table.primaryPreviewUrl} like '/api/teacher/inspiration-wiki/review-packs/%'`),
+  check("inspiration_wiki_evidence_gap_review_packs_stage_check", sql`${table.stage} in ('READY_FOR_TEACHER_TRIAGE','RETURNED_TO_CODEX','REJECTED','PRIVATE_WIKIDRAFT_WITH_GAPS')`),
+  check("inspiration_wiki_evidence_gap_review_packs_private_check", sql`${table.teacherPrivate} = 1 and ${table.studentVisible} = 0 and ${table.currentPage} = 'DISABLED' and ${table.r2} = 'DISABLED' and ${table.embedding} = 'DISABLED' and ${table.lumiRetrieval} = 'DISABLED'`),
+]);
+
+export const inspirationWikiEvidenceGapReviewDecisions = sqliteTable("inspiration_wiki_evidence_gap_review_decisions", {
+  id: text("id").primaryKey(),
+  reviewPackId: text("review_pack_id").notNull()
+    .references(() => inspirationWikiEvidenceGapReviewPacks.reviewPackId, { onDelete: "restrict" }),
+  reviewPackRevision: integer("review_pack_revision").notNull(),
+  teacherId: text("teacher_id").notNull().references(() => users.id, { onDelete: "restrict" }),
+  acceptedGapKeysJson: text("accepted_gap_keys_json", { mode: "json" }).$type<string[]>().notNull(),
+  finalAction: text("final_action", { enum: [
+    "RETURN_TO_CODEX",
+    "REJECT_CANDIDATE",
+    "ENTER_PRIVATE_WIKIDRAFT",
+  ] }).notNull(),
+  previousStage: text("previous_stage").notNull(),
+  nextStage: text("next_stage").notNull(),
+  note: text("note").notNull(),
+  privateDraftOnly: integer("private_draft_only", { mode: "boolean" }).notNull(),
+  idempotencyKey: text("idempotency_key").notNull(),
+  requestHash: text("request_hash").notNull(),
+  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
+}, (table) => [
+  uniqueIndex("inspiration_wiki_evidence_gap_review_decisions_teacher_key_unique").on(table.teacherId, table.idempotencyKey),
+  index("inspiration_wiki_evidence_gap_review_decisions_pack_created_idx").on(table.reviewPackId, table.createdAt),
+  check("inspiration_wiki_evidence_gap_review_decisions_revision_check", sql`${table.reviewPackRevision} > 0`),
+  check("inspiration_wiki_evidence_gap_review_decisions_gaps_json_check", sql`json_valid(${table.acceptedGapKeysJson}) and json_type(${table.acceptedGapKeysJson}) = 'array' and json_array_length(${table.acceptedGapKeysJson}) between 0 and 9`),
+  check("inspiration_wiki_evidence_gap_review_decisions_note_check", sql`length(trim(${table.note})) <= 300 and (${table.finalAction} = 'ENTER_PRIVATE_WIKIDRAFT' or length(trim(${table.note})) >= 1)`),
+  check("inspiration_wiki_evidence_gap_review_decisions_key_check", sql`length(${table.idempotencyKey}) between 8 and 128`),
+  check("inspiration_wiki_evidence_gap_review_decisions_hash_check", sql`length(${table.requestHash}) = 64 and ${table.requestHash} not glob '*[^0-9a-f]*'`),
+  check("inspiration_wiki_evidence_gap_review_decisions_action_check", sql`(${table.finalAction} = 'ENTER_PRIVATE_WIKIDRAFT' and ${table.privateDraftOnly} = 1) or (${table.finalAction} in ('RETURN_TO_CODEX','REJECT_CANDIDATE') and ${table.privateDraftOnly} = 0 and json_array_length(${table.acceptedGapKeysJson}) = 0)`),
+  check("inspiration_wiki_evidence_gap_review_decisions_transition_check", sql`(${table.finalAction} = 'RETURN_TO_CODEX' and ${table.nextStage} = 'RETURNED_TO_CODEX') or (${table.finalAction} = 'REJECT_CANDIDATE' and ${table.nextStage} = 'REJECTED') or (${table.finalAction} = 'ENTER_PRIVATE_WIKIDRAFT' and ${table.nextStage} = 'PRIVATE_WIKIDRAFT_WITH_GAPS')`),
+]);
+
+/** Append-only audit for the one permitted evidence-gap material correction: adding one unverified local preview. */
+export const inspirationWikiEvidenceGapMediaAmendments = sqliteTable("inspiration_wiki_evidence_gap_media_amendments", {
+  id: text("id").primaryKey(),
+  reviewPackId: text("review_pack_id").notNull()
+    .references(() => inspirationWikiEvidenceGapReviewPacks.reviewPackId, { onDelete: "restrict" }),
+  candidateId: text("candidate_id").notNull()
+    .references(() => inspirationWikiHermesCandidates.id, { onDelete: "restrict" }),
+  amendmentKind: text("amendment_kind", { enum: ["ADD_UNVERIFIED_LOCAL_PREVIEW"] }).notNull(),
+  previousRevision: integer("previous_revision").notNull(),
+  nextRevision: integer("next_revision").notNull(),
+  previousMaterialHash: text("previous_material_hash").notNull(),
+  nextMaterialHash: text("next_material_hash").notNull(),
+  mediaId: text("media_id").notNull(),
+  assetStoragePath: text("asset_storage_path").notNull(),
+  assetSha256: text("asset_sha256").notNull(),
+  assetMimeType: text("asset_mime_type", { enum: ["image/jpeg", "image/png", "image/webp"] }).notNull(),
+  assetBytes: integer("asset_bytes").notNull(),
+  sourcePackageDigest: text("source_package_digest").notNull(),
+  idempotencyKey: text("idempotency_key").notNull(),
+  requestHash: text("request_hash").notNull(),
+  previousPackJson: text("previous_pack_json", { mode: "json" }).$type<JsonRecord>().notNull(),
+  amendedPackJson: text("amended_pack_json", { mode: "json" }).$type<JsonRecord>().notNull(),
+  previousAssetsJson: text("previous_assets_json", { mode: "json" }).$type<JsonRecord[]>().notNull(),
+  amendedAssetsJson: text("amended_assets_json", { mode: "json" }).$type<JsonRecord[]>().notNull(),
+  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
+}, (table) => [
+  uniqueIndex("inspiration_wiki_evidence_gap_media_amendments_key_unique").on(table.idempotencyKey),
+  uniqueIndex("inspiration_wiki_evidence_gap_media_amendments_pack_revision_unique").on(table.reviewPackId, table.nextRevision),
+  index("inspiration_wiki_evidence_gap_media_amendments_pack_created_idx").on(table.reviewPackId, table.createdAt),
+  check("inspiration_wiki_evidence_gap_media_amendments_kind_check", sql`${table.amendmentKind} = 'ADD_UNVERIFIED_LOCAL_PREVIEW'`),
+  check("inspiration_wiki_evidence_gap_media_amendments_revision_check", sql`${table.previousRevision} > 0 and ${table.nextRevision} = ${table.previousRevision} + 1`),
+  check("inspiration_wiki_evidence_gap_media_amendments_hash_check", sql`length(${table.previousMaterialHash}) = 64 and ${table.previousMaterialHash} not glob '*[^0-9a-f]*' and length(${table.nextMaterialHash}) = 64 and ${table.nextMaterialHash} not glob '*[^0-9a-f]*' and length(${table.assetSha256}) = 64 and ${table.assetSha256} not glob '*[^0-9a-f]*' and length(${table.sourcePackageDigest}) = 64 and ${table.sourcePackageDigest} not glob '*[^0-9a-f]*' and length(${table.requestHash}) = 64 and ${table.requestHash} not glob '*[^0-9a-f]*'`),
+  check("inspiration_wiki_evidence_gap_media_amendments_asset_check", sql`${table.assetBytes} between 1 and 26214400 and ${table.assetMimeType} in ('image/jpeg','image/png','image/webp')`),
+  check("inspiration_wiki_evidence_gap_media_amendments_key_check", sql`length(${table.idempotencyKey}) between 8 and 128`),
+  check("inspiration_wiki_evidence_gap_media_amendments_json_check", sql`json_valid(${table.previousPackJson}) and json_type(${table.previousPackJson}) = 'object' and json_valid(${table.amendedPackJson}) and json_type(${table.amendedPackJson}) = 'object' and json_valid(${table.previousAssetsJson}) and json_type(${table.previousAssetsJson}) = 'array' and json_array_length(${table.previousAssetsJson}) = 0 and json_valid(${table.amendedAssetsJson}) and json_type(${table.amendedAssetsJson}) = 'array' and json_array_length(${table.amendedAssetsJson}) = 1`),
+]);
+
+/** Append-only audit for Codex analysis revisions that keep exactly three requirements unknown. */
+export const inspirationWikiEvidenceGapAnalysisRevisions = sqliteTable("inspiration_wiki_evidence_gap_analysis_revisions", {
+  id: text("id").primaryKey(),
+  reviewPackId: text("review_pack_id").notNull()
+    .references(() => inspirationWikiEvidenceGapReviewPacks.reviewPackId, { onDelete: "restrict" }),
+  candidateId: text("candidate_id").notNull()
+    .references(() => inspirationWikiHermesCandidates.id, { onDelete: "restrict" }),
+  analysisKind: text("analysis_kind", { enum: ["SIX_ANALYZED_THREE_UNKNOWN"] }).notNull(),
+  previousRevision: integer("previous_revision").notNull(),
+  nextRevision: integer("next_revision").notNull(),
+  previousMaterialHash: text("previous_material_hash").notNull(),
+  nextMaterialHash: text("next_material_hash").notNull(),
+  sourceArtifactDigest: text("source_artifact_digest").notNull(),
+  idempotencyKey: text("idempotency_key").notNull(),
+  requestHash: text("request_hash").notNull(),
+  previousPackJson: text("previous_pack_json", { mode: "json" }).$type<JsonRecord>().notNull(),
+  revisedPackJson: text("revised_pack_json", { mode: "json" }).$type<JsonRecord>().notNull(),
+  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
+}, (table) => [
+  uniqueIndex("inspiration_wiki_evidence_gap_analysis_revisions_key_unique").on(table.idempotencyKey),
+  uniqueIndex("inspiration_wiki_evidence_gap_analysis_revisions_pack_revision_unique").on(table.reviewPackId, table.nextRevision),
+  index("inspiration_wiki_evidence_gap_analysis_revisions_pack_created_idx").on(table.reviewPackId, table.createdAt),
+  check("inspiration_wiki_evidence_gap_analysis_revisions_kind_check", sql`${table.analysisKind} = 'SIX_ANALYZED_THREE_UNKNOWN'`),
+  check("inspiration_wiki_evidence_gap_analysis_revisions_revision_check", sql`${table.previousRevision} > 0 and ${table.nextRevision} = ${table.previousRevision} + 1`),
+  check("inspiration_wiki_evidence_gap_analysis_revisions_hash_check", sql`length(${table.previousMaterialHash}) = 64 and ${table.previousMaterialHash} not glob '*[^0-9a-f]*' and length(${table.nextMaterialHash}) = 64 and ${table.nextMaterialHash} not glob '*[^0-9a-f]*' and length(${table.sourceArtifactDigest}) = 64 and ${table.sourceArtifactDigest} not glob '*[^0-9a-f]*' and length(${table.requestHash}) = 64 and ${table.requestHash} not glob '*[^0-9a-f]*'`),
+  check("inspiration_wiki_evidence_gap_analysis_revisions_key_check", sql`length(${table.idempotencyKey}) between 8 and 128`),
+  check("inspiration_wiki_evidence_gap_analysis_revisions_json_check", sql`json_valid(${table.previousPackJson}) and json_type(${table.previousPackJson}) = 'object' and json_valid(${table.revisedPackJson}) and json_type(${table.revisedPackJson}) = 'object'`),
+]);
+
+/** D-19 editable private drafts. These precede canonical compilation and remain teacher-only. */
+export const inspirationWikiPrivateWorkingDrafts = sqliteTable("inspiration_wiki_private_working_drafts", {
+  draftId: text("draft_id").primaryKey(),
+  candidateId: text("candidate_id").notNull()
+    .references(() => inspirationWikiHermesCandidates.id, { onDelete: "restrict" }),
+  sourceReviewPackId: text("source_review_pack_id").notNull(),
+  sourceContractKind: text("source_contract_kind", { enum: ["STRICT_REVIEW_PACK", "EVIDENCE_GAP_REVIEW"] }).notNull(),
+  sourceReviewRevision: integer("source_review_revision").notNull(),
+  sourceDecisionId: text("source_decision_id").notNull(),
+  revision: integer("revision").notNull(),
+  stage: text("stage", { enum: ["EDITING", "READY_FOR_DOMAIN_REVIEW"] }).notNull(),
+  contentHash: text("content_hash").notNull(),
+  draftJson: text("draft_json", { mode: "json" }).$type<JsonRecord>().notNull(),
+  title: text("title").notNull(),
+  primaryCategory: text("primary_category").notNull(),
+  completionCount: integer("completion_count").notNull(),
+  primaryPreviewUrl: text("primary_preview_url").notNull(),
+  rightsStatus: text("rights_status", { enum: ["UNKNOWN"] }).notNull(),
+  teacherPrivate: integer("teacher_private", { mode: "boolean" }).notNull().default(true),
+  studentVisible: integer("student_visible", { mode: "boolean" }).notNull().default(false),
+  currentPage: text("current_page", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  r2: text("r2", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  embedding: text("embedding", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  lumiRetrieval: text("lumi_retrieval", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
+}, (table) => [
+  uniqueIndex("inspiration_wiki_private_working_drafts_candidate_unique").on(table.candidateId),
+  uniqueIndex("inspiration_wiki_private_working_drafts_review_pack_unique").on(table.sourceReviewPackId),
+  uniqueIndex("inspiration_wiki_private_working_drafts_decision_unique").on(table.sourceDecisionId),
+  index("inspiration_wiki_private_working_drafts_stage_category_idx").on(table.stage, table.primaryCategory),
+  check("inspiration_wiki_private_working_drafts_revision_check", sql`${table.revision} > 0 and ${table.sourceReviewRevision} > 0`),
+  check("inspiration_wiki_private_working_drafts_hash_check", sql`length(${table.contentHash}) = 64 and ${table.contentHash} not glob '*[^0-9a-f]*'`),
+  check("inspiration_wiki_private_working_drafts_json_check", sql`json_valid(${table.draftJson}) and json_type(${table.draftJson}) = 'object'`),
+  check("inspiration_wiki_private_working_drafts_completion_check", sql`${table.completionCount} between 0 and 7`),
+  check("inspiration_wiki_private_working_drafts_preview_check", sql`${table.primaryPreviewUrl} like '/api/teacher/inspiration-wiki/review-packs/%'`),
+  check("inspiration_wiki_private_working_drafts_private_check", sql`${table.rightsStatus} = 'UNKNOWN' and ${table.teacherPrivate} = 1 and ${table.studentVisible} = 0 and ${table.currentPage} = 'DISABLED' and ${table.r2} = 'DISABLED' and ${table.embedding} = 'DISABLED' and ${table.lumiRetrieval} = 'DISABLED'`),
+]);
+
+export const inspirationWikiPrivateWorkingDraftRevisions = sqliteTable("inspiration_wiki_private_working_draft_revisions", {
+  id: text("id").primaryKey(),
+  draftId: text("draft_id").notNull()
+    .references(() => inspirationWikiPrivateWorkingDrafts.draftId, { onDelete: "restrict" }),
+  previousRevision: integer("previous_revision").notNull(),
+  nextRevision: integer("next_revision").notNull(),
+  operation: text("operation", { enum: ["INITIAL_COMPILE", "TEACHER_EDIT", "MARK_READY", "REOPEN_EDITING"] }).notNull(),
+  actorType: text("actor_type", { enum: ["CODEX", "TEACHER"] }).notNull(),
+  actorId: text("actor_id").notNull(),
+  previousContentHash: text("previous_content_hash"),
+  nextContentHash: text("next_content_hash").notNull(),
+  previousDraftJson: text("previous_draft_json", { mode: "json" }).$type<JsonRecord>(),
+  nextDraftJson: text("next_draft_json", { mode: "json" }).$type<JsonRecord>().notNull(),
+  note: text("note").notNull(),
+  idempotencyKey: text("idempotency_key").notNull(),
+  requestHash: text("request_hash").notNull(),
+  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
+}, (table) => [
+  uniqueIndex("inspiration_wiki_private_working_draft_revisions_pack_revision_unique").on(table.draftId, table.nextRevision),
+  uniqueIndex("inspiration_wiki_private_working_draft_revisions_actor_key_unique").on(table.actorId, table.idempotencyKey),
+  index("inspiration_wiki_private_working_draft_revisions_created_idx").on(table.draftId, table.createdAt),
+  check("inspiration_wiki_private_working_draft_revisions_revision_check", sql`${table.previousRevision} >= 0 and ${table.nextRevision} = ${table.previousRevision} + 1`),
+  check("inspiration_wiki_private_working_draft_revisions_hash_check", sql`(${table.previousRevision} = 0 and ${table.previousContentHash} is null) or (${table.previousRevision} > 0 and length(${table.previousContentHash}) = 64 and ${table.previousContentHash} not glob '*[^0-9a-f]*')`),
+  check("inspiration_wiki_private_working_draft_revisions_next_hash_check", sql`length(${table.nextContentHash}) = 64 and ${table.nextContentHash} not glob '*[^0-9a-f]*' and length(${table.requestHash}) = 64 and ${table.requestHash} not glob '*[^0-9a-f]*'`),
+  check("inspiration_wiki_private_working_draft_revisions_json_check", sql`((${table.previousRevision} = 0 and ${table.previousDraftJson} is null) or (${table.previousRevision} > 0 and json_valid(${table.previousDraftJson}) and json_type(${table.previousDraftJson}) = 'object')) and json_valid(${table.nextDraftJson}) and json_type(${table.nextDraftJson}) = 'object'`),
+  check("inspiration_wiki_private_working_draft_revisions_key_check", sql`length(${table.idempotencyKey}) between 8 and 128 and length(trim(${table.note})) between 1 and 300`),
+  check("inspiration_wiki_private_working_draft_revisions_actor_check", sql`(${table.operation} = 'INITIAL_COMPILE' and ${table.actorType} = 'CODEX') or (${table.operation} <> 'INITIAL_COMPILE' and ${table.actorType} = 'TEACHER')`),
+]);
+
+/** D-20 teacher-private pre-review. This does not satisfy the canonical S1 role gate. */
+export const inspirationWikiPrivateDomainReviewCases = sqliteTable("inspiration_wiki_private_domain_review_cases", {
+  reviewCaseId: text("review_case_id").primaryKey(),
+  draftId: text("draft_id").notNull()
+    .references(() => inspirationWikiPrivateWorkingDrafts.draftId, { onDelete: "restrict" }),
+  candidateId: text("candidate_id").notNull()
+    .references(() => inspirationWikiHermesCandidates.id, { onDelete: "restrict" }),
+  draftRevision: integer("draft_revision").notNull(),
+  draftContentHash: text("draft_content_hash").notNull(),
+  revision: integer("revision").notNull(),
+  stateHash: text("state_hash").notNull(),
+  stage: text("stage", { enum: [
+    "PENDING_DOMAIN_REVIEW",
+    "DOMAIN_REVIEW_HOLD",
+    "PRIVATE_DRAFT_REJECTED",
+    "DOMAIN_REVIEW_COMPLETE",
+  ] }).notNull(),
+  domainsJson: text("domains_json", { mode: "json" }).$type<JsonRecord>().notNull(),
+  caseJson: text("case_json", { mode: "json" }).$type<JsonRecord>().notNull(),
+  reviewedDomainCount: integer("reviewed_domain_count").notNull(),
+  title: text("title").notNull(),
+  primaryCategory: text("primary_category").notNull(),
+  primaryPreviewUrl: text("primary_preview_url").notNull(),
+  rightsScope: text("rights_scope", { enum: ["UNKNOWN_PRIVATE_ONLY"] }).notNull(),
+  teacherPrivate: integer("teacher_private", { mode: "boolean" }).notNull().default(true),
+  studentVisible: integer("student_visible", { mode: "boolean" }).notNull().default(false),
+  currentPage: text("current_page", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  r2: text("r2", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  embedding: text("embedding", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  lumiRetrieval: text("lumi_retrieval", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  canonicalCompilation: text("canonical_compilation", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
+}, (table) => [
+  uniqueIndex("inspiration_wiki_private_domain_review_cases_draft_revision_unique").on(table.draftId, table.draftRevision),
+  index("inspiration_wiki_private_domain_review_cases_stage_updated_idx").on(table.stage, table.updatedAt),
+  check("inspiration_wiki_private_domain_review_cases_revision_check", sql`${table.draftRevision} > 0 and ${table.revision} > 0`),
+  check("inspiration_wiki_private_domain_review_cases_hash_check", sql`length(${table.draftContentHash}) = 64 and ${table.draftContentHash} not glob '*[^0-9a-f]*' and length(${table.stateHash}) = 64 and ${table.stateHash} not glob '*[^0-9a-f]*'`),
+  check("inspiration_wiki_private_domain_review_cases_stage_check", sql`${table.stage} in ('PENDING_DOMAIN_REVIEW','DOMAIN_REVIEW_HOLD','PRIVATE_DRAFT_REJECTED','DOMAIN_REVIEW_COMPLETE')`),
+  check("inspiration_wiki_private_domain_review_cases_json_check", sql`json_valid(${table.domainsJson}) and json_type(${table.domainsJson}) = 'object' and json_valid(${table.caseJson}) and json_type(${table.caseJson}) = 'object'`),
+  check("inspiration_wiki_private_domain_review_cases_count_check", sql`${table.reviewedDomainCount} between 0 and 4`),
+  check("inspiration_wiki_private_domain_review_cases_preview_check", sql`${table.primaryPreviewUrl} like '/api/teacher/inspiration-wiki/review-packs/%'`),
+  check("inspiration_wiki_private_domain_review_cases_boundary_check", sql`${table.rightsScope} = 'UNKNOWN_PRIVATE_ONLY' and ${table.teacherPrivate} = 1 and ${table.studentVisible} = 0 and ${table.currentPage} = 'DISABLED' and ${table.r2} = 'DISABLED' and ${table.embedding} = 'DISABLED' and ${table.lumiRetrieval} = 'DISABLED' and ${table.canonicalCompilation} = 'DISABLED'`),
+]);
+
+export const inspirationWikiPrivateDomainReviewDecisions = sqliteTable("inspiration_wiki_private_domain_review_decisions", {
+  id: text("id").primaryKey(),
+  reviewCaseId: text("review_case_id").notNull()
+    .references(() => inspirationWikiPrivateDomainReviewCases.reviewCaseId, { onDelete: "restrict" }),
+  previousCaseRevision: integer("previous_case_revision").notNull(),
+  nextCaseRevision: integer("next_case_revision").notNull(),
+  reviewDomain: text("review_domain", { enum: ["CURATION", "TEACHING", "RIGHTS", "SAFETY"] }).notNull(),
+  decision: text("decision", { enum: ["APPROVE", "HOLD", "REJECT"] }).notNull(),
+  assessmentJson: text("assessment_json", { mode: "json" }).$type<JsonRecord>().notNull(),
+  note: text("note").notNull(),
+  reviewerId: text("reviewer_id").notNull().references(() => users.id, { onDelete: "restrict" }),
+  previousStage: text("previous_stage").notNull(),
+  nextStage: text("next_stage").notNull(),
+  previousStateHash: text("previous_state_hash").notNull(),
+  nextStateHash: text("next_state_hash").notNull(),
+  supersedesDecisionId: text("supersedes_decision_id"),
+  idempotencyKey: text("idempotency_key").notNull(),
+  requestHash: text("request_hash").notNull(),
+  previousCaseJson: text("previous_case_json", { mode: "json" }).$type<JsonRecord>().notNull(),
+  nextCaseJson: text("next_case_json", { mode: "json" }).$type<JsonRecord>().notNull(),
+  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
+}, (table) => [
+  uniqueIndex("inspiration_wiki_private_domain_review_decisions_reviewer_key_unique").on(table.reviewerId, table.idempotencyKey),
+  uniqueIndex("inspiration_wiki_private_domain_review_decisions_case_revision_unique").on(table.reviewCaseId, table.nextCaseRevision),
+  index("inspiration_wiki_private_domain_review_decisions_case_created_idx").on(table.reviewCaseId, table.createdAt),
+  check("inspiration_wiki_private_domain_review_decisions_revision_check", sql`${table.previousCaseRevision} > 0 and ${table.nextCaseRevision} = ${table.previousCaseRevision} + 1`),
+  check("inspiration_wiki_private_domain_review_decisions_domain_check", sql`${table.reviewDomain} in ('CURATION','TEACHING','RIGHTS','SAFETY') and ${table.decision} in ('APPROVE','HOLD','REJECT')`),
+  check("inspiration_wiki_private_domain_review_decisions_json_check", sql`json_valid(${table.assessmentJson}) and json_type(${table.assessmentJson}) = 'object' and json_valid(${table.previousCaseJson}) and json_type(${table.previousCaseJson}) = 'object' and json_valid(${table.nextCaseJson}) and json_type(${table.nextCaseJson}) = 'object'`),
+  check("inspiration_wiki_private_domain_review_decisions_hash_check", sql`length(${table.previousStateHash}) = 64 and ${table.previousStateHash} not glob '*[^0-9a-f]*' and length(${table.nextStateHash}) = 64 and ${table.nextStateHash} not glob '*[^0-9a-f]*' and length(${table.requestHash}) = 64 and ${table.requestHash} not glob '*[^0-9a-f]*'`),
+  check("inspiration_wiki_private_domain_review_decisions_note_check", sql`length(${table.note}) <= 300 and ((${table.decision} = 'APPROVE') or length(trim(${table.note})) between 1 and 300)`),
+  check("inspiration_wiki_private_domain_review_decisions_key_check", sql`length(${table.idempotencyKey}) between 8 and 128`),
+]);
+
+/** D-21 private compilation. These pages are not formal/current Wiki pages. */
+export const inspirationWikiPrivatePages = sqliteTable("inspiration_wiki_private_pages", {
+  pageId: text("page_id").primaryKey(),
+  candidateId: text("candidate_id").notNull()
+    .references(() => inspirationWikiHermesCandidates.id, { onDelete: "restrict" }),
+  pageType: text("page_type", { enum: ["INSPIRATION_CASE"] }).notNull(),
+  state: text("state", { enum: ["PRIVATE_COMPILED"] }).notNull(),
+  title: text("title").notNull(),
+  latestRevisionId: text("latest_revision_id").notNull(),
+  latestTruthId: text("latest_truth_id").notNull(),
+  revisionCount: integer("revision_count").notNull(),
+  rightsScope: text("rights_scope", { enum: ["UNKNOWN_PRIVATE_ONLY"] }).notNull(),
+  pageJson: text("page_json", { mode: "json" }).$type<JsonRecord>().notNull(),
+  teacherPrivate: integer("teacher_private", { mode: "boolean" }).notNull().default(true),
+  studentVisible: integer("student_visible", { mode: "boolean" }).notNull().default(false),
+  privateCompilation: text("private_compilation", { enum: ["ENABLED"] }).notNull().default("ENABLED"),
+  canonicalCompilation: text("canonical_compilation", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  currentPage: text("current_page", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  formalRelease: text("formal_release", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  r2: text("r2", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  embedding: text("embedding", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  lumiRetrieval: text("lumi_retrieval", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
+}, (table) => [
+  uniqueIndex("inspiration_wiki_private_pages_candidate_unique").on(table.candidateId),
+  index("inspiration_wiki_private_pages_updated_idx").on(table.updatedAt),
+  check("inspiration_wiki_private_pages_identity_check", sql`${table.pageId} glob 'private-wiki-page:*' and ${table.pageType} = 'INSPIRATION_CASE' and ${table.state} = 'PRIVATE_COMPILED' and ${table.revisionCount} > 0`),
+  check("inspiration_wiki_private_pages_json_check", sql`json_valid(${table.pageJson}) and json_type(${table.pageJson}) = 'object'`),
+  check("inspiration_wiki_private_pages_boundary_check", sql`${table.rightsScope} = 'UNKNOWN_PRIVATE_ONLY' and ${table.teacherPrivate} = 1 and ${table.studentVisible} = 0 and ${table.privateCompilation} = 'ENABLED' and ${table.canonicalCompilation} = 'DISABLED' and ${table.currentPage} = 'DISABLED' and ${table.formalRelease} = 'DISABLED' and ${table.r2} = 'DISABLED' and ${table.embedding} = 'DISABLED' and ${table.lumiRetrieval} = 'DISABLED'`),
+]);
+
+export const inspirationWikiPrivatePageRevisions = sqliteTable("inspiration_wiki_private_page_revisions", {
+  revisionId: text("revision_id").primaryKey(),
+  pageId: text("page_id").notNull()
+    .references(() => inspirationWikiPrivatePages.pageId, { onDelete: "restrict" }),
+  candidateId: text("candidate_id").notNull()
+    .references(() => inspirationWikiHermesCandidates.id, { onDelete: "restrict" }),
+  revision: integer("revision").notNull(),
+  revisionHash: text("revision_hash").notNull(),
+  contentHash: text("content_hash").notNull(),
+  draftId: text("draft_id").notNull()
+    .references(() => inspirationWikiPrivateWorkingDrafts.draftId, { onDelete: "restrict" }),
+  draftRevision: integer("draft_revision").notNull(),
+  draftContentHash: text("draft_content_hash").notNull(),
+  reviewCaseId: text("review_case_id").notNull()
+    .references(() => inspirationWikiPrivateDomainReviewCases.reviewCaseId, { onDelete: "restrict" }),
+  reviewCaseRevision: integer("review_case_revision").notNull(),
+  reviewStateHash: text("review_state_hash").notNull(),
+  decisionIdsJson: text("decision_ids_json", { mode: "json" }).$type<JsonRecord>().notNull(),
+  contentJson: text("content_json", { mode: "json" }).$type<JsonRecord>().notNull(),
+  revisionJson: text("revision_json", { mode: "json" }).$type<JsonRecord>().notNull(),
+  compiledAt: integer("compiled_at", { mode: "timestamp" }).notNull(),
+}, (table) => [
+  uniqueIndex("inspiration_wiki_private_page_revisions_page_revision_unique").on(table.pageId, table.revision),
+  uniqueIndex("inspiration_wiki_private_page_revisions_source_unique").on(table.reviewCaseId, table.reviewCaseRevision),
+  index("inspiration_wiki_private_page_revisions_candidate_idx").on(table.candidateId),
+  check("inspiration_wiki_private_page_revisions_revision_check", sql`${table.revision} > 0 and ${table.draftRevision} > 0 and ${table.reviewCaseRevision} > 0`),
+  check("inspiration_wiki_private_page_revisions_hash_check", sql`length(${table.revisionHash}) = 64 and ${table.revisionHash} not glob '*[^0-9a-f]*' and length(${table.contentHash}) = 64 and ${table.contentHash} not glob '*[^0-9a-f]*' and length(${table.draftContentHash}) = 64 and ${table.draftContentHash} not glob '*[^0-9a-f]*' and length(${table.reviewStateHash}) = 64 and ${table.reviewStateHash} not glob '*[^0-9a-f]*'`),
+  check("inspiration_wiki_private_page_revisions_json_check", sql`json_valid(${table.decisionIdsJson}) and json_type(${table.decisionIdsJson}) = 'object' and json_valid(${table.contentJson}) and json_type(${table.contentJson}) = 'object' and json_valid(${table.revisionJson}) and json_type(${table.revisionJson}) = 'object'`),
+]);
+
+export const inspirationWikiPrivateCompiledTruths = sqliteTable("inspiration_wiki_private_compiled_truths", {
+  truthId: text("truth_id").primaryKey(),
+  pageId: text("page_id").notNull()
+    .references(() => inspirationWikiPrivatePages.pageId, { onDelete: "restrict" }),
+  revisionId: text("revision_id").notNull()
+    .references(() => inspirationWikiPrivatePageRevisions.revisionId, { onDelete: "restrict" }),
+  truthHash: text("truth_hash").notNull(),
+  contentHash: text("content_hash").notNull(),
+  state: text("state", { enum: ["PRIVATE_COMPILED_PREVIEW"] }).notNull(),
+  rightsScope: text("rights_scope", { enum: ["UNKNOWN_PRIVATE_ONLY"] }).notNull(),
+  truthJson: text("truth_json", { mode: "json" }).$type<JsonRecord>().notNull(),
+  teacherPrivate: integer("teacher_private", { mode: "boolean" }).notNull().default(true),
+  studentVisible: integer("student_visible", { mode: "boolean" }).notNull().default(false),
+  canonicalCompilation: text("canonical_compilation", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  currentPage: text("current_page", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  formalRelease: text("formal_release", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  r2: text("r2", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  embedding: text("embedding", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  lumiRetrieval: text("lumi_retrieval", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  compiledAt: integer("compiled_at", { mode: "timestamp" }).notNull(),
+}, (table) => [
+  uniqueIndex("inspiration_wiki_private_compiled_truths_revision_unique").on(table.revisionId),
+  index("inspiration_wiki_private_compiled_truths_page_idx").on(table.pageId),
+  check("inspiration_wiki_private_compiled_truths_hash_check", sql`length(${table.truthHash}) = 64 and ${table.truthHash} not glob '*[^0-9a-f]*' and length(${table.contentHash}) = 64 and ${table.contentHash} not glob '*[^0-9a-f]*'`),
+  check("inspiration_wiki_private_compiled_truths_json_check", sql`json_valid(${table.truthJson}) and json_type(${table.truthJson}) = 'object'`),
+  check("inspiration_wiki_private_compiled_truths_boundary_check", sql`${table.state} = 'PRIVATE_COMPILED_PREVIEW' and ${table.rightsScope} = 'UNKNOWN_PRIVATE_ONLY' and ${table.teacherPrivate} = 1 and ${table.studentVisible} = 0 and ${table.canonicalCompilation} = 'DISABLED' and ${table.currentPage} = 'DISABLED' and ${table.formalRelease} = 'DISABLED' and ${table.r2} = 'DISABLED' and ${table.embedding} = 'DISABLED' and ${table.lumiRetrieval} = 'DISABLED'`),
+]);
+
+/** D-22 role-governed private internal catalog. This is not a release or Current Page. */
+export const inspirationWikiPrivateCatalogGovernanceCases = sqliteTable("inspiration_wiki_private_catalog_governance_cases", {
+  governanceCaseId: text("governance_case_id").primaryKey(),
+  candidateId: text("candidate_id").notNull()
+    .references(() => inspirationWikiHermesCandidates.id, { onDelete: "restrict" }),
+  pageId: text("page_id").notNull()
+    .references(() => inspirationWikiPrivatePages.pageId, { onDelete: "restrict" }),
+  pageRevisionId: text("page_revision_id").notNull()
+    .references(() => inspirationWikiPrivatePageRevisions.revisionId, { onDelete: "restrict" }),
+  truthId: text("truth_id").notNull()
+    .references(() => inspirationWikiPrivateCompiledTruths.truthId, { onDelete: "restrict" }),
+  reviewCaseId: text("review_case_id").notNull()
+    .references(() => inspirationWikiPrivateDomainReviewCases.reviewCaseId, { onDelete: "restrict" }),
+  policyRevisionId: text("policy_revision_id").notNull()
+    .references(() => inspirationWikiRolePolicies.revisionId, { onDelete: "restrict" }),
+  policyRevisionHash: text("policy_revision_hash").notNull(),
+  targetHash: text("target_hash").notNull(),
+  roleAssignmentIdsJson: text("role_assignment_ids_json", { mode: "json" }).$type<JsonRecord>().notNull(),
+  sourceDecisionIdsJson: text("source_decision_ids_json", { mode: "json" }).$type<JsonRecord>().notNull(),
+  decisionIdsJson: text("decision_ids_json", { mode: "json" }).$type<JsonRecord>().notNull(),
+  stage: text("stage", { enum: ["ROLE_REVIEW_COMPLETE"] }).notNull(),
+  reviewerModel: text("reviewer_model", { enum: ["SINGLE_TEACHER_EXPLICIT_ROLES"] }).notNull(),
+  rightsScope: text("rights_scope", { enum: ["UNKNOWN_PRIVATE_ONLY"] }).notNull(),
+  caseJson: text("case_json", { mode: "json" }).$type<JsonRecord>().notNull(),
+  teacherPrivate: integer("teacher_private", { mode: "boolean" }).notNull().default(true),
+  studentVisible: integer("student_visible", { mode: "boolean" }).notNull().default(false),
+  internalCatalog: text("internal_catalog", { enum: ["ENABLED"] }).notNull().default("ENABLED"),
+  canonicalCompilation: text("canonical_compilation", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  currentPage: text("current_page", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  formalRelease: text("formal_release", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  r2: text("r2", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  embedding: text("embedding", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  lumiRetrieval: text("lumi_retrieval", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  reviewedAt: integer("reviewed_at", { mode: "timestamp" }).notNull(),
+  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
+}, (table) => [
+  uniqueIndex("inspiration_wiki_private_catalog_cases_revision_unique").on(table.pageRevisionId),
+  index("inspiration_wiki_private_catalog_cases_page_idx").on(table.pageId, table.reviewedAt),
+  check("inspiration_wiki_private_catalog_cases_identity_check", sql`${table.governanceCaseId} glob 'private-catalog-governance:*' and ${table.stage} = 'ROLE_REVIEW_COMPLETE' and ${table.reviewerModel} = 'SINGLE_TEACHER_EXPLICIT_ROLES'`),
+  check("inspiration_wiki_private_catalog_cases_hash_check", sql`length(${table.policyRevisionHash}) = 71 and ${table.policyRevisionHash} like 'sha256:%' and length(${table.targetHash}) = 71 and ${table.targetHash} like 'sha256:%'`),
+  check("inspiration_wiki_private_catalog_cases_json_check", sql`json_valid(${table.roleAssignmentIdsJson}) and json_type(${table.roleAssignmentIdsJson}) = 'object' and json_valid(${table.sourceDecisionIdsJson}) and json_type(${table.sourceDecisionIdsJson}) = 'object' and json_valid(${table.decisionIdsJson}) and json_type(${table.decisionIdsJson}) = 'object' and json_valid(${table.caseJson}) and json_type(${table.caseJson}) = 'object'`),
+  check("inspiration_wiki_private_catalog_cases_boundary_check", sql`${table.rightsScope} = 'UNKNOWN_PRIVATE_ONLY' and ${table.teacherPrivate} = 1 and ${table.studentVisible} = 0 and ${table.internalCatalog} = 'ENABLED' and ${table.canonicalCompilation} = 'DISABLED' and ${table.currentPage} = 'DISABLED' and ${table.formalRelease} = 'DISABLED' and ${table.r2} = 'DISABLED' and ${table.embedding} = 'DISABLED' and ${table.lumiRetrieval} = 'DISABLED'`),
+]);
+
+export const inspirationWikiPrivateCatalogDomainDecisions = sqliteTable("inspiration_wiki_private_catalog_domain_decisions", {
+  decisionId: text("decision_id").primaryKey(),
+  decisionHash: text("decision_hash").notNull(),
+  governanceCaseId: text("governance_case_id").notNull()
+    .references(() => inspirationWikiPrivateCatalogGovernanceCases.governanceCaseId, { onDelete: "restrict" }),
+  reviewDomain: text("review_domain", { enum: ["CURATION", "TEACHING", "RIGHTS", "SAFETY"] }).notNull(),
+  decision: text("decision", { enum: ["APPROVE_PRIVATE_INTERNAL_CATALOG"] }).notNull(),
+  actorId: text("actor_id").notNull(),
+  authenticatedTeacherId: text("authenticated_teacher_id").notNull()
+    .references(() => users.id, { onDelete: "restrict" }),
+  actorRoleAssignmentId: text("actor_role_assignment_id").notNull()
+    .references(() => inspirationWikiReviewerAssignments.assignmentId, { onDelete: "restrict" }),
+  sourcePrivateDecisionId: text("source_private_decision_id").notNull()
+    .references(() => inspirationWikiPrivateDomainReviewDecisions.id, { onDelete: "restrict" }),
+  targetHash: text("target_hash").notNull(),
+  interpretation: text("interpretation", { enum: ["CURATION_ACCEPTED", "TEACHING_ACCEPTED", "UNKNOWN_PRIVATE_ONLY_ACCEPTED", "SAFETY_ACCEPTED"] }).notNull(),
+  decisionJson: text("decision_json", { mode: "json" }).$type<JsonRecord>().notNull(),
+  decidedAt: integer("decided_at", { mode: "timestamp" }).notNull(),
+  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
+}, (table) => [
+  uniqueIndex("inspiration_wiki_private_catalog_decisions_case_domain_unique").on(table.governanceCaseId, table.reviewDomain),
+  uniqueIndex("inspiration_wiki_private_catalog_decisions_source_unique").on(table.sourcePrivateDecisionId),
+  index("inspiration_wiki_private_catalog_decisions_actor_idx").on(table.actorId, table.reviewDomain),
+  index("inspiration_wiki_private_catalog_decisions_teacher_idx").on(table.authenticatedTeacherId, table.reviewDomain),
+  check("inspiration_wiki_private_catalog_decisions_hash_check", sql`length(${table.decisionHash}) = 71 and ${table.decisionHash} like 'sha256:%' and length(${table.targetHash}) = 71 and ${table.targetHash} like 'sha256:%'`),
+  check("inspiration_wiki_private_catalog_decisions_json_check", sql`json_valid(${table.decisionJson}) and json_type(${table.decisionJson}) = 'object'`),
+]);
+
+export const inspirationWikiPrivateInternalCatalogEntries = sqliteTable("inspiration_wiki_private_internal_catalog_entries", {
+  entryId: text("entry_id").primaryKey(),
+  entryHash: text("entry_hash").notNull(),
+  governanceCaseId: text("governance_case_id").notNull()
+    .references(() => inspirationWikiPrivateCatalogGovernanceCases.governanceCaseId, { onDelete: "restrict" }),
+  candidateId: text("candidate_id").notNull()
+    .references(() => inspirationWikiHermesCandidates.id, { onDelete: "restrict" }),
+  pageId: text("page_id").notNull()
+    .references(() => inspirationWikiPrivatePages.pageId, { onDelete: "restrict" }),
+  pageRevisionId: text("page_revision_id").notNull()
+    .references(() => inspirationWikiPrivatePageRevisions.revisionId, { onDelete: "restrict" }),
+  truthId: text("truth_id").notNull()
+    .references(() => inspirationWikiPrivateCompiledTruths.truthId, { onDelete: "restrict" }),
+  policyRevisionId: text("policy_revision_id").notNull()
+    .references(() => inspirationWikiRolePolicies.revisionId, { onDelete: "restrict" }),
+  policyRevisionHash: text("policy_revision_hash").notNull(),
+  targetHash: text("target_hash").notNull(),
+  acceptedDecisionIdsJson: text("accepted_decision_ids_json", { mode: "json" }).$type<JsonRecord>().notNull(),
+  state: text("state", { enum: ["INTERNAL_CATALOG_ACTIVE"] }).notNull(),
+  rightsScope: text("rights_scope", { enum: ["UNKNOWN_PRIVATE_ONLY"] }).notNull(),
+  entryJson: text("entry_json", { mode: "json" }).$type<JsonRecord>().notNull(),
+  teacherPrivate: integer("teacher_private", { mode: "boolean" }).notNull().default(true),
+  studentVisible: integer("student_visible", { mode: "boolean" }).notNull().default(false),
+  internalCatalog: text("internal_catalog", { enum: ["ENABLED"] }).notNull().default("ENABLED"),
+  canonicalCompilation: text("canonical_compilation", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  currentPage: text("current_page", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  formalRelease: text("formal_release", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  r2: text("r2", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  embedding: text("embedding", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  lumiRetrieval: text("lumi_retrieval", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  activatedAt: integer("activated_at", { mode: "timestamp" }).notNull(),
+  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
+}, (table) => [
+  uniqueIndex("inspiration_wiki_private_internal_catalog_case_unique").on(table.governanceCaseId),
+  uniqueIndex("inspiration_wiki_private_internal_catalog_revision_unique").on(table.pageRevisionId),
+  index("inspiration_wiki_private_internal_catalog_page_idx").on(table.pageId, table.activatedAt),
+  check("inspiration_wiki_private_internal_catalog_hash_check", sql`length(${table.entryHash}) = 71 and ${table.entryHash} like 'sha256:%' and length(${table.policyRevisionHash}) = 71 and ${table.policyRevisionHash} like 'sha256:%' and length(${table.targetHash}) = 71 and ${table.targetHash} like 'sha256:%'`),
+  check("inspiration_wiki_private_internal_catalog_json_check", sql`json_valid(${table.acceptedDecisionIdsJson}) and json_type(${table.acceptedDecisionIdsJson}) = 'object' and json_valid(${table.entryJson}) and json_type(${table.entryJson}) = 'object'`),
+  check("inspiration_wiki_private_internal_catalog_boundary_check", sql`${table.state} = 'INTERNAL_CATALOG_ACTIVE' and ${table.rightsScope} = 'UNKNOWN_PRIVATE_ONLY' and ${table.teacherPrivate} = 1 and ${table.studentVisible} = 0 and ${table.internalCatalog} = 'ENABLED' and ${table.canonicalCompilation} = 'DISABLED' and ${table.currentPage} = 'DISABLED' and ${table.formalRelease} = 'DISABLED' and ${table.r2} = 'DISABLED' and ${table.embedding} = 'DISABLED' and ${table.lumiRetrieval} = 'DISABLED'`),
+]);
+
+/** P2 migration snapshot. SHADOW is a hard student-read interlock, never a release. */
+export const inspirationWikiP2ChannelSnapshots = sqliteTable("inspiration_wiki_p2_channel_snapshots", {
+  snapshotId: text("snapshot_id").primaryKey(),
+  snapshotHash: text("snapshot_hash").notNull(),
+  sourceReadinessHash: text("source_readiness_hash").notNull(),
+  sourceSetHash: text("source_set_hash").notNull(),
+  schemaVersion: text("schema_version", { enum: ["lumi-inspiration-p2-channel-shadow-snapshot/v1"] }).notNull(),
+  mode: text("mode", { enum: ["SHADOW"] }).notNull(),
+  browseRelease: text("browse_release", { enum: ["SHADOW"] }).notNull(),
+  studentSearch: text("student_search", { enum: ["SHADOW"] }).notNull(),
+  wikiRetrieval: text("wiki_retrieval", { enum: ["DISABLED"] }).notNull(),
+  totalCount: integer("total_count").notNull(),
+  eligibleCount: integer("eligible_count").notNull(),
+  blockedCount: integer("blocked_count").notNull(),
+  rightsUnknownCount: integer("rights_unknown_count").notNull(),
+  eligiblePageIdsJson: text("eligible_page_ids_json", { mode: "json" }).$type<string[]>().notNull(),
+  restrictedPageIdsJson: text("restricted_page_ids_json", { mode: "json" }).$type<string[]>().notNull(),
+  snapshotJson: text("snapshot_json", { mode: "json" }).$type<JsonRecord>().notNull(),
+  studentVisible: integer("student_visible", { mode: "boolean" }).notNull().default(false),
+  productionDeployment: text("production_deployment", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  formalRelease: text("formal_release", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  currentPage: text("current_page", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  r2: text("r2", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  embedding: text("embedding", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  lumiRetrieval: text("lumi_retrieval", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
+}, (table) => [
+  uniqueIndex("inspiration_wiki_p2_channel_source_unique").on(table.sourceReadinessHash),
+  index("inspiration_wiki_p2_channel_created_idx").on(table.createdAt, table.snapshotId),
+  check("inspiration_wiki_p2_channel_id_check", sql`${table.snapshotId} glob 'p2-channel-shadow:*'`),
+  check("inspiration_wiki_p2_channel_hash_check", sql`length(${table.snapshotHash}) = 71 and ${table.snapshotHash} like 'sha256:%' and length(${table.sourceReadinessHash}) = 71 and ${table.sourceReadinessHash} like 'sha256:%' and length(${table.sourceSetHash}) = 71 and ${table.sourceSetHash} like 'sha256:%'`),
+  check("inspiration_wiki_p2_channel_count_check", sql`${table.totalCount} >= 0 and ${table.eligibleCount} = 0 and ${table.totalCount} = ${table.blockedCount} and ${table.totalCount} = ${table.rightsUnknownCount}`),
+  check("inspiration_wiki_p2_channel_json_check", sql`json_valid(${table.eligiblePageIdsJson}) and json_type(${table.eligiblePageIdsJson}) = 'array' and json_array_length(${table.eligiblePageIdsJson}) = 0 and json_valid(${table.restrictedPageIdsJson}) and json_type(${table.restrictedPageIdsJson}) = 'array' and json_array_length(${table.restrictedPageIdsJson}) = ${table.blockedCount} and json_valid(${table.snapshotJson}) and json_type(${table.snapshotJson}) = 'object'`),
+  check("inspiration_wiki_p2_channel_boundary_check", sql`${table.mode} = 'SHADOW' and ${table.browseRelease} = 'SHADOW' and ${table.studentSearch} = 'SHADOW' and ${table.wikiRetrieval} = 'DISABLED' and ${table.studentVisible} = 0 and ${table.productionDeployment} = 'DISABLED' and ${table.formalRelease} = 'DISABLED' and ${table.currentPage} = 'DISABLED' and ${table.r2} = 'DISABLED' and ${table.embedding} = 'DISABLED' and ${table.lumiRetrieval} = 'DISABLED'`),
+]);
+
+/** D-25 formal-release qualification workbench. Qualification is not release or student activation. */
+export const inspirationWikiReleaseQualificationCases = sqliteTable("inspiration_wiki_release_qualification_cases", {
+  caseId: text("case_id").primaryKey(),
+  caseHash: text("case_hash").notNull(),
+  entryId: text("entry_id").notNull().references(() => inspirationWikiPrivateInternalCatalogEntries.entryId, { onDelete: "restrict" }),
+  pageId: text("page_id").notNull().references(() => inspirationWikiPrivatePages.pageId, { onDelete: "restrict" }),
+  pageRevisionId: text("page_revision_id").notNull().references(() => inspirationWikiPrivatePageRevisions.revisionId, { onDelete: "restrict" }),
+  contentHash: text("content_hash").notNull(),
+  primaryCategory: text("primary_category").notNull(),
+  caseJson: text("case_json", { mode: "json" }).$type<JsonRecord>().notNull(),
+  teacherPrivate: integer("teacher_private", { mode: "boolean" }).notNull().default(true),
+  formalQualificationOnly: integer("formal_qualification_only", { mode: "boolean" }).notNull().default(true),
+  studentVisible: integer("student_visible", { mode: "boolean" }).notNull().default(false),
+  formalRelease: text("formal_release", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  currentPage: text("current_page", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  browseRelease: text("browse_release", { enum: ["SHADOW"] }).notNull().default("SHADOW"),
+  studentSearch: text("student_search", { enum: ["SHADOW"] }).notNull().default("SHADOW"),
+  wikiRetrieval: text("wiki_retrieval", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  r2: text("r2", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  embedding: text("embedding", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  lumiRetrieval: text("lumi_retrieval", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  productionDeployment: text("production_deployment", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
+}, (table) => [
+  uniqueIndex("inspiration_wiki_release_qualification_entry_unique").on(table.entryId),
+  uniqueIndex("inspiration_wiki_release_qualification_revision_unique").on(table.pageRevisionId),
+  index("inspiration_wiki_release_qualification_category_idx").on(table.primaryCategory, table.createdAt),
+  check("inspiration_wiki_release_qualification_case_id_check", sql`${table.caseId} glob 'release-qualification:*'`),
+  check("inspiration_wiki_release_qualification_case_hash_check", sql`length(${table.caseHash}) = 71 and ${table.caseHash} like 'sha256:%' and length(${table.contentHash}) = 64 and ${table.contentHash} not glob '*[^0-9a-f]*'`),
+  check("inspiration_wiki_release_qualification_case_json_check", sql`json_valid(${table.caseJson}) and json_type(${table.caseJson}) = 'object'`),
+  check("inspiration_wiki_release_qualification_case_boundary_check", sql`${table.teacherPrivate} = 1 and ${table.formalQualificationOnly} = 1 and ${table.studentVisible} = 0 and ${table.formalRelease} = 'DISABLED' and ${table.currentPage} = 'DISABLED' and ${table.browseRelease} = 'SHADOW' and ${table.studentSearch} = 'SHADOW' and ${table.wikiRetrieval} = 'DISABLED' and ${table.r2} = 'DISABLED' and ${table.embedding} = 'DISABLED' and ${table.lumiRetrieval} = 'DISABLED' and ${table.productionDeployment} = 'DISABLED'`),
+]);
+
+export const inspirationWikiReleaseQualificationDecisions = sqliteTable("inspiration_wiki_release_qualification_decisions", {
+  decisionId: text("decision_id").primaryKey(),
+  decisionHash: text("decision_hash").notNull(),
+  requestHash: text("request_hash").notNull(),
+  idempotencyKey: text("idempotency_key").notNull(),
+  caseId: text("case_id").notNull().references(() => inspirationWikiReleaseQualificationCases.caseId, { onDelete: "restrict" }),
+  gate: text("gate", { enum: ["STUDENT_DISPLAY_RIGHTS", "AUDIENCE_POLICY", "SOURCE_DISCLOSURE", "WITHDRAWAL_READINESS", "RELEASE_ROLE_SIGNOFF"] }).notNull(),
+  status: text("status", { enum: ["SATISFIED", "BLOCKED"] }).notNull(),
+  evidenceRef: text("evidence_ref"),
+  note: text("note").notNull(),
+  actorId: text("actor_id").notNull().references(() => users.id, { onDelete: "restrict" }),
+  revision: integer("revision").notNull(),
+  decisionJson: text("decision_json", { mode: "json" }).$type<JsonRecord>().notNull(),
+  decidedAt: integer("decided_at", { mode: "timestamp" }).notNull(),
+}, (table) => [
+  uniqueIndex("inspiration_wiki_release_qualification_idempotency_unique").on(table.idempotencyKey),
+  uniqueIndex("inspiration_wiki_release_qualification_gate_revision_unique").on(table.caseId, table.gate, table.revision),
+  index("inspiration_wiki_release_qualification_decision_case_idx").on(table.caseId, table.decidedAt),
+  check("inspiration_wiki_release_qualification_decision_id_check", sql`${table.decisionId} glob 'release-qualification-decision:*'`),
+  check("inspiration_wiki_release_qualification_decision_hash_check", sql`length(${table.decisionHash}) = 71 and ${table.decisionHash} like 'sha256:%' and length(${table.requestHash}) = 71 and ${table.requestHash} like 'sha256:%'`),
+  check("inspiration_wiki_release_qualification_decision_json_check", sql`json_valid(${table.decisionJson}) and json_type(${table.decisionJson}) = 'object'`),
+  check("inspiration_wiki_release_qualification_decision_revision_check", sql`${table.revision} >= 1`),
+  check("inspiration_wiki_release_qualification_rights_evidence_check", sql`${table.gate} <> 'STUDENT_DISPLAY_RIGHTS' or ${table.status} <> 'SATISFIED' or (${table.evidenceRef} is not null and length(trim(${table.evidenceRef})) > 0)`),
+]);
+
+/** Canonical inspiration pages remain inert until an immutable formal release activates a Current Page event. */
+export const inspirationWikiCanonicalPages = sqliteTable("inspiration_wiki_canonical_pages", {
+  canonicalPageId: text("canonical_page_id").primaryKey(),
+  candidateId: text("candidate_id").notNull()
+    .references(() => inspirationWikiHermesCandidates.id, { onDelete: "restrict" }),
+  pageType: text("page_type", { enum: ["INSPIRATION_CASE"] }).notNull(),
+  pageJson: text("page_json", { mode: "json" }).$type<JsonRecord>().notNull(),
+  canonical: integer("canonical", { mode: "boolean" }).notNull().default(true),
+  studentVisible: integer("student_visible", { mode: "boolean" }).notNull().default(false),
+  currentPage: text("current_page", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  formalRelease: text("formal_release", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
+}, (table) => [
+  uniqueIndex("inspiration_wiki_canonical_pages_candidate_unique").on(table.candidateId),
+  check("inspiration_wiki_canonical_pages_id_check", sql`${table.canonicalPageId} glob 'wiki-page:*' and length(${table.canonicalPageId}) = 42`),
+  check("inspiration_wiki_canonical_pages_json_check", sql`json_valid(${table.pageJson}) and json_type(${table.pageJson}) = 'object'`),
+  check("inspiration_wiki_canonical_pages_inert_check", sql`${table.pageType} = 'INSPIRATION_CASE' and ${table.canonical} = 1 and ${table.studentVisible} = 0 and ${table.currentPage} = 'DISABLED' and ${table.formalRelease} = 'DISABLED'`),
+]);
+
+export const inspirationWikiCanonicalPageRevisions = sqliteTable("inspiration_wiki_canonical_page_revisions", {
+  canonicalRevisionId: text("canonical_revision_id").primaryKey(),
+  canonicalPageId: text("canonical_page_id").notNull()
+    .references(() => inspirationWikiCanonicalPages.canonicalPageId, { onDelete: "restrict" }),
+  revision: integer("revision").notNull(),
+  revisionHash: text("revision_hash").notNull(),
+  caseId: text("case_id").notNull()
+    .references(() => inspirationWikiReleaseQualificationCases.caseId, { onDelete: "restrict" }),
+  sourcePrivatePageId: text("source_private_page_id").notNull()
+    .references(() => inspirationWikiPrivatePages.pageId, { onDelete: "restrict" }),
+  sourcePrivateRevisionId: text("source_private_revision_id").notNull()
+    .references(() => inspirationWikiPrivatePageRevisions.revisionId, { onDelete: "restrict" }),
+  sourceContentHash: text("source_content_hash").notNull(),
+  materialJson: text("material_json", { mode: "json" }).$type<JsonRecord>().notNull(),
+  assetsJson: text("assets_json", { mode: "json" }).$type<JsonRecord[]>().notNull(),
+  studentVisible: integer("student_visible", { mode: "boolean" }).notNull().default(false),
+  formalRelease: text("formal_release", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  currentPage: text("current_page", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  r2: text("r2", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  embedding: text("embedding", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  lumiRetrieval: text("lumi_retrieval", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  productionDeployment: text("production_deployment", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  compiledAt: integer("compiled_at", { mode: "timestamp" }).notNull(),
+}, (table) => [
+  uniqueIndex("inspiration_wiki_canonical_revisions_case_unique").on(table.caseId),
+  uniqueIndex("inspiration_wiki_canonical_revisions_page_revision_unique").on(table.canonicalPageId, table.revision),
+  check("inspiration_wiki_canonical_revisions_id_check", sql`${table.canonicalRevisionId} glob 'wiki-page-revision:*'`),
+  check("inspiration_wiki_canonical_revisions_revision_check", sql`${table.revision} >= 1`),
+  check("inspiration_wiki_canonical_revisions_hash_check", sql`length(${table.revisionHash}) = 71 and ${table.revisionHash} like 'sha256:%' and length(${table.sourceContentHash}) = 64 and ${table.sourceContentHash} not glob '*[^0-9a-f]*'`),
+  check("inspiration_wiki_canonical_revisions_json_check", sql`json_valid(${table.materialJson}) and json_type(${table.materialJson}) = 'object' and json_valid(${table.assetsJson}) and json_type(${table.assetsJson}) = 'array' and json_array_length(${table.assetsJson}) >= 1`),
+  check("inspiration_wiki_canonical_revisions_inert_check", sql`${table.studentVisible} = 0 and ${table.formalRelease} = 'DISABLED' and ${table.currentPage} = 'DISABLED' and ${table.r2} = 'DISABLED' and ${table.embedding} = 'DISABLED' and ${table.lumiRetrieval} = 'DISABLED' and ${table.productionDeployment} = 'DISABLED'`),
+]);
+
+export const inspirationWikiFormalReleases = sqliteTable("inspiration_wiki_formal_releases", {
+  releaseId: text("release_id").primaryKey(),
+  releaseHash: text("release_hash").notNull(),
+  requestHash: text("request_hash").notNull(),
+  idempotencyKey: text("idempotency_key").notNull(),
+  caseId: text("case_id").notNull()
+    .references(() => inspirationWikiReleaseQualificationCases.caseId, { onDelete: "restrict" }),
+  caseHash: text("case_hash").notNull(),
+  canonicalPageId: text("canonical_page_id").notNull()
+    .references(() => inspirationWikiCanonicalPages.canonicalPageId, { onDelete: "restrict" }),
+  canonicalRevisionId: text("canonical_revision_id").notNull()
+    .references(() => inspirationWikiCanonicalPageRevisions.canonicalRevisionId, { onDelete: "restrict" }),
+  qualificationDecisionIdsJson: text("qualification_decision_ids_json", { mode: "json" }).$type<JsonRecord>().notNull(),
+  releaseJson: text("release_json", { mode: "json" }).$type<JsonRecord>().notNull(),
+  status: text("status", { enum: ["PUBLISHED"] }).notNull(),
+  publishedBy: text("published_by").notNull().references(() => users.id, { onDelete: "restrict" }),
+  studentVisible: integer("student_visible", { mode: "boolean" }).notNull().default(true),
+  formalRelease: text("formal_release", { enum: ["ACTIVE"] }).notNull().default("ACTIVE"),
+  currentPage: text("current_page", { enum: ["ACTIVE"] }).notNull().default("ACTIVE"),
+  browseRelease: text("browse_release", { enum: ["ACTIVE"] }).notNull().default("ACTIVE"),
+  studentSearch: text("student_search", { enum: ["ACTIVE"] }).notNull().default("ACTIVE"),
+  preview: text("preview", { enum: ["ACTIVE"] }).notNull().default("ACTIVE"),
+  wikiRetrieval: text("wiki_retrieval", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  r2: text("r2", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  embedding: text("embedding", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  lumiRetrieval: text("lumi_retrieval", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  productionDeployment: text("production_deployment", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  publishedAt: integer("published_at", { mode: "timestamp" }).notNull(),
+}, (table) => [
+  uniqueIndex("inspiration_wiki_formal_releases_idempotency_unique").on(table.idempotencyKey),
+  uniqueIndex("inspiration_wiki_formal_releases_case_unique").on(table.caseId),
+  uniqueIndex("inspiration_wiki_formal_releases_revision_unique").on(table.canonicalRevisionId),
+  check("inspiration_wiki_formal_releases_id_check", sql`${table.releaseId} glob 'wiki-release:*' and length(${table.releaseId}) = 45`),
+  check("inspiration_wiki_formal_releases_hash_check", sql`length(${table.releaseHash}) = 71 and ${table.releaseHash} like 'sha256:%' and length(${table.requestHash}) = 71 and ${table.requestHash} like 'sha256:%' and length(${table.caseHash}) = 71 and ${table.caseHash} like 'sha256:%'`),
+  check("inspiration_wiki_formal_releases_json_check", sql`json_valid(${table.qualificationDecisionIdsJson}) and json_type(${table.qualificationDecisionIdsJson}) = 'object' and json_valid(${table.releaseJson}) and json_type(${table.releaseJson}) = 'object'`),
+  check("inspiration_wiki_formal_releases_boundary_check", sql`${table.status} = 'PUBLISHED' and ${table.studentVisible} = 1 and ${table.formalRelease} = 'ACTIVE' and ${table.currentPage} = 'ACTIVE' and ${table.browseRelease} = 'ACTIVE' and ${table.studentSearch} = 'ACTIVE' and ${table.preview} = 'ACTIVE' and ${table.wikiRetrieval} = 'DISABLED' and ${table.r2} = 'DISABLED' and ${table.embedding} = 'DISABLED' and ${table.lumiRetrieval} = 'DISABLED' and ${table.productionDeployment} = 'DISABLED'`),
+]);
+
+export const inspirationWikiCurrentPageEvents = sqliteTable("inspiration_wiki_current_page_events", {
+  eventId: text("event_id").primaryKey(),
+  eventHash: text("event_hash").notNull(),
+  requestHash: text("request_hash").notNull(),
+  idempotencyKey: text("idempotency_key").notNull(),
+  canonicalPageId: text("canonical_page_id").notNull()
+    .references(() => inspirationWikiCanonicalPages.canonicalPageId, { onDelete: "restrict" }),
+  canonicalRevisionId: text("canonical_revision_id").notNull()
+    .references(() => inspirationWikiCanonicalPageRevisions.canonicalRevisionId, { onDelete: "restrict" }),
+  releaseId: text("release_id").notNull()
+    .references(() => inspirationWikiFormalReleases.releaseId, { onDelete: "restrict" }),
+  eventType: text("event_type", { enum: ["ACTIVATED", "WITHDRAWN"] }).notNull(),
+  reason: text("reason").notNull(),
+  actorId: text("actor_id").notNull().references(() => users.id, { onDelete: "restrict" }),
+  eventJson: text("event_json", { mode: "json" }).$type<JsonRecord>().notNull(),
+  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
+}, (table) => [
+  uniqueIndex("inspiration_wiki_current_page_events_idempotency_unique").on(table.idempotencyKey),
+  index("inspiration_wiki_current_page_events_page_created_idx").on(table.canonicalPageId, table.createdAt),
+  check("inspiration_wiki_current_page_events_id_check", sql`${table.eventId} glob 'current-page-event:*' and length(${table.eventId}) = 51`),
+  check("inspiration_wiki_current_page_events_hash_check", sql`length(${table.eventHash}) = 71 and ${table.eventHash} like 'sha256:%' and length(${table.requestHash}) = 71 and ${table.requestHash} like 'sha256:%'`),
+  check("inspiration_wiki_current_page_events_json_check", sql`json_valid(${table.eventJson}) and json_type(${table.eventJson}) = 'object' and length(trim(${table.reason})) > 0`),
+]);
+
+export const inspirationWikiP2ActiveChannelSnapshots = sqliteTable("inspiration_wiki_p2_active_channel_snapshots", {
+  snapshotId: text("snapshot_id").primaryKey(),
+  snapshotHash: text("snapshot_hash").notNull(),
+  releaseSetHash: text("release_set_hash").notNull(),
+  schemaVersion: text("schema_version", { enum: ["lumi-inspiration-p2-active-channel-snapshot/v1"] }).notNull(),
+  mode: text("mode", { enum: ["ACTIVE"] }).notNull(),
+  releaseIdsJson: text("release_ids_json", { mode: "json" }).$type<string[]>().notNull(),
+  canonicalPageIdsJson: text("canonical_page_ids_json", { mode: "json" }).$type<string[]>().notNull(),
+  browseRelease: text("browse_release", { enum: ["ACTIVE"] }).notNull(),
+  studentSearch: text("student_search", { enum: ["ACTIVE"] }).notNull(),
+  preview: text("preview", { enum: ["ACTIVE"] }).notNull(),
+  wikiRetrieval: text("wiki_retrieval", { enum: ["DISABLED"] }).notNull(),
+  snapshotJson: text("snapshot_json", { mode: "json" }).$type<JsonRecord>().notNull(),
+  studentVisible: integer("student_visible", { mode: "boolean" }).notNull().default(true),
+  formalRelease: text("formal_release", { enum: ["ACTIVE"] }).notNull(),
+  currentPage: text("current_page", { enum: ["ACTIVE"] }).notNull(),
+  r2: text("r2", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  embedding: text("embedding", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  lumiRetrieval: text("lumi_retrieval", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  productionDeployment: text("production_deployment", { enum: ["DISABLED"] }).notNull().default("DISABLED"),
+  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
+}, (table) => [
+  uniqueIndex("inspiration_wiki_p2_active_release_set_unique").on(table.releaseSetHash),
+  index("inspiration_wiki_p2_active_created_idx").on(table.createdAt, table.snapshotId),
+  check("inspiration_wiki_p2_active_id_check", sql`${table.snapshotId} glob 'p2-channel-active:*' and length(${table.snapshotId}) = 50`),
+  check("inspiration_wiki_p2_active_hash_check", sql`length(${table.snapshotHash}) = 71 and ${table.snapshotHash} like 'sha256:%' and length(${table.releaseSetHash}) = 71 and ${table.releaseSetHash} like 'sha256:%'`),
+  check("inspiration_wiki_p2_active_json_check", sql`json_valid(${table.releaseIdsJson}) and json_type(${table.releaseIdsJson}) = 'array' and json_valid(${table.canonicalPageIdsJson}) and json_type(${table.canonicalPageIdsJson}) = 'array' and json_array_length(${table.canonicalPageIdsJson}) = json_array_length(${table.releaseIdsJson}) and json_valid(${table.snapshotJson}) and json_type(${table.snapshotJson}) = 'object'`),
+  check("inspiration_wiki_p2_active_boundary_check", sql`${table.mode} = 'ACTIVE' and ${table.browseRelease} = 'ACTIVE' and ${table.studentSearch} = 'ACTIVE' and ${table.preview} = 'ACTIVE' and ${table.wikiRetrieval} = 'DISABLED' and ${table.studentVisible} = 1 and ${table.formalRelease} = 'ACTIVE' and ${table.currentPage} = 'ACTIVE' and ${table.r2} = 'DISABLED' and ${table.embedding} = 'DISABLED' and ${table.lumiRetrieval} = 'DISABLED' and ${table.productionDeployment} = 'DISABLED'`),
+]);

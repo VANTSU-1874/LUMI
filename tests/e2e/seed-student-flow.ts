@@ -1,6 +1,9 @@
 import { mkdir, rm } from "node:fs/promises";
 import path from "node:path";
 
+import { NextRequest } from "next/server";
+
+import { POST as registerAccount } from "@/app/api/account/register/route";
 import { digestIdentityCode } from "@/lib/auth/identity-code";
 import { createDb } from "@/lib/db/client";
 import { runMigrations } from "@/lib/db/migrate";
@@ -9,6 +12,8 @@ import { seedDemoDatabase } from "@/scripts/seed-demo";
 
 const DATABASE_PATH = process.env.DATABASE_PATH ?? ".runtime/e2e-demo-student-flow.sqlite";
 const PEPPER = process.env.IDENTITY_CODE_PEPPER ?? "e2e-identity-pepper-at-least-32-characters-long";
+const E2E_TEACHER_EMAIL = "teacher.e2e@example.com";
+const E2E_TEACHER_PASSWORD = "LumiTeacher2026!";
 export const E2E_IDENTITY_CODES = [
   "AB7K-C9M2-Q4RP", "CD8L-N3R5-TQ9W", "EF9M-P4S6-VR2X", "GH2N-Q5T7-WX3Z", "JK4P-R6V8-YZ5B",
   "LM3T-R7V9-X2QA", "NP4U-S8W2-Y3RB", "QR5V-T9X3-Z4SC",
@@ -100,6 +105,29 @@ async function main() {
         ('bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbb5','99999999-9999-4999-8999-999999999999',5,'FINAL_RESPONSE','SUCCEEDED','生成受控回答','回答已绑定课程依据和学生确认行动卡。',NULL,NULL,0,${now},'REAL');
       INSERT INTO agent_actions(id,turn_id,action_sequence,type,label,adapter_id,target,focus,payload_json,status,created_at,data_type) VALUES
         ('cccccccc-cccc-4ccc-8ccc-cccccccccccc','99999999-9999-4999-8999-999999999999',1,'START_TROUBLESHOOTING','开始证据排障','project-evidence','PROJECT','troubleshoot','{}','PROPOSED',${now},'REAL');
+      INSERT INTO inspiration_wiki_hermes_batches(
+        batch_id,contract_version,package_digest,manifest_json,done_json,candidate_count,
+        failure_count,intake_state,student_visible,current_page,r2,embedding,lumi_retrieval,imported_at
+      ) VALUES(
+        'hermes-e2e-private-001','LEGACY_V1','dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd',
+        '{}','{}',1,0,'VALIDATED_PRIVATE',0,'DISABLED','DISABLED','DISABLED','DISABLED',${now}
+      );
+      INSERT INTO inspiration_wiki_hermes_candidates(
+        id,batch_id,source_candidate_id,revision,contract_state,review_state,source_id,
+        source_platform,page_url,canonical_url,title,description,author_json,license_json,
+        media_json,design_categories_json,screening_json,raw_candidate_json,raw_digest,
+        dedupe_fingerprint,scope,student_visible,wiki_draft,current_page,r2,embedding,
+        lumi_retrieval,created_at,updated_at
+      ) VALUES(
+        'hermes-candidate:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee','hermes-e2e-private-001',
+        'hc-e2e-private-candidate-001',1,'V1_UPGRADE_REQUIRED','PENDING_REVIEW','e2e-public-source',
+        'OTHER_PUBLIC_WEB','https://example.com/e2e-private-work','https://example.com/e2e-private-work',
+        'Private E2E candidate',NULL,NULL,NULL,'[{"kind":"IMAGE","asset":null}]',
+        '["PRINT","TYPOGRAPHY"]','{"totalScore":24,"evidence":["Public source metadata supports a traceable print design project."]}',
+        '{}','eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+        'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
+        'PRIVATE_CANDIDATE',0,'NOT_CREATED','DISABLED','DISABLED','DISABLED','DISABLED',${now},${now}
+      );
     `);
     await ingestCoursePackKnowledge(connection);
   } finally { connection.sqlite.close(); }
@@ -110,6 +138,28 @@ async function main() {
     allowDemoSeed: true,
     nodeEnv: "test",
   });
+
+  const publicAppUrl = process.env.PUBLIC_APP_URL ?? "http://127.0.0.1:3000";
+  const teacherRegistration = await registerAccount(new NextRequest(
+    new URL("/api/account/register", publicAppUrl),
+    {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        name: "E2E 课程负责人",
+        email: E2E_TEACHER_EMAIL,
+        password: E2E_TEACHER_PASSWORD,
+        role: "TEACHER",
+        teacherCode: process.env.TEACHER_ACCESS_CODE ?? "e2e-teacher-code",
+        rememberMe: true,
+      }),
+    },
+  ));
+  if (!teacherRegistration.ok) {
+    throw new Error(`E2E 教师账号创建失败：${teacherRegistration.status} ${await teacherRegistration.text()}`);
+  }
 }
 
 void main().catch((error: unknown) => { console.error(error); process.exitCode = 1; });

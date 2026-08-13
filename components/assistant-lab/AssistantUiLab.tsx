@@ -713,6 +713,19 @@ function AssistantLabShell() {
             <div className={styles.topbarSpacer} aria-hidden="true" />
           )}
         </header>
+        <div className={styles.inspirationStage} hidden={activeSection !== "inspiration"}>
+          <InspirationWiki
+            currentThreadId={activeThreadId}
+            embedded
+            entries={inspirationEntries}
+            initialSelectedId={inspirationCitation?.entryId ?? initialInspirationCaseId}
+            onBackToChat={() => navigateTo("chat")}
+            onToggleSaved={toggleSavedInspiration}
+            onUseInChat={bringInspirationToChat}
+            savedEntryIds={savedInspirationIds}
+            showEmbeddedTopbar={false}
+          />
+        </div>
         {activeSection === "chat" ? (
           <div
             className={styles.threadStage}

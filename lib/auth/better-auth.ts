@@ -138,8 +138,12 @@ export function createLumiAuthRuntime(
   const config = readEnv(environment);
   const connection = createDb(config.databasePath);
   const registrationToken = internalRegistrationToken(config.sessionSecret);
+  const configuredOrigin = config.publicAppUrl;
 
   const auth = betterAuth({
+    ...(configuredOrigin
+      ? { baseURL: configuredOrigin, trustedOrigins: [configuredOrigin] }
+      : {}),
     secret: config.sessionSecret,
     database: drizzleAdapter(connection.db, {
       provider: "sqlite",
