@@ -53,6 +53,12 @@ describe("constrained Lumi release wrapper", () => {
     expect(wrapper).toContain("run_inspiration_wiki_d27_release()");
     expect(wrapper).toContain("verify_inspiration_wiki_d27_release()");
     expect(wrapper).toContain("apply-inspiration-wiki-production-release.ts");
+    expect(wrapper).toContain(
+      "data/inspiration-wiki/production-release/d28-full-release-v1",
+    );
+    expect(wrapper).not.toContain(
+      "data/inspiration-wiki/production-release/d27-pilot-release-v1",
+    );
     expect(wrapper).toContain('grep -Fq \'"databaseWrites": 0\'');
     expect(wrapper).toContain('grep -Fq \'"assetWrites": 0\'');
     expect(wrapper).toContain("INSPIRATION_WIKI_D27_VERIFY=PASS");

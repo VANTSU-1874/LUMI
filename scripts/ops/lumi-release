@@ -592,7 +592,7 @@ run_inspiration_wiki_d27_release() {
     cd "$2"
     exec "$3" "$2/node_modules/tsx/dist/cli.mjs" \
       "$2/scripts/apply-inspiration-wiki-production-release.ts" \
-      --bundle "$2/data/inspiration-wiki/production-release/d27-pilot-release-v1"
+      --bundle "$2/data/inspiration-wiki/production-release/d28-full-release-v1"
   ' -- "$SERVICE_ENV" "$release" "$RUNTIME_NODE"
 }
 
@@ -1345,8 +1345,8 @@ verify_release() {
     runuser -u "$SERVICE_USER" -- test -x "$release/.runtime/knowledge-v2-linux/python/bin/python3"
   elif [[ "$database_migration" == "$DATABASE_MIGRATION_INSPIRATION_D27" ]]; then
     runuser -u "$SERVICE_USER" -- test -r "$release/scripts/apply-inspiration-wiki-production-release.ts"
-    runuser -u "$SERVICE_USER" -- test -r "$release/data/inspiration-wiki/production-release/d27-pilot-release-v1/manifest.json"
-    runuser -u "$SERVICE_USER" -- test -r "$release/data/inspiration-wiki/production-release/d27-pilot-release-v1/DONE.json"
+    runuser -u "$SERVICE_USER" -- test -r "$release/data/inspiration-wiki/production-release/d28-full-release-v1/manifest.json"
+    runuser -u "$SERVICE_USER" -- test -r "$release/data/inspiration-wiki/production-release/d28-full-release-v1/DONE.json"
     runuser -u "$SERVICE_USER" -- test -r "$release/runtime-manifest.json"
     runuser -u "$SERVICE_USER" -- test -x "$release/.runtime/knowledge-v2-linux/python/bin/python3"
   fi
