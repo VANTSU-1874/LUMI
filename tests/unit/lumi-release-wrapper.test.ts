@@ -58,6 +58,20 @@ describe("constrained Lumi release wrapper", () => {
     expect(wrapper).toContain("INSPIRATION_WIKI_D27_VERIFY=PASS");
   });
 
+  it("inherits the sealed Knowledge V2 runtime for D-27 before release verification", () => {
+    const wrapper = readFileSync(wrapperPath, "utf8");
+
+    expect(wrapper).toContain("inherit_knowledge_v2_runtime_for_d27()");
+    expect(wrapper).toContain("KNOWLEDGE_V2_RUNTIME_INHERIT=PASS");
+    expect(wrapper).toContain('"$RELEASE_ROOT/$expected_current" "$release"');
+    expect(wrapper).toContain('test -r "$release/runtime-manifest.json"');
+    expect(wrapper).toContain(
+      'test -x "$release/.runtime/knowledge-v2-linux/python/bin/python3"',
+    );
+    expect(wrapper).toContain("KNOWLEDGE_V2_INHERIT_SOURCE_HASH_DRIFT");
+    expect(wrapper).toContain("KNOWLEDGE_V2_INHERIT_TARGET_ESCAPE");
+  });
+
   it("verifies every K8.4 schema object and restores the previous flag on rollback", () => {
     const wrapper = readFileSync(wrapperPath, "utf8");
     const migration = readFileSync(

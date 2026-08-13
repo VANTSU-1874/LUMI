@@ -83,6 +83,7 @@ environment_write=not-requested
 ~~~
 
 该组合保留生产 0050 Knowledge V2，顺序执行 0051–0063，并从签名发布包中事务化导入恰好五条已授权案例及其受控媒体。Browse、Search、Preview 开启；R2、Embedding、Lumi 自动引用继续关闭。导入支持精确幂等重放，任何行、媒体哈希、教师身份或能力边界冲突都会阻断切换。
+准备 D-27 release 时，入口还会按当前已封存 release 的 `runtime-manifest.json` 逐文件复算尺寸与 SHA-256，再把既有 Knowledge V2 文本运行包继承到新 release；目标已有文件必须完全同哈希，路径穿越、符号链接或内容漂移都会阻断准备。这样 D-27 只增加灵感 Wiki 能力，不会静默撤掉已上线的 Knowledge V2。
 
 在**本机**对 `manifest` 签名，不上传私钥：
 

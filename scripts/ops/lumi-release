@@ -608,6 +608,122 @@ verify_inspiration_wiki_d27_release() {
   printf 'INSPIRATION_WIKI_D27_VERIFY=PASS\n'
 }
 
+inherit_knowledge_v2_runtime_for_d27() {
+  local source_release=$1
+  local target_release=$2
+  python3 - "$source_release" "$target_release" <<'PY'
+import hashlib
+import json
+import os
+from pathlib import Path, PurePosixPath
+import stat
+import sys
+
+source = Path(sys.argv[1]).resolve(strict=True)
+target = Path(sys.argv[2]).resolve(strict=True)
+
+def reject(reason):
+    raise SystemExit(reason)
+
+def within(root, candidate):
+    try:
+        candidate.relative_to(root)
+        return True
+    except ValueError:
+        return False
+
+def digest(path):
+    result = hashlib.sha256()
+    with path.open("rb") as stream:
+        for block in iter(lambda: stream.read(1024 * 1024), b""):
+            result.update(block)
+    return result.hexdigest()
+
+def safe_file(root, relative, expected_bytes, expected_sha):
+    candidate = root.joinpath(*PurePosixPath(relative).parts)
+    info = candidate.lstat()
+    resolved = candidate.resolve(strict=True)
+    if stat.S_ISLNK(info.st_mode) or not stat.S_ISREG(info.st_mode) or not within(root, resolved):
+        reject("KNOWLEDGE_V2_INHERIT_SOURCE_UNSAFE")
+    if info.st_size != expected_bytes or digest(resolved) != expected_sha:
+        reject("KNOWLEDGE_V2_INHERIT_SOURCE_HASH_DRIFT")
+    return resolved
+
+manifest_path = source / "runtime-manifest.json"
+manifest_info = manifest_path.lstat()
+if stat.S_ISLNK(manifest_info.st_mode) or not stat.S_ISREG(manifest_info.st_mode):
+    reject("KNOWLEDGE_V2_INHERIT_MANIFEST_UNSAFE")
+manifest_bytes = manifest_path.read_bytes()
+manifest = json.loads(manifest_bytes)
+files = manifest.get("files")
+if not isinstance(files, list) or not 8 <= len(files) <= 100:
+    reject("KNOWLEDGE_V2_INHERIT_MANIFEST_INVALID")
+
+copied = 0
+reused = 0
+for item in files:
+    if not isinstance(item, dict):
+        reject("KNOWLEDGE_V2_INHERIT_FILE_INVALID")
+    relative = item.get("path")
+    expected_bytes = item.get("bytes")
+    expected_sha = item.get("sha256")
+    if (
+        not isinstance(relative, str)
+        or not isinstance(expected_bytes, int)
+        or expected_bytes < 0
+        or not isinstance(expected_sha, str)
+        or len(expected_sha) != 64
+    ):
+        reject("KNOWLEDGE_V2_INHERIT_FILE_INVALID")
+    pure = PurePosixPath(relative)
+    if pure.is_absolute() or not pure.parts or any(part in ("", ".", "..") for part in pure.parts):
+        reject("KNOWLEDGE_V2_INHERIT_PATH_UNSAFE")
+    source_file = safe_file(source, relative, expected_bytes, expected_sha)
+    destination = target.joinpath(*pure.parts)
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    parent = destination.parent.resolve(strict=True)
+    if not within(target, parent):
+        reject("KNOWLEDGE_V2_INHERIT_TARGET_ESCAPE")
+    if destination.exists() or destination.is_symlink():
+        safe_file(target, relative, expected_bytes, expected_sha)
+        reused += 1
+        continue
+    source_fd = os.open(source_file, os.O_RDONLY | os.O_CLOEXEC | os.O_NOFOLLOW)
+    try:
+        destination_fd = os.open(
+            destination,
+            os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_CLOEXEC | os.O_NOFOLLOW,
+            0o600,
+        )
+        try:
+            while True:
+                block = os.read(source_fd, 1024 * 1024)
+                if not block:
+                    break
+                view = memoryview(block)
+                while view:
+                    view = view[os.write(destination_fd, view):]
+            os.fsync(destination_fd)
+        finally:
+            os.close(destination_fd)
+    finally:
+        os.close(source_fd)
+    safe_file(target, relative, expected_bytes, expected_sha)
+    copied += 1
+
+target_manifest = target / "runtime-manifest.json"
+if target_manifest.exists() or target_manifest.is_symlink():
+    if target_manifest.is_symlink() or target_manifest.read_bytes() != manifest_bytes:
+        reject("KNOWLEDGE_V2_INHERIT_TARGET_MANIFEST_CONFLICT")
+else:
+    target_manifest.write_bytes(manifest_bytes)
+    with target_manifest.open("rb") as stream:
+        os.fsync(stream.fileno())
+
+print(f"KNOWLEDGE_V2_RUNTIME_INHERIT=PASS:{len(files)}:{copied}:{reused}")
+PY
+}
+
 make_evidence() {
   local phase=$1
   local run_id=$2
@@ -936,6 +1052,8 @@ verify_release() {
     runuser -u "$SERVICE_USER" -- test -r "$release/scripts/apply-inspiration-wiki-production-release.ts"
     runuser -u "$SERVICE_USER" -- test -r "$release/data/inspiration-wiki/production-release/d27-pilot-release-v1/manifest.json"
     runuser -u "$SERVICE_USER" -- test -r "$release/data/inspiration-wiki/production-release/d27-pilot-release-v1/DONE.json"
+    runuser -u "$SERVICE_USER" -- test -r "$release/runtime-manifest.json"
+    runuser -u "$SERVICE_USER" -- test -x "$release/.runtime/knowledge-v2-linux/python/bin/python3"
   fi
   runuser -u "$SERVICE_USER" -- test -r "$marker"
   runuser -u "$SERVICE_USER" -- test -w "$release/.next/cache"
@@ -1062,6 +1180,11 @@ prepare() {
   install -d -o root -g "$SERVICE_GROUP" -m 0750 "$release"
   tar --no-same-owner --no-same-permissions --delay-directory-restore -xf "$source_archive" -C "$release"
   tar --no-same-owner --no-same-permissions --delay-directory-restore -xzf "$built_archive" -C "$release"
+  if [[ "$database_migration" == "$DATABASE_MIGRATION_INSPIRATION_D27" ]]; then
+    inherit_knowledge_v2_runtime_for_d27 \
+      "$RELEASE_ROOT/$expected_current" "$release" \
+      | tee "$ACTIVE_EVIDENCE/knowledge-v2-runtime-inherit.log"
+  fi
   test -s "$release/.next/BUILD_ID"
   [[ "$(cat "$release/.next/BUILD_ID")" == "$build_id" ]]
   test -r "$release/node_modules/tsx/dist/cli.mjs"
