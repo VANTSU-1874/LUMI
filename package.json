@@ -68,6 +68,7 @@
     "inspiration:p2-channels:verify": "tsx scripts/verify-inspiration-wiki-p2-student-shadow.ts",
     "inspiration:release-qualification:prepare": "tsx scripts/prepare-inspiration-wiki-release-qualification.ts",
     "inspiration:formal-release:publish": "tsx scripts/publish-d25-inspiration-pilots.ts",
+    "inspiration:formal-release:publish-remaining": "tsx scripts/publish-inspiration-wiki-remaining-releases.ts",
     "inspiration:production-bundle:build": "tsx scripts/build-inspiration-wiki-production-bundle.ts",
     "inspiration:production-release:apply": "tsx scripts/apply-inspiration-wiki-production-release.ts",
     "backup:create": "tsx scripts/create-backup.ts",

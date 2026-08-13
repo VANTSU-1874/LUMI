@@ -99,9 +99,14 @@ function buildCanonicalMaterial(connection: DatabaseConnection, releaseCase: Rel
   const selectedMedia = media.find((item) => item.previewUrl === releaseCase.primaryPreviewUrl) ?? media.find((item) => item.role === "COVER") ?? media[0];
   if (!selectedMedia || typeof selectedMedia.mediaId !== "string") throw new FormalReleaseConflictError("FORMAL_RELEASE_PRIMARY_MEDIA_MISSING");
   const pack = connection.sqlite.prepare(
-    "SELECT pack_json,media_assets_json FROM inspiration_wiki_review_packs WHERE candidate_id=(SELECT candidate_id FROM inspiration_wiki_private_pages WHERE page_id=?)",
-  ).get(releaseCase.pageId) as { pack_json: string; media_assets_json: string } | undefined;
-  if (!pack) throw new FormalReleaseConflictError("FORMAL_RELEASE_STRICT_MEDIA_REQUIRED");
+    `SELECT media_assets_json FROM inspiration_wiki_review_packs
+     WHERE candidate_id=(SELECT candidate_id FROM inspiration_wiki_private_pages WHERE page_id=?)
+     UNION ALL
+     SELECT media_assets_json FROM inspiration_wiki_evidence_gap_review_packs
+     WHERE candidate_id=(SELECT candidate_id FROM inspiration_wiki_private_pages WHERE page_id=?)
+     LIMIT 1`,
+  ).get(releaseCase.pageId, releaseCase.pageId) as { media_assets_json: string } | undefined;
+  if (!pack) throw new FormalReleaseConflictError("FORMAL_RELEASE_CONTROLLED_MEDIA_REQUIRED");
   const assetRaw = asArray(JSON.parse(pack.media_assets_json)).map(asRecord).find((asset) => asset.mediaId === selectedMedia.mediaId);
   if (!assetRaw) throw new FormalReleaseConflictError("FORMAL_RELEASE_ASSET_BINDING_MISSING");
   const asset = FormalReleaseAssetSchema.parse({

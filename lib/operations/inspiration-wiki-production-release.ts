@@ -15,17 +15,12 @@ import Database from "better-sqlite3";
 
 import { runMigrations } from "@/lib/db/migrate";
 
-export const D27_SCHEMA_VERSION = "lumi-inspiration-production-release-bundle/v1";
-export const D27_BUNDLE_ID = "d27-pilot-release-v1";
+export const D27_SCHEMA_VERSION = "lumi-inspiration-production-release-bundle/v2";
+export const D27_BUNDLE_ID = "d28-full-release-v1";
 export const D27_RIGHTS_EVIDENCE_REF = "USER_RIGHTS_ATTESTATION:2026-08-13:D25-PILOT-5";
-
-const EXPECTED_TITLES = [
-  "4P’s｜餐饮品牌视觉识别（设计：Base Saigon）",
-  "Bristol Dockyards｜城市文化场所视觉识别（设计：How & How）",
-  "DOOMERS, Kunstmeile Hamburg & Internationales Sommerfestival Kampnagel｜表演艺术活动海报",
-  "Fhirst｜包装设计（设计：Mother Design）",
-  "Kanal｜布鲁塞尔博物馆视觉识别（设计：Base Design）",
-] as const;
+export const D28_RIGHTS_EVIDENCE_REF = "USER_RIGHTS_ATTESTATION:2026-08-13:INSPIRATION-WIKI-REMAINING-172";
+const RIGHTS_EVIDENCE_REFS = [D27_RIGHTS_EVIDENCE_REF, D28_RIGHTS_EVIDENCE_REF] as const;
+const EXPECTED_RELEASE_COUNT = 177;
 
 const TABLE_ORDER = [
   "inspiration_wiki_hermes_batches",
@@ -34,6 +29,9 @@ const TABLE_ORDER = [
   "inspiration_wiki_reviewer_assignments",
   "inspiration_wiki_review_packs",
   "inspiration_wiki_review_pack_decisions",
+  "inspiration_wiki_evidence_gap_review_packs",
+  "inspiration_wiki_evidence_gap_review_decisions",
+  "inspiration_wiki_evidence_gap_media_amendments",
   "inspiration_wiki_private_working_drafts",
   "inspiration_wiki_private_working_draft_revisions",
   "inspiration_wiki_private_domain_review_cases",
@@ -71,8 +69,8 @@ type BundleAsset = {
 type BundleManifest = {
   schemaVersion: typeof D27_SCHEMA_VERSION;
   bundleId: typeof D27_BUNDLE_ID;
-  rightsEvidenceRef: typeof D27_RIGHTS_EVIDENCE_REF;
-  releaseCount: 5;
+  rightsEvidenceRefs: string[];
+  releaseCount: number;
   titles: string[];
   tableOrder: TableName[];
   rowCounts: Record<string, number>;
@@ -176,6 +174,14 @@ function assertSafeRelativePath(value: string, prefix: string) {
   if (!value.startsWith(prefix)) throw new Error("D27_ASSET_PATH_OUTSIDE_PREFIX");
 }
 
+function assertControlledAssetPath(value: string) {
+  if (value.startsWith("inspiration-wiki/review-packs/assets/")) {
+    assertSafeRelativePath(value, "inspiration-wiki/review-packs/assets/");
+    return;
+  }
+  assertSafeRelativePath(value, "inspiration-wiki/evidence-gap-review-packs/assets/");
+}
+
 function manifestMaterial(manifest: Omit<BundleManifest, "bundleDigest">) {
   return canonicalJson(manifest);
 }
@@ -196,7 +202,7 @@ function assertNoSensitiveMaterial(payload: string) {
 
 function collectBundleRows(database: Database.Database) {
   const canonicalPages = selectRows(database, "inspiration_wiki_canonical_pages");
-  if (canonicalPages.length !== 5) throw new Error("D27_CANONICAL_PAGE_COUNT_MISMATCH");
+  if (canonicalPages.length !== EXPECTED_RELEASE_COUNT) throw new Error("D27_CANONICAL_PAGE_COUNT_MISMATCH");
   const candidateIds = valuesOf(canonicalPages, "candidate_id");
   const candidates = selectRows(
     database,
@@ -204,7 +210,7 @@ function collectBundleRows(database: Database.Database) {
     columnIn("id", candidateIds),
     candidateIds,
   );
-  if (candidates.length !== 5) throw new Error("D27_CANDIDATE_COUNT_MISMATCH");
+  if (candidates.length !== EXPECTED_RELEASE_COUNT) throw new Error("D27_CANDIDATE_COUNT_MISMATCH");
   const batchIds = [...new Set(valuesOf(candidates, "batch_id"))];
   const batches = selectRows(database, "inspiration_wiki_hermes_batches", columnIn("batch_id", batchIds), batchIds);
   const rolePolicies = selectRows(database, "inspiration_wiki_role_policies");
@@ -215,14 +221,13 @@ function collectBundleRows(database: Database.Database) {
     columnIn("candidate_id", candidateIds),
     candidateIds,
   );
-  if (reviewPacks.length !== 5) throw new Error("D27_STRICT_REVIEW_PACK_COUNT_MISMATCH");
   const reviewPackIds = valuesOf(reviewPacks, "review_pack_id");
-  const reviewDecisions = selectRows(
-    database,
-    "inspiration_wiki_review_pack_decisions",
-    columnIn("review_pack_id", reviewPackIds),
-    reviewPackIds,
-  );
+  const reviewDecisions = reviewPackIds.length ? selectRows(database, "inspiration_wiki_review_pack_decisions", columnIn("review_pack_id", reviewPackIds), reviewPackIds) : [];
+  const evidenceGapPacks = selectRows(database, "inspiration_wiki_evidence_gap_review_packs", columnIn("candidate_id", candidateIds), candidateIds);
+  const evidenceGapPackIds = valuesOf(evidenceGapPacks, "review_pack_id");
+  const evidenceGapDecisions = evidenceGapPackIds.length ? selectRows(database, "inspiration_wiki_evidence_gap_review_decisions", columnIn("review_pack_id", evidenceGapPackIds), evidenceGapPackIds) : [];
+  const evidenceGapAmendments = evidenceGapPackIds.length ? selectRows(database, "inspiration_wiki_evidence_gap_media_amendments", columnIn("review_pack_id", evidenceGapPackIds), evidenceGapPackIds) : [];
+  if (reviewPacks.length + evidenceGapPacks.length !== EXPECTED_RELEASE_COUNT) throw new Error("D27_CONTROLLED_REVIEW_PACK_COUNT_MISMATCH");
   const drafts = selectRows(
     database,
     "inspiration_wiki_private_working_drafts",
@@ -333,6 +338,9 @@ function collectBundleRows(database: Database.Database) {
     inspiration_wiki_reviewer_assignments: reviewerAssignments,
     inspiration_wiki_review_packs: reviewPacks,
     inspiration_wiki_review_pack_decisions: reviewDecisions,
+    inspiration_wiki_evidence_gap_review_packs: evidenceGapPacks,
+    inspiration_wiki_evidence_gap_review_decisions: evidenceGapDecisions,
+    inspiration_wiki_evidence_gap_media_amendments: evidenceGapAmendments,
     inspiration_wiki_private_working_drafts: drafts,
     inspiration_wiki_private_working_draft_revisions: draftRevisions,
     inspiration_wiki_private_domain_review_cases: domainCases,
@@ -351,19 +359,20 @@ function collectBundleRows(database: Database.Database) {
     inspiration_wiki_current_page_events: currentEvents,
     inspiration_wiki_p2_active_channel_snapshots: [activeSnapshots.at(-1)!],
   };
-  for (const [name, rows] of Object.entries(groups)) {
-    if (rows.length === 0) throw new Error(`D27_REQUIRED_TABLE_EMPTY:${name}`);
-  }
+  const required = Object.entries(groups).filter(([name]) => name !== "inspiration_wiki_evidence_gap_media_amendments");
+  for (const [name, rows] of required) if (rows.length === 0) throw new Error(`D27_REQUIRED_TABLE_EMPTY:${name}`);
   if (privateRevisions.some(({ row }) => !privateRevisionIds.includes(row.revision_id ?? null))) {
     throw new Error("D27_PRIVATE_REVISION_SELECTION_INVALID");
   }
   if (truths.some(({ row }) => !truthIds.includes(row.truth_id ?? null))) {
     throw new Error("D27_TRUTH_SELECTION_INVALID");
   }
-  return { groups, rows: TABLE_ORDER.flatMap((table) => groups[table]), reviewPacks, formalReleases };
+  return { groups, rows: TABLE_ORDER.flatMap((table) => groups[table]), controlledPacks: [...reviewPacks, ...evidenceGapPacks], formalReleases };
 }
 
 function verifyReleaseRows(rows: BundleRow[]) {
+  if (rows.length !== EXPECTED_RELEASE_COUNT) throw new Error("D27_RELEASE_COUNT_MISMATCH");
+  const rightsCounts = new Map<string, number>();
   const titles = rows.map(({ row }) => {
     const release = parseJsonObject(row.release_json ?? null, "D27_RELEASE_JSON_INVALID");
     const material = release.publicMaterial;
@@ -371,9 +380,11 @@ function verifyReleaseRows(rows: BundleRow[]) {
       throw new Error("D27_PUBLIC_MATERIAL_INVALID");
     }
     const publicMaterial = material as Record<string, unknown>;
-    if (publicMaterial.rightsEvidenceRef !== D27_RIGHTS_EVIDENCE_REF) {
+    if (!RIGHTS_EVIDENCE_REFS.includes(publicMaterial.rightsEvidenceRef as typeof RIGHTS_EVIDENCE_REFS[number])) {
       throw new Error("D27_RIGHTS_EVIDENCE_MISMATCH");
     }
+    const rightsRef = String(publicMaterial.rightsEvidenceRef);
+    rightsCounts.set(rightsRef, (rightsCounts.get(rightsRef) ?? 0) + 1);
     if (publicMaterial.audience !== "AUTHENTICATED_STUDENT_ONLY") {
       throw new Error("D27_AUDIENCE_BOUNDARY_MISMATCH");
     }
@@ -388,9 +399,7 @@ function verifyReleaseRows(rows: BundleRow[]) {
     ) throw new Error("D27_RELEASE_BOUNDARY_MISMATCH");
     return String(publicMaterial.title);
   }).sort();
-  if (JSON.stringify(titles) !== JSON.stringify([...EXPECTED_TITLES].sort())) {
-    throw new Error("D27_RELEASE_TITLES_MISMATCH");
-  }
+  if (rightsCounts.get(D27_RIGHTS_EVIDENCE_REF) !== 5 || rightsCounts.get(D28_RIGHTS_EVIDENCE_REF) !== 172) throw new Error("D27_RIGHTS_EVIDENCE_COUNT_MISMATCH");
   return titles;
 }
 
@@ -410,8 +419,8 @@ function collectAssets(
       bytes: Number(raw.bytes),
       sha256: String(raw.sha256),
     };
-    assertSafeRelativePath(asset.storagePath, "inspiration-wiki/review-packs/assets/");
-    assertSafeRelativePath(asset.bundlePath, "assets/inspiration-wiki/review-packs/assets/");
+    assertControlledAssetPath(asset.storagePath);
+    assertSafeRelativePath(asset.bundlePath, "assets/inspiration-wiki/");
     if (!/^[0-9a-f]{64}$/.test(asset.sha256) || !Number.isSafeInteger(asset.bytes) || asset.bytes <= 0) {
       throw new Error("D27_ASSET_DESCRIPTOR_INVALID");
     }
@@ -448,17 +457,17 @@ export function buildInspirationWikiProductionBundle(options: {
   try {
     database.pragma("foreign_keys = ON");
     if ((database.pragma("foreign_key_check") as unknown[]).length > 0) throw new Error("D27_SOURCE_FOREIGN_KEY_FAILURE");
-    const { groups, rows, reviewPacks, formalReleases } = collectBundleRows(database);
+    const { groups, rows, controlledPacks, formalReleases } = collectBundleRows(database);
     const titles = verifyReleaseRows(formalReleases);
     const rowsPayload = rows.map((row) => JSON.stringify(canonicalize(row))).join("\n") + "\n";
     assertNoSensitiveMaterial(rowsPayload);
     writeFileSync(path.join(stagingRoot, "rows.jsonl"), rowsPayload, { flag: "wx" });
-    const assets = collectAssets(reviewPacks, dataRoot, stagingRoot);
+    const assets = collectAssets(controlledPacks, dataRoot, stagingRoot);
     const material: Omit<BundleManifest, "bundleDigest"> = {
       schemaVersion: D27_SCHEMA_VERSION,
       bundleId: D27_BUNDLE_ID,
-      rightsEvidenceRef: D27_RIGHTS_EVIDENCE_REF,
-      releaseCount: 5,
+      rightsEvidenceRefs: [...RIGHTS_EVIDENCE_REFS],
+      releaseCount: EXPECTED_RELEASE_COUNT,
       titles,
       tableOrder: [...TABLE_ORDER],
       rowCounts: Object.fromEntries(TABLE_ORDER.map((table) => [table, groups[table].length])),
@@ -480,7 +489,7 @@ export function buildInspirationWikiProductionBundle(options: {
     writeFileSync(path.join(stagingRoot, "manifest.json"), manifestPayload, { flag: "wx" });
     writeFileSync(
       path.join(stagingRoot, "report.md"),
-      `# D-27 Inspiration Wiki production bundle\n\n- Releases: 5\n- Evidence rows: ${rows.length}\n- Controlled assets: ${assets.length}\n- Asset bytes: ${material.totalAssetBytes}\n- Browse/Search/Preview: ACTIVE\n- R2/Embedding/Lumi retrieval: DISABLED\n- Bundle digest: \`${manifest.bundleDigest}\`\n`,
+      `# Inspiration Wiki full production bundle\n\n- Releases: ${EXPECTED_RELEASE_COUNT}\n- Evidence rows: ${rows.length}\n- Controlled assets: ${assets.length}\n- Asset bytes: ${material.totalAssetBytes}\n- Browse/Search/Preview: ACTIVE\n- Anonymous/R2/Embedding/Lumi retrieval: DISABLED\n- Bundle digest: \`${manifest.bundleDigest}\`\n`,
       { flag: "wx" },
     );
     writeFileSync(path.join(stagingRoot, "DONE.json"), canonicalJson({
@@ -531,8 +540,8 @@ function readBundle(bundleRoot: string) {
     if (!row.row || !row.primaryKey) throw new Error("D27_ROW_INVALID");
   }
   for (const asset of manifest.assets) {
-    assertSafeRelativePath(asset.storagePath, "inspiration-wiki/review-packs/assets/");
-    assertSafeRelativePath(asset.bundlePath, "assets/inspiration-wiki/review-packs/assets/");
+    assertControlledAssetPath(asset.storagePath);
+    assertSafeRelativePath(asset.bundlePath, "assets/inspiration-wiki/");
     const bytes = readFileSync(path.resolve(root, asset.bundlePath));
     if (bytes.byteLength !== asset.bytes || sha256Bytes(bytes) !== asset.sha256) {
       throw new Error("D27_BUNDLE_ASSET_INTEGRITY_FAILURE");
@@ -571,7 +580,7 @@ function verifyTarget(database: Database.Database, manifest: BundleManifest) {
   const formal = database.prepare(
     "SELECT release_json FROM inspiration_wiki_formal_releases WHERE status='PUBLISHED' AND student_visible=1 AND browse_release='ACTIVE' AND student_search='ACTIVE' AND preview='ACTIVE'",
   ).all() as Array<{ release_json: string }>;
-  if (formal.length !== 5) throw new Error("D27_TARGET_RELEASE_COUNT_MISMATCH");
+  if (formal.length !== manifest.releaseCount) throw new Error("D27_TARGET_RELEASE_COUNT_MISMATCH");
   const titles = formal.map(({ release_json }) => {
     const parsed = JSON.parse(release_json) as { publicMaterial?: { title?: string } };
     return String(parsed.publicMaterial?.title);

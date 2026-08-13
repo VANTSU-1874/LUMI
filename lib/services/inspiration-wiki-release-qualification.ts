@@ -85,24 +85,11 @@ function choosePilotItems(items: ReturnType<typeof readTeacherPrivateInternalCat
   return chosen;
 }
 
-export function prepareReleaseQualificationPilots(
+function insertQualificationCases(
   connection: DatabaseConnection,
-  actor: SessionPayload,
-  selectedAt: string | Date = new Date(),
-  limit = 5,
+  items: ReturnType<typeof readTeacherPrivateInternalCatalog>["items"],
+  selectedAt: string | Date,
 ) {
-  if (!Number.isInteger(limit) || limit < 1 || limit > 12) throw new Error("D-25 试点数量必须为 1-12");
-  const catalog = readTeacherPrivateInternalCatalog(connection, actor);
-  const existing = connection.sqlite.prepare(
-    "SELECT case_json FROM inspiration_wiki_release_qualification_cases ORDER BY created_at,case_id",
-  ).all() as Array<{ case_json: string }>;
-  if (existing.length) {
-    const cases = existing.map((row) => ReleaseQualificationCaseSchema.parse(parseJson(row.case_json)));
-    cases.forEach(assertCaseHash);
-    return { cases, created: 0, replayed: cases.length };
-  }
-  const chosen = choosePilotItems(catalog.items, limit);
-  if (chosen.length !== limit) throw new ReleaseQualificationConflictError("D25_NOT_ENOUGH_STRICT_MEDIA_PILOTS");
   const stamp = isoSeconds(selectedAt);
   const insert = connection.sqlite.prepare(
     `INSERT INTO inspiration_wiki_release_qualification_cases (
@@ -111,7 +98,7 @@ export function prepareReleaseQualificationPilots(
       browse_release,student_search,wiki_retrieval,r2,embedding,lumi_retrieval,production_deployment,created_at
     ) VALUES (?,?,?,?,?,?,?,?,1,1,0,'DISABLED','DISABLED','SHADOW','SHADOW','DISABLED','DISABLED','DISABLED','DISABLED','DISABLED',?)`,
   );
-  const cases = connection.sqlite.transaction(() => chosen.map((item) => {
+  return connection.sqlite.transaction(() => items.map((item) => {
     const row = connection.sqlite.prepare(
       `SELECT e.page_revision_id,r.revision,r.content_hash
        FROM inspiration_wiki_private_internal_catalog_entries e
@@ -133,7 +120,7 @@ export function prepareReleaseQualificationPilots(
       primaryCategory: item.primaryCategory,
       artisticStyleLabels: [...item.artisticStyleLabels],
       primaryPreviewUrl: item.primaryPreviewUrl,
-      evidenceGapCount: 0,
+      evidenceGapCount: item.evidenceGapCount,
       rightsScope: "UNKNOWN_PRIVATE_ONLY",
       selectedAt: stamp,
       boundary: BOUNDARY,
@@ -153,6 +140,51 @@ export function prepareReleaseQualificationPilots(
     );
     return releaseCase;
   }))();
+}
+
+export function prepareReleaseQualificationPilots(
+  connection: DatabaseConnection,
+  actor: SessionPayload,
+  selectedAt: string | Date = new Date(),
+  limit = 5,
+) {
+  if (!Number.isInteger(limit) || limit < 1 || limit > 12) throw new Error("D-25 试点数量必须为 1-12");
+  const catalog = readTeacherPrivateInternalCatalog(connection, actor);
+  const existing = connection.sqlite.prepare(
+    "SELECT case_json FROM inspiration_wiki_release_qualification_cases ORDER BY created_at,case_id",
+  ).all() as Array<{ case_json: string }>;
+  if (existing.length) {
+    const cases = existing.map((row) => ReleaseQualificationCaseSchema.parse(parseJson(row.case_json)));
+    cases.forEach(assertCaseHash);
+    return { cases, created: 0, replayed: cases.length };
+  }
+  const chosen = choosePilotItems(catalog.items, limit);
+  if (chosen.length !== limit) throw new ReleaseQualificationConflictError("D25_NOT_ENOUGH_STRICT_MEDIA_PILOTS");
+  const cases = insertQualificationCases(connection, chosen, selectedAt);
+  return { cases, created: cases.length, replayed: 0 };
+}
+
+export function prepareRemainingReleaseQualificationCases(
+  connection: DatabaseConnection,
+  actor: SessionPayload,
+  selectedAt: string | Date = new Date(),
+  expectedCount = 172,
+) {
+  if (!Number.isInteger(expectedCount) || expectedCount < 1 || expectedCount > 500) {
+    throw new Error("剩余发布资格数量必须为 1-500");
+  }
+  const catalog = readTeacherPrivateInternalCatalog(connection, actor);
+  const existing = new Set((connection.sqlite.prepare(
+    "SELECT entry_id FROM inspiration_wiki_release_qualification_cases",
+  ).all() as Array<{ entry_id: string }>).map((row) => row.entry_id));
+  const remaining = catalog.items
+    .filter((item) => !existing.has(item.entryId) && item.primaryPreviewUrl !== null)
+    .sort((left, right) => left.pageId.localeCompare(right.pageId));
+  if (remaining.length === 0) return { cases: [] as ReleaseQualificationCase[], created: 0, replayed: expectedCount };
+  if (remaining.length !== expectedCount) {
+    throw new ReleaseQualificationConflictError(`REMAINING_RELEASE_SET_MISMATCH:${remaining.length}:${expectedCount}`);
+  }
+  const cases = insertQualificationCases(connection, remaining, selectedAt);
   return { cases, created: cases.length, replayed: 0 };
 }
 

@@ -71,7 +71,8 @@ afterEach(() => {
 });
 
 describe("D-27 Inspiration Wiki production release", () => {
-  it("applies the exact five-item evidence closure and replays with zero writes", () => {
+  it("applies the exact full evidence closure and replays with zero writes", () => {
+    const manifest = JSON.parse(readFileSync(path.join(bundleRoot, "manifest.json"), "utf8")) as { assets: unknown[]; releaseCount: number };
     const target = createTarget();
     const first = applyInspirationWikiProductionBundle({
       databasePath: target.databasePath,
@@ -79,7 +80,7 @@ describe("D-27 Inspiration Wiki production release", () => {
       bundleRoot,
     });
     expect(first.databaseWrites).toBeGreaterThan(100);
-    expect(first.assetWrites).toBe(14);
+    expect(first.assetWrites).toBe(manifest.assets.length);
 
     const replay = applyInspirationWikiProductionBundle({
       databasePath: target.databasePath,
@@ -95,7 +96,7 @@ describe("D-27 Inspiration Wiki production release", () => {
 
     const database = new Database(target.databasePath, { readonly: true });
     expect(database.prepare("SELECT count(*) count FROM inspiration_wiki_formal_releases").get())
-      .toEqual({ count: 5 });
+      .toEqual({ count: manifest.releaseCount });
     expect(database.prepare("SELECT count(*) count FROM inspiration_wiki_p2_active_channel_snapshots").get())
       .toEqual({ count: 1 });
     expect(database.pragma("foreign_key_check")).toEqual([]);

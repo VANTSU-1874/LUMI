@@ -47,7 +47,7 @@ export const ReleaseQualificationCaseSchema = z.object({
   primaryCategory: z.string().trim().min(1).max(120),
   artisticStyleLabels: z.array(z.string().trim().min(1).max(80)).max(12),
   primaryPreviewUrl: z.string().startsWith("/api/teacher/inspiration-wiki/").nullable(),
-  evidenceGapCount: z.literal(0),
+  evidenceGapCount: z.number().int().min(0).max(9),
   rightsScope: z.literal("UNKNOWN_PRIVATE_ONLY"),
   selectedAt: z.string().datetime(),
   boundary: ReleaseQualificationBoundarySchema,
@@ -101,7 +101,7 @@ export const TeacherReleaseQualificationQueueSchema = z.object({
     gates: z.array(GateViewSchema).length(5),
     satisfiedGateCount: z.number().int().min(0).max(5),
     state: z.enum(["QUALIFICATION_IN_PROGRESS", "QUALIFIED_FOR_CANONICAL_BUILD"]),
-  }).strict().readonly()).max(12),
+  }).strict().readonly()).max(500),
   meta: z.object({
     total: z.number().int().nonnegative(),
     inProgress: z.number().int().nonnegative(),
