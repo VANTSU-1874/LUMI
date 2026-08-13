@@ -648,7 +648,7 @@ database.close();
 if (!row?.canonicalJson) throw new Error("KNOWLEDGE_V2_CORPUS_REPAIR_DATABASE_ROW_MISSING");
 
 const moduleUrl = pathToFileURL(path.join(
-  targetRelease,
+  currentRelease,
   "lib/knowledge/knowledge-object-v2.ts",
 )).href;
 const { verifyKnowledgeCorpusBundleV2 } = await import(moduleUrl);
