@@ -78,11 +78,11 @@ describe("constrained Lumi release wrapper", () => {
     expect(reconstruction).toBeGreaterThan(firstReadNormalization);
     expect(wrapper).toContain('repair if relative == corpus_path else source');
     expect(wrapper).toContain("KNOWLEDGE_V2_RUNTIME_INHERIT=PASS");
-    expect(wrapper).toContain(
-      "KNOWLEDGE_V2_INHERIT_PYTHON_TARGET_UNMANIFESTED",
-    );
-    expect(wrapper).toContain("KNOWLEDGE_V2_INHERIT_PYTHON_LINK_ESCAPE");
-    expect(wrapper).toContain("os.symlink(link_target, target_python)");
+    expect(wrapper).toContain("clone_knowledge_v2_runtime_tree_for_d27()");
+    expect(wrapper).toContain("KNOWLEDGE_V2_RUNTIME_TREE_CLONE=PASS");
+    expect(wrapper).toContain("KNOWLEDGE_V2_RUNTIME_TREE_{label}_LINK_ESCAPE");
+    expect(wrapper).toContain("KNOWLEDGE_V2_RUNTIME_TREE_TARGET_HASH_DRIFT");
+    expect(wrapper).toContain("target_entries != source_entries");
     expect(wrapper).toContain('"$RELEASE_ROOT/$expected_current" "$release"');
     expect(wrapper).toContain('test -r "$release/runtime-manifest.json"');
     expect(wrapper).toContain(

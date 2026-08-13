@@ -749,7 +749,6 @@ if not isinstance(files, list) or not 8 <= len(files) <= 100:
 
 copied = 0
 reused = 0
-manifest_files = {}
 for item in files:
     if not isinstance(item, dict):
         reject("KNOWLEDGE_V2_INHERIT_FILE_INVALID")
@@ -767,9 +766,6 @@ for item in files:
     pure = PurePosixPath(relative)
     if pure.is_absolute() or not pure.parts or any(part in ("", ".", "..") for part in pure.parts):
         reject("KNOWLEDGE_V2_INHERIT_PATH_UNSAFE")
-    if relative in manifest_files:
-        reject("KNOWLEDGE_V2_INHERIT_FILE_DUPLICATED")
-    manifest_files[relative] = (expected_bytes, expected_sha)
     source_file = safe_file(
         repair if relative == corpus_path else source,
         relative,
@@ -825,46 +821,181 @@ else:
     with target_manifest.open("rb") as stream:
         os.fsync(stream.fileno())
 
-python_relative = ".runtime/knowledge-v2-linux/python/bin/python3"
-source_python = source.joinpath(*PurePosixPath(python_relative).parts)
-try:
-    source_python_info = source_python.lstat()
-except FileNotFoundError:
-    reject("KNOWLEDGE_V2_INHERIT_PYTHON_ENTRYPOINT_MISSING")
-target_python = target.joinpath(*PurePosixPath(python_relative).parts)
-if stat.S_ISLNK(source_python_info.st_mode):
-    link_target = os.readlink(source_python)
-    if not link_target or os.path.isabs(link_target) or "\x00" in link_target:
-        reject("KNOWLEDGE_V2_INHERIT_PYTHON_LINK_UNSAFE")
-    source_python_resolved = source_python.resolve(strict=True)
-    if not source_python_resolved.is_file() or not within(source, source_python_resolved):
-        reject("KNOWLEDGE_V2_INHERIT_PYTHON_LINK_ESCAPE")
-    resolved_relative = source_python_resolved.relative_to(source).as_posix()
-    expected_target = manifest_files.get(resolved_relative)
-    if expected_target is None:
-        reject("KNOWLEDGE_V2_INHERIT_PYTHON_TARGET_UNMANIFESTED")
-    safe_file(source, resolved_relative, *expected_target)
-    target_python_resolved = safe_file(target, resolved_relative, *expected_target)
-    if target_python.exists() or target_python.is_symlink():
-        if not target_python.is_symlink() or os.readlink(target_python) != link_target:
-            reject("KNOWLEDGE_V2_INHERIT_PYTHON_TARGET_CONFLICT")
-    else:
-        target_python.parent.mkdir(parents=True, exist_ok=True)
-        if not within(target, target_python.parent.resolve(strict=True)):
-            reject("KNOWLEDGE_V2_INHERIT_PYTHON_TARGET_ESCAPE")
-        os.symlink(link_target, target_python)
-    if target_python.resolve(strict=True) != target_python_resolved:
-        reject("KNOWLEDGE_V2_INHERIT_PYTHON_LINK_DRIFT")
-elif stat.S_ISREG(source_python_info.st_mode):
-    expected_target = manifest_files.get(python_relative)
-    if expected_target is None:
-        reject("KNOWLEDGE_V2_INHERIT_PYTHON_TARGET_UNMANIFESTED")
-    safe_file(source, python_relative, *expected_target)
-    safe_file(target, python_relative, *expected_target)
-else:
-    reject("KNOWLEDGE_V2_INHERIT_PYTHON_ENTRYPOINT_UNSAFE")
+print(f"KNOWLEDGE_V2_RUNTIME_INHERIT=PASS:{len(files)}:{copied}:{reused}")
+PY
+}
 
-print(f"KNOWLEDGE_V2_RUNTIME_INHERIT=PASS:{len(files)}:{copied}:{reused}:PYTHON_ENTRYPOINT")
+clone_knowledge_v2_runtime_tree_for_d27() {
+  local source_release=$1
+  local target_release=$2
+  python3 - "$source_release" "$target_release" "$SERVICE_GROUP" <<'PY'
+import grp
+import hashlib
+import os
+from pathlib import Path, PurePosixPath
+import stat
+import sys
+
+source_release = Path(sys.argv[1]).resolve(strict=True)
+target_release = Path(sys.argv[2]).resolve(strict=True)
+expected_gid = grp.getgrnam(sys.argv[3]).gr_gid
+relative_root = PurePosixPath(".runtime/knowledge-v2-linux")
+source = source_release.joinpath(*relative_root.parts)
+target = target_release.joinpath(*relative_root.parts)
+max_files = 75000
+max_bytes = 4 * 1024 * 1024 * 1024
+
+def reject(reason):
+    raise SystemExit(reason)
+
+def within(root, candidate):
+    try:
+        candidate.relative_to(root)
+        return True
+    except ValueError:
+        return False
+
+def digest(path):
+    result = hashlib.sha256()
+    with path.open("rb") as stream:
+        for block in iter(lambda: stream.read(1024 * 1024), b""):
+            result.update(block)
+    return result.hexdigest()
+
+def collect(root, label):
+    if root.is_symlink() or not root.is_dir():
+        reject(f"KNOWLEDGE_V2_RUNTIME_TREE_{label}_ROOT_UNSAFE")
+    root_info = root.stat()
+    if root_info.st_uid != 0 or root_info.st_mode & 0o022:
+        reject(f"KNOWLEDGE_V2_RUNTIME_TREE_{label}_ROOT_METADATA_UNSAFE")
+    entries = {}
+    stack = [(PurePosixPath(), root)]
+    regular_count = 0
+    total_bytes = 0
+    while stack:
+        relative_parent, directory = stack.pop()
+        for entry in sorted(os.scandir(directory), key=lambda item: item.name):
+            if not entry.name or any(value in entry.name for value in ("/", "\x00", "\n", "\r")):
+                reject(f"KNOWLEDGE_V2_RUNTIME_TREE_{label}_NAME_UNSAFE")
+            relative = relative_parent / entry.name
+            relative_text = relative.as_posix()
+            info = entry.stat(follow_symlinks=False)
+            if info.st_uid != 0:
+                reject(f"KNOWLEDGE_V2_RUNTIME_TREE_{label}_METADATA_UNSAFE:{relative_text}")
+            path = Path(entry.path)
+            if stat.S_ISDIR(info.st_mode):
+                if info.st_mode & 0o022:
+                    reject(f"KNOWLEDGE_V2_RUNTIME_TREE_{label}_MODE_UNSAFE:{relative_text}")
+                entries[relative_text] = ("D", 0, "", False)
+                stack.append((relative, path))
+            elif stat.S_ISREG(info.st_mode):
+                if info.st_mode & 0o022:
+                    reject(f"KNOWLEDGE_V2_RUNTIME_TREE_{label}_MODE_UNSAFE:{relative_text}")
+                regular_count += 1
+                total_bytes += info.st_size
+                if regular_count > max_files or total_bytes > max_bytes:
+                    reject(f"KNOWLEDGE_V2_RUNTIME_TREE_{label}_LIMIT_EXCEEDED")
+                entries[relative_text] = (
+                    "F",
+                    info.st_size,
+                    digest(path),
+                    bool(info.st_mode & 0o111),
+                )
+            elif stat.S_ISLNK(info.st_mode):
+                link_target = os.readlink(path)
+                if (
+                    not link_target
+                    or os.path.isabs(link_target)
+                    or any(value in link_target for value in ("\x00", "\n", "\r"))
+                ):
+                    reject(f"KNOWLEDGE_V2_RUNTIME_TREE_{label}_LINK_UNSAFE:{relative_text}")
+                try:
+                    resolved = path.resolve(strict=True)
+                except FileNotFoundError:
+                    reject(f"KNOWLEDGE_V2_RUNTIME_TREE_{label}_LINK_BROKEN:{relative_text}")
+                if not within(root, resolved):
+                    reject(f"KNOWLEDGE_V2_RUNTIME_TREE_{label}_LINK_ESCAPE:{relative_text}")
+                entries[relative_text] = ("L", 0, link_target, False)
+            else:
+                reject(f"KNOWLEDGE_V2_RUNTIME_TREE_{label}_TYPE_UNSAFE:{relative_text}")
+    return entries, regular_count, total_bytes
+
+source_entries, source_files, source_bytes = collect(source, "SOURCE")
+if source_files < 1:
+    reject("KNOWLEDGE_V2_RUNTIME_TREE_SOURCE_EMPTY")
+target.mkdir(parents=True, exist_ok=True)
+if target.is_symlink() or not within(target_release, target.resolve(strict=True)):
+    reject("KNOWLEDGE_V2_RUNTIME_TREE_TARGET_ROOT_UNSAFE")
+
+for relative, expected in sorted(source_entries.items(), key=lambda item: (item[0].count("/"), item[0])):
+    if expected[0] != "D":
+        continue
+    destination = target.joinpath(*PurePosixPath(relative).parts)
+    if destination.exists() or destination.is_symlink():
+        if destination.is_symlink() or not destination.is_dir():
+            reject(f"KNOWLEDGE_V2_RUNTIME_TREE_TARGET_CONFLICT:{relative}")
+    else:
+        destination.mkdir(mode=0o750)
+
+for relative, expected in sorted(source_entries.items()):
+    kind, expected_bytes, expected_value, executable = expected
+    source_path = source.joinpath(*PurePosixPath(relative).parts)
+    destination = target.joinpath(*PurePosixPath(relative).parts)
+    if kind == "F":
+        if destination.exists() or destination.is_symlink():
+            if destination.is_symlink() or not destination.is_file():
+                reject(f"KNOWLEDGE_V2_RUNTIME_TREE_TARGET_CONFLICT:{relative}")
+            if destination.stat().st_size != expected_bytes or digest(destination) != expected_value:
+                reject(f"KNOWLEDGE_V2_RUNTIME_TREE_TARGET_HASH_DRIFT:{relative}")
+        else:
+            source_fd = os.open(source_path, os.O_RDONLY | os.O_CLOEXEC | os.O_NOFOLLOW)
+            try:
+                destination_fd = os.open(
+                    destination,
+                    os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_CLOEXEC | os.O_NOFOLLOW,
+                    0o600,
+                )
+                try:
+                    while True:
+                        block = os.read(source_fd, 1024 * 1024)
+                        if not block:
+                            break
+                        view = memoryview(block)
+                        while view:
+                            view = view[os.write(destination_fd, view):]
+                    os.fsync(destination_fd)
+                finally:
+                    os.close(destination_fd)
+            finally:
+                os.close(source_fd)
+        os.chown(destination, 0, expected_gid, follow_symlinks=False)
+        destination.chmod(0o750 if executable else 0o640)
+    elif kind == "L":
+        if destination.exists() or destination.is_symlink():
+            if not destination.is_symlink() or os.readlink(destination) != expected_value:
+                reject(f"KNOWLEDGE_V2_RUNTIME_TREE_TARGET_LINK_DRIFT:{relative}")
+        else:
+            os.symlink(expected_value, destination)
+        os.chown(destination, 0, expected_gid, follow_symlinks=False)
+
+for relative, expected in sorted(source_entries.items(), reverse=True):
+    if expected[0] == "D":
+        destination = target.joinpath(*PurePosixPath(relative).parts)
+        os.chown(destination, 0, expected_gid)
+        destination.chmod(0o750)
+os.chown(target, 0, expected_gid)
+target.chmod(0o750)
+
+target_entries, target_files, target_bytes = collect(target, "TARGET")
+if target_entries != source_entries or target_files != source_files or target_bytes != source_bytes:
+    reject("KNOWLEDGE_V2_RUNTIME_TREE_TARGET_MISMATCH")
+inventory = hashlib.sha256()
+for relative, value in sorted(source_entries.items()):
+    inventory.update(f"{relative}\t{value[0]}\t{value[1]}\t{value[2]}\t{int(value[3])}\n".encode())
+print(
+    "KNOWLEDGE_V2_RUNTIME_TREE_CLONE=PASS:"
+    f"{len(source_entries)}:{source_files}:{source_bytes}:{inventory.hexdigest()}"
+)
 PY
 }
 
@@ -1355,6 +1486,9 @@ prepare() {
     inherit_knowledge_v2_runtime_for_d27 \
       "$RELEASE_ROOT/$expected_current" "$release" "$knowledge_repair_root" \
       | tee "$ACTIVE_EVIDENCE/knowledge-v2-runtime-inherit.log"
+    clone_knowledge_v2_runtime_tree_for_d27 \
+      "$RELEASE_ROOT/$expected_current" "$release" \
+      | tee "$ACTIVE_EVIDENCE/knowledge-v2-runtime-tree-clone.log"
     rm -rf -- "$knowledge_repair_root"
   fi
   test -s "$release/.next/BUILD_ID"
