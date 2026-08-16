@@ -17,6 +17,7 @@ import {
   projects,
   users,
 } from "@/lib/db/schema";
+import { proxiedApplicationOrigin } from "@/lib/operations/local-host";
 
 import {
   AUTH_USER_ADDITIONAL_FIELDS,
@@ -138,8 +139,18 @@ export function createLumiAuthRuntime(
   const config = readEnv(environment);
   const connection = createDb(config.databasePath);
   const registrationToken = internalRegistrationToken(config.sessionSecret);
+  const configuredOrigin = config.publicAppUrl;
 
   const auth = betterAuth({
+    ...(configuredOrigin
+      ? {
+          baseURL: configuredOrigin,
+          trustedOrigins: [
+            configuredOrigin,
+            proxiedApplicationOrigin(configuredOrigin),
+          ],
+        }
+      : {}),
     secret: config.sessionSecret,
     database: drizzleAdapter(connection.db, {
       provider: "sqlite",

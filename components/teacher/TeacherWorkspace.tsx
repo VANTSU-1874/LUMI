@@ -1,16 +1,17 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { Download, FileCheck2 } from "lucide-react";
 
 import { AgentDecisionReviewPublicSchema, ClassAnalyticsSchema, LearnerDetailSchema, TeacherDecisionPublicSchema, type AgentDecisionReviewInput, type ClassAnalytics, type LearnerDetail as LearnerDetailValue } from "@/lib/domain/teacher";
-import { ClassOverview } from "./ClassOverview";
 import { LearnerDetail } from "./LearnerDetail";
-import { MisconceptionPanel } from "./MisconceptionPanel";
 import { FallbackModeBadge } from "@/components/common/FallbackModeBadge";
 import { EvidenceHistory } from "@/components/common/EvidenceHistory";
-import Link from "next/link";
 import { ClassListSchema, jsonOrError, type TeacherClassList, type TeacherWorkspaceFetcher } from "./teacher-workspace-api";
 import type { StudentMemoryPublic } from "@/lib/domain/student-memory";
+import { TeacherReviewPackQueueSchema } from "@/lib/domain/inspiration-wiki/review-pack-contracts";
+import { TeacherAppShell, type TeacherSection } from "./TeacherAppShell";
+import { TeacherDashboardOverview, TeacherStudentsTable } from "./TeacherDashboardOverview";
 
 export function TeacherWorkspace({ fetcher = fetch }: { fetcher?: TeacherWorkspaceFetcher }) {
   const [classes, setClasses] = useState<TeacherClassList["classes"]>([]);
@@ -26,6 +27,8 @@ export function TeacherWorkspace({ fetcher = fetch }: { fetcher?: TeacherWorkspa
   const [autoDemoFallback, setAutoDemoFallback] = useState(false);
   const [evidenceHistoryRevision, setEvidenceHistoryRevision] = useState(0);
   const [aiMode, setAiMode] = useState<"MODEL_ASSISTED" | "DETERMINISTIC_FALLBACK">("DETERMINISTIC_FALLBACK");
+  const [section, setSection] = useState<TeacherSection>("overview");
+  const [reviewPackSummary, setReviewPackSummary] = useState<{ ready: number; governance: number } | null>(null);
   const errorRef = useRef<HTMLDivElement>(null);
   const classListSequence = useRef(0);
   const classSequence = useRef(0);
@@ -39,6 +42,19 @@ export function TeacherWorkspace({ fetcher = fetch }: { fetcher?: TeacherWorkspa
   const activeStudent = useRef("");
   const demoPreferenceTouched = useRef(false);
   const autoDemoAttempted = useRef(false);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    void (async () => {
+      try {
+        const payload = TeacherReviewPackQueueSchema.parse(await jsonOrError(await fetcher("/api/teacher/inspiration-wiki/review-packs", { signal: controller.signal, cache: "no-store" })));
+        if (!controller.signal.aborted) setReviewPackSummary({ ready: payload.meta.teacherReviewReady, governance: payload.meta.totalGovernanceMaterials });
+      } catch {
+        // The classroom workspace remains usable if the separately governed Wiki readiness API is unavailable.
+      }
+    })();
+    return () => controller.abort();
+  }, [fetcher]);
 
   useEffect(() => {
     const sequence = ++classListSequence.current;
@@ -118,6 +134,7 @@ export function TeacherWorkspace({ fetcher = fetch }: { fetcher?: TeacherWorkspa
   useEffect(() => { if (error) errorRef.current?.focus(); }, [error]);
 
   async function openLearner(studentId: string) {
+    setSection("reviews");
     const selectedClass = classId;
     activeStudent.current = studentId;
     const sequence = ++detailSequence.current;
@@ -297,21 +314,38 @@ export function TeacherWorkspace({ fetcher = fetch }: { fetcher?: TeacherWorkspa
     });
   }
 
+  const sectionTitle: Record<TeacherSection, string> = {
+    overview: "课堂学习工作台",
+    students: "学生与班级",
+    reviews: "判断复核",
+    wiki: "灵感 Wiki",
+    evidence: "证据与隐私",
+  };
+
+  const tools = <>
+    <label className="teacherCheck"><input checked={includeDemo} onChange={(event) => changeDemoVisibility(event.target.checked)} type="checkbox" />显示演示数据</label>
+    {classes.length ? <label className="teacherCheck">选择班级<select aria-label="选择班级" className="teacherSelect" onChange={(event) => changeClass(event.target.value)} value={classId}>{classes.map((item) => <option key={item.id} value={item.id}>{item.name}（{item.students}人）</option>)}</select></label> : null}
+    {classId ? <a aria-label="导出真实试用报告" className="teacherButton" download href={`/api/teacher/pilot-report?classId=${encodeURIComponent(classId)}`}><Download size={15} />导出真实试用报告</a> : null}
+  </>;
+
   return (
-    <main className="mx-auto min-h-screen max-w-7xl space-y-6 px-4 py-5 sm:px-6 lg:px-8">
-      <header className="rounded-[1.75rem] border border-[#dce4df] bg-[#fffef9] px-5 py-5 shadow-[0_8px_28px_rgba(23,51,45,0.06)] sm:px-7">
-        <div className="flex flex-wrap items-center justify-between gap-4"><div className="flex items-center gap-3"><div className="grid size-12 place-items-center rounded-2xl bg-[#17332d] text-xl text-[#ffbf47]" aria-hidden="true">L</div><div><p className="text-xs font-black tracking-[0.18em] text-[#178b73]">Lumi 鹿鸣 · 教师工作台</p><h1 aria-label="教师学习分析工作台" className="mt-1 text-2xl font-black text-[#17332d] sm:text-3xl">课堂学习工作台</h1></div></div><Link aria-label="隐私与证据删除" className="text-sm font-bold text-[#58706a] underline" href="/privacy">隐私与证据管理</Link></div>
-        <div className="mt-5 flex flex-wrap items-center gap-3 border-t border-[#e6ebe7] pt-4"><label className="flex items-center gap-2 rounded-full bg-[#edf5f0] px-4 py-2 text-sm font-black text-[#0d6858]"><input checked={includeDemo} className="size-4 accent-[#178b73]" onChange={(event) => changeDemoVisibility(event.target.checked)} type="checkbox" />显示演示数据</label>{classes.length ? <label className="text-sm font-black text-[#3f5f56]">选择班级<select className="ml-2 rounded-xl border border-[#cbd8d2] bg-white px-3 py-2 text-[#17332d]" onChange={(event) => changeClass(event.target.value)} value={classId}>{classes.map((item) => <option key={item.id} value={item.id}>{item.name}（{item.students}人）</option>)}</select></label> : null}{classId ? <div className="ml-auto flex flex-col items-start gap-1 sm:items-end"><a className="rounded-xl border-2 border-[#178b73] bg-white px-4 py-2 text-sm font-black text-[#0d6858] transition hover:bg-[#e7f5ef]" download href={`/api/teacher/pilot-report?classId=${encodeURIComponent(classId)}`}>导出真实试用报告</a><span className="text-xs text-[#71847f]">仅汇总真实数据；现场观察项仍需教师补填</span></div> : null}</div>
-      </header>
-      {autoDemoFallback ? <div className="flex gap-3 rounded-2xl border border-[#f2cf7a] bg-[#fff7df] p-4 text-sm leading-6 text-[#704d00]" role="status"><span aria-hidden="true" className="text-xl">ⓘ</span><p><strong className="block">当前还没有真实课堂记录，已自动打开演示班。</strong>下方数据用于体验教师分析功能，均为演示数据，不代表真实学生成效。关闭“显示演示数据”即可隐藏。</p></div> : null}
+    <TeacherAppShell active={section} description={classId ? "仅汇总真实数据；现场观察项仍需教师补填" : "选择班级后查看课堂数据。"} eyebrow="Lumi 鹿鸣 · 教师工作台" onNavigate={setSection} title={sectionTitle[section]} tools={tools}>
+      {autoDemoFallback ? <div className="teacherNotice" role="status"><p><strong>当前还没有真实课堂记录，已自动打开演示班。</strong>下方数据用于体验教师分析功能，均为演示数据，不代表真实学生成效。关闭“显示演示数据”即可隐藏。</p></div> : null}
       {aiMode === "DETERMINISTIC_FALLBACK" ? <FallbackModeBadge /> : null}
-      {classesMeta.truncated ? <p className="rounded-xl bg-amber-50 p-3 text-sm text-amber-900">班级列表仅显示 {classesMeta.returned}/{classesMeta.total}个，请联系管理员分配班级范围。</p> : null}
+      {classesMeta.truncated ? <p className="teacherNotice">班级列表仅显示 {classesMeta.returned}/{classesMeta.total} 个，请联系管理员分配班级范围。</p> : null}
       <div aria-live="polite" className="sr-only">{loading ? "正在加载" : "加载完成"}</div>
-      {error ? <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-red-800" ref={errorRef} role="alert" tabIndex={-1}>{error}</div> : null}
-      {loading ? <p className="rounded-2xl border border-[#dce4df] bg-[#fffef9] p-6 font-bold text-[#58706a]">正在整理课堂数据…</p> : null}
-      {analytics ? <><ClassOverview analytics={analytics} onOpenLearner={openLearner} /><MisconceptionPanel analytics={analytics} /></> : null}
-      <EvidenceHistory fetcher={fetcher as typeof fetch} onDeleted={evidenceDeleted} refreshToken={evidenceHistoryRevision} />
-      {detail ? <LearnerDetail agentReviewPending={agentReviewPending} classId={classId} detail={detail} fetcher={fetcher as typeof fetch} includeDemo={includeDemo} onAgentReview={saveAgentReview} onDecision={saveDecision} onEvidenceDeleted={evidenceDeleted} onMemoryDeleted={memoryDeleted} onMemoryLoaded={memoriesLoaded} onTargetChange={() => setError(null)} pending={decisionPending} /> : null}
-    </main>
+      {error ? <div className="teacherNotice teacherError" ref={errorRef} role="alert" tabIndex={-1}>{error}</div> : null}
+      {loading ? <p className="teacherLoading">正在整理课堂数据…</p> : null}
+      {analytics && section === "overview" ? <TeacherDashboardOverview analytics={analytics} governanceMaterials={reviewPackSummary?.governance ?? null} onOpenLearner={openLearner} onShowStudents={() => setSection("students")} reviewReady={reviewPackSummary?.ready ?? null} /> : null}
+      {analytics && section === "students" ? <TeacherStudentsTable analytics={analytics} onOpenLearner={openLearner} /> : null}
+      {analytics && section === "reviews" ? <div className="teacherWorkspaceGrid">
+        <TeacherStudentsTable analytics={analytics} onOpenLearner={openLearner} />
+        {!detail ? <p className="teacherEmpty teacherPanel">选择一名学生，查看原系统判断并追加教师复核。</p> : null}
+        {detail ? <div className="teacherPanel teacherLearnerFrame"><LearnerDetail agentReviewPending={agentReviewPending} classId={classId} detail={detail} fetcher={fetcher as typeof fetch} includeDemo={includeDemo} onAgentReview={saveAgentReview} onDecision={saveDecision} onEvidenceDeleted={evidenceDeleted} onMemoryDeleted={memoryDeleted} onMemoryLoaded={memoriesLoaded} onTargetChange={() => setError(null)} pending={decisionPending} /></div> : null}
+        <article className="teacherPanel" aria-labelledby="evidence-summary-heading"><header className="teacherPanelHeader"><div><h2 id="evidence-summary-heading">证据来源与验证</h2><p>当前班级聚合</p></div><FileCheck2 aria-hidden="true" size={16} /></header>{analytics.evidence.byVerification.length ? <div className="teacherTaskList">{analytics.evidence.byVerification.map((item) => <div className="teacherTask" key={item.key}><span className="teacherTaskIndex">EV</span><div><strong>{item.key}</strong><p>当前验证状态</p></div><span>{item.count}</span></div>)}</div> : <p className="teacherEmpty">暂无证据</p>}</article>
+        <div className="teacherEvidenceFrame"><EvidenceHistory fetcher={fetcher as typeof fetch} onDeleted={evidenceDeleted} refreshToken={evidenceHistoryRevision} /></div>
+      </div> : null}
+      {section === "evidence" ? <div className="teacherWorkspaceGrid"><div className="teacherPanel teacherEvidenceFrame"><EvidenceHistory fetcher={fetcher as typeof fetch} onDeleted={evidenceDeleted} refreshToken={evidenceHistoryRevision} /></div><a className="teacherButton" href="/privacy">打开隐私与证据删除中心</a></div> : null}
+    </TeacherAppShell>
   );
 }

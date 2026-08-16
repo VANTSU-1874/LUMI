@@ -35,7 +35,11 @@ async function main() {
   const runtimeRoot = path.resolve(".runtime/agent-harness");
   await mkdir(runtimeRoot, { recursive: true });
   const databasePath = path.join(runtimeRoot, `agent-harness-${process.pid}.sqlite`);
-  const reportPath = path.resolve(environment.AGENT_HARNESS_REPORT_PATH?.trim() || path.join(runtimeRoot, "latest.json"));
+  const reportPath = path.resolve(
+    process.env.LUMI_RELEASE_AUDIT_AGENT_HARNESS_REPORT_PATH?.trim()
+      || environment.AGENT_HARNESS_REPORT_PATH?.trim()
+      || path.join(runtimeRoot, "latest.json"),
+  );
   const runtime = {
     ...CURRENT_AGENT_RUNTIME,
     generation: "V3" as const,

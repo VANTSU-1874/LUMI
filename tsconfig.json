@@ -42,9 +42,12 @@
     ".next/codex-screen-fit-3016/types/**/*.ts",
     ".next/codex-screen-fit-3016/dev/types/**/*.ts",
     ".next/e2e-playwright/types/**/*.ts",
-    ".next/e2e-playwright/dev/types/**/*.ts"
+    ".next/e2e-playwright/dev/types/**/*.ts",
+    ".next/gap-review-qa/types/**/*.ts",
+    ".next/gap-review-qa/dev/types/**/*.ts"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    ".codex-runtime"
   ]
 }

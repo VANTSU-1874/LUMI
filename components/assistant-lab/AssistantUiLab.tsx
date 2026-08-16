@@ -7,7 +7,6 @@ import {
   ComposerPrimitive,
   ErrorPrimitive,
   MessagePrimitive,
-  QueueItemPrimitive,
   SuggestionPrimitive,
   ThreadListItemPrimitive,
   ThreadListPrimitive,
@@ -29,6 +28,7 @@ import {
 import Link from "next/link";
 import {
   ArrowDownIcon,
+  ArrowLeftIcon,
   ArrowUpIcon,
   CheckIcon,
   ChevronDownIcon,
@@ -53,6 +53,7 @@ import {
   PlusIcon,
   RefreshCwIcon,
   SearchIcon,
+  SparklesIcon,
   SquareIcon,
   ThumbsDownIcon,
   ThumbsUpIcon,
@@ -77,6 +78,17 @@ import {
 } from "react";
 
 import { MessageResponse } from "@/components/ai-elements/message";
+import {
+  InspirationCitationCard,
+  type CourseReference,
+  type InspirationCitation,
+} from "@/components/inspiration/InspirationCitationCard";
+import { inspirationCitationPreviewFor } from "@/components/inspiration/inspiration-citation-mocks";
+import { InspirationWiki } from "@/components/inspiration/InspirationWiki";
+import type {
+  InspirationEntries,
+  InspirationEntry,
+} from "@/components/inspiration/inspiration-wiki-data";
 import {
   Sources,
   SourcesContent,
@@ -119,6 +131,10 @@ import {
   requestedCapabilityFromThreadMessage,
   useComposerCapability,
 } from "./assistant-lab-capability-state";
+import {
+  assistantLabInterventionStatusLabel,
+  useAssistantLabInterventions,
+} from "./assistant-lab-interventions";
 import { isContinuationIntent } from "./continuation-intent";
 import { latestTextSnapshot } from "./latest-answer-snapshot";
 import styles from "./assistant-lab.module.css";
@@ -562,24 +578,57 @@ const groupAssistantMessageParts = groupPartByType({
   "generative-ui": ["group-next-step"],
 });
 
-export function AssistantUiLab() {
+type AssistantUiLabProps = {
+  inspirationCase?: string;
+  /** Development/test-only fixture mode. Production Browser data loads from the authenticated API. */
+  inspirationEntries?: InspirationEntries;
+  inspirationMode?: boolean;
+};
+
+type AssistantLabSurface = AssistantLabSection | "inspiration";
+
+export function AssistantUiLab({
+  inspirationCase,
+  inspirationEntries,
+  inspirationMode = false,
+}: AssistantUiLabProps) {
+  const inspirationCitation = inspirationCitationPreviewFor(inspirationCase);
   return (
     <AssistantLabRuntimeProvider>
       <KnowledgeSearchToolUI />
       <FiveDimensionToolUI />
       <ConfirmActionToolUI />
-      <AssistantLabShell />
+      <AssistantLabShell
+        initialInspirationCaseId={inspirationCase}
+        initialInspirationCitation={inspirationCitation}
+        inspirationEntries={inspirationEntries}
+        inspirationMode={inspirationMode}
+      />
     </AssistantLabRuntimeProvider>
   );
 }
 
-function AssistantLabShell() {
+function AssistantLabShell({
+  initialInspirationCaseId,
+  initialInspirationCitation,
+  inspirationEntries,
+  inspirationMode,
+}: {
+  initialInspirationCaseId?: string;
+  initialInspirationCitation?: InspirationCitation;
+  inspirationEntries?: InspirationEntries;
+  inspirationMode: boolean;
+}) {
   const aui = useAui();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
-  const [activeSection, setActiveSection] = useState<AssistantLabSection>("chat");
+  const [activeSection, setActiveSection] = useState<AssistantLabSurface>(
+    inspirationMode ? "inspiration" : "chat",
+  );
   const [activeProjectId, setActiveProjectIdState] = useState<string | null>(null);
+  const [inspirationCitation, setInspirationCitation] = useState(initialInspirationCitation);
+  const [savedInspirationIds, setSavedInspirationIds] = useState<string[]>([]);
   const sharedThreadHandled = useRef(false);
   const threadIsEmpty = useAuiState((state) => state.thread.isEmpty);
   useEffect(() => {
@@ -611,7 +660,7 @@ function AssistantLabShell() {
     setSearchOpen(!searchOpen);
   };
 
-  const navigateTo = (section: AssistantLabSection) => {
+  const navigateTo = (section: AssistantLabSurface) => {
     setActiveSection(section);
     setSidebarOpen(false);
   };
@@ -635,6 +684,34 @@ function AssistantLabShell() {
     setActiveSection("chat");
     setSidebarOpen(false);
     void aui.threads().switchToNewThread();
+  };
+
+  const toggleSavedInspiration = (entryId: string) => {
+    setSavedInspirationIds((current) => (
+      current.includes(entryId)
+        ? current.filter((id) => id !== entryId)
+        : [...current, entryId]
+    ));
+  };
+
+  const bringInspirationToChat = (entry: InspirationEntry) => {
+    const citation = inspirationCitationPreviewFor(entry.id);
+    if (!citation) return;
+    setInspirationCitation(citation);
+    setActiveSection("chat");
+    setSidebarOpen(false);
+    const url = new URL(window.location.href);
+    url.searchParams.delete("inspiration");
+    url.searchParams.delete("entry");
+    url.searchParams.set("inspirationCase", entry.id);
+    window.history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
+  };
+
+  const clearInspirationFromChat = () => {
+    setInspirationCitation(undefined);
+    const url = new URL(window.location.href);
+    url.searchParams.delete("inspirationCase");
+    window.history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
   };
 
   return (
@@ -694,7 +771,7 @@ function AssistantLabShell() {
         />
       ) : null}
 
-      <section aria-label="与 Lumi 对话" className={styles.workspace}>
+      <section aria-label={activeSection === "inspiration" ? "Lumi 灵感 Wiki" : "与 Lumi 对话"} className={styles.workspace}>
         <header className={styles.topbar}>
           <button
             aria-label="打开历史对话"
@@ -705,7 +782,9 @@ function AssistantLabShell() {
           >
             <MenuIcon aria-hidden="true" size={18} />
           </button>
-          {activeSection === "chat" && threadIsEmpty ? (
+          {activeSection === "inspiration" ? (
+            <LabInspirationHeader onBackToChat={() => navigateTo("chat")} />
+          ) : activeSection === "chat" && threadIsEmpty ? (
             <div className={styles.topbarSpacer} aria-hidden="true" />
           ) : activeSection === "chat" ? (
             <LabThreadHeader />
@@ -713,22 +792,53 @@ function AssistantLabShell() {
             <div className={styles.topbarSpacer} aria-hidden="true" />
           )}
         </header>
+        <div className={styles.inspirationStage} hidden={activeSection !== "inspiration"}>
+          <InspirationWiki
+            embedded
+            entries={inspirationEntries}
+            initialSelectedId={inspirationCitation?.entryId ?? initialInspirationCaseId}
+            onBackToChat={() => navigateTo("chat")}
+            onToggleSaved={toggleSavedInspiration}
+            onUseInChat={inspirationEntries ? bringInspirationToChat : undefined}
+            savedEntryIds={savedInspirationIds}
+            showEmbeddedTopbar={false}
+          />
+        </div>
         {activeSection === "chat" ? (
           <div
             className={styles.threadStage}
           >
-            <LabThread />
+            <LabThread
+              inspirationCitation={inspirationCitation}
+              onClearInspiration={clearInspirationFromChat}
+              onOpenInspiration={() => navigateTo("inspiration")}
+            />
           </div>
-        ) : (
+        ) : activeSection !== "inspiration" ? (
           <AssistantLabSectionView
             activeProjectId={activeProjectId}
             onBackToChat={() => navigateTo("chat")}
             onOpenProject={openProject}
             section={activeSection}
           />
-        )}
+        ) : null}
       </section>
     </main>
+  );
+}
+
+function LabInspirationHeader({ onBackToChat }: { onBackToChat: () => void }) {
+  return (
+    <div className={styles.inspirationHeader}>
+      <div>
+        <p>灵感 Wiki</p>
+        <span>浏览案例、搜索主题，并把有用的参考保存到灵感板。</span>
+      </div>
+      <button className={styles.topbarTextButton} onClick={onBackToChat} type="button">
+        <ArrowLeftIcon aria-hidden="true" size={15} />
+        <span>返回对话</span>
+      </button>
+    </div>
   );
 }
 
@@ -741,8 +851,8 @@ function LabThreadList({
   searchOpen,
   setQuery,
 }: {
-  activeSection: AssistantLabSection;
-  onNavigate: (section: AssistantLabSection) => void;
+  activeSection: AssistantLabSurface;
+  onNavigate: (section: AssistantLabSurface) => void;
   onNewChat: () => void;
   onSelectThread: (threadId: string | undefined) => void;
   query: string;
@@ -768,6 +878,14 @@ function LabThreadList({
       </ThreadListPrimitive.New>
 
       <nav aria-label="Lumi 工具" className={styles.sidebarTools}>
+        <button
+          aria-current={activeSection === "inspiration" ? "page" : undefined}
+          onClick={() => onNavigate("inspiration")}
+          type="button"
+        >
+          <SparklesIcon aria-hidden="true" size={17} />
+          <span>灵感 Wiki</span>
+        </button>
         <button
           aria-current={activeSection === "library" ? "page" : undefined}
           onClick={() => onNavigate("library")}
@@ -886,7 +1004,15 @@ function LabArchivedThreadListItem() {
   );
 }
 
-function LabThread() {
+function LabThread({
+  inspirationCitation,
+  onClearInspiration,
+  onOpenInspiration,
+}: {
+  inspirationCitation?: InspirationCitation;
+  onClearInspiration: () => void;
+  onOpenInspiration: () => void;
+}) {
   const isEmpty = useAuiState((state) => state.thread.isEmpty);
 
   return (
@@ -900,7 +1026,7 @@ function LabThread() {
       >
         <div className={styles.threadInner}>
           <AuiIf condition={(state) => state.thread.isEmpty}>
-            <LabWelcome />
+            <LabWelcome onOpenInspiration={onOpenInspiration} />
           </AuiIf>
 
           <div className={styles.messageList}>
@@ -923,6 +1049,11 @@ function LabThread() {
             <AuiIf condition={(state) => state.thread.isEmpty}>
               <LabWelcomeSuggestions />
             </AuiIf>
+            {inspirationCitation ? <LabInspirationContext
+              citation={inspirationCitation}
+              onClear={onClearInspiration}
+              onOpenInspiration={onOpenInspiration}
+            /> : null}
             <LabComposer />
           </ThreadPrimitive.ViewportFooter>
         </div>
@@ -931,11 +1062,40 @@ function LabThread() {
   );
 }
 
-function LabWelcome() {
+function LabWelcome({ onOpenInspiration }: { onOpenInspiration: () => void }) {
   return (
     <div className={styles.welcome}>
       <h1>你今天想一起把什么设计清楚？</h1>
+      <button className={styles.inspirationEntry} onClick={onOpenInspiration} type="button">
+        <SparklesIcon aria-hidden="true" size={15} />
+        <span>浏览灵感案例</span>
+        <small>查看来源、许可与可迁移的规则</small>
+      </button>
     </div>
+  );
+}
+
+function LabInspirationContext({
+  citation,
+  onClear,
+  onOpenInspiration,
+}: {
+  citation: InspirationCitation;
+  onClear: () => void;
+  onOpenInspiration: () => void;
+}) {
+  const prompt = `我想讨论灵感案例《${citation.title}》。它与当前问题的关联是：${citation.relevance}。请区分案例观察与课程原理，解释其中哪些版式、配色或交互判断值得迁移；不要建议直接复刻。`;
+  return (
+    <section aria-label="已带回当前对话的灵感案例" className={styles.inspirationContext}>
+      <InspirationCitationCard citations={[citation]} presentation="context" />
+      <div className={styles.inspirationContextActions}>
+        <ThreadPrimitive.Suggestion asChild prompt={prompt} send>
+          <button type="button">讨论这个案例</button>
+        </ThreadPrimitive.Suggestion>
+        <button onClick={onOpenInspiration} type="button">更换案例</button>
+        <button onClick={onClear} type="button">移除</button>
+      </div>
+    </section>
   );
 }
 
@@ -965,6 +1125,16 @@ function LabThreadMessage() {
 }
 
 function LabAssistantMessage() {
+  const messageParts = useAuiState((state) => state.message.parts);
+  const legacyCourseReferences = useMemo(() => messageParts.flatMap((part, index) => (
+    part.type === "source" && part.sourceType === "document"
+      ? [{
+        id: `course:${index}:${part.title ?? "untitled"}`,
+        title: part.title ?? "未命名课程资料",
+        detail: "本回答使用的课程资料",
+      } satisfies CourseReference]
+      : []
+  )), [messageParts]);
   const incomplete = useAuiState((state) => Boolean(partialResponseReason(
     state.message.parts as readonly { type: string; name?: string; data?: unknown }[],
   )));
@@ -973,6 +1143,10 @@ function LabAssistantMessage() {
       <div className={styles.assistantBody}>
         <LabAssistantParts />
         <LabAnswerGroup />
+        <InspirationCitationCard
+          citations={[]}
+          courseReferences={legacyCourseReferences}
+        />
         <LabPartialAnswerNotice />
         <LabMessageError />
         <div className={styles.messageFooter}>
@@ -1684,26 +1858,34 @@ function LabLongform({
 
 function LabTextPart({ text, status }: TextMessagePartProps) {
   const isStreaming = status.type === "running";
-  const continuation = useAuiState((state) => {
+  const continuationPrefix = useAuiState((state) => {
     const part = state.message.parts.find((candidate) => (
       candidate.type === "data" && candidate.name === "lumi-continuation"
     ));
     const data = part?.type === "data" && part.data && typeof part.data === "object"
       ? part.data as { instantPrefix?: unknown; seamOffset?: unknown; attempt?: unknown }
       : undefined;
-    const seamOffset = typeof data?.seamOffset === "number" ? data.seamOffset : 0;
-    return seamOffset > 0
-      ? {
-        instantPrefix: typeof data?.instantPrefix === "string" ? data.instantPrefix : "",
-        seamOffset,
-      }
-      : null;
+    return typeof data?.instantPrefix === "string" ? data.instantPrefix : "";
   });
-  const visibleText = useSmoothStream(text, isStreaming, undefined, continuation?.instantPrefix);
+  const continuationSeamOffset = useAuiState((state) => {
+    const part = state.message.parts.find((candidate) => (
+      candidate.type === "data" && candidate.name === "lumi-continuation"
+    ));
+    const data = part?.type === "data" && part.data && typeof part.data === "object"
+      ? part.data as { seamOffset?: unknown }
+      : undefined;
+    return typeof data?.seamOffset === "number" ? data.seamOffset : 0;
+  });
+  const visibleText = useSmoothStream(
+    text,
+    isStreaming,
+    undefined,
+    continuationSeamOffset > 0 ? continuationPrefix : undefined,
+  );
   const incompleteReason = useAuiState((state) => partialResponseReason(
     state.message.parts as readonly { type: string; name?: string; data?: unknown }[],
   ));
-  const hasSeam = continuation !== null && visibleText.length > continuation.seamOffset;
+  const hasSeam = continuationSeamOffset > 0 && visibleText.length > continuationSeamOffset;
   const incomplete = status.type === "incomplete" || Boolean(incompleteReason);
   return (
     <LabLongform
@@ -1717,7 +1899,7 @@ function LabTextPart({ text, status }: TextMessagePartProps) {
           <LabMarkdownResponse
             className={styles.markdownSegment}
             isStreaming={isStreaming}
-            text={visibleText.slice(0, continuation.seamOffset)}
+            text={visibleText.slice(0, continuationSeamOffset)}
           />
           <span
             aria-label="从这里继续生成"
@@ -1727,7 +1909,7 @@ function LabTextPart({ text, status }: TextMessagePartProps) {
           <LabMarkdownResponse
             className={styles.markdownSegment}
             isStreaming={isStreaming}
-            text={visibleText.slice(continuation.seamOffset)}
+            text={visibleText.slice(continuationSeamOffset)}
           />
         </div>
       )}
@@ -2164,6 +2346,12 @@ type LumiResponseData = {
   incomplete?: {
     reason?: PartialResponseReason;
   };
+  routingReceipt?: {
+    schema?: "specialty-route-receipt/v1";
+    coursePackId?: "general-design" | "digital-interaction" | "book-design";
+    coursePackVersion?: "1";
+    reason?: "GENERAL_DEFAULT" | "MESSAGE_MATCH" | "INTERFACE_CONTEXT" | "STUDENT_DECLARED";
+  };
 };
 
 function partialResponseReason(parts: readonly { type: string; name?: string; data?: unknown }[]) {
@@ -2231,8 +2419,20 @@ function LabResponseDataPart({ data }: DataMessagePartProps<LumiResponseData>) {
   // The structured payload remains available to the runtime and to the
   // incomplete-answer notice, but ordinary answers no longer carry a noisy
   // “why/uncertainty/capability” footer.
-  void data;
-  return null;
+  if (
+    process.env.NODE_ENV === "production"
+    || process.env.NEXT_PUBLIC_E2E_HARNESS_RECEIPT !== "true"
+    || data.routingReceipt?.schema !== "specialty-route-receipt/v1"
+    || !data.routingReceipt.coursePackId
+    || !data.routingReceipt.reason
+  ) return null;
+  return (
+    <output aria-label="Lumi 路由回执" className={styles.routingReceipt}>
+      <strong>本地路由回执</strong>
+      <code>{data.routingReceipt.coursePackId}@{data.routingReceipt.coursePackVersion}</code>
+      <span>{data.routingReceipt.reason}</span>
+    </output>
+  );
 }
 
 function CapabilityChecklist({
@@ -2414,10 +2614,23 @@ function LabFollowupSuggestions() {
   );
 }
 
+function threadMessageRunId(message: ThreadMessage) {
+  const custom = message.metadata?.custom as { runId?: unknown } | undefined;
+  return typeof custom?.runId === "string" ? custom.runId : undefined;
+}
+
 function LabComposer() {
   const aui = useAui();
   const isEmpty = useAuiState((state) => state.thread.isEmpty);
   const draft = useAuiState((state) => state.composer.text);
+  const threadRunning = useAuiState((state) => state.thread.isRunning);
+  const taskId = useAuiState((state) => state.threadListItem.remoteId);
+  const historyRunId = useAuiState((state) => (
+    [...state.thread.messages]
+      .reverse()
+      .map(threadMessageRunId)
+      .find((runId): runId is string => Boolean(runId))
+  ));
   const hasAttachments = useAuiState((state) => state.composer.attachments.length > 0);
   const incompleteAssistantId = useAuiState((state) => (
     [...state.thread.messages]
@@ -2430,11 +2643,30 @@ function LabComposer() {
   const [extensionsOpen, setExtensionsOpen] = useState(false);
   const [extensionPlacement, setExtensionPlacement] = useState<"above" | "below">("below");
   const [placeholderIndex, setPlaceholderIndex] = useState(0);
+  const [interventionDraftState, setInterventionDraftState] = useState<{
+    taskId?: string;
+    value: string;
+  }>({ taskId, value: "" });
+  const interventions = useAssistantLabInterventions({
+    taskId,
+    historyRunId,
+    threadRunning,
+  });
+  const interventionDraft = interventionDraftState.taskId === taskId
+    ? interventionDraftState.value
+    : "";
+  const setInterventionDraft = (value: string) => {
+    setInterventionDraftState({ taskId, value });
+  };
+  const visibleExtensionsOpen =
+    extensionsOpen && !interventions.canIntervene;
   const prefersReducedMotion = useReducedMotion();
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const shellRef = useRef<HTMLDivElement>(null);
   const extensionPanelRef = useRef<HTMLDivElement>(null);
-  const hasDraft = draft.trim().length > 0;
+  const hasDraft = (
+    interventions.canIntervene ? interventionDraft : draft
+  ).trim().length > 0;
   const showPlaceholder = !hasDraft && !isActive;
   const canRotatePlaceholder = showPlaceholder && prefersReducedMotion !== true;
   const selectedCapabilityItem = selected
@@ -2453,7 +2685,7 @@ function LabComposer() {
   }, [canRotatePlaceholder]);
 
   useEffect(() => {
-    if (!extensionsOpen) return;
+    if (!visibleExtensionsOpen) return;
 
     const closeOnOutsidePointer = (event: PointerEvent) => {
       if (!shellRef.current?.contains(event.target as Node | null)) {
@@ -2463,10 +2695,10 @@ function LabComposer() {
 
     document.addEventListener("pointerdown", closeOnOutsidePointer);
     return () => document.removeEventListener("pointerdown", closeOnOutsidePointer);
-  }, [extensionsOpen]);
+  }, [visibleExtensionsOpen]);
 
   useEffect(() => {
-    if (!extensionsOpen) return;
+    if (!visibleExtensionsOpen) return;
 
     const updateExtensionPlacement = () => {
       const shell = shellRef.current;
@@ -2501,7 +2733,7 @@ function LabComposer() {
       window.removeEventListener("resize", updateExtensionPlacement);
       window.removeEventListener("scroll", updateExtensionPlacement, true);
     };
-  }, [extensionsOpen]);
+  }, [visibleExtensionsOpen]);
 
   const toggleExtensions = () => {
     if (extensionsOpen) {
@@ -2518,7 +2750,7 @@ function LabComposer() {
     setExtensionsOpen(true);
   };
 
-  const continueIncompleteAnswer = (event: FormEvent<HTMLFormElement>) => {
+  const submitComposer = (event: FormEvent<HTMLFormElement>) => {
     if (!incompleteAssistantId || hasAttachments || !isContinuationIntent(draft)) return;
     event.preventDefault();
     clear();
@@ -2526,8 +2758,13 @@ function LabComposer() {
     aui.threads().thread("main").message({ id: incompleteAssistantId }).reload();
   };
 
+  const submitIntervention = async (mode: "FOLLOW_UP" | "STEER") => {
+    const accepted = await interventions.submit(interventionDraft, mode);
+    if (accepted) setInterventionDraft("");
+  };
+
   return (
-    <ComposerPrimitive.Root className={styles.composer} onSubmit={continueIncompleteAnswer}>
+    <ComposerPrimitive.Root className={styles.composer} onSubmit={submitComposer}>
       <ComposerPrimitive.AttachmentDropzone asChild>
         <div
           className={styles.composerShell}
@@ -2535,17 +2772,28 @@ function LabComposer() {
           data-compact={!isActive && !hasDraft}
           data-draft={hasDraft}
           data-empty={isEmpty}
-          data-extension-open={extensionsOpen}
+          data-extension-open={visibleExtensionsOpen}
           data-extension-placement={extensionPlacement}
+          data-intervening={interventions.canIntervene}
           ref={shellRef}
           onBlur={(event) => {
             if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
               setIsActive(false);
             }
           }}
+          onDragOverCapture={(event) => {
+            if (!interventions.canIntervene) return;
+            event.preventDefault();
+            event.stopPropagation();
+          }}
+          onDropCapture={(event) => {
+            if (!interventions.canIntervene) return;
+            event.preventDefault();
+            event.stopPropagation();
+          }}
           onFocus={() => setIsActive(true)}
         >
-          {extensionsOpen ? (
+          {visibleExtensionsOpen ? (
             <div
               aria-label="扩展能力面板"
               className={styles.composerExtensionPanel}
@@ -2640,24 +2888,31 @@ function LabComposer() {
               ))}
             </div>
           ) : null}
-          <div className={styles.queueList}>
-            <ComposerPrimitive.Queue>
-              {() => (
-                <div className={styles.queueItem}>
-                  <span>排队：</span>
-                  <QueueItemPrimitive.Text />
-                  <QueueItemPrimitive.Steer asChild>
-                    <button title="下一条优先执行" type="button">优先</button>
-                  </QueueItemPrimitive.Steer>
-                  <QueueItemPrimitive.Remove asChild>
-                    <button aria-label="移除排队消息" title="移除" type="button">
-                      <XIcon aria-hidden="true" size={14} />
-                    </button>
-                  </QueueItemPrimitive.Remove>
+          {interventions.items.length > 0 ? (
+            <section
+              aria-label="后续消息队列"
+              aria-live="polite"
+              className={styles.queueList}
+            >
+              {interventions.items.map((intervention) => (
+                <div
+                  className={styles.queueItem}
+                  data-status={intervention.status}
+                  key={intervention.id}
+                >
+                  <span className={styles.queueMode}>
+                    {intervention.requestedMode === "STEER" ? "改方向" : "下一轮"}
+                  </span>
+                  <span className={styles.queueMessage}>
+                    {intervention.content}
+                  </span>
+                  <span className={styles.queueStatus}>
+                    {assistantLabInterventionStatusLabel(intervention)}
+                  </span>
                 </div>
-              )}
-            </ComposerPrimitive.Queue>
-          </div>
+              ))}
+            </section>
+          ) : null}
           <div className={styles.composerAttachments}>
             <ComposerPrimitive.Attachments>
               {() => <LabAttachment removable />}
@@ -2665,15 +2920,21 @@ function LabComposer() {
           </div>
           <div className={styles.composerInputRow}>
             <LabIconButton
-              aria-expanded={extensionsOpen}
+              aria-expanded={visibleExtensionsOpen}
               aria-haspopup="menu"
               className={`${styles.iconButton} ${styles.extensionToggle}`}
+              disabled={interventions.canIntervene}
               label="打开扩展能力面板"
               onClick={toggleExtensions}
+              title={interventions.canIntervene
+                ? "本轮结束后可添加作品"
+                : "打开扩展能力面板"}
             >
               <PlusIcon aria-hidden="true" size={19} />
             </LabIconButton>
-            {selectedCapabilityItem && SelectedCapabilityIcon ? (
+            {!interventions.canIntervene
+            && selectedCapabilityItem
+            && SelectedCapabilityIcon ? (
               <button
                 aria-label={`移除${selectedCapabilityItem.label}`}
                 className={styles.composerCapabilityChip}
@@ -2687,18 +2948,48 @@ function LabComposer() {
               </button>
             ) : null}
             <div className={styles.composerTextField}>
-              <ComposerPrimitive.Input
-                aria-label="给 Lumi 发送消息"
-                enterKeyHint="send"
-                maxRows={hasDraft ? undefined : 1}
-                placeholder=" "
-                ref={inputRef}
-                rows={1}
-                unstable_focusOnScrollToBottom={false}
-                unstable_focusOnThreadSwitched={false}
-              />
+              {interventions.canIntervene ? (
+                <textarea
+                  aria-label="给 Lumi 发送消息"
+                  enterKeyHint="send"
+                  maxLength={2_000}
+                  onChange={(event) => setInterventionDraft(event.target.value)}
+                  onKeyDown={(event) => {
+                    if (
+                      event.key !== "Enter"
+                      || event.shiftKey
+                      || event.nativeEvent.isComposing
+                    ) {
+                      return;
+                    }
+                    event.preventDefault();
+                    void submitIntervention("FOLLOW_UP");
+                  }}
+                  placeholder=" "
+                  ref={inputRef}
+                  rows={1}
+                  value={interventionDraft}
+                />
+              ) : (
+                <ComposerPrimitive.Input
+                  aria-label="给 Lumi 发送消息"
+                  enterKeyHint="send"
+                  maxRows={hasDraft ? undefined : 1}
+                  placeholder=" "
+                  ref={inputRef}
+                  rows={1}
+                  unstable_focusOnScrollToBottom={false}
+                  unstable_focusOnThreadSwitched={false}
+                />
+              )}
               <div aria-hidden="true" className={styles.composerPlaceholder}>
-                {prefersReducedMotion ? (
+                {interventions.canIntervene ? (
+                  showPlaceholder ? (
+                    <span className={styles.composerPlaceholderText}>
+                      运行中可补充文字，Enter 将追加到下一轮
+                    </span>
+                  ) : null
+                ) : prefersReducedMotion ? (
                   showPlaceholder ? (
                     <span className={styles.composerPlaceholderText}>
                       {composerPlaceholders[0]}
@@ -2733,22 +3024,36 @@ function LabComposer() {
               </div>
             </div>
             <div className={styles.composerActions}>
-              <AuiIf condition={(state) => state.composer.dictation == null}>
-                <ComposerPrimitive.Dictate asChild>
-                  <LabIconButton label="语音输入">
-                    <MicIcon aria-hidden="true" size={17} />
-                  </LabIconButton>
-                </ComposerPrimitive.Dictate>
-              </AuiIf>
-              <AuiIf condition={(state) => state.composer.dictation != null}>
-                <ComposerPrimitive.StopDictation asChild>
-                  <LabIconButton label="停止语音输入">
-                    <SquareIcon aria-hidden="true" size={14} />
-                  </LabIconButton>
-                </ComposerPrimitive.StopDictation>
-              </AuiIf>
+              {interventions.canIntervene ? (
+                <LabIconButton
+                  disabled
+                  label="语音输入"
+                  title="本轮结束后可使用语音"
+                >
+                  <MicIcon aria-hidden="true" size={17} />
+                </LabIconButton>
+              ) : (
+                <>
+                  <AuiIf condition={(state) => state.composer.dictation == null}>
+                    <ComposerPrimitive.Dictate asChild>
+                      <LabIconButton label="语音输入">
+                        <MicIcon aria-hidden="true" size={17} />
+                      </LabIconButton>
+                    </ComposerPrimitive.Dictate>
+                  </AuiIf>
+                  <AuiIf condition={(state) => state.composer.dictation != null}>
+                    <ComposerPrimitive.StopDictation asChild>
+                      <LabIconButton label="停止语音输入">
+                        <SquareIcon aria-hidden="true" size={14} />
+                      </LabIconButton>
+                    </ComposerPrimitive.StopDictation>
+                  </AuiIf>
+                </>
+              )}
             </div>
-            <AuiIf condition={(state) => !state.thread.isRunning}>
+            <AuiIf condition={(state) => (
+              !state.thread.isRunning && !interventions.canIntervene
+            )}>
               <ComposerPrimitive.Send asChild>
                 <button
                   aria-label="发送消息"
@@ -2776,6 +3081,36 @@ function LabComposer() {
               </ComposerPrimitive.Cancel>
             </AuiIf>
           </div>
+          {interventions.canIntervene ? (
+            <div className={styles.interventionControls}>
+              <p className={styles.interventionHint}>
+                当前运行中：文字会先保存到服务器；作品与语音将在本轮结束后恢复。
+              </p>
+              <div className={styles.interventionActions}>
+                <button
+                  className={styles.interventionButton}
+                  disabled={interventions.busy || !interventionDraft.trim()}
+                  onClick={() => void submitIntervention("STEER")}
+                  type="button"
+                >
+                  改变当前方向
+                </button>
+                <button
+                  className={styles.interventionButton}
+                  disabled={interventions.busy || !interventionDraft.trim()}
+                  onClick={() => void submitIntervention("FOLLOW_UP")}
+                  type="button"
+                >
+                  追加到下一轮
+                </button>
+              </div>
+            </div>
+          ) : null}
+          {interventions.error ? (
+            <p className={styles.interventionError} role="alert">
+              {interventions.error}
+            </p>
+          ) : null}
         </div>
       </ComposerPrimitive.AttachmentDropzone>
     </ComposerPrimitive.Root>

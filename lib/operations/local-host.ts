@@ -6,6 +6,9 @@ import { signTrustedSource } from "@/lib/auth/trusted-source";
 
 export { parseServiceEnvironment } from "@/lib/config/service-environment";
 
+export const LOCAL_APP_UPSTREAM_PORT = 3000;
+export const LOCAL_APP_UPSTREAM_ORIGIN = `http://localhost:${LOCAL_APP_UPSTREAM_PORT}`;
+
 const STRIPPED_REQUEST_HEADERS = new Set([
   "connection",
   "keep-alive",
@@ -82,6 +85,15 @@ function isLoopbackHost(hostname: string) {
   return normalized === "localhost" || normalized === "127.0.0.1" || normalized === "[::1]";
 }
 
+export function proxiedApplicationOrigin(
+  publicUrl: string,
+  upstreamOrigin = LOCAL_APP_UPSTREAM_ORIGIN,
+) {
+  const external = new URL(publicUrl);
+  const upstream = new URL(upstreamOrigin);
+  return `${external.protocol}//${upstream.host}`;
+}
+
 export function resolveExternalRequestOrigin(options: {
   headers: IncomingHttpHeaders;
   peerAddress?: string;
@@ -155,7 +167,10 @@ export function buildTrustedProxyHeaders(options: {
   headers["x-forwarded-host"] = externalOrigin.host;
   headers.host = upstreamOrigin.host;
   if (firstHeaderValue(options.headers.origin)) {
-    headers.origin = `${externalOrigin.protocol}//${upstreamOrigin.host}`;
+    headers.origin = proxiedApplicationOrigin(
+      externalOrigin.origin,
+      upstreamOrigin.origin,
+    );
   }
   return headers;
 }

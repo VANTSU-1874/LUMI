@@ -1,0 +1,221 @@
+.card {
+  --citation-ink: var(--lab-ink, var(--lumi-color-ink, #202825));
+  --citation-muted: var(--lab-muted, #5d6862);
+  --citation-panel: var(--lab-panel, var(--lumi-color-surface, #fffef9));
+  --citation-panel-soft: var(--lab-panel-soft, #f5f8f6);
+  --citation-line: var(--lab-line, var(--lumi-color-line, #dfe4df));
+  --citation-accent: var(--lab-accent, var(--lumi-color-accent, #178b73));
+
+  display: grid;
+  gap: 0.7rem;
+  margin: 0.95rem 0 0;
+  padding: 0.85rem;
+  border: 1px solid var(--citation-line);
+  border-radius: 0.95rem;
+  background: var(--citation-panel);
+  color: var(--citation-ink);
+}
+
+.card[data-presentation="wiki"] {
+  margin-top: 1rem;
+}
+
+.header {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.header p,
+.header h3,
+.courseReference p,
+.citationList h4,
+.citationList p,
+.mockNotice {
+  margin: 0;
+}
+
+.header p,
+.referenceLabel,
+.caseHeading {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.header p {
+  color: var(--citation-accent);
+  font-size: 0.66rem;
+  font-weight: 750;
+  letter-spacing: 0.05em;
+}
+
+.header h3 {
+  margin-top: 0.22rem;
+  color: var(--citation-ink);
+  font-size: 0.86rem;
+  font-weight: 680;
+  line-height: 1.35;
+}
+
+.count {
+  flex: 0 0 auto;
+  padding: 0.17rem 0.42rem;
+  border-radius: 999px;
+  background: var(--citation-panel-soft);
+  color: var(--citation-muted);
+  font-size: 0.63rem;
+  font-weight: 650;
+}
+
+.courseReference {
+  display: grid;
+  gap: 0.35rem;
+  padding: 0.55rem 0.62rem;
+  border-radius: 0.68rem;
+  background: var(--citation-panel-soft);
+}
+
+.referenceLabel {
+  color: var(--citation-muted);
+  font-size: 0.67rem;
+  font-weight: 700;
+}
+
+.courseReference > p {
+  color: var(--citation-muted);
+  font-size: 0.7rem;
+  line-height: 1.5;
+}
+
+.courseReference ul,
+.citationList {
+  display: grid;
+  gap: 0.38rem;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.courseReference li {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 0.45rem;
+  color: var(--citation-muted);
+  font-size: 0.7rem;
+  line-height: 1.45;
+}
+
+.courseReference strong {
+  color: var(--citation-ink);
+  font-weight: 650;
+}
+
+.citationList > li {
+  display: grid;
+  gap: 0.45rem;
+  padding: 0.68rem;
+  border: 1px solid var(--citation-line);
+  border-radius: 0.72rem;
+  background: color-mix(in srgb, var(--citation-panel) 92%, var(--citation-panel-soft));
+}
+
+.caseHeading {
+  justify-content: space-between;
+  color: var(--citation-accent);
+  font-size: 0.65rem;
+  font-weight: 730;
+}
+
+.caseHeading > span {
+  padding: 0.12rem 0.36rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--citation-accent) 10%, transparent);
+}
+
+.caseHeading a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.18rem;
+  color: var(--citation-ink);
+  text-decoration: underline;
+  text-underline-offset: 0.14rem;
+}
+
+.caseHeading a:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--citation-accent) 70%, transparent);
+  outline-offset: 2px;
+}
+
+.citationList h4 {
+  color: var(--citation-ink);
+  font-size: 0.82rem;
+  font-weight: 690;
+  line-height: 1.4;
+}
+
+.relevance {
+  color: var(--citation-muted);
+  font-size: 0.72rem;
+  line-height: 1.55;
+}
+
+.relevance strong {
+  display: block;
+  margin-bottom: 0.1rem;
+  color: var(--citation-ink);
+  font-size: 0.65rem;
+  font-weight: 700;
+}
+
+.citationList dl {
+  display: grid;
+  gap: 0.32rem;
+  margin: 0;
+}
+
+.citationList dl > div {
+  display: grid;
+  grid-template-columns: 2.25rem minmax(0, 1fr);
+  gap: 0.45rem;
+  align-items: start;
+}
+
+.citationList dt,
+.citationList dd {
+  margin: 0;
+  font-size: 0.65rem;
+  line-height: 1.45;
+}
+
+.citationList dt {
+  color: var(--citation-muted);
+}
+
+.citationList dd {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 0.22rem;
+  color: var(--citation-ink);
+}
+
+.citationList dd svg {
+  flex: 0 0 auto;
+  margin-top: 0.08rem;
+  color: var(--citation-accent);
+}
+
+.mockNotice {
+  padding-top: 0.62rem;
+  border-top: 1px solid var(--citation-line);
+  color: var(--citation-muted);
+  font-size: 0.65rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 640px) {
+  .card {
+    padding: 0.75rem;
+  }
+}

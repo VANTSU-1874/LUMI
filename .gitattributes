@@ -4,3 +4,50 @@
 /scripts/ops/lumi-release.sudoers text eol=lf
 /scripts/ops/lumi-release-allowed-signers text eol=lf
 /scripts/ops/install-lumi-release-wrapper.sh text eol=lf
+
+# 语料是机器生成并逐字节比对的产物(见 scripts/convert-course-corpus.ts 与
+# tests/unit/course-corpus-convert.test.ts)。工作区行尾必须与转换器输出一致,
+# 否则在 core.autocrlf=true 的 Windows 上检出即 CRLF,防漂移比对必然失败。
+/data/courses/**/*.md text eol=lf
+/data/knowledge/*.md text eol=lf
+/data/knowledge/*.json text eol=lf
+/data/knowledge-v2/*.json text eol=lf
+/data/manifests/*.json text eol=lf
+/tests/retrieval-quality/*.json text eol=lf
+/tests/retrieval-quality/generations/**/*.json text eol=lf
+/tests/fixtures/agent-runtime-harness/evidence-channel/**/*.json text eol=lf
+/docs/superpowers/pilots/2026-08-04-kpl-p0-k11-evaluation/** text eol=lf
+/docs/superpowers/pilots/2026-08-04-kpl-p0-k11-human-review/** text eol=lf
+/docs/superpowers/pilots/2026-08-04-kpl-p0-k6-ocr-revision/** text eol=lf
+/docs/superpowers/pilots/2026-08-04-kpl-p0-k6-ocr-revision/evidence/*.png -text -diff
+/docs/superpowers/pilots/2026-08-04-kpl-p0-k6-p20-vision-read-supplement/** text eol=lf
+/docs/superpowers/pilots/2026-08-04-kpl-p0-k8-human-recognition-k6-revisions/** text eol=lf
+/docs/superpowers/pilots/2026-08-04-kpl-p0-second-pilot-readonly-preparation/** text eol=lf
+/docs/superpowers/pilots/2026-08-04-kpl-p0-second-pilot-b3-20-preview/** text eol=lf
+/docs/superpowers/pilots/2026-08-04-kpl-p0-second-pilot-b3-20-preview/previews/*.png -text -diff
+/docs/superpowers/pilots/2026-08-04-kpl-p1-b3-20-k6-mixed-route/** text eol=lf
+/docs/superpowers/pilots/2026-08-04-kpl-p1-b3-20-k6-mixed-route/evidence/*.png -text -diff
+/docs/superpowers/pilots/2026-08-04-kpl-p1-b3-20-case-contextual-semantic-supplement/** text eol=lf
+/docs/superpowers/pilots/2026-08-04-kpl-p1-k7-five-page-review-package/** text eol=lf
+/docs/superpowers/pilots/2026-08-04-kpl-p1-k6-five-page-chinese-output-supplement/** text eol=lf
+/docs/superpowers/pilots/2026-08-04-kpl-p1-k7-five-page-review-package-zh/** text eol=lf
+/docs/superpowers/pilots/2026-08-04-kpl-p1-k8-five-page-human-review-decision/** text eol=lf
+/docs/superpowers/pilots/2026-08-04-kpl-p1-five-page-k9-k12-local-chain/** text eol=lf
+/docs/superpowers/pilots/2026-08-04-kpl-p1-five-page-k12-activation-audit/** text eol=lf
+/docs/superpowers/pilots/2026-08-04-kpl-p1-two-core-page-k12-preflight/** text eol=lf
+
+# Preserve byte-pinned upstream license text. TorchVision's official source has
+# a significant trailing space, so whitespace checks must not rewrite any text.
+/third_party/knowledge-v2/LICENSE-*.txt text eol=lf -whitespace
+
+# Drizzle records a SHA-256 of raw SQL text. Keep future checkouts stable while
+# the migrator remains compatible with hashes created from earlier CRLF copies.
+/drizzle/*.sql text eol=lf
+
+# D-27 release manifests bind exact byte digests. Keep Git archive export
+# semantics identical to the bytes hashed by the bundle builder.
+/data/inspiration-wiki/production-release/**/*.json text eol=lf
+/data/inspiration-wiki/production-release/**/*.jsonl text eol=lf
+/data/inspiration-wiki/production-release/**/*.md text eol=lf
+/data/inspiration-wiki/production-release/**/*.jpg -text -diff
+/data/inspiration-wiki/production-release/**/*.png -text -diff

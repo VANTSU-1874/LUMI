@@ -10,6 +10,12 @@ export const INFERENCE_ENVIRONMENT_KEYS = [
   "LLM_BASE_URL",
   "LLM_API_KEY",
   "LLM_MODEL",
+  "LLM_PLANNER_BASE_URL",
+  "LLM_PLANNER_API_KEY",
+  "LLM_PLANNER_MODEL",
+  "LLM_WEB_BASE_URL",
+  "LLM_WEB_API_KEY",
+  "LLM_WEB_MODEL",
   "LLM_EMBEDDING_BASE_URL",
   "LLM_EMBEDDING_API_KEY",
   "LLM_EMBEDDING_MODEL",
@@ -21,6 +27,13 @@ export const INFERENCE_ENVIRONMENT_KEYS = [
   "AGENT_EVAL_MODEL_IDLE_TIMEOUT_MS",
   "AGENT_EVAL_MODEL_TOTAL_TIMEOUT_MS",
   "AGENT_EVAL_TURN_TOTAL_TIMEOUT_MS",
+] as const;
+
+export const SERVICE_SCOPED_ENVIRONMENT_KEYS = [
+  "KNOWLEDGE_OBJECT_V2",
+  "VISUAL_RETRIEVAL",
+  "EVIDENCE_BUNDLE_V2",
+  "KNOWLEDGE_V2_CANARY_USER_IDS",
 ] as const;
 
 export type RuntimeEnvironmentMode =
@@ -40,6 +53,10 @@ export type RuntimeEnvironmentProvenance = {
     sourceFile: string | null;
     shadowedProjectModelConfig: boolean;
   };
+  database: {
+    source: "service-env" | "process-env" | "project-env" | "unset";
+    sourceFile: string | null;
+  };
 };
 
 type EnvironmentSnapshot = Record<string, string | undefined>;
@@ -58,6 +75,10 @@ type LoadedProjectEnvironment = {
 
 type EffectiveModelConfiguration = {
   ai: { baseUrl?: string };
+};
+
+type EffectiveDatabaseConfiguration = {
+  databasePath?: string;
 };
 
 function isWithin(root: string, candidate: string) {
@@ -86,6 +107,19 @@ function projectModelSource(
     return { source: "process-env" as const, sourceFile: null };
   }
   const source = loadedEnvFiles.find(({ env }) => env?.LLM_BASE_URL?.trim());
+  return source
+    ? { source: "project-env" as const, sourceFile: source.path }
+    : { source: "unset" as const, sourceFile: null };
+}
+
+function projectDatabaseSource(
+  incomingEnvironment: EnvironmentSnapshot,
+  loadedEnvFiles: Array<{ path: string; env?: Record<string, string | undefined> }>,
+) {
+  if (incomingEnvironment.DATABASE_PATH?.trim()) {
+    return { source: "process-env" as const, sourceFile: null };
+  }
+  const source = loadedEnvFiles.find(({ env }) => env?.DATABASE_PATH?.trim());
   return source
     ? { source: "project-env" as const, sourceFile: source.path }
     : { source: "unset" as const, sourceFile: null };
@@ -127,7 +161,13 @@ export async function loadRuntimeEnvironment(options: RuntimeEnvironmentOptions)
     ...loaded.combinedEnv,
     ...incomingEnvironment,
   };
+  const explicitServiceScopedEnvironment = Object.fromEntries(
+    SERVICE_SCOPED_ENVIRONMENT_KEYS
+      .filter((key) => incomingEnvironment[key]?.trim())
+      .map((key) => [key, incomingEnvironment[key]!.trim()]),
+  );
   const projectSource = projectModelSource(incomingEnvironment, loaded.loadedEnvFiles);
+  const projectDatabase = projectDatabaseSource(incomingEnvironment, loaded.loadedEnvFiles);
   const serviceSelection = resolveServiceSelection(options.mode, incomingEnvironment, cwd);
 
   let serviceEnvironment: Record<string, string> | null = null;
@@ -151,7 +191,9 @@ export async function loadRuntimeEnvironment(options: RuntimeEnvironmentOptions)
   const environment: Record<string, string | undefined> = { ...projectEnvironment };
   if (serviceEnvironment) {
     for (const key of INFERENCE_ENVIRONMENT_KEYS) delete environment[key];
+    for (const key of SERVICE_SCOPED_ENVIRONMENT_KEYS) delete environment[key];
     Object.assign(environment, serviceEnvironment);
+    Object.assign(environment, explicitServiceScopedEnvironment);
   }
   if (incomingEnvironment.CHUYING_SERVICE_ENV?.trim()) {
     environment.CHUYING_SERVICE_ENV = incomingEnvironment.CHUYING_SERVICE_ENV.trim();
@@ -177,6 +219,17 @@ export async function loadRuntimeEnvironment(options: RuntimeEnvironmentOptions)
           ? displayPath(projectSource.sourceFile, cwd, incomingEnvironment.LOCALAPPDATA)
           : null,
       };
+  const databaseSource = serviceEnvironment?.DATABASE_PATH?.trim()
+    ? {
+        source: "service-env" as const,
+        sourceFile: serviceSourceFile,
+      }
+    : {
+        ...projectDatabase,
+        sourceFile: projectDatabase.sourceFile
+          ? displayPath(projectDatabase.sourceFile, cwd, incomingEnvironment.LOCALAPPDATA)
+          : null,
+      };
 
   return {
     environment,
@@ -198,6 +251,7 @@ export async function loadRuntimeEnvironment(options: RuntimeEnvironmentOptions)
         ...modelSource,
         shadowedProjectModelConfig: Boolean(serviceEnvironment && projectHasInferenceConfiguration),
       },
+      database: databaseSource,
     } satisfies RuntimeEnvironmentProvenance,
   };
 }
@@ -221,4 +275,35 @@ export function writeEffectiveModelConfigNotice(
   stream: Pick<NodeJS.WriteStream, "write"> = process.stderr,
 ) {
   stream.write(`${JSON.stringify(effectiveModelConfigNotice(config, provenance))}\n`);
+}
+
+export function effectiveDatabaseConfigNotice(
+  config: EffectiveDatabaseConfiguration,
+  provenance: RuntimeEnvironmentProvenance,
+  environment: EnvironmentSnapshot = process.env,
+  cwd = process.cwd(),
+) {
+  return {
+    event: "effective-database-config" as const,
+    databasePath: config.databasePath?.trim()
+      ? displayPath(config.databasePath, path.resolve(cwd), environment.LOCALAPPDATA)
+      : null,
+    source: provenance.database.source,
+    sourceFile: provenance.database.sourceFile,
+  };
+}
+
+export function writeEffectiveDatabaseConfigNotice(
+  config: EffectiveDatabaseConfiguration,
+  provenance: RuntimeEnvironmentProvenance,
+  environment: EnvironmentSnapshot = process.env,
+  stream: Pick<NodeJS.WriteStream, "write"> = process.stderr,
+  cwd = process.cwd(),
+) {
+  stream.write(`${JSON.stringify(effectiveDatabaseConfigNotice(
+    config,
+    provenance,
+    environment,
+    cwd,
+  ))}\n`);
 }

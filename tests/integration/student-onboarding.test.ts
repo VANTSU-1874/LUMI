@@ -1,5 +1,6 @@
 // @vitest-environment node
 
+import { readFileSync } from "node:fs";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -21,6 +22,10 @@ import {
 
 const SECRET = "student-onboarding-route-secret-at-least-32-characters";
 const cookie = (token: string) => `${SESSION_COOKIE_NAME}=${token}`;
+const MIGRATION_COUNT = (JSON.parse(readFileSync(
+  path.join(process.cwd(), "drizzle", "meta", "_journal.json"),
+  "utf8",
+)) as { entries: unknown[] }).entries.length;
 
 describe("student onboarding model and owned API", () => {
   let directory: string;
@@ -67,7 +72,7 @@ describe("student onboarding model and owned API", () => {
     try {
       expect(connection.sqlite.prepare(
         "SELECT count(*) count FROM __drizzle_migrations",
-      ).get()).toEqual({ count: 48 });
+      ).get()).toEqual({ count: MIGRATION_COUNT });
       const userColumns = connection.sqlite.prepare(
         "SELECT name FROM pragma_table_xinfo('users')",
       ).all() as Array<{ name: string }>;

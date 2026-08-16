@@ -337,6 +337,118 @@
       "when": 1785175359334,
       "tag": "0047_parched_jane_foster",
       "breakpoints": true
+    },
+    {
+      "idx": 48,
+      "version": "6",
+      "when": 1785243398751,
+      "tag": "0048_aberrant_wallow",
+      "breakpoints": true
+    },
+    {
+      "idx": 49,
+      "version": "6",
+      "when": 1785398275258,
+      "tag": "0049_legal_madrox",
+      "breakpoints": true
+    },
+    {
+      "idx": 50,
+      "version": "6",
+      "when": 1785634171039,
+      "tag": "0050_knowledge_v2_after_production_0049",
+      "breakpoints": true
+    },
+    {
+      "idx": 51,
+      "version": "6",
+      "when": 1786497658324,
+      "tag": "0051_milky_talos",
+      "breakpoints": true
+    },
+    {
+      "idx": 52,
+      "version": "6",
+      "when": 1786508207594,
+      "tag": "0052_smiling_masked_marvel",
+      "breakpoints": true
+    },
+    {
+      "idx": 53,
+      "version": "6",
+      "when": 1786530445765,
+      "tag": "0053_evidence_gap_teacher_review",
+      "breakpoints": true
+    },
+    {
+      "idx": 54,
+      "version": "6",
+      "when": 1786532664585,
+      "tag": "0054_evidence_gap_media_amendment",
+      "breakpoints": true
+    },
+    {
+      "idx": 55,
+      "version": "6",
+      "when": 1786535651391,
+      "tag": "0055_rich_malcolm_colcord",
+      "breakpoints": true
+    },
+    {
+      "idx": 56,
+      "version": "6",
+      "when": 1786540134031,
+      "tag": "0056_quick_deathbird",
+      "breakpoints": true
+    },
+    {
+      "idx": 57,
+      "version": "6",
+      "when": 1786547376086,
+      "tag": "0057_abandoned_psylocke",
+      "breakpoints": true
+    },
+    {
+      "idx": 58,
+      "version": "6",
+      "when": 1786549845869,
+      "tag": "0058_eager_vargas",
+      "breakpoints": true
+    },
+    {
+      "idx": 59,
+      "version": "6",
+      "when": 1786553991061,
+      "tag": "0059_private_wiki_compilation",
+      "breakpoints": true
+    },
+    {
+      "idx": 60,
+      "version": "6",
+      "when": 1786556052492,
+      "tag": "0060_organic_mauler",
+      "breakpoints": true
+    },
+    {
+      "idx": 61,
+      "version": "6",
+      "when": 1786558312008,
+      "tag": "0061_futuristic_magik",
+      "breakpoints": true
+    },
+    {
+      "idx": 62,
+      "version": "6",
+      "when": 1786588549073,
+      "tag": "0062_quiet_vargas",
+      "breakpoints": true
+    },
+    {
+      "idx": 63,
+      "version": "6",
+      "when": 1786590468186,
+      "tag": "0063_fat_ser_duncan",
+      "breakpoints": true
     }
   ]
 }

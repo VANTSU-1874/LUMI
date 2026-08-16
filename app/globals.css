@@ -54,6 +54,26 @@
   --lumi-color-on-accent: #fffaf4;
   --lumi-color-overlay: rgb(35 32 28 / 56%);
 
+  /* Shared workbench palette: the current student workspace is the visual source of truth. */
+  --lumi-workbench-bg: #ffffff;
+  --lumi-workbench-surface: #f7f7f8;
+  --lumi-workbench-surface-soft: #f4f4f5;
+  --lumi-workbench-surface-active: #e9e9eb;
+  --lumi-workbench-title: #0d0d0d;
+  --lumi-workbench-ink: #1a1a1a;
+  --lumi-workbench-muted: #8e8ea0;
+  --lumi-workbench-faint: #b4b4be;
+  --lumi-workbench-line: #e5e5e7;
+  --lumi-workbench-line-strong: #d4d4d8;
+  --lumi-workbench-accent: #1a1a1a;
+  --lumi-workbench-accent-soft: #f4f4f5;
+  --lumi-workbench-on-accent: #ffffff;
+  --lumi-workbench-danger: #b42318;
+  --lumi-workbench-danger-soft: #fff2f0;
+  --lumi-workbench-warning: #8e8ea0;
+  --lumi-workbench-warning-soft: #f4f4f5;
+  --lumi-workbench-overlay: rgb(13 13 13 / 92%);
+
   --lumi-font-sans: "Noto Sans SC", "Source Han Sans SC", "Microsoft YaHei UI", "PingFang SC", system-ui, sans-serif;
   --lumi-font-serif: "Noto Serif SC", "Source Han Serif SC", "Songti SC", SimSun, serif;
   --lumi-font-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;

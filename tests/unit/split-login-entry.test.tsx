@@ -63,6 +63,25 @@ describe("SplitLoginEntry", () => {
     });
   });
 
+  it("localizes an origin validation failure", async () => {
+    authMocks.signInEmail.mockResolvedValue({
+      data: null,
+      error: { code: "INVALID_ORIGIN", message: "Invalid origin" },
+    });
+
+    render(<SplitLoginEntry />);
+    fireEvent.change(screen.getByLabelText("邮箱"), {
+      target: { value: "student@example.com" },
+    });
+    fireEvent.change(screen.getByLabelText("密码"), {
+      target: { value: "password-2026" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "登录 Lumi" }));
+
+    expect(await screen.findByText("登录请求来源无效，请刷新页面后重试"))
+      .toBeInTheDocument();
+  });
+
   it("creates a student account with a class invite instead of an anonymous code", async () => {
     const navigate = vi.fn();
     const fetchMock = vi.fn(async () => new Response(JSON.stringify({

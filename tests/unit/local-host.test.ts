@@ -7,6 +7,7 @@ import {
   buildTrustedProxyHeaders,
   deriveTrustedSourceId,
   parseServiceEnvironment,
+  proxiedApplicationOrigin,
   resolveExternalRequestOrigin,
 } from "@/lib/operations/local-host";
 
@@ -68,6 +69,8 @@ describe("local computer hosting", () => {
   });
 
   it("accepts browser same-origin requests and rewrites only the trusted upstream origin", () => {
+    expect(proxiedApplicationOrigin("https://chuyingai.cc.cd"))
+      .toBe("https://localhost:3000");
     const proxied = buildTrustedProxyHeaders({
       headers: {
         host: "chuyingai.cc.cd",

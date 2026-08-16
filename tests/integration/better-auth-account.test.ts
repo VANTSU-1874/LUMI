@@ -184,6 +184,32 @@ describe("Better Auth account integration", () => {
     }
   });
 
+  it("accepts the origin produced by the validated production proxy", async () => {
+    vi.stubEnv("PUBLIC_APP_URL", "https://lumi.bot.cd");
+    clearLumiAuthRuntimeForTests();
+
+    const response = await getLumiAuthRuntime().auth.handler(
+      new Request("http://localhost:3000/api/auth/sign-in/email", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          origin: "https://localhost:3000",
+          "sec-fetch-site": "same-origin",
+        },
+        body: JSON.stringify({
+          email: "missing@lumi.local",
+          password: "not-a-real-password",
+          rememberMe: false,
+        }),
+      }),
+    );
+
+    expect(response.status).toBe(401);
+    await expect(response.json()).resolves.toMatchObject({
+      code: "INVALID_EMAIL_OR_PASSWORD",
+    });
+  });
+
   it("rejects an unknown class invite before creating an account", async () => {
     const response = await registerAccount(
       registrationRequest({
