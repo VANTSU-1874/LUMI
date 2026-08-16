@@ -71,6 +71,7 @@ Usage:
   lumi-release discard-failed <40-hex-commit>
   lumi-release discard-incomplete-prepare <40-hex-commit>
   lumi-release discard-failed-work <40-hex-commit>
+  lumi-release diagnose-cutover <failed-cutover-run-id>
   lumi-release prepare <40-hex-commit>
   lumi-release audit <prepare-run-id>
   lumi-release recover-audit <prepare-run-id> <failed-audit-run-id>
@@ -105,6 +106,36 @@ log() {
   else
     printf '%s\n' "$*"
   fi
+}
+
+capture_service_journal() {
+  local destination=$1
+  local since=$2
+  local until=$3
+  local temporary="$destination.tmp.$$"
+  local raw="$destination.raw.$$"
+  journalctl -u "$SERVICE" --since "$since" --until "$until" --no-pager -o short-iso > "$raw"
+  python3 - "$raw" "$temporary" <<'PY'
+from collections import deque
+from pathlib import Path
+import re
+import sys
+
+source = Path(sys.argv[1])
+destination = Path(sys.argv[2])
+pattern = re.compile(
+    r"(?i)\b(authorization|cookie|set-cookie|token|secret|password|api[_-]?key)\b"
+    r"(\s*[:=]\s*|\s+)([^\s]+)"
+)
+lines = deque(maxlen=1000)
+with source.open(encoding="utf-8", errors="replace") as stream:
+    for raw_line in stream:
+        line = pattern.sub(lambda match: f"{match.group(1)}{match.group(2)}[REDACTED]", raw_line.rstrip("\n"))
+        lines.append(line[:4000])
+destination.write_text("\n".join(lines) + ("\n" if lines else ""), encoding="utf-8")
+PY
+  rm -f -- "$raw"
+  mv -f -- "$temporary" "$destination"
 }
 
 finalize_evidence() {
@@ -197,6 +228,26 @@ wait_for_health() {
   return 1
 }
 
+wait_for_base_health() {
+  local destination=$1
+  local timeout_seconds=${2:-$HEALTH_STARTUP_TIMEOUT_SECONDS}
+  local deadline=$((SECONDS + timeout_seconds))
+  local attempts=0
+
+  while (( SECONDS < deadline )); do
+    attempts=$((attempts + 1))
+    if capture_base_health "$destination" "$HEALTH_RETRY_CURL_TIMEOUT_SECONDS" >/dev/null 2>&1; then
+      printf 'BASE_HEALTH_OK\n'
+      printf 'BASE_HEALTH_READY_ATTEMPTS=%s\n' "$attempts"
+      return 0
+    fi
+    sleep 1
+  done
+
+  printf 'BASE_HEALTH_WAIT_TIMEOUT_SECONDS=%s\n' "$timeout_seconds" >&2
+  return 1
+}
+
 status_health() {
   curl -fsS --max-time 20 http://127.0.0.1:3100/api/health | python3 -c '
 import json
@@ -238,6 +289,10 @@ assert_run_id() {
 
 assert_audit_run_id() {
   [[ "$1" =~ ^audit-[0-9]{8}T[0-9]{6}Z-[0-9]+-[0-9]+$ ]] || die 'AUDIT_RUN_ID_INVALID'
+}
+
+assert_cutover_run_id() {
+  [[ "$1" =~ ^cutover-([0-9]{8}T[0-9]{6}Z)-[0-9]+-[0-9]+$ ]] || die 'CUTOVER_RUN_ID_INVALID'
 }
 
 assert_operations_roots() {
@@ -1150,7 +1205,7 @@ rollback_current() {
     fi
   fi
   systemctl start "$SERVICE" || true
-  if wait_for_health "$ACTIVE_EVIDENCE/rollback-health.json" | tee -a "$ACTIVE_EVIDENCE/summary.log"; then
+  if wait_for_base_health "$ACTIVE_EVIDENCE/rollback-health.json" | tee -a "$ACTIVE_EVIDENCE/summary.log"; then
     printf 'ROLLBACK=HEALTHY\n' >> "$ACTIVE_EVIDENCE/summary.log"
   else
     printf 'ROLLBACK=HEALTH_FAILED\n' >> "$ACTIVE_EVIDENCE/summary.log"
@@ -1162,12 +1217,55 @@ on_error() {
   trap - ERR
   set +e
   release_failure_reserve
+  if [[ -n "$ACTIVE_EVIDENCE" ]]; then
+    capture_service_journal "$ACTIVE_EVIDENCE/service-journal.log" '10 minutes ago' 'now' || true
+  fi
   rollback_current
   write_failure
   finalize_evidence
   exit "$status"
 }
 trap on_error ERR
+
+diagnose_failed_cutover() {
+  local run_id=$1
+  local evidence
+  local failed
+  local stamp
+  local stamp_date
+  local stamp_time
+  local anchor
+  local since
+  local until
+  local temporary
+
+  assert_cutover_run_id "$run_id"
+  assert_operations_roots
+  evidence="$EVIDENCE_ROOT/$run_id"
+  failed="$evidence/FAILED.result"
+  [[ -d "$evidence" && ! -L "$evidence" ]]
+  [[ -f "$failed" && ! -L "$failed" ]]
+  grep -Fqx 'PHASE=cutover' "$failed"
+  grep -Fqx 'STATUS=FAILED' "$failed"
+  grep -Fqx 'CUTOVER_STARTED=true' "$failed"
+  stamp=${run_id#cutover-}
+  stamp=${stamp%%-*}
+  stamp_date="${stamp:0:4}-${stamp:4:2}-${stamp:6:2}"
+  stamp_time="${stamp:9:2}:${stamp:11:2}:${stamp:13:2}"
+  anchor="$stamp_date $stamp_time UTC"
+  since=$(date -u -d "$anchor - 30 seconds" '+%Y-%m-%d %H:%M:%S UTC')
+  until=$(date -u -d "$anchor + 10 minutes" '+%Y-%m-%d %H:%M:%S UTC')
+  temporary="$evidence/.diagnostics.$$.log"
+  [[ ! -e "$temporary" && ! -L "$temporary" ]]
+  capture_service_journal "$temporary" "$since" "$until"
+  printf 'DIAGNOSTICS=SUCCEEDED\n'
+  printf 'RUN_ID=%s\n' "$run_id"
+  printf 'WINDOW_START=%s\n' "$since"
+  printf 'WINDOW_END=%s\n' "$until"
+  printf '%s\n' '--- REDACTED SERVICE JOURNAL ---'
+  cat "$temporary"
+  rm -f -- "$temporary"
+}
 
 copy_regular_input() {
   local source=$1
@@ -1735,7 +1833,7 @@ verify_release() {
   actual_esbuild=$(runuser -u "$SERVICE_USER" -- "$esbuild" --version)
   [[ "$actual_esbuild" == "$esbuild_version" ]]
   printf 'TARGET_ESBUILD_VERSION=%s\n' "$actual_esbuild" | tee -a "$ACTIVE_EVIDENCE/summary.log"
-  runuser -u "$SERVICE_USER" -- "$RUNTIME_NODE" -e 'require(process.argv[1]); process.stdout.write("NATIVE_MODULE_LOAD=PASS\\n")' "$release/node_modules/better-sqlite3" | tee -a "$ACTIVE_EVIDENCE/summary.log"
+  runuser -u "$SERVICE_USER" -- "$RUNTIME_NODE" -e 'const Database = require(process.argv[1]); const db = new Database(":memory:"); try { db.prepare("SELECT 1 AS ok").get(); process.stdout.write("NATIVE_MODULE_LOAD=PASS\\n"); } finally { db.close(); }' "$release/node_modules/better-sqlite3" | tee -a "$ACTIVE_EVIDENCE/summary.log"
   verify_next_external_module_aliases "$release" | tee -a "$ACTIVE_EVIDENCE/summary.log"
 }
 
@@ -2332,7 +2430,13 @@ cutover() {
   [[ "$(readlink -f "$CURRENT_LINK")" == "$release" ]]
   systemctl start "$SERVICE"
   systemctl is-active --quiet "$SERVICE"
-  wait_for_health "$ACTIVE_EVIDENCE/new-health.json" | tee -a "$ACTIVE_EVIDENCE/summary.log"
+  if [[ "$database_migration" == "$DATABASE_MIGRATION_KV2" || "$environment_write" == "$ENVIRONMENT_WRITE_KV2" ]]; then
+    wait_for_health "$ACTIVE_EVIDENCE/new-health.json" | tee -a "$ACTIVE_EVIDENCE/summary.log"
+    printf 'CUTOVER_HEALTH_GATE=COMPETITION_READY\n' >> "$ACTIVE_EVIDENCE/summary.log"
+  else
+    wait_for_base_health "$ACTIVE_EVIDENCE/new-health.json" | tee -a "$ACTIVE_EVIDENCE/summary.log"
+    printf 'CUTOVER_HEALTH_GATE=BASE\n' >> "$ACTIVE_EVIDENCE/summary.log"
+  fi
   local student_headers="$ACTIVE_EVIDENCE/student.headers"
   local student_temporary="$ACTIVE_EVIDENCE/student.html.tmp"
   local student_location=''
@@ -2642,7 +2746,7 @@ prune_retired_releases() {
   make_evidence prune-retired "$run_id"
   ACTIVE_COMMIT="$current_commit"
   service_preflight "$ACTIVE_EVIDENCE/before-prune-base-health.json"
-  capture_health "$ACTIVE_EVIDENCE/before-prune-health.json" | tee -a "$ACTIVE_EVIDENCE/summary.log"
+  capture_base_health "$ACTIVE_EVIDENCE/before-prune-health.json" | tee -a "$ACTIVE_EVIDENCE/summary.log"
 
   for commit in "${commits[@]}"; do
     release="$RELEASE_ROOT/$commit"
@@ -2657,7 +2761,7 @@ prune_retired_releases() {
 
   [[ "$(readlink -f "$CURRENT_LINK")" == "$current" ]]
   systemctl is-active --quiet "$SERVICE"
-  capture_health "$ACTIVE_EVIDENCE/after-prune-health.json" | tee -a "$ACTIVE_EVIDENCE/summary.log"
+  capture_base_health "$ACTIVE_EVIDENCE/after-prune-health.json" | tee -a "$ACTIVE_EVIDENCE/summary.log"
   {
     printf 'CURRENT_COMMIT=%s\n' "$current_commit"
     printf 'REMOVED_RELEASES=%s\n' "$removed_releases"
@@ -2997,6 +3101,10 @@ main() {
     discard-failed-work)
       [[ "$#" -eq 2 ]] || die 'DISCARD_FAILED_WORK_REQUIRES_COMMIT'
       discard_failed_work "$2"
+      ;;
+    diagnose-cutover)
+      [[ "$#" -eq 2 ]] || die 'DIAGNOSE_CUTOVER_REQUIRES_FAILED_RUN_ID'
+      diagnose_failed_cutover "$2"
       ;;
     prepare)
       [[ "$#" -eq 2 ]] || die 'PREPARE_REQUIRES_COMMIT'

@@ -160,6 +160,49 @@ describe("constrained Lumi release wrapper", () => {
     }
   });
 
+  it("scopes the post-cutover health gate to the release policy", () => {
+    const wrapper = readFileSync(wrapperPath, "utf8");
+
+    expect(wrapper).toContain("wait_for_base_health()");
+    expect(wrapper).toContain(
+      'if [[ "$database_migration" == "$DATABASE_MIGRATION_KV2" || "$environment_write" == "$ENVIRONMENT_WRITE_KV2" ]]; then',
+    );
+    expect(wrapper).toContain("CUTOVER_HEALTH_GATE=COMPETITION_READY");
+    expect(wrapper).toContain("CUTOVER_HEALTH_GATE=BASE");
+    expect(wrapper).toContain(
+      'wait_for_base_health "$ACTIVE_EVIDENCE/rollback-health.json"',
+    );
+    expect(wrapper).toContain(
+      'capture_base_health "$ACTIVE_EVIDENCE/before-prune-health.json"',
+    );
+    expect(wrapper).toContain(
+      'capture_base_health "$ACTIVE_EVIDENCE/after-prune-health.json"',
+    );
+  });
+
+  it("captures only a bounded, redacted journal for failed cutovers", () => {
+    const wrapper = readFileSync(wrapperPath, "utf8");
+    const failureHandler = wrapper.slice(
+      wrapper.indexOf("on_error()"),
+      wrapper.indexOf("trap on_error ERR"),
+    );
+
+    expect(wrapper).toContain("lumi-release diagnose-cutover <failed-cutover-run-id>");
+    expect(wrapper).toContain("diagnose_failed_cutover()");
+    expect(wrapper).toContain("assert_cutover_run_id()");
+    expect(wrapper).toContain("from collections import deque");
+    expect(wrapper).toContain("deque(maxlen=1000)");
+    expect(wrapper).toContain("authorization|cookie|set-cookie|token|secret|password|api[_-]?key");
+    expect(wrapper).toContain('grep -Fqx \'STATUS=FAILED\' "$failed"');
+    expect(wrapper).toContain('grep -Fqx \'CUTOVER_STARTED=true\' "$failed"');
+    expect(wrapper).toContain('stamp_date="${stamp:0:4}-${stamp:4:2}-${stamp:6:2}"');
+    expect(wrapper).toContain('stamp_time="${stamp:9:2}:${stamp:11:2}:${stamp:13:2}"');
+    expect(failureHandler.indexOf("capture_service_journal")).toBeGreaterThan(-1);
+    expect(failureHandler.indexOf("rollback_current")).toBeGreaterThan(
+      failureHandler.indexOf("capture_service_journal"),
+    );
+  });
+
   it("replays Next traced external-module aliases before release activation", () => {
     const wrapper = readFileSync(wrapperPath, "utf8");
 
@@ -250,13 +293,20 @@ describe("constrained Lumi release wrapper", () => {
 
   it("reserves failure evidence space before disk-heavy operations", () => {
     const wrapper = readFileSync(wrapperPath, "utf8");
+    const failureHandler = wrapper.slice(
+      wrapper.indexOf("on_error()"),
+      wrapper.indexOf("trap on_error ERR"),
+    );
 
     expect(wrapper).toContain("readonly FAILURE_RESERVE_BYTES=1048576");
     expect(wrapper).toContain(
       'fallocate -l "$FAILURE_RESERVE_BYTES" "$path/.failure-reserve"',
     );
     expect(wrapper).toContain("release_failure_reserve()");
-    expect(wrapper).toContain("release_failure_reserve\n  rollback_current");
+    expect(failureHandler.indexOf("release_failure_reserve")).toBeGreaterThan(-1);
+    expect(failureHandler.indexOf("rollback_current")).toBeGreaterThan(
+      failureHandler.indexOf("release_failure_reserve"),
+    );
   });
 
   it("discards only unsealed prepare work bound to a failed commit", () => {
@@ -295,6 +345,19 @@ describe("constrained Lumi release wrapper", () => {
     expect(builtValidation).toBeGreaterThan(sourceValidation);
     expect(consume).toBeGreaterThan(builtValidation);
     expect(wrapper).toContain("SIGNED_INPUT_CONSUMED=YES");
+  });
+
+  it("opens an in-memory database with the production Node runtime before sealing", () => {
+    const wrapper = readFileSync(wrapperPath, "utf8");
+
+    expect(wrapper).toContain(
+      'const db = new Database(":memory:")',
+    );
+    expect(wrapper).toContain('db.prepare("SELECT 1 AS ok").get()');
+    expect(wrapper).toContain("NATIVE_MODULE_LOAD=PASS");
+    expect(wrapper).not.toContain(
+      "-e 'require(process.argv[1]); process.stdout.write(\"NATIVE_MODULE_LOAD=PASS",
+    );
   });
 
   it("keeps the cutover confirmation root-sealed and out of argv", () => {
