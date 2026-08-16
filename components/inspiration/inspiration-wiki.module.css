@@ -1467,6 +1467,104 @@
   color: var(--lumi-color-ink-muted);
 }
 
+/* Hallmark · component: multimodal search control · genre: editorial · theme: existing Lumi student system
+ * states: default · hover · focus · active · disabled · loading · error · success
+ * contrast: pass
+ */
+.wikiImageInput {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.wikiImageSearchButton {
+  display: inline-flex;
+  width: 4.7rem;
+  height: 2.75rem;
+  flex: 0 0 4.7rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.36rem;
+  padding: 0 0.75rem;
+  border: 1px solid var(--lumi-color-line);
+  border-radius: 999px;
+  background: var(--lumi-color-surface);
+  color: var(--lumi-color-ink-muted);
+  font: inherit;
+  font-size: 0.74rem;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: border-color 180ms ease, color 180ms ease, background-color 180ms ease, transform 120ms ease;
+}
+
+.wikiImageSearchButton:hover {
+  border-color: var(--lumi-color-line-strong);
+  color: var(--lumi-color-ink);
+}
+
+.wikiImageSearchButton:active {
+  transform: translateY(1px);
+}
+
+.wikiImageSearchButton[data-active] {
+  border-color: var(--lumi-color-ink);
+  background: var(--lumi-color-ink);
+  color: var(--lumi-color-surface);
+}
+
+.wikiImageSearchButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.48;
+}
+
+.wikiImageSearchButton[data-state="loading"] { cursor: wait; }
+.wikiImageSearchButton[data-state="error"] { border-color: var(--lumi-color-ink-muted); }
+.wikiImageSearchButton[data-state="success"] { border-color: var(--lumi-color-ink); }
+
+.wikiImageQuery {
+  display: flex;
+  width: min(100%, 52rem);
+  min-width: 0;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0.65rem auto 0;
+  color: var(--lumi-color-ink-muted);
+  font-size: 0.72rem;
+}
+
+.wikiImageQuery > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.wikiImageQuery > button {
+  display: grid;
+  width: 1.75rem;
+  height: 1.75rem;
+  flex: 0 0 1.75rem;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.wikiRetrievalNote {
+  width: min(100%, 52rem);
+  margin: 0.45rem auto 0;
+  color: var(--lumi-color-ink-muted);
+  font-size: 0.7rem;
+  line-height: 1.5;
+  text-align: left;
+}
+
 .wikiCount,
 .wikiFacetNote {
   color: var(--lumi-color-ink-muted);
@@ -1750,6 +1848,20 @@
 
   .wikiSearch {
     flex-basis: calc(100% - 5.5rem);
+  }
+
+  .wikiImageSearchButton {
+    flex: 0 0 4.7rem;
+  }
+
+  .wikiCount {
+    width: 100%;
+    text-align: right;
+  }
+
+  .wikiImageQuery,
+  .wikiRetrievalNote {
+    width: calc(100% - 0.8rem);
   }
 
   .contextSearchButton {

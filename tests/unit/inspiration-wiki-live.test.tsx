@@ -34,13 +34,38 @@ describe("live InspirationWiki", () => {
   });
 
   it("uses the browse API, shows metadata-only active cases, and does not substitute fixtures", async () => {
-    const fetcher = vi.fn(() => response({ items: [item], nextCursor: null, appliedFacets: ["书籍设计"] }));
+    const fetcher = vi.fn((_: RequestInfo | URL, init?: RequestInit) => init?.method === "POST"
+      ? response({
+        items: [{ ...item, retrieval: { score: 0.88, channels: ["文字特征"] } }],
+        appliedFacets: ["书籍设计"],
+        retrieval: { mode: "TEXT_TO_IMAGE", state: "READY", indexId: "wiki-multimodal-177-v1", encoderVersion: "lumi-local-dual-feature-v1", resultCount: 1, notice: "已按作品文字、标签与来源特征检索受控图片。" },
+      })
+      : response({ items: [item], nextCursor: null, appliedFacets: ["书籍设计"] }));
     render(<InspirationWiki embedded fetcher={fetcher} />);
     expect((await screen.findAllByText("已审核书籍版式")).length).toBeGreaterThan(0);
     expect(screen.getByText("仅展示受控元数据")).toBeInTheDocument();
     fireEvent.change(screen.getByRole("searchbox", { name: "搜索灵感资料" }), { target: { value: "书籍设计参考" } });
     expect(await screen.findByText(/已识别：书籍设计/)).toBeInTheDocument();
-    await waitFor(() => expect(fetcher).toHaveBeenCalledWith(expect.stringContaining("q=%E4%B9%A6%E7%B1%8D%E8%AE%BE%E8%AE%A1%E5%8F%82%E8%80%83"), expect.anything()));
+    await waitFor(() => expect(fetcher).toHaveBeenCalledWith("/api/inspiration/multimodal-search", expect.objectContaining({ method: "POST", body: expect.any(FormData) })));
+    expect(await screen.findByText("已按作品文字、标签与来源特征检索受控图片。")).toBeInTheDocument();
+  });
+
+  it("supports an image query, exposes its state, and lets the student remove it", async () => {
+    const fetcher = vi.fn((_: RequestInfo | URL, init?: RequestInit) => init?.method === "POST"
+      ? response({
+        items: [{ ...item, retrieval: { score: 0.94, channels: ["图像特征"] } }],
+        appliedFacets: [],
+        retrieval: { mode: "IMAGE_TO_IMAGE", state: "READY", indexId: "wiki-multimodal-177-v1", encoderVersion: "lumi-local-dual-feature-v1", resultCount: 1, notice: "已按本地图像构图与色彩特征查找相似作品。" },
+      })
+      : response({ items: [item], nextCursor: null, appliedFacets: [] }));
+    render(<InspirationWiki embedded fetcher={fetcher} />);
+    await screen.findByText("已审核书籍版式");
+    const image = new File([new Uint8Array([137, 80, 78, 71])], "参考图.png", { type: "image/png" });
+    fireEvent.change(screen.getByLabelText("选择检索图片"), { target: { files: [image] } });
+    expect(await screen.findByText("参考图.png")).toBeInTheDocument();
+    expect(await screen.findByText("已按本地图像构图与色彩特征查找相似作品。")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "移除检索图片" }));
+    await waitFor(() => expect(screen.queryByText("参考图.png")).not.toBeInTheDocument());
   });
 
   it("shows an API failure instead of fixture content", async () => {

@@ -71,6 +71,8 @@
     "inspiration:formal-release:publish-remaining": "tsx scripts/publish-inspiration-wiki-remaining-releases.ts",
     "inspiration:production-bundle:build": "tsx scripts/build-inspiration-wiki-production-bundle.ts",
     "inspiration:production-release:apply": "tsx scripts/apply-inspiration-wiki-production-release.ts",
+    "inspiration:multimodal-index:build": "tsx scripts/build-inspiration-wiki-multimodal-index.ts",
+    "inspiration:multimodal-index:evaluate": "tsx scripts/evaluate-inspiration-wiki-multimodal.ts",
     "backup:create": "tsx scripts/create-backup.ts",
     "backup:verify": "tsx scripts/verify-backup.ts",
     "backup:restore": "tsx scripts/restore-backup.ts",

@@ -53,6 +53,9 @@
 /data/evidence/
 /data/evidence-dev/
 
+# Authenticated-student retrieval indexes are release sidecars, not source artifacts.
+/data/inspiration-wiki/multimodal-index/
+
 # misc
 .DS_Store
 *.pem

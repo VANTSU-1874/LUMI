@@ -7,6 +7,7 @@ import {
   CheckIcon,
   ChevronLeftIcon,
   ExternalLinkIcon,
+  ImageIcon,
   LibraryBigIcon,
   SearchIcon,
   XIcon,
@@ -22,6 +23,7 @@ import type {
   InspirationEntry,
 } from "./inspiration-wiki-data";
 import { InspirationBrowseResponseSchema, type InspirationBrowseItem } from "@/lib/domain/inspiration-browser";
+import { WikiMultimodalSearchResponseSchema } from "@/lib/domain/inspiration-wiki/multimodal-retrieval-contracts";
 import styles from "./inspiration-wiki.module.css";
 
 const topics = ["全部", "构成", "网格", "字体", "色彩", "材质", "动势", "系统"] as const;
@@ -192,6 +194,7 @@ export function InspirationWiki(props: InspirationWikiProps) {
 
 function LiveInspirationWiki({ fetcher = fetch, ...props }: Omit<InspirationWikiProps, "entries">) {
   const [query, setQuery] = useState("");
+  const [queryImage, setQueryImage] = useState<File | null>(null);
   const [topic, setTopic] = useState<Topic>("全部");
   const [items, setItems] = useState<InspirationBrowseItem[]>([]);
   const [nextCursor, setNextCursor] = useState<string | null>(null);
@@ -199,22 +202,33 @@ function LiveInspirationWiki({ fetcher = fetch, ...props }: Omit<InspirationWiki
   const [status, setStatus] = useState<"LOADING" | "READY" | "ERROR">("LOADING");
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [retrievalNotice, setRetrievalNotice] = useState<string | null>(null);
   const [reloadVersion, setReloadVersion] = useState(0);
   const [resolvedRequestKey, setResolvedRequestKey] = useState<string | null>(null);
   const requestId = useRef(0);
   const sentinel = useRef<HTMLDivElement>(null);
-  const requestKey = JSON.stringify([query, topic, reloadVersion]);
+  const requestKey = JSON.stringify([query, topic, queryImage?.name ?? null, queryImage?.size ?? null, queryImage?.lastModified ?? null, reloadVersion]);
 
   const requestPage = useCallback(async (cursor: string | null) => {
+    if (query.trim() || queryImage) {
+      const form = new FormData();
+      if (query.trim()) form.set("query", query.trim());
+      if (topic !== "全部") form.set("topic", topic);
+      if (queryImage) form.set("image", queryImage);
+      const response = await fetcher("/api/inspiration/multimodal-search", { method: "POST", body: form, cache: "no-store" });
+      const payload: unknown = await response.json();
+      if (!response.ok) throw new Error(typeof payload === "object" && payload && "error" in payload && typeof payload.error === "string" ? payload.error : "灵感检索失败");
+      const parsed = WikiMultimodalSearchResponseSchema.parse(payload);
+      return { items: parsed.items, nextCursor: null, appliedFacets: parsed.appliedFacets, retrievalNotice: parsed.retrieval.notice };
+    }
     const params = new URLSearchParams({ limit: "12" });
-    if (query.trim()) params.set("q", query.trim());
     if (topic !== "全部") params.set("topic", topic);
     if (cursor) params.set("cursor", cursor);
     const response = await fetcher(`/api/inspiration/browse?${params}`, { cache: "no-store" });
     const payload: unknown = await response.json();
     if (!response.ok) throw new Error(typeof payload === "object" && payload && "error" in payload && typeof payload.error === "string" ? payload.error : "灵感案例加载失败");
-    return InspirationBrowseResponseSchema.parse(payload);
-  }, [fetcher, query, topic]);
+    return { ...InspirationBrowseResponseSchema.parse(payload), retrievalNotice: null };
+  }, [fetcher, query, queryImage, topic]);
   const currentStatus = resolvedRequestKey === requestKey ? status : "LOADING";
 
   useEffect(() => {
@@ -223,6 +237,7 @@ function LiveInspirationWiki({ fetcher = fetch, ...props }: Omit<InspirationWiki
     void requestPage(null).then((parsed) => {
       if (cancelled || sequence !== requestId.current) return;
       setItems(parsed.items); setNextCursor(parsed.nextCursor); setAppliedFacets(parsed.appliedFacets);
+      setRetrievalNotice(parsed.retrievalNotice);
       setStatus("READY"); setError(null); setLoadingMore(false); setResolvedRequestKey(requestKey);
     }).catch((caught: unknown) => {
       if (cancelled || sequence !== requestId.current) return;
@@ -239,7 +254,7 @@ function LiveInspirationWiki({ fetcher = fetch, ...props }: Omit<InspirationWiki
       const parsed = await requestPage(nextCursor);
       if (sequence !== requestId.current) return;
       setItems((current) => [...current, ...parsed.items.filter((entry) => !current.some((known) => known.id === entry.id))]);
-      setNextCursor(parsed.nextCursor); setAppliedFacets(parsed.appliedFacets); setStatus("READY"); setError(null);
+      setNextCursor(parsed.nextCursor); setAppliedFacets(parsed.appliedFacets); setRetrievalNotice(parsed.retrievalNotice); setStatus("READY"); setError(null);
     } catch (caught) {
       if (sequence === requestId.current) { setStatus("ERROR"); setError(caught instanceof Error ? caught.message : "灵感案例加载失败"); }
     } finally { if (sequence === requestId.current) setLoadingMore(false); }
@@ -256,7 +271,7 @@ function LiveInspirationWiki({ fetcher = fetch, ...props }: Omit<InspirationWiki
   if (currentStatus === "LOADING") return <BrowserState embedded={props.embedded} kind="loading" onBackToChat={props.onBackToChat} showEmbeddedTopbar={props.showEmbeddedTopbar} />;
   if (currentStatus === "ERROR") return <BrowserState embedded={props.embedded} error={error} kind="error" onBackToChat={props.onBackToChat} onRetry={retry} showEmbeddedTopbar={props.showEmbeddedTopbar} />;
   const entries = items.map(liveEntry);
-  return <><InspirationWikiContents {...props} appliedFacets={appliedFacets} controlledQuery={query} controlledTopic={topic} entries={entries as unknown as InspirationEntries} onQueryChange={setQuery} onTopicChange={setTopic} serverSearch />
+  return <><InspirationWikiContents {...props} appliedFacets={appliedFacets} controlledQuery={query} controlledTopic={topic} entries={entries as unknown as InspirationEntries} imageQueryName={queryImage?.name ?? null} onImageQueryChange={setQueryImage} onQueryChange={setQuery} onTopicChange={setTopic} retrievalNotice={retrievalNotice} serverSearch />
     <div aria-live="polite" className={styles.loadMore} ref={sentinel}>{loadingMore ? "正在加载更多案例…" : nextCursor ? <button onClick={() => void loadMore()} type="button">继续浏览更多案例</button> : "已显示全部可浏览案例"}</div>
   </>;
 }
@@ -318,6 +333,9 @@ function InspirationWikiContents({
   entries,
   onQueryChange,
   onTopicChange,
+  imageQueryName,
+  onImageQueryChange,
+  retrievalNotice,
   serverSearch = false,
   showEmbeddedTopbar,
   ...props
@@ -328,6 +346,9 @@ function InspirationWikiContents({
   controlledTopic?: Topic;
   onQueryChange?: (value: string) => void;
   onTopicChange?: (value: Topic) => void;
+  imageQueryName?: string | null;
+  onImageQueryChange?: (value: File | null) => void;
+  retrievalNotice?: string | null;
   serverSearch?: boolean;
 }) {
   const { embedded = false, onBackToChat, onToggleSaved, onUseInChat, savedEntryIds } = props;
@@ -338,10 +359,11 @@ function InspirationWikiContents({
   const setQuery = onQueryChange ?? setLocalQuery;
   const setActiveTopic = onTopicChange ?? setLocalTopic;
   const [localSavedIds, setLocalSavedIds] = useState<Set<string>>(() => new Set());
+  const imageInput = useRef<HTMLInputElement>(null);
   const savedIds = useMemo(() => new Set(savedEntryIds ?? localSavedIds), [localSavedIds, savedEntryIds]);
   const localSearchResult = useMemo(() => searchInspirationEntries(entries, query, activeTopic), [activeTopic, entries, query]);
   const searchResult = serverSearch
-    ? { ...localSearchResult, entries: [...entries], appliedFacets: serverAppliedFacets ?? [], state: query ? "SEARCH_INTENT" as const : "BROWSE_DEFAULT" as const }
+    ? { ...localSearchResult, entries: [...entries], appliedFacets: serverAppliedFacets ?? [], state: query || imageQueryName ? "SEARCH_INTENT" as const : "BROWSE_DEFAULT" as const }
     : localSearchResult;
   const visibleEntries = searchResult.entries;
   const masonryItems = useMemo(() => visibleEntries.map((entry, index) => ({
@@ -389,8 +411,34 @@ function InspirationWikiContents({
             />
             {query ? <button aria-label="清空搜索" onClick={() => setQuery("")} type="button"><XIcon aria-hidden="true" size={15} /></button> : null}
           </label>
+          {serverSearch ? <>
+            <input
+              accept="image/jpeg,image/png,image/webp"
+              aria-label="选择检索图片"
+              className={styles.wikiImageInput}
+              onChange={(event) => onImageQueryChange?.(event.currentTarget.files?.[0] ?? null)}
+              ref={imageInput}
+              type="file"
+            />
+            <button
+              aria-label="选择图片查找相似作品"
+              className={styles.wikiImageSearchButton}
+              data-active={imageQueryName ? true : undefined}
+              onClick={() => imageInput.current?.click()}
+              title="以图片搜索"
+              type="button"
+            ><ImageIcon aria-hidden="true" size={17} /><span>图片</span></button>
+          </> : null}
           <span aria-live="polite" className={styles.wikiCount}>{visibleEntries.length} 个正式案例</span>
         </section>
+
+        {imageQueryName ? <div className={styles.wikiImageQuery}>
+          <ImageIcon aria-hidden="true" size={15} />
+          <span title={imageQueryName}>{imageQueryName}</span>
+          <button aria-label="移除检索图片" onClick={() => { if (imageInput.current) imageInput.current.value = ""; onImageQueryChange?.(null); }} type="button"><XIcon aria-hidden="true" size={14} /></button>
+        </div> : null}
+
+        {retrievalNotice ? <p aria-live="polite" className={styles.wikiRetrievalNote}>{retrievalNotice}</p> : null}
 
         {searchResult.appliedFacets.length ? (
           <p className={styles.wikiFacetNote}>已识别：{searchResult.appliedFacets.join(" · ")}</p>
@@ -468,9 +516,9 @@ function InspirationWikiContents({
         ) : (
           <section className={styles.wikiStatus} aria-live="polite">
             <SearchIcon aria-hidden="true" size={24} />
-            <h2>{query || activeTopic !== "全部" ? "还没有匹配的灵感条目" : "暂无可浏览的已审核案例"}</h2>
-            <p>{query || activeTopic !== "全部" ? "换一个更宽的描述，或清空筛选后继续浏览。" : "案例通过学生展示门禁后会直接进入这组瀑布流。"}</p>
-            {query || activeTopic !== "全部" ? <button onClick={() => { setActiveTopic("全部"); setQuery(""); }} type="button">清空筛选</button> : null}
+            <h2>{query || imageQueryName || activeTopic !== "全部" ? "还没有匹配的灵感条目" : "暂无可浏览的已审核案例"}</h2>
+            <p>{query || imageQueryName || activeTopic !== "全部" ? "换一个更宽的描述、另一张图片，或清空筛选后继续浏览。" : "案例通过学生展示门禁后会直接进入这组瀑布流。"}</p>
+            {query || imageQueryName || activeTopic !== "全部" ? <button onClick={() => { setActiveTopic("全部"); setQuery(""); if (imageInput.current) imageInput.current.value = ""; onImageQueryChange?.(null); }} type="button">清空筛选</button> : null}
           </section>
         )}
       </div>

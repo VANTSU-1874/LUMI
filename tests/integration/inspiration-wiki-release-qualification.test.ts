@@ -1,7 +1,7 @@
 // @vitest-environment node
 
 import { randomUUID } from "node:crypto";
-import { mkdtemp, rm } from "node:fs/promises";
+import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 
@@ -10,10 +10,13 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { createDb, type DatabaseConnection } from "@/lib/db/client";
 import { runMigrations } from "@/lib/db/migrate";
 import { privateDraftCompletion, PrivateWikiDraftSchema, type PrivateWikiDraft } from "@/lib/domain/inspiration-wiki/private-draft-contracts";
+import { hashWikiValue } from "@/lib/domain/inspiration-wiki/integrity";
+import { WIKI_MULTIMODAL_ENCODER_VERSION, WIKI_MULTIMODAL_INDEX_ID, WIKI_MULTIMODAL_SCHEMA_VERSION, WikiMultimodalIndexSchema } from "@/lib/domain/inspiration-wiki/multimodal-retrieval-contracts";
 import { compileEligiblePrivateWikiPages } from "@/lib/services/inspiration-wiki-private-compilation";
 import { readPublishedInspirationBrowser } from "@/lib/services/inspiration-browser";
 import { FormalReleaseGateError, publishQualifiedInspirationCase, readTeacherFormalReleaseQueue, withdrawFormalInspirationRelease } from "@/lib/services/inspiration-wiki-formal-release";
 import { buildAndPersistP2StudentChannelShadowSnapshot } from "@/lib/services/inspiration-wiki-p2-student-channels";
+import { activeWikiMultimodalReleaseIdentity, searchWikiMultimodal, studentItemText, textFeatureVector, TEXT_VECTOR_DIMENSIONS, VISUAL_VECTOR_DIMENSIONS } from "@/lib/services/inspiration-wiki-multimodal";
 import { admitApprovedPrivatePagesToInternalCatalog } from "@/lib/services/inspiration-wiki-private-catalog-governance";
 import {
   approveTeacherPrivateNonTeachingDomains,
@@ -198,7 +201,7 @@ describe("D-25 release qualification service", () => {
     expect(connection.sqlite.prepare("SELECT count(*) AS count FROM inspiration_admissions").get()).toEqual({ count: 0 });
   });
 
-  it("publishes only after five gates, exposes the exact active set, and withdraws append-only", () => {
+  it("publishes only after five gates, exposes the exact active set, and withdraws append-only", async () => {
     prepareReleaseQualificationPilots(connection, teacher, "2026-08-13T02:06:00.000Z");
     buildAndPersistP2StudentChannelShadowSnapshot(connection, teacher, "2026-08-13T02:06:30.000Z");
     const initial = readTeacherReleaseQualificationQueue(connection, teacher);
@@ -221,9 +224,36 @@ describe("D-25 release qualification service", () => {
     expect(connection.sqlite.prepare("SELECT count(*) count FROM inspiration_admissions").get()).toEqual({ count: 0 });
     expect(() => connection.sqlite.prepare("UPDATE inspiration_wiki_formal_releases SET status='PUBLISHED'").run()).toThrow("INSPIRATION_WIKI_FORMAL_RELEASE_APPEND_ONLY");
     const first = readTeacherFormalReleaseQueue(connection, teacher).items[0]!.release;
+    const browserItems = readPublishedInspirationBrowser(connection.db, { limit: 30 }).items;
+    const identities = activeWikiMultimodalReleaseIdentity(connection.db);
+    const indexRoot = path.join(directory, "multimodal-index");
+    await mkdir(indexRoot);
+    const material = {
+      schemaVersion: WIKI_MULTIMODAL_SCHEMA_VERSION,
+      indexId: WIKI_MULTIMODAL_INDEX_ID,
+      encoderVersion: WIKI_MULTIMODAL_ENCODER_VERSION,
+      sourceReleaseBundleId: "test-release-bundle",
+      sourceReleaseBundleDigest: "a".repeat(64),
+      releaseSetHash: identities.releaseSetHash,
+      visualDimensions: VISUAL_VECTOR_DIMENSIONS,
+      textDimensions: TEXT_VECTOR_DIMENSIONS,
+      itemCount: browserItems.length,
+      rightsEvidenceRef: "USER_AUTHORIZATION:2026-08-16:WIKI-SELF-MULTIMODAL-177" as const,
+      capabilityBoundary: { authenticatedStudentWiki: "ACTIVE" as const, textToImage: "ACTIVE" as const, imageToImage: "ACTIVE" as const, imageTextToImage: "ACTIVE" as const, externalProvider: "DISABLED" as const, externalDataEgress: "DISABLED" as const, anonymousAccess: "DISABLED" as const, r2: "DISABLED" as const, lumiRetrieval: "DISABLED" as const },
+      entries: identities.active.map((identity, index) => {
+        const item = browserItems.find((candidate) => candidate.id === identity.publicId)!;
+        const visualVector = Array<number>(VISUAL_VECTOR_DIMENSIONS).fill(0); visualVector[index] = 1;
+        return { ...identity, assetSha256: String(index + 1).repeat(64), item, visualVector, textVector: textFeatureVector(studentItemText(item)) };
+      }),
+    };
+    const index = WikiMultimodalIndexSchema.parse({ ...material, indexHash: hashWikiValue(material) });
+    await writeFile(path.join(indexRoot, "index.json"), JSON.stringify(index));
+    await writeFile(path.join(indexRoot, "DONE.json"), JSON.stringify({ schemaVersion: "lumi-inspiration-wiki-multimodal-done/v1", indexId: index.indexId, indexHash: index.indexHash, status: "READY" }));
+    expect((await searchWikiMultimodal(connection.db, { query: browserItems[0]!.title, indexRoot })).items.map((item) => item.id)).toContain(browserItems[0]!.id);
     withdrawFormalInspirationRelease(connection, teacher, { action: "WITHDRAW", releaseId: first.releaseId, reason: "测试撤下", idempotencyKey: randomUUID() }, "2026-08-13T02:09:00.000Z");
     expect(readTeacherFormalReleaseQueue(connection, teacher).meta).toEqual({ total: 5, active: 4, withdrawn: 1, qualifiedUnreleased: 0 });
     expect(readPublishedInspirationBrowser(connection.db, { limit: 30 }).items).toHaveLength(4);
+    expect((await searchWikiMultimodal(connection.db, { query: first.publicMaterial.title, indexRoot })).items.map((item) => item.id)).not.toContain(first.publicMaterial.publicId);
     expect(connection.sqlite.prepare("SELECT count(*) count FROM inspiration_wiki_p2_active_channel_snapshots").get()).toEqual({ count: 6 });
   });
 });
