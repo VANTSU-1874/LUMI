@@ -2,7 +2,7 @@ import { asc, desc, eq } from "drizzle-orm";
 
 import type { SessionPayload } from "@/lib/auth/session";
 import type { DatabaseConnection } from "@/lib/db/client";
-import { inspirationWikiCurrentPageEvents, inspirationWikiFormalReleases, inspirationWikiP2ActiveChannelSnapshots, inspirationWikiP2ChannelSnapshots } from "@/lib/db/schema";
+import { inspirationWikiFormalReleases, inspirationWikiP2ActiveChannelSnapshots, inspirationWikiP2ChannelSnapshots } from "@/lib/db/schema";
 import { P2ActiveChannelSnapshotSchema, type P2ActiveChannelSnapshot } from "@/lib/domain/inspiration-wiki/formal-release-contracts";
 import {
   P2StudentChannelShadowSnapshotSchema,
@@ -10,6 +10,7 @@ import {
   type P2StudentChannelShadowSnapshot,
 } from "@/lib/domain/inspiration-wiki/p2-student-channel-contracts";
 import { hashWikiValue } from "@/lib/domain/inspiration-wiki/integrity";
+import { readLatestInspirationCurrentPageStates } from "@/lib/services/inspiration-current-page";
 import { readTeacherReleaseReadiness } from "./inspiration-wiki-release-readiness";
 
 export class P2StudentChannelShadowConflictError extends Error {
@@ -56,15 +57,7 @@ export function p2StudentChannelBlocksStudentRead(db: DatabaseConnection["db"]) 
   try {
     const shadow = readLatestP2StudentChannelShadowSnapshot(db);
     if (!shadow) return false;
-    const events = db.select({
-      canonicalPageId: inspirationWikiCurrentPageEvents.canonicalPageId,
-      eventType: inspirationWikiCurrentPageEvents.eventType,
-      createdAt: inspirationWikiCurrentPageEvents.createdAt,
-      eventId: inspirationWikiCurrentPageEvents.eventId,
-    }).from(inspirationWikiCurrentPageEvents)
-      .orderBy(desc(inspirationWikiCurrentPageEvents.createdAt), desc(inspirationWikiCurrentPageEvents.eventId)).all();
-    const latest = new Map<string, "ACTIVATED" | "WITHDRAWN">();
-    for (const event of events) if (!latest.has(event.canonicalPageId)) latest.set(event.canonicalPageId, event.eventType);
+    const latest = readLatestInspirationCurrentPageStates(db);
     const expected = db.select({ releaseId: inspirationWikiFormalReleases.releaseId, canonicalPageId: inspirationWikiFormalReleases.canonicalPageId })
       .from(inspirationWikiFormalReleases).orderBy(asc(inspirationWikiFormalReleases.releaseId)).all()
       .filter((release) => latest.get(release.canonicalPageId) === "ACTIVATED");

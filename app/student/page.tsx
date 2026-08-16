@@ -42,13 +42,14 @@ async function requireStudentWorkspace(returnTo: string) {
 
   const token = (await cookies()).get(SESSION_COOKIE_NAME)?.value;
   if (token) {
+    let legacySession = null;
     try {
-      const legacySession = await verifySession(token, readEnv(process.env).sessionSecret);
-      if (legacySession.role === "STUDENT") return legacySession;
-      redirect("/teacher");
+      legacySession = await verifySession(token, readEnv(process.env).sessionSecret);
     } catch {
       // An invalid legacy token falls through to the ordinary login flow.
     }
+    if (legacySession?.role === "STUDENT") return legacySession;
+    if (legacySession) redirect("/teacher");
   }
   redirect(`/login?returnTo=${encodeURIComponent(returnTo)}`);
 }

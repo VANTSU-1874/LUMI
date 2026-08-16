@@ -1,14 +1,14 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
 
-import { desc } from "drizzle-orm";
 import sharp from "sharp";
 
 import type { DatabaseConnection } from "@/lib/db/client";
-import { inspirationWikiCurrentPageEvents, inspirationWikiFormalReleases } from "@/lib/db/schema";
+import { inspirationWikiFormalReleases } from "@/lib/db/schema";
 import type { InspirationBrowseItem } from "@/lib/domain/inspiration-browser";
 import { FormalReleaseSchema } from "@/lib/domain/inspiration-wiki/formal-release-contracts";
 import { hashWikiValue } from "@/lib/domain/inspiration-wiki/integrity";
+import { readLatestInspirationCurrentPageStates } from "@/lib/services/inspiration-current-page";
 import {
   WIKI_MULTIMODAL_ENCODER_VERSION,
   WIKI_MULTIMODAL_INDEX_ID,
@@ -135,11 +135,7 @@ export function loadWikiMultimodalIndex(indexRoot = DEFAULT_WIKI_MULTIMODAL_INDE
 }
 
 export function activeWikiMultimodalReleaseIdentity(db: DatabaseConnection["db"]) {
-  const events = db.select({ canonicalPageId: inspirationWikiCurrentPageEvents.canonicalPageId, eventType: inspirationWikiCurrentPageEvents.eventType })
-    .from(inspirationWikiCurrentPageEvents)
-    .orderBy(desc(inspirationWikiCurrentPageEvents.createdAt), desc(inspirationWikiCurrentPageEvents.eventId)).all();
-  const latest = new Map<string, "ACTIVATED" | "WITHDRAWN">();
-  for (const event of events) if (!latest.has(event.canonicalPageId)) latest.set(event.canonicalPageId, event.eventType);
+  const latest = readLatestInspirationCurrentPageStates(db);
   const active = db.select({
     canonicalPageId: inspirationWikiFormalReleases.canonicalPageId,
     releaseId: inspirationWikiFormalReleases.releaseId,

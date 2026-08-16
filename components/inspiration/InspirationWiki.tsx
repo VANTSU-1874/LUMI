@@ -285,7 +285,7 @@ function InspirationSurfaceTopbar({ embedded, onBackToChat, serverSearch, showEm
     </button>
     <div>
       <p>灵感 Wiki</p>
-      <span>浏览已策展案例，也可带回当前对话继续讨论</span>
+      <span>浏览已策展案例，并把有用的参考保存到灵感板</span>
     </div>
     <p className={styles.topbarNote}>{serverSearch ? "已审核案例浏览" : "本地合规示意"}</p>
   </header> : <header className={styles.topbar}>
@@ -499,12 +499,7 @@ function InspirationWikiContents({
                           <span>带回当前对话</span>
                           <ExternalLinkIcon aria-hidden="true" size={14} />
                         </button>
-                      ) : (
-                        <Link className={styles.wikiUseButton} href={`/student?inspirationCase=${encodeURIComponent(entry.id)}`}>
-                          <span>带着案例问 Lumi</span>
-                          <ExternalLinkIcon aria-hidden="true" size={14} />
-                        </Link>
-                      )}
+                      ) : null}
                     </div>
                   </article>
                 );

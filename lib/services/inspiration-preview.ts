@@ -1,10 +1,11 @@
-import { desc, eq } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 
 import type { DatabaseConnection } from "@/lib/db/client";
-import { inspirationAdmissions, inspirationCandidates, inspirationWikiCurrentPageEvents, inspirationWikiFormalReleases, inspirationWikiCanonicalPageRevisions, type JsonRecord } from "@/lib/db/schema";
+import { inspirationAdmissions, inspirationCandidates, inspirationWikiFormalReleases, inspirationWikiCanonicalPageRevisions, type JsonRecord } from "@/lib/db/schema";
 import { FormalReleaseAssetSchema, FormalReleaseSchema } from "@/lib/domain/inspiration-wiki/formal-release-contracts";
 import { isFormalWikiStudentEligible, studentPreviewAllowed } from "@/lib/domain/inspiration-eligibility";
 import { inspirationPublicId, isInspirationPublicId } from "@/lib/domain/inspiration-public-id";
+import { readLatestInspirationCurrentPageStates } from "@/lib/services/inspiration-current-page";
 import { readTeacherReviewableInspirationCandidate } from "@/lib/services/inspiration-review-access";
 import { p2StudentChannelBlocksStudentRead } from "@/lib/services/inspiration-wiki-p2-student-channels";
 
@@ -20,10 +21,7 @@ export function controlledSyntheticPreview(privateAssetRef: unknown, contentHash
 }
 
 function formalPreview(db: DatabaseConnection["db"], publicId: string): PreviewRecord | null {
-  const events = db.select({ canonicalPageId: inspirationWikiCurrentPageEvents.canonicalPageId, eventType: inspirationWikiCurrentPageEvents.eventType })
-    .from(inspirationWikiCurrentPageEvents).orderBy(desc(inspirationWikiCurrentPageEvents.createdAt), desc(inspirationWikiCurrentPageEvents.eventId)).all();
-  const latest = new Map<string, "ACTIVATED" | "WITHDRAWN">();
-  for (const event of events) if (!latest.has(event.canonicalPageId)) latest.set(event.canonicalPageId, event.eventType);
+  const latest = readLatestInspirationCurrentPageStates(db);
   const rows = db.select({
     canonicalPageId: inspirationWikiFormalReleases.canonicalPageId,
     releaseJson: inspirationWikiFormalReleases.releaseJson,
@@ -65,10 +63,8 @@ export function resolveInspirationPreview(
 ) {
   if (!isInspirationPublicId(publicId)) return null;
   if (actor.role === "STUDENT" && p2StudentChannelBlocksStudentRead(db)) return null;
-  if (actor.role === "STUDENT") {
-    const published = formalPreview(db, publicId);
-    if (published) return published;
-  }
+  const published = formalPreview(db, publicId);
+  if (published) return published;
   const candidateId = resolveCandidateIdByPublicId(db, publicId);
   if (!candidateId) return null;
   if (actor.role === "TEACHER") {

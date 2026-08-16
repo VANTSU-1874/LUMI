@@ -2,12 +2,13 @@ import { and, asc, desc, eq } from "drizzle-orm";
 
 import type { InspirationBrowseItem, InspirationBrowseResponse } from "@/lib/domain/inspiration-browser";
 import type { DatabaseConnection } from "@/lib/db/client";
-import { inspirationAdmissions, inspirationCandidates, inspirationSources, inspirationWikiCurrentPageEvents, inspirationWikiFormalReleases, type JsonRecord } from "@/lib/db/schema";
+import { inspirationAdmissions, inspirationCandidates, inspirationSources, inspirationWikiFormalReleases, type JsonRecord } from "@/lib/db/schema";
 import { FormalReleaseSchema } from "@/lib/domain/inspiration-wiki/formal-release-contracts";
 import { isFormalWikiStudentEligible, studentPreviewAllowed } from "@/lib/domain/inspiration-eligibility";
 import { inspirationPublicId } from "@/lib/domain/inspiration-public-id";
 import { projectApprovedPublicSource, reviewedPublicHostsFromSourceConfiguration } from "@/lib/domain/inspiration-public-source";
 import { safeInspirationStudentList, safeInspirationStudentText } from "@/lib/domain/inspiration-student-projection";
+import { readLatestInspirationCurrentPageStates } from "@/lib/services/inspiration-current-page";
 import { controlledPreviewUrl } from "@/lib/services/inspiration-preview";
 import { p2StudentChannelBlocksStudentRead } from "@/lib/services/inspiration-wiki-p2-student-channels";
 
@@ -117,11 +118,7 @@ export function readPublishedInspirationBrowser(db: DatabaseConnection["db"], in
   if (p2StudentChannelBlocksStudentRead(db)) {
     return { items: [], nextCursor: null, appliedFacets: facets };
   }
-  const currentEvents = db.select({ canonicalPageId: inspirationWikiCurrentPageEvents.canonicalPageId, eventType: inspirationWikiCurrentPageEvents.eventType })
-    .from(inspirationWikiCurrentPageEvents)
-    .orderBy(desc(inspirationWikiCurrentPageEvents.createdAt), desc(inspirationWikiCurrentPageEvents.eventId)).all();
-  const latestEvents = new Map<string, "ACTIVATED" | "WITHDRAWN">();
-  for (const event of currentEvents) if (!latestEvents.has(event.canonicalPageId)) latestEvents.set(event.canonicalPageId, event.eventType);
+  const latestEvents = readLatestInspirationCurrentPageStates(db);
   const formal = db.select({
     canonicalPageId: inspirationWikiFormalReleases.canonicalPageId,
     releaseJson: inspirationWikiFormalReleases.releaseJson,

@@ -14,6 +14,7 @@ import { hashWikiValue } from "@/lib/domain/inspiration-wiki/integrity";
 import { WIKI_MULTIMODAL_ENCODER_VERSION, WIKI_MULTIMODAL_INDEX_ID, WIKI_MULTIMODAL_SCHEMA_VERSION, WikiMultimodalIndexSchema } from "@/lib/domain/inspiration-wiki/multimodal-retrieval-contracts";
 import { compileEligiblePrivateWikiPages } from "@/lib/services/inspiration-wiki-private-compilation";
 import { readPublishedInspirationBrowser } from "@/lib/services/inspiration-browser";
+import { resolveInspirationPreview } from "@/lib/services/inspiration-preview";
 import { FormalReleaseGateError, publishQualifiedInspirationCase, readTeacherFormalReleaseQueue, withdrawFormalInspirationRelease } from "@/lib/services/inspiration-wiki-formal-release";
 import { buildAndPersistP2StudentChannelShadowSnapshot } from "@/lib/services/inspiration-wiki-p2-student-channels";
 import { activeWikiMultimodalReleaseIdentity, searchWikiMultimodal, studentItemText, textFeatureVector, TEXT_VECTOR_DIMENSIONS, VISUAL_VECTOR_DIMENSIONS } from "@/lib/services/inspiration-wiki-multimodal";
@@ -224,6 +225,7 @@ describe("D-25 release qualification service", () => {
     expect(connection.sqlite.prepare("SELECT count(*) count FROM inspiration_admissions").get()).toEqual({ count: 0 });
     expect(() => connection.sqlite.prepare("UPDATE inspiration_wiki_formal_releases SET status='PUBLISHED'").run()).toThrow("INSPIRATION_WIKI_FORMAL_RELEASE_APPEND_ONLY");
     const first = readTeacherFormalReleaseQueue(connection, teacher).items[0]!.release;
+    expect(resolveInspirationPreview(connection.db, teacher, first.publicMaterial.publicId)?.kind).toBe("ASSET");
     const browserItems = readPublishedInspirationBrowser(connection.db, { limit: 30 }).items;
     const identities = activeWikiMultimodalReleaseIdentity(connection.db);
     const indexRoot = path.join(directory, "multimodal-index");
@@ -250,10 +252,11 @@ describe("D-25 release qualification service", () => {
     await writeFile(path.join(indexRoot, "index.json"), JSON.stringify(index));
     await writeFile(path.join(indexRoot, "DONE.json"), JSON.stringify({ schemaVersion: "lumi-inspiration-wiki-multimodal-done/v1", indexId: index.indexId, indexHash: index.indexHash, status: "READY" }));
     expect((await searchWikiMultimodal(connection.db, { query: browserItems[0]!.title, indexRoot })).items.map((item) => item.id)).toContain(browserItems[0]!.id);
-    withdrawFormalInspirationRelease(connection, teacher, { action: "WITHDRAW", releaseId: first.releaseId, reason: "测试撤下", idempotencyKey: randomUUID() }, "2026-08-13T02:09:00.000Z");
+    withdrawFormalInspirationRelease(connection, teacher, { action: "WITHDRAW", releaseId: first.releaseId, reason: "测试同秒撤下", idempotencyKey: randomUUID() }, "2026-08-13T02:08:00.000Z");
     expect(readTeacherFormalReleaseQueue(connection, teacher).meta).toEqual({ total: 5, active: 4, withdrawn: 1, qualifiedUnreleased: 0 });
     expect(readPublishedInspirationBrowser(connection.db, { limit: 30 }).items).toHaveLength(4);
     expect((await searchWikiMultimodal(connection.db, { query: first.publicMaterial.title, indexRoot })).items.map((item) => item.id)).not.toContain(first.publicMaterial.publicId);
+    expect(resolveInspirationPreview(connection.db, { userId: "student", role: "STUDENT" }, first.publicMaterial.publicId)).toBeNull();
     expect(connection.sqlite.prepare("SELECT count(*) count FROM inspiration_wiki_p2_active_channel_snapshots").get()).toEqual({ count: 6 });
   });
 });
