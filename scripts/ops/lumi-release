@@ -70,6 +70,7 @@ Usage:
   lumi-release prune-retired <40-hex-commit> [<40-hex-commit> ...]
   lumi-release discard-failed <40-hex-commit>
   lumi-release discard-incomplete-prepare <40-hex-commit>
+  lumi-release discard-incomplete-prepare-work <40-hex-commit>
   lumi-release discard-failed-work <40-hex-commit>
   lumi-release diagnose-cutover <failed-cutover-run-id>
   lumi-release prepare <40-hex-commit>
@@ -2909,6 +2910,78 @@ discard_incomplete_prepare_release() {
   printf 'EVIDENCE=%s\n' "$EVIDENCE_ROOT/$run_id"
 }
 
+discard_incomplete_prepare_work() {
+  local commit=$1
+  local current
+  local failed_evidence_count
+  local candidate
+  local candidate_real
+  local manifest
+  local candidate_run_id
+  local released_bytes=0
+  local candidate_bytes
+  local removed_work_dirs=0
+  local run_id
+
+  assert_commit "$commit"
+  assert_operations_roots
+  current=$(readlink -f "$CURRENT_LINK")
+  [[ "$current" != "$RELEASE_ROOT/$commit" ]]
+  failed_evidence_count=$(failed_prepare_evidence_count "$commit")
+  [[ "$failed_evidence_count" =~ ^[1-9][0-9]*$ ]]
+
+  run_id="discard-incomplete-prepare-work-$(date -u +%Y%m%dT%H%M%SZ)-$$-$RANDOM"
+  make_evidence discard-incomplete-prepare-work "$run_id"
+  ACTIVE_COMMIT="$commit"
+  service_preflight "$ACTIVE_EVIDENCE/before-discard-work-health.json"
+
+  shopt -s nullglob
+  for candidate in "$WORK_ROOT"/prepare-*; do
+    [[ -d "$candidate" && ! -L "$candidate" ]]
+    candidate_real=$(realpath -e -- "$candidate")
+    [[ "$candidate_real" == "$candidate" ]]
+    manifest="$candidate/manifest"
+    [[ -f "$manifest" && ! -L "$manifest" ]] || continue
+    grep -Fqx "source_commit=$commit" "$manifest" || continue
+    candidate_run_id=$(basename -- "$candidate")
+    assert_run_id "$candidate_run_id"
+    [[ ! -e "$SEAL_ROOT/$candidate_run_id.seal" && ! -L "$SEAL_ROOT/$candidate_run_id.seal" ]]
+    [[ ! -e "$SEAL_ROOT/$candidate_run_id.token" && ! -L "$SEAL_ROOT/$candidate_run_id.token" ]]
+    candidate_bytes=$(du -sb -- "$candidate" | awk '{print $1}')
+    [[ "$candidate_bytes" =~ ^[1-9][0-9]*$ ]]
+    rm -rf --one-file-system -- "$candidate"
+    [[ ! -e "$candidate" && ! -L "$candidate" ]]
+    released_bytes=$((released_bytes + candidate_bytes))
+    removed_work_dirs=$((removed_work_dirs + 1))
+  done
+  shopt -u nullglob
+
+  [[ "$removed_work_dirs" -gt 0 ]]
+  [[ "$(readlink -f "$CURRENT_LINK")" == "$current" ]]
+  systemctl is-active --quiet "$SERVICE"
+  capture_base_health "$ACTIVE_EVIDENCE/after-discard-work-health.json" | tee -a "$ACTIVE_EVIDENCE/summary.log"
+  {
+    printf 'SOURCE_COMMIT=%s\n' "$commit"
+    printf 'FAILED_PREPARE_EVIDENCE_COUNT=%s\n' "$failed_evidence_count"
+    printf 'REMOVED_WORK_DIRS=%s\n' "$removed_work_dirs"
+    printf 'RELEASED_BYTES=%s\n' "$released_bytes"
+    printf 'CURRENT_UNCHANGED=%s\n' "$current"
+    printf 'PRODUCTION_CHANGED=NO\n'
+    printf 'STATUS=SUCCEEDED\n'
+  } > "$ACTIVE_EVIDENCE/SUCCEEDED.result"
+  finalize_evidence
+  ACTIVE_EVIDENCE=''
+
+  printf 'INCOMPLETE_PREPARE_WORK_DISCARDED=YES\n'
+  printf 'SOURCE_COMMIT=%s\n' "$commit"
+  printf 'FAILED_PREPARE_EVIDENCE_COUNT=%s\n' "$failed_evidence_count"
+  printf 'REMOVED_WORK_DIRS=%s\n' "$removed_work_dirs"
+  printf 'RELEASED_BYTES=%s\n' "$released_bytes"
+  printf 'CURRENT=%s\n' "$(readlink -f "$CURRENT_LINK")"
+  printf 'PRODUCTION_CHANGED=NO\n'
+  printf 'EVIDENCE=%s\n' "$EVIDENCE_ROOT/$run_id"
+}
+
 discard_failed_release() {
   local commit=$1
   local release
@@ -3097,6 +3170,10 @@ main() {
     discard-incomplete-prepare)
       [[ "$#" -eq 2 ]] || die 'DISCARD_INCOMPLETE_PREPARE_REQUIRES_COMMIT'
       discard_incomplete_prepare_release "$2"
+      ;;
+    discard-incomplete-prepare-work)
+      [[ "$#" -eq 2 ]] || die 'DISCARD_INCOMPLETE_PREPARE_WORK_REQUIRES_COMMIT'
+      discard_incomplete_prepare_work "$2"
       ;;
     discard-failed-work)
       [[ "$#" -eq 2 ]] || die 'DISCARD_FAILED_WORK_REQUIRES_COMMIT'

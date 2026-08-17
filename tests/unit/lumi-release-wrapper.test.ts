@@ -324,6 +324,25 @@ describe("constrained Lumi release wrapper", () => {
     expect(wrapper).toContain("PRODUCTION_CHANGED=NO");
   });
 
+  it("discards only unsealed work from a failed prepare before release creation", () => {
+    const wrapper = readFileSync(wrapperPath, "utf8");
+
+    expect(wrapper).toContain(
+      "lumi-release discard-incomplete-prepare-work <40-hex-commit>",
+    );
+    expect(wrapper).toContain("discard_incomplete_prepare_work()");
+    expect(wrapper).toContain(
+      'failed_evidence_count=$(failed_prepare_evidence_count "$commit")',
+    );
+    expect(wrapper).toContain('for candidate in "$WORK_ROOT"/prepare-*');
+    expect(wrapper).toContain('grep -Fqx "source_commit=$commit" "$manifest"');
+    expect(wrapper).toContain(
+      '[[ ! -e "$SEAL_ROOT/$candidate_run_id.seal"',
+    );
+    expect(wrapper).toContain("INCOMPLETE_PREPARE_WORK_DISCARDED=YES");
+    expect(wrapper).toContain("FAILED_PREPARE_EVIDENCE_COUNT=%s");
+  });
+
   it("consumes user input only after root copies and validates both archives", () => {
     const wrapper = readFileSync(wrapperPath, "utf8");
     const sourceValidation = wrapper.indexOf(
