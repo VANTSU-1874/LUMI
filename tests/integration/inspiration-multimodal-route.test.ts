@@ -12,6 +12,7 @@ import { POST } from "@/app/api/inspiration/multimodal-search/route";
 import { issueSession, SESSION_COOKIE_NAME } from "@/lib/auth/session";
 import { createDb } from "@/lib/db/client";
 import { runMigrations } from "@/lib/db/migrate";
+import * as multimodalService from "@/lib/services/inspiration-wiki-multimodal";
 
 const SECRET = "inspiration-multimodal-route-secret-32-chars";
 
@@ -39,7 +40,7 @@ describe("Inspiration Wiki multimodal search route", () => {
     vi.stubEnv("SESSION_SECRET", SECRET);
     vi.stubEnv("INSPIRATION_WIKI_MULTIMODAL_INDEX_ROOT", path.join(directory, "missing-index"));
   });
-  afterEach(async () => { vi.unstubAllEnvs(); await rm(directory, { recursive: true, force: true }); });
+  afterEach(async () => { vi.restoreAllMocks(); vi.unstubAllEnvs(); await rm(directory, { recursive: true, force: true }); });
 
   it("requires an authenticated student or teacher", async () => {
     const form = new FormData();
@@ -59,6 +60,26 @@ describe("Inspiration Wiki multimodal search route", () => {
     expect(JSON.stringify(payload)).not.toContain("visualVector");
     expect(JSON.stringify(payload)).not.toContain("textVector");
     expect(JSON.stringify(payload)).not.toContain("storagePath");
+  });
+
+  it("keeps authenticated text search available when multimodal retrieval throws", async () => {
+    const token = await issueSession({ userId: "student", role: "STUDENT" }, SECRET);
+    vi.spyOn(multimodalService, "searchWikiMultimodal").mockRejectedValueOnce(new TypeError("synthetic retrieval failure"));
+    const errorLog = vi.spyOn(console, "error").mockImplementation(() => undefined);
+    const form = new FormData();
+    form.set("query", "红色海报");
+    const response = await POST(request(form, token));
+    expect(response.status).toBe(200);
+    expect(await response.json()).toMatchObject({
+      items: [],
+      retrieval: { mode: "TEXT_FALLBACK", state: "DEGRADED", indexId: null },
+    });
+    expect(errorLog).toHaveBeenCalledWith(expect.objectContaining({
+      route: "inspiration-multimodal-search",
+      diagnosticStage: "RETRIEVAL",
+      errorName: "TypeError",
+      fallbackState: "SUCCEEDED",
+    }));
   });
 
   it("rejects unsupported and undecodable image payloads", async () => {

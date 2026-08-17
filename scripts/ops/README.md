@@ -154,3 +154,15 @@ sudo -n /usr/local/sbin/lumi-release release-inventory
 ~~~bash
 sudo -n /usr/local/sbin/lumi-release prune-retired <commit> [<commit> ...]
 ~~~
+
+历史测试有时会留下 `<40 位提交号>-<测试后缀>` 形式的完整或半成品发布目录。
+这类目录不能传给正式版本清理命令；只能显式列名调用下列入口：
+
+~~~bash
+sudo -n /usr/local/sbin/lumi-release prune-never-activated <commit>-<suffix> [<commit>-<suffix> ...]
+~~~
+
+该命令拒绝无后缀目录、current、创建未满一小时、被进程或符号链接引用、仍有
+prepare seal、属主/模式异常、挂载点，以及存在成功切流证据的目录。带完整发布标记的
+目录还必须让标记提交与名称前缀一致；整组预检全部通过后才会删除，并在前后执行基础
+健康检查、记录释放字节和 `PRODUCTION_CHANGED=NO`。

@@ -337,6 +337,24 @@ describe("constrained Lumi release wrapper", () => {
     expect(wrapper).toContain("PRODUCTION_CHANGED=NO");
   });
 
+  it("prunes only old suffixed release directories that were never activated", () => {
+    const wrapper = readFileSync(wrapperPath, "utf8");
+
+    expect(wrapper).toContain(
+      "lumi-release prune-never-activated <40-hex-commit>-<suffix>",
+    );
+    expect(wrapper).toContain("prune_never_activated_release_dirs()");
+    expect(wrapper).toContain("release_path_seal_count()");
+    expect(wrapper).toContain("PRUNE_NEVER_ACTIVATED_NAME_UNSAFE");
+    expect(wrapper).toContain("PRUNE_NEVER_ACTIVATED_REFUSES_CURRENT");
+    expect(wrapper).toContain("PRUNE_NEVER_ACTIVATED_STILL_REFERENCED");
+    expect(wrapper).toContain("PRUNE_NEVER_ACTIVATED_STILL_SEALED");
+    expect(wrapper).toContain("PRUNE_NEVER_ACTIVATED_TOO_RECENT");
+    expect(wrapper).toContain("PRUNE_NEVER_ACTIVATED_HAS_SUCCESSFUL_CUTOVER");
+    expect(wrapper).toContain("NEVER_ACTIVATED_RELEASES_PRUNED=YES");
+    expect(wrapper).toContain("PRODUCTION_CHANGED=NO");
+  });
+
   it("discards only unsealed work from a failed prepare before release creation", () => {
     const wrapper = readFileSync(wrapperPath, "utf8");
 
