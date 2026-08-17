@@ -203,6 +203,19 @@ describe("constrained Lumi release wrapper", () => {
     );
   });
 
+  it("exposes only a bounded redacted current multimodal diagnostic", () => {
+    const wrapper = readFileSync(wrapperPath, "utf8");
+
+    expect(wrapper).toContain("lumi-release diagnose-current-inspiration");
+    expect(wrapper).toContain("diagnose_current_inspiration()");
+    expect(wrapper).toContain("'10 minutes ago' 'now'");
+    expect(wrapper).toContain('"inspiration-multimodal-search" in line');
+    expect(wrapper).toContain('email.sub("[REDACTED_EMAIL]"');
+    expect(wrapper).toContain('selected = [email.sub("[REDACTED_EMAIL]", lines[index])[:4000] for index in indexes][-120:]');
+    expect(wrapper).toContain("DIAGNOSE_CURRENT_INSPIRATION_TAKES_NO_ARGUMENTS");
+    expect(wrapper).toContain("PRODUCTION_CHANGED=NO");
+  });
+
   it("replays Next traced external-module aliases before release activation", () => {
     const wrapper = readFileSync(wrapperPath, "utf8");
 

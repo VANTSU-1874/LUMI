@@ -73,6 +73,7 @@ Usage:
   lumi-release discard-incomplete-prepare-work <40-hex-commit>
   lumi-release discard-failed-work <40-hex-commit>
   lumi-release diagnose-cutover <failed-cutover-run-id>
+  lumi-release diagnose-current-inspiration
   lumi-release prepare <40-hex-commit>
   lumi-release audit <prepare-run-id>
   lumi-release recover-audit <prepare-run-id> <failed-audit-run-id>
@@ -1266,6 +1267,56 @@ diagnose_failed_cutover() {
   printf '%s\n' '--- REDACTED SERVICE JOURNAL ---'
   cat "$temporary"
   rm -f -- "$temporary"
+}
+
+diagnose_current_inspiration() {
+  local current
+  local run_id
+  local temporary
+  local selected
+
+  assert_operations_roots
+  [[ -L "$CURRENT_LINK" ]]
+  current=$(readlink -f "$CURRENT_LINK")
+  [[ "$current" == "$RELEASE_ROOT/"* ]]
+  systemctl is-active --quiet "$SERVICE"
+  run_id="diagnose-current-inspiration-$(date -u +%Y%m%dT%H%M%SZ)-$$-$RANDOM"
+  make_evidence diagnose-current-inspiration "$run_id"
+  ACTIVE_COMMIT=$(basename -- "$current")
+  service_preflight "$ACTIVE_EVIDENCE/base-health.json"
+  temporary="$ACTIVE_EVIDENCE/current-service-journal.log"
+  selected="$ACTIVE_EVIDENCE/inspiration-multimodal-diagnostic.log"
+  capture_service_journal "$temporary" '10 minutes ago' 'now'
+  python3 - "$temporary" "$selected" <<'PY'
+from pathlib import Path
+import re
+import sys
+
+source = Path(sys.argv[1])
+destination = Path(sys.argv[2])
+lines = source.read_text(encoding="utf-8", errors="replace").splitlines()
+anchors = [index for index, line in enumerate(lines) if "inspiration-multimodal-search" in line]
+indexes = sorted({item for anchor in anchors for item in range(max(0, anchor - 8), min(len(lines), anchor + 9))})
+email = re.compile(r"(?i)\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b")
+selected = [email.sub("[REDACTED_EMAIL]", lines[index])[:4000] for index in indexes][-120:]
+destination.write_text("\n".join(selected) + ("\n" if selected else ""), encoding="utf-8")
+PY
+  rm -f -- "$temporary"
+  {
+    printf 'CURRENT_COMMIT=%s\n' "$ACTIVE_COMMIT"
+    printf 'DIAGNOSTIC_LINES=%s\n' "$(wc -l < "$selected")"
+    printf 'PRODUCTION_CHANGED=NO\n'
+    printf 'STATUS=SUCCEEDED\n'
+  } > "$ACTIVE_EVIDENCE/SUCCEEDED.result"
+  finalize_evidence
+  ACTIVE_EVIDENCE=''
+
+  printf 'DIAGNOSTICS=SUCCEEDED\n'
+  printf 'CURRENT=%s\n' "$current"
+  printf 'PRODUCTION_CHANGED=NO\n'
+  printf '%s\n' '--- REDACTED INSPIRATION MULTIMODAL JOURNAL ---'
+  cat "$EVIDENCE_ROOT/$run_id/inspiration-multimodal-diagnostic.log"
+  printf 'EVIDENCE=%s\n' "$EVIDENCE_ROOT/$run_id"
 }
 
 copy_regular_input() {
@@ -3182,6 +3233,10 @@ main() {
     diagnose-cutover)
       [[ "$#" -eq 2 ]] || die 'DIAGNOSE_CUTOVER_REQUIRES_FAILED_RUN_ID'
       diagnose_failed_cutover "$2"
+      ;;
+    diagnose-current-inspiration)
+      [[ "$#" -eq 1 ]] || die 'DIAGNOSE_CURRENT_INSPIRATION_TAKES_NO_ARGUMENTS'
+      diagnose_current_inspiration
       ;;
     prepare)
       [[ "$#" -eq 2 ]] || die 'PREPARE_REQUIRES_COMMIT'

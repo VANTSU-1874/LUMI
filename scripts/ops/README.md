@@ -129,6 +129,14 @@ Knowledge V2 切换还会在停服后备份并原子提升已封存的质量与 
 sudo -n /usr/local/sbin/lumi-release status
 ~~~
 
+当当前生产版的灵感 Wiki 多模态路由返回通用错误时，可运行下列只读诊断。
+它只输出最近 10 分钟与 `inspiration-multimodal-search` 相邻的最多 120 行，
+并复用凭据脱敏、邮箱脱敏和每行长度上限；不接受时间、服务名或 journal 查询参数：
+
+~~~bash
+sudo -n /usr/local/sbin/lumi-release diagnose-current-inspiration
+~~~
+
 发布目录盘点与旧回退版本清理也只能经过同一受限入口。盘点会以 root 权限回报
 每个目录的精确字节、完整发布标记、成功/失败切换证据、实时进程/符号链接引用和
 current 状态：
