@@ -203,6 +203,19 @@ describe("constrained Lumi release wrapper", () => {
     );
   });
 
+  it("exposes only a bounded redacted current multimodal diagnostic", () => {
+    const wrapper = readFileSync(wrapperPath, "utf8");
+
+    expect(wrapper).toContain("lumi-release diagnose-current-inspiration");
+    expect(wrapper).toContain("diagnose_current_inspiration()");
+    expect(wrapper).toContain("'10 minutes ago' 'now'");
+    expect(wrapper).toContain('"inspiration-multimodal-search" in line');
+    expect(wrapper).toContain('email.sub("[REDACTED_EMAIL]"');
+    expect(wrapper).toContain('selected = [email.sub("[REDACTED_EMAIL]", lines[index])[:4000] for index in indexes][-120:]');
+    expect(wrapper).toContain("DIAGNOSE_CURRENT_INSPIRATION_TAKES_NO_ARGUMENTS");
+    expect(wrapper).toContain("PRODUCTION_CHANGED=NO");
+  });
+
   it("replays Next traced external-module aliases before release activation", () => {
     const wrapper = readFileSync(wrapperPath, "utf8");
 
@@ -321,6 +334,24 @@ describe("constrained Lumi release wrapper", () => {
     expect(wrapper).toContain('[[ ! -e "$SEAL_ROOT/$candidate_run_id.seal"');
     expect(wrapper).toContain('rm -rf --one-file-system -- "$candidate"');
     expect(wrapper).toContain("FAILED_WORK_DISCARDED=YES");
+    expect(wrapper).toContain("PRODUCTION_CHANGED=NO");
+  });
+
+  it("prunes only old suffixed release directories that were never activated", () => {
+    const wrapper = readFileSync(wrapperPath, "utf8");
+
+    expect(wrapper).toContain(
+      "lumi-release prune-never-activated <40-hex-commit>-<suffix>",
+    );
+    expect(wrapper).toContain("prune_never_activated_release_dirs()");
+    expect(wrapper).toContain("release_path_seal_count()");
+    expect(wrapper).toContain("PRUNE_NEVER_ACTIVATED_NAME_UNSAFE");
+    expect(wrapper).toContain("PRUNE_NEVER_ACTIVATED_REFUSES_CURRENT");
+    expect(wrapper).toContain("PRUNE_NEVER_ACTIVATED_STILL_REFERENCED");
+    expect(wrapper).toContain("PRUNE_NEVER_ACTIVATED_STILL_SEALED");
+    expect(wrapper).toContain("PRUNE_NEVER_ACTIVATED_TOO_RECENT");
+    expect(wrapper).toContain("PRUNE_NEVER_ACTIVATED_HAS_SUCCESSFUL_CUTOVER");
+    expect(wrapper).toContain("NEVER_ACTIVATED_RELEASES_PRUNED=YES");
     expect(wrapper).toContain("PRODUCTION_CHANGED=NO");
   });
 

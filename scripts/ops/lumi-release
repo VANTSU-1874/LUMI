@@ -68,11 +68,13 @@ Usage:
   lumi-release release-inventory
   lumi-release backup
   lumi-release prune-retired <40-hex-commit> [<40-hex-commit> ...]
+  lumi-release prune-never-activated <40-hex-commit>-<suffix> [<40-hex-commit>-<suffix> ...]
   lumi-release discard-failed <40-hex-commit>
   lumi-release discard-incomplete-prepare <40-hex-commit>
   lumi-release discard-incomplete-prepare-work <40-hex-commit>
   lumi-release discard-failed-work <40-hex-commit>
   lumi-release diagnose-cutover <failed-cutover-run-id>
+  lumi-release diagnose-current-inspiration
   lumi-release prepare <40-hex-commit>
   lumi-release audit <prepare-run-id>
   lumi-release recover-audit <prepare-run-id> <failed-audit-run-id>
@@ -1266,6 +1268,56 @@ diagnose_failed_cutover() {
   printf '%s\n' '--- REDACTED SERVICE JOURNAL ---'
   cat "$temporary"
   rm -f -- "$temporary"
+}
+
+diagnose_current_inspiration() {
+  local current
+  local run_id
+  local temporary
+  local selected
+
+  assert_operations_roots
+  [[ -L "$CURRENT_LINK" ]]
+  current=$(readlink -f "$CURRENT_LINK")
+  [[ "$current" == "$RELEASE_ROOT/"* ]]
+  systemctl is-active --quiet "$SERVICE"
+  run_id="diagnose-current-inspiration-$(date -u +%Y%m%dT%H%M%SZ)-$$-$RANDOM"
+  make_evidence diagnose-current-inspiration "$run_id"
+  ACTIVE_COMMIT=$(basename -- "$current")
+  service_preflight "$ACTIVE_EVIDENCE/base-health.json"
+  temporary="$ACTIVE_EVIDENCE/current-service-journal.log"
+  selected="$ACTIVE_EVIDENCE/inspiration-multimodal-diagnostic.log"
+  capture_service_journal "$temporary" '10 minutes ago' 'now'
+  python3 - "$temporary" "$selected" <<'PY'
+from pathlib import Path
+import re
+import sys
+
+source = Path(sys.argv[1])
+destination = Path(sys.argv[2])
+lines = source.read_text(encoding="utf-8", errors="replace").splitlines()
+anchors = [index for index, line in enumerate(lines) if "inspiration-multimodal-search" in line]
+indexes = sorted({item for anchor in anchors for item in range(max(0, anchor - 8), min(len(lines), anchor + 9))})
+email = re.compile(r"(?i)\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b")
+selected = [email.sub("[REDACTED_EMAIL]", lines[index])[:4000] for index in indexes][-120:]
+destination.write_text("\n".join(selected) + ("\n" if selected else ""), encoding="utf-8")
+PY
+  rm -f -- "$temporary"
+  {
+    printf 'CURRENT_COMMIT=%s\n' "$ACTIVE_COMMIT"
+    printf 'DIAGNOSTIC_LINES=%s\n' "$(wc -l < "$selected")"
+    printf 'PRODUCTION_CHANGED=NO\n'
+    printf 'STATUS=SUCCEEDED\n'
+  } > "$ACTIVE_EVIDENCE/SUCCEEDED.result"
+  finalize_evidence
+  ACTIVE_EVIDENCE=''
+
+  printf 'DIAGNOSTICS=SUCCEEDED\n'
+  printf 'CURRENT=%s\n' "$current"
+  printf 'PRODUCTION_CHANGED=NO\n'
+  printf '%s\n' '--- REDACTED INSPIRATION MULTIMODAL JOURNAL ---'
+  cat "$EVIDENCE_ROOT/$run_id/inspiration-multimodal-diagnostic.log"
+  printf 'EVIDENCE=%s\n' "$EVIDENCE_ROOT/$run_id"
 }
 
 copy_regular_input() {
@@ -2640,6 +2692,22 @@ release_seal_count() {
   printf '%s\n' "$count"
 }
 
+release_path_seal_count() {
+  local release=$1
+  local seal
+  local count=0
+
+  shopt -s nullglob
+  for seal in "$SEAL_ROOT"/*.seal; do
+    [[ -f "$seal" && ! -L "$seal" ]]
+    if [[ "$(seal_field "$seal" release)" == "$release" ]]; then
+      count=$((count + 1))
+    fi
+  done
+  shopt -u nullglob
+  printf '%s\n' "$count"
+}
+
 release_inventory() {
   local current
   local release
@@ -2775,6 +2843,110 @@ prune_retired_releases() {
   ACTIVE_EVIDENCE=''
 
   printf 'RETIRED_RELEASES_PRUNED=YES\n'
+  printf 'REMOVED_RELEASES=%s\n' "$removed_releases"
+  printf 'RELEASED_BYTES=%s\n' "$total_released_bytes"
+  printf 'CURRENT=%s\n' "$(readlink -f "$CURRENT_LINK")"
+  printf 'PRODUCTION_CHANGED=NO\n'
+  printf 'EVIDENCE=%s\n' "$EVIDENCE_ROOT/$run_id"
+}
+
+prune_never_activated_release_dirs() {
+  [[ "$#" -ge 1 && "$#" -le 32 ]] || die 'PRUNE_NEVER_ACTIVATED_REQUIRES_ONE_TO_32_NAMES'
+
+  local current
+  local current_commit
+  local name
+  local base_commit
+  local release
+  local marker
+  local marker_commit
+  local success_count
+  local reference_count
+  local seal_count
+  local modified_at
+  local age_seconds
+  local released_bytes
+  local total_released_bytes=0
+  local removed_releases=0
+  local run_id
+  local -a names=()
+  declare -A seen=()
+
+  assert_operations_roots
+  [[ -d "$RELEASE_ROOT" && ! -L "$RELEASE_ROOT" ]]
+  [[ -L "$CURRENT_LINK" ]]
+  current=$(readlink -f "$CURRENT_LINK")
+  [[ "$current" == "$RELEASE_ROOT/"* ]]
+  current_commit=$(basename -- "$current")
+  assert_commit "$current_commit"
+
+  for name in "$@"; do
+    [[ "$name" =~ ^[0-9a-f]{40}-[a-z0-9][a-z0-9-]{0,31}$ ]] \
+      || die "PRUNE_NEVER_ACTIVATED_NAME_UNSAFE:$name"
+    [[ -z "${seen[$name]:-}" ]] || die "PRUNE_NEVER_ACTIVATED_DUPLICATE_NAME:$name"
+    seen[$name]=1
+    base_commit=${name%%-*}
+    assert_commit "$base_commit"
+    release="$RELEASE_ROOT/$name"
+    marker="$release/.lumi-deploy-complete"
+    [[ "$release" != "$current" ]] || die 'PRUNE_NEVER_ACTIVATED_REFUSES_CURRENT'
+    [[ -d "$release" && ! -L "$release" ]] || die "PRUNE_NEVER_ACTIVATED_RELEASE_UNSAFE:$name"
+    [[ "$(realpath -e -- "$release")" == "$release" ]] || die "PRUNE_NEVER_ACTIVATED_PATH_MISMATCH:$name"
+    ! mountpoint -q -- "$release" || die "PRUNE_NEVER_ACTIVATED_IS_MOUNTPOINT:$name"
+    [[ "$(stat -c '%U:%G:%a' -- "$release")" == "root:$SERVICE_GROUP:750" ]] \
+      || die "PRUNE_NEVER_ACTIVATED_METADATA_UNEXPECTED:$name"
+    reference_count=$(release_reference_count "$release")
+    [[ "$reference_count" == '0' ]] || die "PRUNE_NEVER_ACTIVATED_STILL_REFERENCED:$name:$reference_count"
+    seal_count=$(release_path_seal_count "$release")
+    [[ "$seal_count" == '0' ]] || die "PRUNE_NEVER_ACTIVATED_STILL_SEALED:$name:$seal_count"
+    modified_at=$(stat -c '%Y' -- "$release")
+    [[ "$modified_at" =~ ^[0-9]+$ ]]
+    age_seconds=$(( $(date +%s) - modified_at ))
+    [[ "$age_seconds" -ge 3600 ]] || die "PRUNE_NEVER_ACTIVATED_TOO_RECENT:$name"
+    if [[ -e "$marker" || -L "$marker" ]]; then
+      [[ -f "$marker" && ! -L "$marker" ]] || die "PRUNE_NEVER_ACTIVATED_MARKER_UNSAFE:$name"
+      [[ "$(stat -c '%U:%G:%a' -- "$marker")" == "root:$SERVICE_GROUP:640" ]] \
+        || die "PRUNE_NEVER_ACTIVATED_MARKER_METADATA_UNEXPECTED:$name"
+      marker_commit=$(awk -F= '$1 == "source_commit" { print $2 }' "$marker")
+      [[ "$marker_commit" == "$base_commit" ]] || die "PRUNE_NEVER_ACTIVATED_MARKER_COMMIT_MISMATCH:$name"
+      success_count=$(successful_cutover_evidence_count "$marker_commit")
+      [[ "$success_count" == '0' ]] || die "PRUNE_NEVER_ACTIVATED_HAS_SUCCESSFUL_CUTOVER:$name:$success_count"
+    fi
+    names+=("$name")
+  done
+
+  run_id="prune-never-activated-$(date -u +%Y%m%dT%H%M%SZ)-$$-$RANDOM"
+  make_evidence prune-never-activated "$run_id"
+  ACTIVE_COMMIT="$current_commit"
+  service_preflight "$ACTIVE_EVIDENCE/before-prune-health.json"
+  capture_base_health "$ACTIVE_EVIDENCE/before-prune-base-health.json" | tee -a "$ACTIVE_EVIDENCE/summary.log"
+
+  for name in "${names[@]}"; do
+    release="$RELEASE_ROOT/$name"
+    released_bytes=$(du -sb -- "$release" | awk '{print $1}')
+    [[ "$released_bytes" =~ ^[1-9][0-9]*$ ]]
+    printf 'RELEASE_NAME=%s|RELEASED_BYTES=%s\n' "$name" "$released_bytes" >> "$ACTIVE_EVIDENCE/pruned-release-dirs.txt"
+    rm -rf --one-file-system -- "$release"
+    [[ ! -e "$release" && ! -L "$release" ]]
+    total_released_bytes=$((total_released_bytes + released_bytes))
+    removed_releases=$((removed_releases + 1))
+  done
+
+  [[ "$(readlink -f "$CURRENT_LINK")" == "$current" ]]
+  systemctl is-active --quiet "$SERVICE"
+  capture_base_health "$ACTIVE_EVIDENCE/after-prune-base-health.json" | tee -a "$ACTIVE_EVIDENCE/summary.log"
+  {
+    printf 'CURRENT_COMMIT=%s\n' "$current_commit"
+    printf 'REMOVED_RELEASES=%s\n' "$removed_releases"
+    printf 'RELEASED_BYTES=%s\n' "$total_released_bytes"
+    printf 'CURRENT_UNCHANGED=%s\n' "$current"
+    printf 'PRODUCTION_CHANGED=NO\n'
+    printf 'STATUS=SUCCEEDED\n'
+  } > "$ACTIVE_EVIDENCE/SUCCEEDED.result"
+  finalize_evidence
+  ACTIVE_EVIDENCE=''
+
+  printf 'NEVER_ACTIVATED_RELEASES_PRUNED=YES\n'
   printf 'REMOVED_RELEASES=%s\n' "$removed_releases"
   printf 'RELEASED_BYTES=%s\n' "$total_released_bytes"
   printf 'CURRENT=%s\n' "$(readlink -f "$CURRENT_LINK")"
@@ -3163,6 +3335,11 @@ main() {
       shift
       prune_retired_releases "$@"
       ;;
+    prune-never-activated)
+      [[ "$#" -ge 2 && "$#" -le 33 ]] || die 'PRUNE_NEVER_ACTIVATED_REQUIRES_ONE_TO_32_NAMES'
+      shift
+      prune_never_activated_release_dirs "$@"
+      ;;
     discard-failed)
       [[ "$#" -eq 2 ]] || die 'DISCARD_FAILED_REQUIRES_COMMIT'
       discard_failed_release "$2"
@@ -3182,6 +3359,10 @@ main() {
     diagnose-cutover)
       [[ "$#" -eq 2 ]] || die 'DIAGNOSE_CUTOVER_REQUIRES_FAILED_RUN_ID'
       diagnose_failed_cutover "$2"
+      ;;
+    diagnose-current-inspiration)
+      [[ "$#" -eq 1 ]] || die 'DIAGNOSE_CURRENT_INSPIRATION_TAKES_NO_ARGUMENTS'
+      diagnose_current_inspiration
       ;;
     prepare)
       [[ "$#" -eq 2 ]] || die 'PREPARE_REQUIRES_COMMIT'
