@@ -38,6 +38,11 @@ type PromptLearningContext = {
   verifiedEvidenceFacts: VerifiedEvidenceFact[];
   toolState: null | { adapterId: string; status: "EMPTY" | "IN_PROGRESS" | "EVIDENCE_SUBMITTED"; facts: string[] };
   projectBrief: import("./project-brief-memory").ProjectBrief;
+  workspaceProject?: null | {
+    project: { name: string; instructions: string; memoryMode: "PROJECT_ONLY" };
+    files: Array<{ id: string; name: string; mimeType: string }>;
+    relatedConversationSummaries: Array<{ taskId: string; title: string; excerpt: string }>;
+  };
 };
 
 export async function decideAgentTurn(input: {
@@ -103,6 +108,14 @@ export async function decideAgentTurn(input: {
         } : null,
         coursePack: { id: input.pack.id, version: input.pack.version, label: input.pack.label, summary: input.pack.summary },
         projectBrief: input.context.projectBrief,
+        projectWorkspace: input.context.workspaceProject ? {
+          name: input.context.workspaceProject.project.name,
+          customInstructions: input.context.workspaceProject.project.instructions,
+          memoryMode: input.context.workspaceProject.project.memoryMode,
+          availableFiles: input.context.workspaceProject.files,
+          relatedConversations: input.context.workspaceProject.relatedConversationSummaries,
+          instruction: "项目说明和文件清单是当前学生项目的受控上下文；不要声称已读取文件内容，除非本轮工具或图像输入提供了内容证据。",
+        } : null,
         guardrails: {
           formalAuthority: "FORBIDDEN",
           courseFactsRequireSource: true,

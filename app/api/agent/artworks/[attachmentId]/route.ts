@@ -43,6 +43,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
       config.evidenceRoot,
     );
     const body = Readable.toWeb(file.stream) as ReadableStream<Uint8Array>;
+    const download = request.nextUrl.searchParams.get("download") === "1";
     const extension = file.contentType === "image/png"
       ? "png"
       : file.contentType === "image/jpeg" ? "jpg" : "webp";
@@ -52,7 +53,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
         ...PRIVATE_HEADERS,
         "Content-Type": file.contentType,
         "Content-Length": String(file.size),
-        "Content-Disposition": `inline; filename="${attachmentId}.${extension}"`,
+        "Content-Disposition": `${download ? "attachment" : "inline"}; filename="${attachmentId}.${extension}"`,
       },
     });
   } catch (error) {

@@ -29,6 +29,7 @@ import {
   type ModelProviderAdapter,
 } from "./model-provider-adapter";
 import { readProjectBrief, type ProjectBrief } from "./project-brief-memory";
+import { projectContextForTask } from "./student-project";
 import { actionForType } from "./router";
 import type { AgentToolExecutor } from "./tool-executor";
 import {
@@ -86,6 +87,7 @@ export type StudentContext = {
   verifiedEvidenceFacts: VerifiedEvidenceFact[];
   toolState: ToolLearningState | null;
   projectBrief: ProjectBrief;
+  workspaceProject?: ReturnType<typeof projectContextForTask>;
 };
 
 export function readStudentContext(
@@ -160,6 +162,7 @@ export function readStudentContext(
     verifiedEvidenceFacts,
     toolState,
     projectBrief: readProjectBrief(connection, actor.userId, student.classId, activeTask.task.id),
+    workspaceProject: projectContextForTask(connection, actor, activeTask.task.id),
   };
 }
 

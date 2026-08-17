@@ -110,6 +110,7 @@ import {
   type TodoItem,
 } from "@/components/ui/todo-tool";
 import type { AgentRequestedCapabilityId } from "@/lib/agent/requested-capability";
+import type { DesignTask } from "@/lib/agent/design-project-task-contract";
 
 import {
   type AssistantLabSection,
@@ -118,12 +119,6 @@ import {
 import { LabAccountArea } from "./AssistantLabAccount";
 import { LabThreadHeader } from "./AssistantLabExperience";
 import { LabThreadMoreMenu } from "./AssistantLabThreadMenu";
-import {
-  LAB_DATA_EVENT,
-  type LabProject,
-  readActiveLabProjectId,
-  setActiveLabProjectId,
-} from "./assistant-lab-data";
 import { shouldCollapseLongform } from "./longform-presentation";
 import { AssistantLabRuntimeProvider } from "./assistant-lab-runtime";
 import type { LumiExecutionProgressData } from "./assistant-lab-backend";
@@ -626,20 +621,11 @@ function AssistantLabShell({
   const [activeSection, setActiveSection] = useState<AssistantLabSurface>(
     inspirationMode ? "inspiration" : "chat",
   );
-  const [activeProjectId, setActiveProjectIdState] = useState<string | null>(null);
+  const activeProjectId = useAuiState((state) => state.threadListItem.remoteId ?? null);
   const [inspirationCitation, setInspirationCitation] = useState(initialInspirationCitation);
   const [savedInspirationIds, setSavedInspirationIds] = useState<string[]>([]);
   const sharedThreadHandled = useRef(false);
   const threadIsEmpty = useAuiState((state) => state.thread.isEmpty);
-  useEffect(() => {
-    const refresh = () => {
-      setActiveProjectIdState(readActiveLabProjectId());
-    };
-    refresh();
-    window.addEventListener(LAB_DATA_EVENT, refresh);
-    return () => window.removeEventListener(LAB_DATA_EVENT, refresh);
-  }, [threadIsEmpty]);
-
   useEffect(() => {
     if (sharedThreadHandled.current) return;
     const sharedThreadId = new URLSearchParams(window.location.search).get("thread");
@@ -666,10 +652,9 @@ function AssistantLabShell({
   };
 
   const startGlobalChat = () => {
-    setActiveLabProjectId(null);
-    setActiveProjectIdState(null);
     setActiveSection("chat");
     setSidebarOpen(false);
+    void aui.threads().switchToNewThread();
   };
 
   const selectThread = (threadId: string | undefined) => {
@@ -678,12 +663,10 @@ function AssistantLabShell({
     setSidebarOpen(false);
   };
 
-  const openProject = (project: LabProject) => {
-    setActiveLabProjectId(project.id);
-    setActiveProjectIdState(project.id);
+  const openProject = (project: DesignTask) => {
     setActiveSection("chat");
     setSidebarOpen(false);
-    void aui.threads().switchToNewThread();
+    void aui.threads().reload().then(() => aui.threads().switchToThread(project.id));
   };
 
   const toggleSavedInspiration = (entryId: string) => {
