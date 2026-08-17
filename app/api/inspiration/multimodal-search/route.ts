@@ -28,6 +28,22 @@ type DiagnosticStage =
   | "RETRIEVAL"
   | "RESPONSE_VALIDATION";
 
+type UploadedImage = {
+  size: number;
+  type: string;
+  arrayBuffer(): Promise<ArrayBuffer>;
+};
+
+function uploadedImage(value: FormDataEntryValue | null): UploadedImage | null {
+  if (typeof value === "string" || value === null) return null;
+  if (
+    typeof value.size !== "number"
+    || typeof value.type !== "string"
+    || typeof value.arrayBuffer !== "function"
+  ) return null;
+  return value.size > 0 ? value : null;
+}
+
 function textFallback(connection: DatabaseConnection, query: string, topic: string) {
   const fallback = readPublishedInspirationBrowser(connection.db, { query, topic, limit: 24 });
   return WikiMultimodalSearchResponseSchema.parse({
@@ -76,7 +92,7 @@ export async function POST(request: NextRequest) {
     const topic = typeof topicValue === "string" ? topicValue.trim() : "";
     fallbackQuery = query;
     fallbackTopic = topic;
-    const image = imageValue instanceof File && imageValue.size > 0 ? imageValue : null;
+    const image = uploadedImage(imageValue);
     if ((!query && !image) || query.length > 160 || topic.length > 80) return NextResponse.json({ error: "请输入文字或选择一张图片" }, { status: 400, headers: HEADERS });
     if (image && (image.size > MAX_IMAGE_BYTES || !ALLOWED_IMAGE_TYPES.has(image.type))) {
       return NextResponse.json({ error: "图片需为 JPG、PNG 或 WebP，且不超过 8 MB" }, { status: image.size > MAX_IMAGE_BYTES ? 413 : 415, headers: HEADERS });

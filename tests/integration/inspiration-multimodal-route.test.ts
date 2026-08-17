@@ -62,6 +62,23 @@ describe("Inspiration Wiki multimodal search route", () => {
     expect(JSON.stringify(payload)).not.toContain("storagePath");
   });
 
+  it("accepts text queries when the server runtime has no global File constructor", async () => {
+    const token = await issueSession({ userId: "student", role: "STUDENT" }, SECRET);
+    const form = new FormData();
+    form.set("query", "红色海报");
+    const fileDescriptor = Object.getOwnPropertyDescriptor(globalThis, "File");
+    Reflect.deleteProperty(globalThis, "File");
+    try {
+      const response = await POST(request(form, token));
+      expect(response.status).toBe(200);
+      expect(await response.json()).toMatchObject({
+        retrieval: { mode: "TEXT_FALLBACK", state: "DEGRADED" },
+      });
+    } finally {
+      if (fileDescriptor) Object.defineProperty(globalThis, "File", fileDescriptor);
+    }
+  });
+
   it("keeps authenticated text search available when multimodal retrieval throws", async () => {
     const token = await issueSession({ userId: "student", role: "STUDENT" }, SECRET);
     vi.spyOn(multimodalService, "searchWikiMultimodal").mockRejectedValueOnce(new TypeError("synthetic retrieval failure"));
