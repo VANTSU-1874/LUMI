@@ -551,7 +551,7 @@ function LabSettingsSectionContent({
     return <SettingsSummary title={account.plan} detail="当前课程账号不产生单独账单。" />;
   }
   if (section === "usage") {
-    return <SettingsSummary title="使用情况" detail="对话由 Lumi 后端保存；文件库、工程与界面偏好仍是本机演示数据。" />;
+    return <SettingsSummary title="使用情况" detail="对话、文件库与项目由 Lumi 后端保存；界面偏好保存在本机。" />;
   }
   if (section === "data") {
     return isStudent ? (
@@ -567,7 +567,7 @@ function LabSettingsSectionContent({
     );
   }
   if (section === "storage") {
-    return <SettingsSummary title="本机存储" detail="localStorage 仅保存文件库、工程和界面偏好，不保存对话历史。" />;
+    return <SettingsSummary title="本机存储" detail="localStorage 仅保存界面偏好，不保存对话、文件库或项目内容。" />;
   }
   if (section === "safety") {
     return (

@@ -79,7 +79,7 @@ function reconcileLegacyLocalInspirationHistory(
   // partial or altered lineage remains fail-closed.
   const legacyStart = applied.findIndex((record) => Number(record.createdAt) === 1_786_272_000_000);
   if (legacyStart < 0) return false;
-  if (legacyStart !== 48 || applied.length !== 63 || migrations.length !== 64) {
+  if (legacyStart !== 48 || applied.length !== 63 || migrations.length !== 65) {
     throw new Error(`LEGACY_LOCAL_INSPIRATION_HISTORY_SHAPE_MISMATCH:${legacyStart}:${applied.length}:${migrations.length}`);
   }
   const legacyPrefix = [

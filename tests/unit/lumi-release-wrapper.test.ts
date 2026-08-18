@@ -17,7 +17,7 @@ describe("constrained Lumi release wrapper", () => {
     expect(installer).toContain(`readonly WRAPPER_SHA256='${digest}'`);
   });
 
-  it("allows only the paired K8.4, Knowledge V2, and D-27 release policies", () => {
+  it("allows only the paired K8.4, Knowledge V2, D-27, and student workspace release policies", () => {
     const wrapper = readFileSync(wrapperPath, "utf8");
 
     expect(wrapper).toContain(
@@ -40,6 +40,12 @@ describe("constrained Lumi release wrapper", () => {
     );
     expect(wrapper).toContain(
       '("inspiration-wiki-0051-0063-d27", "not-requested")',
+    );
+    expect(wrapper).toContain(
+      "readonly DATABASE_MIGRATION_STUDENT_WORKSPACE='student-workspace-0064-0065-additive'",
+    );
+    expect(wrapper).toContain(
+      '("student-workspace-0064-0065-additive", "not-requested")',
     );
     expect(wrapper).toContain("MANIFEST_RELEASE_POLICY_PAIR_NOT_ALLOWED");
     expect(wrapper).toContain("RELEASE_POLICY_PAIR_NOT_ALLOWED");
@@ -158,6 +164,21 @@ describe("constrained Lumi release wrapper", () => {
     ] as const) {
       expect(wrapper).toContain(`${table}: ${count}`);
     }
+  });
+
+  it("runs and verifies only the additive student workspace migrations", () => {
+    const wrapper = readFileSync(wrapperPath, "utf8");
+
+    expect(wrapper).toContain("run_student_workspace_database_migration()");
+    expect(wrapper).toContain("verify_student_workspace_database_migration()");
+    expect(wrapper).toContain("student_library_assets");
+    expect(wrapper).toContain("student_projects");
+    expect(wrapper).toContain("student_project_threads");
+    expect(wrapper).toContain("STUDENT_WORKSPACE_PROJECT_BINDING_MISSING");
+    expect(wrapper).toContain("STUDENT_WORKSPACE_MIGRATION_FOREIGN_KEY_FAILURE");
+    expect(wrapper).toContain("STUDENT_WORKSPACE_MIGRATION_VERIFY=PASS");
+    expect(wrapper).toContain('test -r "$release/drizzle/0064_student_library_assets.sql"');
+    expect(wrapper).toContain('test -r "$release/drizzle/0065_student_projects.sql"');
   });
 
   it("scopes the post-cutover health gate to the release policy", () => {

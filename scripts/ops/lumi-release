@@ -38,6 +38,7 @@ readonly DATABASE_MIGRATION_NONE='not-required'
 readonly DATABASE_MIGRATION_K84='agent-interventions-0048-additive'
 readonly DATABASE_MIGRATION_KV2='knowledge-v2-0050-additive'
 readonly DATABASE_MIGRATION_INSPIRATION_D27='inspiration-wiki-0051-0063-d27'
+readonly DATABASE_MIGRATION_STUDENT_WORKSPACE='student-workspace-0064-0065-additive'
 readonly ENVIRONMENT_WRITE_NONE='not-requested'
 readonly ENVIRONMENT_WRITE_K84='enable-agent-interventions'
 readonly ENVIRONMENT_WRITE_KV2='enable-knowledge-v2-text'
@@ -93,7 +94,7 @@ The signed manifest contains exactly:
   built_sha256=<64-hex-sha256>
   build_id=<Next BUILD_ID>
   esbuild_version=<semver>
-  database_migration=not-required|agent-interventions-0048-additive|knowledge-v2-0050-additive|inspiration-wiki-0051-0063-d27
+  database_migration=not-required|agent-interventions-0048-additive|knowledge-v2-0050-additive|inspiration-wiki-0051-0063-d27|student-workspace-0064-0065-additive
   environment_write=not-requested|enable-agent-interventions|enable-knowledge-v2-text
 EOF
 }
@@ -323,6 +324,9 @@ assert_release_policy() {
     return 0
   fi
   if [[ "$database_migration" == "$DATABASE_MIGRATION_INSPIRATION_D27" && "$environment_write" == "$ENVIRONMENT_WRITE_NONE" ]]; then
+    return 0
+  fi
+  if [[ "$database_migration" == "$DATABASE_MIGRATION_STUDENT_WORKSPACE" && "$environment_write" == "$ENVIRONMENT_WRITE_NONE" ]]; then
     return 0
   fi
   die 'RELEASE_POLICY_PAIR_NOT_ALLOWED'
@@ -639,6 +643,74 @@ if (!latest || Number(latest.createdAt) < 1785243398751) throw new Error("K84_MI
 if (database.pragma("foreign_key_check").length > 0) throw new Error("K84_MIGRATION_FOREIGN_KEY_FAILURE");
 database.close();
 process.stdout.write("K84_MIGRATION_VERIFY=PASS\\n");
+'
+
+  runuser -u "$SERVICE_USER" -- /bin/bash -c '
+    set -Eeuo pipefail
+    set -a
+    . "$1"
+    set +a
+    export NODE_ENV=production
+    export PATH=/usr/sbin:/usr/bin:/sbin:/bin
+    unset BASH_ENV ENV GIT_DIR GIT_WORK_TREE NODE_OPTIONS npm_config_userconfig
+    cd "$2"
+    exec "$3" -e "$4" "$2/node_modules/better-sqlite3"
+  ' -- "$SERVICE_ENV" "$release" "$RUNTIME_NODE" "$verifier"
+}
+
+run_student_workspace_database_migration() {
+  local release=$1
+  [[ -d "$release" && ! -L "$release" ]]
+
+  runuser -u "$SERVICE_USER" -- /bin/bash -c '
+    set -Eeuo pipefail
+    set -a
+    . "$1"
+    set +a
+    export NODE_ENV=production
+    export PATH=/usr/sbin:/usr/bin:/sbin:/bin
+    unset BASH_ENV ENV GIT_DIR GIT_WORK_TREE NODE_OPTIONS npm_config_userconfig
+    cd "$2"
+    exec "$3" "$2/node_modules/tsx/dist/cli.mjs" "$2/lib/db/migrate.ts"
+  ' -- "$SERVICE_ENV" "$release" "$RUNTIME_NODE"
+}
+
+verify_student_workspace_database_migration() {
+  local release=$1
+  local verifier
+  [[ -d "$release" && ! -L "$release" ]]
+  verifier='
+const Database = require(process.argv[1]);
+const database = new Database(process.env.DATABASE_PATH, { readonly: true, fileMustExist: true });
+database.pragma("query_only = ON");
+const required = [
+  ["table", "student_library_assets"],
+  ["table", "student_projects"],
+  ["table", "student_project_threads"],
+  ["index", "student_library_assets_project_created_idx"],
+  ["index", "student_projects_owner_unique"],
+  ["index", "student_projects_student_updated_idx"],
+  ["index", "student_project_threads_project_created_idx"],
+  ["trigger", "student_library_assets_task_owner_insert"],
+  ["trigger", "student_library_assets_task_owner_update"],
+];
+for (const [type, name] of required) {
+  const row = database.prepare("SELECT 1 present FROM sqlite_master WHERE type=? AND name=?").get(type, name);
+  if (!row) throw new Error("STUDENT_WORKSPACE_MIGRATION_OBJECT_MISSING");
+}
+const columns = database.prepare("PRAGMA table_info(student_library_assets)").all();
+if (!columns.some((column) => column.name === "project_id")) {
+  throw new Error("STUDENT_WORKSPACE_PROJECT_BINDING_MISSING");
+}
+const latest = database.prepare("SELECT max(created_at) createdAt FROM __drizzle_migrations").get();
+if (!latest || Number(latest.createdAt) < 1786952423221) {
+  throw new Error("STUDENT_WORKSPACE_MIGRATION_JOURNAL_MISSING");
+}
+if (database.pragma("foreign_key_check").length > 0) {
+  throw new Error("STUDENT_WORKSPACE_MIGRATION_FOREIGN_KEY_FAILURE");
+}
+database.close();
+process.stdout.write("STUDENT_WORKSPACE_MIGRATION_VERIFY=PASS\\n");
 '
 
   runuser -u "$SERVICE_USER" -- /bin/bash -c '
@@ -1564,6 +1636,7 @@ allowed_pairs = {
     ("agent-interventions-0048-additive", "enable-agent-interventions"),
     ("knowledge-v2-0050-additive", "enable-knowledge-v2-text"),
     ("inspiration-wiki-0051-0063-d27", "not-requested"),
+    ("student-workspace-0064-0065-additive", "not-requested"),
 }
 if (values["database_migration"], values["environment_write"]) not in allowed_pairs:
     raise SystemExit("MANIFEST_RELEASE_POLICY_PAIR_NOT_ALLOWED")
@@ -1878,6 +1951,9 @@ verify_release() {
     runuser -u "$SERVICE_USER" -- test -r "$release/data/inspiration-wiki/production-release/d28-full-release-v1/DONE.json"
     runuser -u "$SERVICE_USER" -- test -r "$release/runtime-manifest.json"
     runuser -u "$SERVICE_USER" -- test -x "$release/.runtime/knowledge-v2-linux/python/bin/python3"
+  elif [[ "$database_migration" == "$DATABASE_MIGRATION_STUDENT_WORKSPACE" ]]; then
+    runuser -u "$SERVICE_USER" -- test -r "$release/drizzle/0064_student_library_assets.sql"
+    runuser -u "$SERVICE_USER" -- test -r "$release/drizzle/0065_student_projects.sql"
   fi
   runuser -u "$SERVICE_USER" -- test -r "$marker"
   runuser -u "$SERVICE_USER" -- test -w "$release/.next/cache"
@@ -2462,6 +2538,11 @@ cutover() {
     run_inspiration_wiki_d27_release "$release" > "$ACTIVE_EVIDENCE/database-migration.log" 2>&1
     MIGRATION_APPLIED=true
     verify_inspiration_wiki_d27_release "$release" | tee -a "$ACTIVE_EVIDENCE/database-migration.log" "$ACTIVE_EVIDENCE/summary.log"
+  elif [[ "$database_migration" == "$DATABASE_MIGRATION_STUDENT_WORKSPACE" ]]; then
+    log 'STAGE=STUDENT_WORKSPACE_DATABASE_MIGRATION'
+    run_student_workspace_database_migration "$release" > "$ACTIVE_EVIDENCE/database-migration.log" 2>&1
+    MIGRATION_APPLIED=true
+    verify_student_workspace_database_migration "$release" | tee -a "$ACTIVE_EVIDENCE/database-migration.log" "$ACTIVE_EVIDENCE/summary.log"
   fi
   if [[ "$environment_write" == "$ENVIRONMENT_WRITE_KV2" ]]; then
     log 'STAGE=QUALITY_REPORT_PROMOTION'

@@ -85,6 +85,18 @@ environment_write=not-requested
 该组合保留生产 0050 Knowledge V2，顺序执行 0051–0063，并从签名发布包中事务化导入恰好五条已授权案例及其受控媒体。Browse、Search、Preview 开启；R2、Embedding、Lumi 自动引用继续关闭。导入支持精确幂等重放，任何行、媒体哈希、教师身份或能力边界冲突都会阻断切换。
 准备 D-27 release 时，入口还会按当前已封存 release 的 `runtime-manifest.json` 逐文件复算尺寸与 SHA-256，再把既有 Knowledge V2 文本运行包继承到新 release；目标已有文件必须完全同哈希，路径穿越、符号链接或内容漂移都会阻断准备。这样 D-27 只增加灵感 Wiki 能力，不会静默撤掉已上线的 Knowledge V2。
 
+学生文件库与项目工作区使用下面的精确组合：
+
+~~~text
+database_migration=student-workspace-0064-0065-additive
+environment_write=not-requested
+~~~
+
+该策略只运行已签名版本内的规范迁移器，并要求生产迁移历史精确连续。它新增学生
+文件库、独立项目容器和项目会话关系，随后核验目标表、索引、所有权触发器、项目外键、
+迁移日志与全库外键一致性。失败时切回旧代码；新增结构保持向后兼容，不开放任何环境
+变量、匿名访问或额外学生数据通道。
+
 在**本机**对 `manifest` 签名，不上传私钥：
 
 ~~~powershell

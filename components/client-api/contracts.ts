@@ -54,17 +54,37 @@ export type AgentRunCreateResponse = {
   run: AgentRun;
   created: boolean;
   nextEventSequence: number;
+  interventionsEnabled?: boolean;
 };
 
 export type AgentRunCurrentResponse = {
   run: AgentRun | null;
   nextEventSequence: number;
+  interventionsEnabled?: boolean;
 };
 
 export type AgentRunEventsResponse = {
   runId: string;
   events: AgentRunEvent[];
   nextEventSequence: number;
+};
+
+export type AgentRunIntervention = ServerAgentRunIntervention;
+export type AgentRunInterventionMode = ServerAgentRunInterventionMode;
+export type AgentRunInterventionRequest = ServerAgentRunInterventionRequest;
+export type AgentMessageRecord = ServerAgentMessageRecord;
+export type AgentMessageListResponse = ServerAgentMessageListResponse;
+
+export type AgentRunInterventionCreateResponse = {
+  intervention: AgentRunIntervention;
+  nextRun: AgentRun;
+  created: boolean;
+  steerShouldCancel: boolean;
+};
+
+export type AgentRunInterventionListResponse = {
+  taskId: string;
+  interventions: AgentRunIntervention[];
 };
 
 export type CourseSummary = {
@@ -134,6 +154,15 @@ import type {
   AgentView as ServerAgentView,
 } from "@/lib/agent/contracts";
 import type { DesignTask as ServerDesignTask } from "@/lib/agent/design-project-task-contract";
+import type {
+  AgentMessageListResponse as ServerAgentMessageListResponse,
+  AgentMessageRecord as ServerAgentMessageRecord,
+} from "@/lib/agent/agent-message-contract";
+import type {
+  AgentRunIntervention as ServerAgentRunIntervention,
+  AgentRunInterventionMode as ServerAgentRunInterventionMode,
+  AgentRunInterventionRequest as ServerAgentRunInterventionRequest,
+} from "@/lib/agent/runtime/agent-run-intervention-contract";
 import type {
   AgentRun as ServerAgentRun,
   AgentRunEvent as ServerAgentRunEvent,

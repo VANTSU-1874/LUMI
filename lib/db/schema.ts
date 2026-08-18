@@ -2186,6 +2186,111 @@ export const agentArtworkAttachments = sqliteTable(
   ],
 );
 
+export const studentProjects = sqliteTable(
+  "student_projects",
+  {
+    id: text("id").primaryKey(),
+    studentId: text("student_id").notNull(),
+    classId: text("class_id").notNull(),
+    name: text("name").notNull(),
+    icon: text("icon").notNull().default("folder"),
+    color: text("color").notNull().default("emerald"),
+    instructions: text("instructions").notNull().default(""),
+    memoryMode: text("memory_mode", { enum: ["PROJECT_ONLY"] }).notNull().default("PROJECT_ONLY"),
+    status: text("status", { enum: ["ACTIVE", "ARCHIVED"] }).notNull().default("ACTIVE"),
+    createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
+    updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
+    dataType: text("data_type", { enum: dataTypes }).notNull(),
+  },
+  (table) => [
+    uniqueIndex("student_projects_owner_unique").on(table.id, table.studentId, table.classId),
+    index("student_projects_student_updated_idx").on(table.studentId, table.classId, table.status, table.updatedAt),
+    foreignKey({
+      columns: [table.studentId, table.classId],
+      foreignColumns: [users.id, users.classId],
+      name: "student_projects_student_class_fk",
+    }).onDelete("cascade"),
+    check("student_projects_name_check", sql`length(trim(${table.name})) between 1 and 80`),
+    check("student_projects_icon_check", sql`${table.icon} in ('folder','book','palette','sparkles','graduation-cap','presentation')`),
+    check("student_projects_color_check", sql`${table.color} in ('emerald','blue','violet','amber','rose','slate')`),
+    check("student_projects_instructions_check", sql`length(${table.instructions}) <= 6000`),
+    check("student_projects_memory_mode_check", sql`${table.memoryMode} = 'PROJECT_ONLY'`),
+    check("student_projects_status_check", sql`${table.status} in ('ACTIVE','ARCHIVED')`),
+    check("student_projects_data_type_check", sql`${table.dataType} in ('REAL','DEMONSTRATION_DATA')`),
+  ],
+);
+
+export const studentProjectThreads = sqliteTable(
+  "student_project_threads",
+  {
+    projectId: text("project_id").notNull().references(() => studentProjects.id, { onDelete: "cascade" }),
+    taskId: text("task_id").primaryKey().references(() => designProjectTasks.id, { onDelete: "cascade" }),
+    studentId: text("student_id").notNull(),
+    classId: text("class_id").notNull(),
+    createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
+  },
+  (table) => [
+    index("student_project_threads_project_created_idx").on(table.projectId, table.createdAt),
+    foreignKey({
+      columns: [table.projectId, table.studentId, table.classId],
+      foreignColumns: [studentProjects.id, studentProjects.studentId, studentProjects.classId],
+      name: "student_project_threads_project_owner_fk",
+    }).onDelete("cascade"),
+    foreignKey({
+      columns: [table.taskId, table.studentId, table.classId],
+      foreignColumns: [designProjectTasks.id, designProjectTasks.studentId, designProjectTasks.classId],
+      name: "student_project_threads_task_owner_fk",
+    }).onDelete("cascade"),
+  ],
+);
+
+export const studentLibraryAssets = sqliteTable(
+  "student_library_assets",
+  {
+    id: text("id").primaryKey(),
+    studentId: text("student_id").notNull(),
+    classId: text("class_id").notNull(),
+    taskId: text("task_id").references(() => designProjectTasks.id, { onDelete: "set null" }),
+    projectId: text("project_id").references(() => studentProjects.id, { onDelete: "cascade" }),
+    source: text("source", { enum: ["DIRECT_UPLOAD"] }).notNull(),
+    originalName: text("original_name").notNull(),
+    mimeType: text("mime_type").notNull(),
+    storagePath: text("storage_path").notNull(),
+    digest: text("digest").notNull(),
+    byteSize: integer("byte_size").notNull(),
+    width: integer("width").notNull(),
+    height: integer("height").notNull(),
+    createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
+    updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
+    dataType: text("data_type", { enum: dataTypes })
+      .generatedAlwaysAs(sql`case when ${sql.raw("student_id")} glob 'demo-student-*' then 'DEMONSTRATION_DATA' else 'REAL' end`),
+  },
+  (table) => [
+    uniqueIndex("student_library_assets_owner_unique").on(table.id, table.studentId, table.classId),
+    index("student_library_assets_student_created_idx").on(table.studentId, table.classId, table.createdAt),
+    index("student_library_assets_task_created_idx").on(table.taskId, table.createdAt),
+    index("student_library_assets_project_created_idx").on(table.projectId, table.createdAt),
+    foreignKey({
+      columns: [table.studentId, table.classId],
+      foreignColumns: [users.id, users.classId],
+      name: "student_library_assets_student_class_fk",
+    }).onDelete("cascade"),
+    foreignKey({
+      columns: [table.projectId, table.studentId, table.classId],
+      foreignColumns: [studentProjects.id, studentProjects.studentId, studentProjects.classId],
+      name: "student_library_assets_project_owner_fk",
+    }).onDelete("cascade"),
+    check("student_library_assets_source_check", sql`${table.source} = 'DIRECT_UPLOAD'`),
+    check("student_library_assets_name_check", sql`length(trim(${table.originalName})) between 1 and 160`),
+    check("student_library_assets_mime_check", sql`${table.mimeType} in ('image/png','image/jpeg','image/webp')`),
+    check("student_library_assets_path_check", sql`length(${table.storagePath}) between 1 and 255`),
+    check("student_library_assets_digest_check", sql`length(${table.digest}) = 64 and ${table.digest} not glob '*[^0-9a-f]*'`),
+    check("student_library_assets_size_check", sql`${table.byteSize} between 1 and ${sql.raw("5242880")}`),
+    check("student_library_assets_dimensions_check", sql`${table.width} between 1 and 10000 and ${table.height} between 1 and 10000 and ${table.width} * ${table.height} <= 12000000`),
+    check("student_library_assets_data_type_check", sql`${table.dataType} in ('REAL','DEMONSTRATION_DATA')`),
+  ],
+);
+
 export const agentCritiques = sqliteTable(
   "agent_critiques",
   {
