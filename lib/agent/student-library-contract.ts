@@ -35,4 +35,3 @@ export const StudentLibraryUploadResponseSchema = z.object({
 
 export type StudentLibraryAsset = z.infer<typeof StudentLibraryAssetSchema>;
 export type StudentLibraryListResponse = z.infer<typeof StudentLibraryListResponseSchema>;
-

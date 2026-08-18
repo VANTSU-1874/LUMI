@@ -46,4 +46,3 @@ export const StudentProjectThreadMoveSchema = z.object({ taskId: z.string().uuid
 
 export type StudentProject = z.infer<typeof StudentProjectSchema>;
 export type StudentProjectDetail = z.infer<typeof StudentProjectDetailSchema>;
-

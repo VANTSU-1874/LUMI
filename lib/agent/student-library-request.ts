@@ -31,7 +31,6 @@ function isMultipartFile(value: FormDataEntryValue | null): value is FormDataEnt
     && typeof candidate.type === "string"
     && typeof candidate.arrayBuffer === "function";
 }
-
 export async function parseStudentLibraryUpload(request: NextRequest) {
   const mediaType = request.headers.get("content-type")?.split(";", 1)[0]?.trim().toLowerCase();
   if (mediaType !== "multipart/form-data") throw new UnsupportedMediaTypeError();

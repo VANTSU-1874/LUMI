@@ -53,4 +53,3 @@ export async function DELETE(request: NextRequest, context: RouteContext) {
     connection?.sqlite.close();
   }
 }
-

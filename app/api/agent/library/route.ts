@@ -56,7 +56,6 @@ function errorResponse(error: unknown, requestId: string, route: string) {
   console.error({ requestId, route, errorName: error instanceof Error ? error.name : "UnknownError" });
   return NextResponse.json({ error: "文件库暂时不可用" }, { status: 500, headers: PRIVATE_HEADERS });
 }
-
 export async function GET(request: NextRequest) {
   const requestId = randomUUID();
   let connection: DatabaseConnection | undefined;

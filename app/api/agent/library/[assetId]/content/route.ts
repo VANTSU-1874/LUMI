@@ -67,4 +67,3 @@ export async function GET(request: NextRequest, context: RouteContext) {
     connection?.sqlite.close();
   }
 }
-

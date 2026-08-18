@@ -21,7 +21,6 @@ function failure(error: unknown, requestId: string) {
   console.error({ requestId, route: "agent-projects", errorName: error instanceof Error ? error.name : "UnknownError" });
   return NextResponse.json({ error: "项目暂时不可用" }, { status: 500, headers: HEADERS });
 }
-
 export async function GET(request: NextRequest) {
   const requestId = randomUUID(); let connection: DatabaseConnection | undefined;
   try { validateRequestSource(request); const config = readEnv(process.env); const session = await requireStudentSession(request, config.sessionSecret); connection = createDb(config.databasePath); return NextResponse.json(listStudentProjects(connection, session), { headers: HEADERS }); }
