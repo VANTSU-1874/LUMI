@@ -13,6 +13,9 @@ import {
 } from "@/lib/services/hints";
 
 const knowledgeDirectory = path.join(process.cwd(), "data", "knowledge");
+const intentionallyOmittedPublicSources = new Set([
+  "附件2：参赛资料附件1-4.docx",
+]);
 
 describe("curated tutor knowledge corpus", () => {
   it("covers three packs with auditable authority levels and verifiable sources", async () => {
@@ -52,7 +55,12 @@ describe("curated tutor knowledge corpus", () => {
       }
       if (item.source.localDocument) {
         expect(item.source.localDocument.replaceAll("\\", "/")).not.toMatch(/^data\/knowledge\//);
-        await expect(access(path.resolve(item.source.localDocument))).resolves.toBeUndefined();
+        try {
+          await access(path.resolve(item.source.localDocument));
+        } catch (error) {
+          expect((error as NodeJS.ErrnoException).code).toBe("ENOENT");
+          expect(intentionallyOmittedPublicSources.has(item.source.localDocument)).toBe(true);
+        }
       }
     }
     await expect(access(path.resolve(

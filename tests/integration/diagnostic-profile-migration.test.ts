@@ -32,6 +32,13 @@ async function copyMigrationsThrough0024(target: string) {
   );
 }
 
+async function currentMigrationCount() {
+  const journal = JSON.parse(
+    await readFile(path.join(process.cwd(), "drizzle", "meta", "_journal.json"), "utf8"),
+  ) as Journal;
+  return journal.entries.length;
+}
+
 describe("diagnostic profile integrity migration", () => {
   const roots: string[] = [];
 
@@ -86,7 +93,7 @@ describe("diagnostic profile integrity migration", () => {
       ).get()).toEqual({ decomposition: 3.5 });
       expect(upgraded.sqlite.prepare(
         "SELECT count(*) count FROM __drizzle_migrations",
-      ).get()).toEqual({ count: 48 });
+      ).get()).toEqual({ count: await currentMigrationCount() });
       const genericProfile = upgraded.sqlite.prepare(
         "SELECT course_pack_id coursePackId, course_pack_version coursePackVersion, level, dimensions_json dimensionsJson FROM course_pack_profiles WHERE user_id='s1'",
       ).get() as { coursePackId: string; coursePackVersion: string; level: string; dimensionsJson: string };

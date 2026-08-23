@@ -13,7 +13,11 @@ import { issueSession, SESSION_COOKIE_NAME } from "@/lib/auth/session";
 import { createDb } from "@/lib/db/client";
 import { runMigrations } from "@/lib/db/migrate";
 import { validPng } from "@/tests/helpers/image-fixtures";
-import { deletePrivateEvidence, EvidenceCleanupPendingError } from "@/lib/services/private-evidence";
+import {
+  deletePrivateEvidence,
+  EvidenceCleanupPendingError,
+  listPrivateEvidence,
+} from "@/lib/services/private-evidence";
 import { verifySession } from "@/lib/auth/session";
 
 const SECRET = "private-evidence-secret-at-least-32-characters";
@@ -38,6 +42,7 @@ describe("protected evidence file and deletion route", () => {
   let classTeacher: string;
   let otherTeacher: string;
   let globalTeacher: string;
+  let registeredTeacher: string;
 
   beforeEach(async () => {
     directory = await mkdtemp(path.join(tmpdir(), "tonggan-private-evidence-"));
@@ -55,7 +60,9 @@ describe("protected evidence file and deletion route", () => {
         ('student-2','class-1','STUDENT','匿名-2',1700000000),
         ('teacher-1','class-1','TEACHER','教师-1',1700000000),
         ('teacher-2','class-2','TEACHER','教师-2',1700000000),
-        ('teacher',NULL,'TEACHER','课程负责人',1700000000);
+        ('teacher',NULL,'TEACHER','课程负责人',1700000000),
+        ('account-teacher',NULL,'TEACHER','注册教师',1700000000);
+      INSERT INTO teacher_access_scopes(teacher_id,scope_kind,class_id,granted_by,grant_reason,created_at) VALUES('teacher','GLOBAL',NULL,'TEST_SETUP','测试课程负责人',1700000000);
       INSERT INTO course_modules VALUES ('module-1','class-1',1,'搭建',2,'信号');
       INSERT INTO assignments VALUES ('assignment-1','class-1','module-1','作业','简介','["DIGISHOW"]',1700000000);
       INSERT INTO projects VALUES ('project-1','class-1','assignment-1','student-1','BUILD',1700000000,1700000000,1);
@@ -70,6 +77,7 @@ describe("protected evidence file and deletion route", () => {
     classTeacher = await issueSession({ userId: "teacher-1", role: "TEACHER" }, SECRET);
     otherTeacher = await issueSession({ userId: "teacher-2", role: "TEACHER" }, SECRET);
     globalTeacher = await issueSession({ userId: "teacher", role: "TEACHER" }, SECRET);
+    registeredTeacher = await issueSession({ userId: "account-teacher", role: "TEACHER" }, SECRET);
     vi.stubEnv("DATABASE_PATH", databasePath);
     vi.stubEnv("EVIDENCE_ROOT", evidenceRoot);
     vi.stubEnv("SESSION_SECRET", SECRET);
@@ -143,9 +151,25 @@ describe("protected evidence file and deletion route", () => {
     } finally { check.sqlite.close(); }
   });
 
+  it("denies a registered teacher until an explicit scope is granted", async () => {
+    const actor = await verifySession(registeredTeacher, SECRET);
+    const connection = createDb(databasePath);
+    try {
+      expect(() => listPrivateEvidence(connection.db, actor, {})).toThrow("证据不存在");
+    } finally {
+      connection.sqlite.close();
+    }
+    expect((await GET(request("GET", registeredTeacher), context())).status).toBe(404);
+  });
+
   it("does not grant cross-class GET or DELETE when the fixed teacher id has a class", async () => {
     const connection = createDb(databasePath);
-    try { connection.sqlite.prepare("UPDATE users SET class_id='class-2' WHERE id='teacher'").run(); }
+    try {
+      connection.sqlite.transaction(() => {
+        connection.sqlite.prepare("DELETE FROM teacher_access_scopes WHERE teacher_id='teacher'").run();
+        connection.sqlite.prepare("UPDATE users SET class_id='class-2' WHERE id='teacher'").run();
+      }).immediate();
+    }
     finally { connection.sqlite.close(); }
     expect((await GET(request("GET", globalTeacher), context())).status).toBe(404);
     expect((await DELETE(request("DELETE", globalTeacher), context())).status).toBe(204);

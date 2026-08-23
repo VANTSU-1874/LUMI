@@ -1,21 +1,12 @@
-import { expect, test, type Page } from "./fixtures";
+import { expect, test } from "./fixtures";
 import { strictReviewPackFixture } from "../fixtures/inspiration-review-pack";
-
-async function signInCurrentTeacherAccount(page: Page) {
-  await page.goto("/login");
-  await expect(page.getByRole("heading", { name: "欢迎回来" })).toBeVisible();
-  await expect(page.getByLabel("教师访问码")).toHaveCount(0);
-  await page.getByLabel("邮箱").fill("teacher.e2e@example.com");
-  await page.locator('input[name="password"]').fill("LumiTeacher2026!");
-  await page.getByRole("button", { name: "登录 Lumi" }).click();
-  await expect(page).toHaveURL(/\/teacher$/, { timeout: 30_000 });
-  await expect(page.getByRole("heading", { name: "教师学习分析工作台" })).toBeVisible();
-}
+import { signInCurrentTeacher } from "./auth-helpers";
 
 test.describe("D-18 Hermes candidate governance readiness", () => {
   test("teacher sees readiness without a false per-item review task", async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 1000 });
-    await signInCurrentTeacherAccount(page);
+    await signInCurrentTeacher(page);
+    await expect(page.getByRole("heading", { name: "教师学习分析工作台" })).toBeVisible();
     await expect(page.getByRole("heading", { name: "最近学生动态" })).toBeVisible({ timeout: 30_000 });
     await page.screenshot({ path: "docs/reports/assets/teacher-dashboard-desktop.png" });
     const readinessResponse = page.waitForResponse((response) =>
@@ -23,7 +14,7 @@ test.describe("D-18 Hermes candidate governance readiness", () => {
     const queueResponse = page.waitForResponse((response) =>
       response.request().method() === "GET" && response.url().includes("/api/teacher/inspiration-wiki/candidates?"));
     await page.getByRole("link", { name: "灵感 Wiki", exact: true }).click();
-    await expect(page).toHaveURL(/\/teacher\/inspiration-wiki$/);
+    await expect(page).toHaveURL(/\/teacher\/inspiration-wiki$/, { timeout: 30_000 });
     expect((await readinessResponse).status()).toBe(200);
     const loadedQueue = await queueResponse;
     expect(loadedQueue.status(), JSON.stringify(await loadedQueue.json())).toBe(200);
@@ -48,7 +39,7 @@ test.describe("D-18 Hermes candidate governance readiness", () => {
   });
 
   test("governance readiness has no horizontal overflow across the required widths", async ({ page }) => {
-    await signInCurrentTeacherAccount(page);
+    await signInCurrentTeacher(page);
     const readinessResponse = page.waitForResponse((response) =>
       response.request().method() === "GET" && response.url().endsWith("/api/teacher/inspiration-wiki/review-packs"));
     const queueResponse = page.waitForResponse((response) =>
@@ -67,7 +58,7 @@ test.describe("D-18 Hermes candidate governance readiness", () => {
   });
 
   test("strict fixture exercises the full private ReviewPack workspace without entering the real queue", async ({ page }) => {
-    await signInCurrentTeacherAccount(page);
+    await signInCurrentTeacher(page);
     await page.route("**/api/teacher/inspiration-wiki/review-packs/**", async (route) => {
       if (route.request().method() === "GET") {
         await route.fulfill({

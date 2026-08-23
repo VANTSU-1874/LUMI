@@ -6,6 +6,7 @@ import { and, desc, eq, lt, or, sql } from "drizzle-orm";
 import { z } from "zod";
 
 import type { SessionPayload } from "@/lib/auth/session";
+import { readTeacherScope, TeacherIdentityForbiddenError } from "@/lib/auth/teacher-access";
 import type { DatabaseConnection } from "@/lib/db/client";
 import { auditEvents, evidence, hintEvidenceConsumptions, projects, users } from "@/lib/db/schema";
 import { EvidenceRecordSchema } from "@/lib/services/evidence";
@@ -60,12 +61,20 @@ export function listPrivateEvidence(
   if (actor.role === "STUDENT" && requestedStudent) throw new InvalidEvidenceListQueryError();
   if (requestedStudent && requestedStudent.length > 128) throw new InvalidEvidenceListQueryError();
 
-  const isGlobalTeacher = actor.userId === "teacher" && actorUser.role === "TEACHER" && actorUser.classId === null;
+  let teacherScope: ReturnType<typeof readTeacherScope> | null = null;
+  if (actor.role === "TEACHER") {
+    try {
+      teacherScope = readTeacherScope(db, actor);
+    } catch (error) {
+      if (error instanceof TeacherIdentityForbiddenError) throw new PrivateEvidenceNotFoundError();
+      throw error;
+    }
+  }
   const owner = actor.role === "STUDENT"
     ? eq(evidence.studentId, actor.userId)
-    : isGlobalTeacher
+    : teacherScope?.kind === "GLOBAL"
       ? requestedStudent ? eq(evidence.studentId, requestedStudent) : undefined
-      : and(eq(evidence.classId, actorUser.classId ?? ""), requestedStudent ? eq(evidence.studentId, requestedStudent) : undefined);
+      : and(eq(evidence.classId, teacherScope?.classId ?? ""), requestedStudent ? eq(evidence.studentId, requestedStudent) : undefined);
   const cursorWhere = cursor ? or(
     lt(evidence.createdAt, new Date(cursor.createdAt)),
     and(eq(evidence.createdAt, new Date(cursor.createdAt)), lt(evidence.id, cursor.id)),
@@ -98,10 +107,13 @@ function authorizedRow(db: CourseDatabase, actor: SessionPayload, evidenceId: st
   if (!parsed.success || parsed.data.dataType !== expectedDataType(parsed.data.studentId)) return undefined;
   const row = parsed.data;
   if (actor.role === "STUDENT") return row.studentId === actor.userId ? row : undefined;
-  const teacher = db.select({ classId: users.classId, role: users.role }).from(users)
-    .where(and(eq(users.id, actor.userId), eq(users.role, "TEACHER"))).get();
-  if (actor.userId === "teacher" && teacher?.classId === null) return row; // Only the persisted unscoped course owner manages all classes.
-  return teacher?.classId === row.classId ? row : undefined;
+  try {
+    const scope = readTeacherScope(db, actor);
+    if (scope.kind === "GLOBAL" || scope.classId === row.classId) return row;
+  } catch (error) {
+    if (!(error instanceof TeacherIdentityForbiddenError)) throw error;
+  }
+  return undefined;
 }
 
 function assertBoundImagePath(row: ReturnType<typeof EvidenceRecordSchema.parse>) {

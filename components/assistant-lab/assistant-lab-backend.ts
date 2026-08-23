@@ -26,6 +26,9 @@ import {
 
 type ErrorPayload = { error?: string };
 
+const TRANSIENT_READ_STATUSES = new Set([502, 503, 504]);
+const READ_RETRY_DELAYS_MS = [180, 420] as const;
+
 export type LumiExecutionProgressData = {
   state: "streaming" | "complete";
   items: Array<{
@@ -100,17 +103,66 @@ async function readError(response: Response) {
   }
 }
 
+function requestMethod(input: RequestInfo | URL, init?: RequestInit) {
+  if (init?.method) return init.method.toUpperCase();
+  if (typeof Request !== "undefined" && input instanceof Request) {
+    return input.method.toUpperCase();
+  }
+  return "GET";
+}
+
+function waitForReadRetry(delayMs: number, signal?: AbortSignal | null) {
+  return new Promise<void>((resolve, reject) => {
+    if (signal?.aborted) {
+      reject(signal.reason ?? new DOMException("Aborted", "AbortError"));
+      return;
+    }
+    const onAbort = () => {
+      clearTimeout(timer);
+      reject(signal?.reason ?? new DOMException("Aborted", "AbortError"));
+    };
+    const timer = setTimeout(() => {
+      signal?.removeEventListener("abort", onAbort);
+      resolve();
+    }, delayMs);
+    signal?.addEventListener("abort", onAbort, { once: true });
+  });
+}
+
 export async function requestJson<T>(
   input: RequestInfo | URL,
   init?: RequestInit,
 ): Promise<T> {
-  const response = await fetch(input, {
-    credentials: "same-origin",
-    cache: "no-store",
-    ...init,
-  });
-  if (!response.ok) throw new Error(await readError(response));
-  return response.json() as Promise<T>;
+  const retryableRead = requestMethod(input, init) === "GET";
+  const attempts = retryableRead ? READ_RETRY_DELAYS_MS.length + 1 : 1;
+  for (let attempt = 0; attempt < attempts; attempt += 1) {
+    let response: Response;
+    try {
+      response = await fetch(input, {
+        credentials: "same-origin",
+        cache: "no-store",
+        ...init,
+      });
+    } catch (error) {
+      if (!retryableRead || init?.signal?.aborted || attempt >= attempts - 1) {
+        throw error;
+      }
+      await waitForReadRetry(READ_RETRY_DELAYS_MS[attempt]!, init?.signal);
+      continue;
+    }
+    if (response.ok) return response.json() as Promise<T>;
+    if (
+      retryableRead
+      && TRANSIENT_READ_STATUSES.has(response.status)
+      && attempt < attempts - 1
+    ) {
+      await response.body?.cancel().catch(() => undefined);
+      await waitForReadRetry(READ_RETRY_DELAYS_MS[attempt]!, init?.signal);
+      continue;
+    }
+    throw new Error(await readError(response));
+  }
+  throw new Error("请求暂时不可用");
 }
 
 function taskMetadata(task: DesignTask) {
@@ -184,13 +236,18 @@ export class LumiThreadListAdapter implements RemoteThreadListAdapter {
 
   async generateTitle(remoteId: string) {
     let title = "未命名设计任务";
-    for (let attempt = 0; attempt < 64; attempt += 1) {
-      const task = await requestJson<DesignTask>(
-        `/api/agent/tasks/${encodeURIComponent(remoteId)}`,
-      );
-      title = task.title;
-      if (title !== "未命名设计任务") break;
-      await new Promise((resolve) => setTimeout(resolve, 250));
+    try {
+      for (let attempt = 0; attempt < 64; attempt += 1) {
+        const task = await requestJson<DesignTask>(
+          `/api/agent/tasks/${encodeURIComponent(remoteId)}`,
+        );
+        title = task.title;
+        if (title !== "未命名设计任务") break;
+        await new Promise((resolve) => setTimeout(resolve, 250));
+      }
+    } catch {
+      // Thread title generation is cosmetic. A temporary task-list outage must
+      // never reject into assistant-ui or disturb the completed learner turn.
     }
     return titleStream(title) as Awaited<
       ReturnType<RemoteThreadListAdapter["generateTitle"]>
@@ -322,10 +379,14 @@ export function agentMessageToAssistantParts(
       uncertainty: message.structure.reply.uncertainty,
       graph: message.structure.reply.graph,
       basis: message.structure.reply.basis ?? [],
+      evidenceSources: message.structure.reply.sources
+        .filter(({ evidence }) => Boolean(evidence))
+        .map((source) => source),
       incomplete: message.structure.reply.incomplete,
       episode: message.structure.episode,
       decisionCode: message.structure.decisionCode,
       aiMode: message.structure.aiMode,
+      routingReceipt: message.structure.routingReceipt,
     },
   });
   content.push(...actionToolParts(message));

@@ -30,6 +30,7 @@ describe("teacher evidence review", () => {
           ('teacher',NULL,'TEACHER','课程负责人',1700000000),
           ('teacher-1','c1','TEACHER','一班教师',1700000000),
           ('teacher-2','c2','TEACHER','二班教师',1700000000);
+        INSERT INTO teacher_access_scopes VALUES('teacher','GLOBAL',NULL,'TEST_SETUP','测试课程负责人',1700000000);
         INSERT INTO course_modules(id,class_id,sequence,title,hours,focus) VALUES('m1','c1',1,'M',1,'F'),('m2','c2',1,'M',1,'F');
         INSERT INTO assignments(id,class_id,module_id,title,brief,allowed_tools,created_at) VALUES('a1','c1','m1','A','B','["DIGISHOW"]',1700000000),('a2','c2','m2','A','B','["DIGISHOW"]',1700000000);
         INSERT INTO projects(id,class_id,assignment_id,student_id,stage,created_at,updated_at) VALUES('p1','c1','a1','student-1','TROUBLESHOOT',1700000000,1700000000),('p2','c2','a2','student-2','TROUBLESHOOT',1700000000,1700000000);

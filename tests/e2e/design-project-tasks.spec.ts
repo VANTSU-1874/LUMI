@@ -1,12 +1,8 @@
 import { expect, test } from "./fixtures";
+import { enterLegacyStudent } from "./auth-helpers";
 
 async function loginStudent(page: import("./fixtures").Page) {
-  await page.goto("/");
-  await page.getByRole("tab", { name: "学生" }).click();
-  await page.getByLabel("班级邀请码").fill("E2E2026");
-  await page.getByLabel("匿名编号").fill("EF9M-P4S6-VR2X");
-  await page.getByRole("button", { name: "学生进入" }).click();
-  await expect(page).toHaveURL(/\/student$/, { timeout: 30_000 });
+  await enterLegacyStudent(page, "EF9M-P4S6-VR2X", { waitForWorkspace: false });
   await expect(page.getByRole("complementary", { name: "历史对话" })).toBeVisible({ timeout: 30_000 });
 }
 

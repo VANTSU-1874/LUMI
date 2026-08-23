@@ -12,13 +12,11 @@ async function text(relativePath: string) {
 }
 
 describe("operational documentation contract", () => {
-  it("exposes the exact supported operation scripts and safe environment template", async () => {
+  it("exposes the exact supported operation scripts without committing environment files", async () => {
     const packageJson = JSON.parse(await text("package.json")) as {
       scripts: Record<string, string>;
       dependencies: Record<string, string>;
     };
-    const example = await text(".env.example");
-
     expect(packageJson.scripts).toMatchObject({
       "db:migrate": "tsx lib/db/migrate.ts",
       "db:seed": "tsx scripts/seed-demo.ts",
@@ -41,11 +39,7 @@ describe("operational documentation contract", () => {
       start: "next start --hostname 127.0.0.1 --port 3000",
     });
     expect(packageJson.dependencies.qrcode).toBeDefined();
-    expect(example).toMatch(/ALLOW_DEMO_SEED=true/);
-    expect(example).toMatch(/AGENT_HARNESS_REPORT_PATH=/);
-    expect(example).toMatch(/^# PUBLIC_APP_URL=$/m);
-    expect(example).not.toMatch(/^# PUBLIC_APP_URL=.+$/m);
-    expect(example).not.toMatch(/shuzi-yijing-community-map/i);
+    await expect(text(".env.example")).rejects.toMatchObject({ code: "ENOENT" });
   });
 
   it("keeps the README and runbooks discoverable without inventing a public URL", async () => {

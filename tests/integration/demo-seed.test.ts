@@ -3,7 +3,7 @@
 import { createHash } from "node:crypto";
 import { spawn } from "node:child_process";
 import { createRequire } from "node:module";
-import { rmSync } from "node:fs";
+import { readFileSync, rmSync } from "node:fs";
 import { access, cp, mkdir, mkdtemp, readFile, rm, symlink, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { tmpdir } from "node:os";
@@ -23,6 +23,10 @@ import { cleanupResetBackups, resetDatabase, ResetBackupCleanupError, UnsafeRese
 const PEPPER = "demo-test-identity-pepper-at-least-32-characters";
 const roots: string[] = [];
 const require = createRequire(import.meta.url);
+const MIGRATION_COUNT = (JSON.parse(readFileSync(
+  path.join(process.cwd(), "drizzle", "meta", "_journal.json"),
+  "utf8",
+)) as { entries: unknown[] }).entries.length;
 
 async function workspaceTemp(prefix: string) {
   const runtimeRoot = path.join(process.cwd(), ".runtime");
@@ -118,7 +122,7 @@ describe("deterministic demonstration seed", () => {
       .toBe(true);
     const connection = createDb(databasePath);
     try {
-      expect(connection.sqlite.prepare("SELECT count(*) count FROM __drizzle_migrations").get()).toEqual({ count: 48 });
+      expect(connection.sqlite.prepare("SELECT count(*) count FROM __drizzle_migrations").get()).toEqual({ count: MIGRATION_COUNT });
       expect(connection.sqlite.prepare("SELECT count(*) count FROM users WHERE role='STUDENT'").get()).toEqual({ count: 5 });
       expect(connection.sqlite.prepare("SELECT count(*) count FROM evidence").get()).toEqual({ count: 15 });
       expect(connection.sqlite.pragma("foreign_key_check")).toEqual([]);
@@ -419,7 +423,7 @@ describe("guarded reset target validation", () => {
     expect(cleanupError).toBeDefined();
     expect(attempts.length).toBeGreaterThanOrEqual(2);
     const replacement = createDb(databasePath);
-    try { expect(replacement.sqlite.prepare("SELECT count(*) count FROM __drizzle_migrations").get()).toEqual({ count: 48 }); }
+    try { expect(replacement.sqlite.prepare("SELECT count(*) count FROM __drizzle_migrations").get()).toEqual({ count: MIGRATION_COUNT }); }
     finally { replacement.sqlite.close(); }
     expect(cleanupError?.remainingBackups).toHaveLength(1);
     cleanupResetBackups(cleanupError?.remainingBackups ?? []);

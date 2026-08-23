@@ -164,6 +164,7 @@ export const Lid = ({
             alt="MacBook screen"
             fill
             sizes="512px"
+            loading="eager"
             className="object-cover object-center"
           />
         ) : null}

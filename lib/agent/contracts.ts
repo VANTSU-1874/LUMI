@@ -90,12 +90,16 @@ export const AgentViewSchema = z.enum([
   "KNOWLEDGE_MAP",
   "PROJECT",
   "BOOK_LAYOUT_LAB",
+  "LAYOUT_GRID_LAB",
+  "GENERATIVE_LAB",
 ]);
 
 export const DesignSpecialtySchema = z.enum([
   "GENERAL_DESIGN",
   "DIGITAL_INTERACTION",
   "BOOK_DESIGN",
+  "LAYOUT_DESIGN",
+  "BRAND_VI_DESIGN",
 ]);
 
 export const AgentTurnRequestSchema = z
@@ -258,8 +262,119 @@ export const AgentSourceSchema = z
         context.addIssue({ code: "custom", message: "public web source URL must be public HTTPS" });
       }
     }).optional(),
+    evidence: z.object({
+      schemaVersion: z.literal(2),
+      bundleId: z.string()
+        .regex(/^[a-z0-9][a-z0-9-]{0,127}$/),
+      objectId: z.string()
+        .regex(/^[a-z0-9][a-z0-9-]{0,127}$/),
+      nodeId: z.string()
+        .regex(/^[a-z0-9][a-z0-9-]{0,127}$/),
+      sourceId: z.string()
+        .regex(/^[a-z0-9][a-z0-9-]{0,127}$/),
+      evidenceKind: z.enum([
+        "KNOWLEDGE_FACT",
+        "VISUAL_REFERENCE",
+        "CONTEXT",
+      ]),
+      assetId: z.string()
+        .regex(/^[a-z0-9][a-z0-9-]{0,127}$/)
+        .nullable(),
+      assetSha256:
+        z.string().regex(/^[0-9a-f]{64}$/)
+          .nullable(),
+      assetWidthPx:
+        z.number().int().positive().nullable(),
+      assetHeightPx:
+        z.number().int().positive().nullable(),
+      region: z.object({
+        regionId: z.string()
+          .regex(/^[a-z0-9][a-z0-9-]{0,127}$/),
+        bbox: z.object({
+          coordinateSpace:
+            z.literal("NORMALIZED"),
+          x: z.number().finite().min(0).max(1),
+          y: z.number().finite().min(0).max(1),
+          width: z.number().finite().gt(0).max(1),
+          height: z.number().finite().gt(0).max(1),
+        }).strict().superRefine((bbox, context) => {
+          if (
+            bbox.x + bbox.width > 1
+            || bbox.y + bbox.height > 1
+          ) {
+            context.addIssue({
+              code: "custom",
+              message:
+                "agent evidence region must stay inside the image",
+            });
+          }
+        }),
+      }).strict().nullable(),
+      previewUrl: z.string().regex(
+        /^\/api\/knowledge\/assets\/[a-z0-9][a-z0-9-]{0,127}$/,
+      ).nullable(),
+      corpusBundleHash:
+        z.string().regex(/^[0-9a-f]{64}$/),
+      activeIndexBundleHash:
+        z.string().regex(/^[0-9a-f]{64}$/),
+    }).strict().superRefine((evidence, context) => {
+      if (
+        evidence.region !== null
+        && evidence.assetId === null
+      ) {
+        context.addIssue({
+          code: "custom",
+          message:
+            "agent evidence region requires an asset id",
+        });
+      }
+      const expectedPreviewUrl = evidence.assetId
+        ? `/api/knowledge/assets/${evidence.assetId}`
+        : null;
+      if (
+        evidence.previewUrl !== expectedPreviewUrl
+      ) {
+        context.addIssue({
+          code: "custom",
+          message:
+            "agent evidence preview URL must match the asset id",
+        });
+      }
+      const assetMetadata = [
+        evidence.assetSha256,
+        evidence.assetWidthPx,
+        evidence.assetHeightPx,
+      ];
+      if (
+        evidence.assetId === null
+          ? assetMetadata.some(
+              (value) => value !== null,
+            )
+          : assetMetadata.some(
+              (value) => value === null,
+            )
+      ) {
+        context.addIssue({
+          code: "custom",
+          message:
+            "agent evidence asset metadata must match the asset id",
+        });
+      }
+    }).optional(),
   })
-  .strict();
+  .strict()
+  .superRefine((source, context) => {
+    if (
+      source.evidence
+      && source.id !== source.evidence.nodeId
+    ) {
+      context.addIssue({
+        code: "custom",
+        message:
+          "agent evidence source id must match its node id",
+      });
+    }
+  });
 
 export const AgentAnswerBasisSchema = z.object({
   kind: z.enum([
@@ -296,7 +411,7 @@ export const AgentReplySchema = z
     title: z.string().min(1).max(100),
     message: z.string().min(1).max(32_000),
     whyThisStep: z.string().min(1).max(500),
-    uncertainty: z.string().min(1).max(500),
+    uncertainty: z.string().max(500),
     graph: AgentGraphSchema,
     sources: z.array(AgentSourceSchema).max(5),
     basis: z.array(AgentAnswerBasisSchema).min(1).max(8).optional(),
@@ -311,6 +426,24 @@ export const AgentReplySchema = z
   })
   .strict();
 
+export const AgentRoutingReceiptSchema = z.object({
+  schema: z.literal("specialty-route-receipt/v1"),
+  coursePackId: z.enum([
+    "general-design",
+    "digital-interaction",
+    "book-design",
+    "layout-design",
+    "brand-vi-design",
+  ]),
+  coursePackVersion: z.literal("1"),
+  reason: z.enum([
+    "GENERAL_DEFAULT",
+    "MESSAGE_MATCH",
+    "INTERFACE_CONTEXT",
+    "STUDENT_DECLARED",
+  ]),
+}).strict();
+
 export const AgentTurnResponseSchema = z
   .object({
     taskId: z.string().uuid().optional(),
@@ -318,6 +451,7 @@ export const AgentTurnResponseSchema = z
     turnId: z.string().uuid(),
     studentMessage: z.string().trim().min(1).max(2_000),
     coursePack: z.object({ id: z.string(), version: z.string(), label: z.string() }).strict(),
+    routingReceipt: AgentRoutingReceiptSchema.optional(),
     specialty: z.object({ id: DesignSpecialtySchema, label: z.string(), enhanced: z.boolean() }).strict().optional(),
     episode: LearningEpisodeSchema,
     decisionCode: z.string().regex(/^[A-Z][A-Z0-9_]{2,63}$/),

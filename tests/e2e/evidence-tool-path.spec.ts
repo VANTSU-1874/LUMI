@@ -1,4 +1,5 @@
 import { expect, test, type Page } from "./fixtures";
+import { enterLegacyStudent } from "./auth-helpers";
 
 import { setFreshTrustedSourceHeaders } from "./trusted-source";
 
@@ -9,14 +10,7 @@ const scenarios = [
 ] as const;
 
 async function login(page: Page, code: string) {
-  await page.goto("/");
-  await page.getByLabel("班级邀请码").fill("E2E2026");
-  await page.getByLabel("匿名编号").fill(code);
-  await page.getByRole("button", { name: "学生进入" }).click();
-  await expect(page).toHaveURL(/\/student$/, { timeout: 30_000 });
-  await expect(page.getByRole("region", { name: "与 Lumi 对话" })).toBeVisible({
-    timeout: 30_000,
-  });
+  await enterLegacyStudent(page, code);
 }
 
 for (const scenario of scenarios) {

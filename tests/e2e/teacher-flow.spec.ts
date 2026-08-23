@@ -1,4 +1,5 @@
 import { expect, test } from "./fixtures";
+import { enterLegacyStudent, signInCurrentTeacher } from "./auth-helpers";
 
 import { setFreshTrustedSourceHeaders } from "./trusted-source";
 
@@ -12,14 +13,11 @@ test.describe("teacher analytics flow", () => {
   });
 
   test("teacher reviews an anonymous learner without replacing the original result", async ({ page }) => {
-    await page.goto("/");
-    await page.getByRole("tab", { name: "教师" }).click();
-    await page.getByLabel("教师访问码").fill("e2e-teacher-code");
-    await page.getByRole("button", { name: "教师进入" }).click();
-    await expect(page).toHaveURL(/\/teacher$/);
+    await signInCurrentTeacher(page);
     await expect(page.getByRole("heading", { name: "教师学习分析工作台" })).toBeVisible();
-    await expect(page.getByText("需要支持 1 人")).toBeVisible();
+    await expect(page.getByText("1 人需要教师介入", { exact: true })).toBeVisible({ timeout: 30_000 });
     await page.getByRole("button", { name: "查看匿名-教师01" }).click();
+    await expect(page.getByRole("heading", { name: "匿名-教师01" })).toBeVisible({ timeout: 30_000 });
     await expect(page.getByText("原系统结果：NEEDS_REVISION")).toBeVisible();
     await page.getByRole("button", { name: /暂待复核/ }).click();
     await page.getByLabel("教师备注").fill("课后当面复核映射关系");
@@ -34,11 +32,19 @@ test.describe("teacher analytics flow", () => {
     await expect(page.getByText("原系统结果：NEEDS_REVISION")).toBeVisible();
     await page.reload();
     await page.getByRole("button", { name: "查看匿名-教师01" }).click();
+    await expect(page.getByRole("heading", { name: "匿名-教师01" })).toBeVisible({ timeout: 30_000 });
     await expect(page.getByText("课后当面复核映射关系").first()).toBeVisible();
 
-    await page.getByLabel("复核对象").selectOption("EVIDENCE:33333333-3333-4333-8333-333333333333");
+    const reviewTarget = page.getByLabel("复核对象");
+    await expect(reviewTarget).toContainText("证据 INPUT：SUBMITTED", { timeout: 30_000 });
+    const evidenceContentResponse = page.waitForResponse((response) => (
+      response.url().includes("/api/teacher/evidence/33333333-3333-4333-8333-333333333333")
+      && response.request().method() === "GET"
+    ));
+    await reviewTarget.selectOption("EVIDENCE:33333333-3333-4333-8333-333333333333");
+    expect((await evidenceContentResponse).status()).toBe(200);
     await expect(page.getByRole("heading", { name: "证据内容" })).toBeVisible();
-    await expect(page.getByText("输入值有变化", { exact: true })).toBeVisible();
+    await expect(page.getByText("输入值有变化", { exact: true })).toBeVisible({ timeout: 30_000 });
     await setFreshTrustedSourceHeaders(page, "e2e-teacher-decision");
     await page.getByRole("button", { name: "保存教师决定" }).click();
     await expect(page.getByText("原系统结果：TEACHER_VERIFIED")).toBeVisible();
@@ -55,7 +61,7 @@ test.describe("teacher analytics flow", () => {
     await expect(deletionStatus).toHaveText("证据已删除");
     await expect(deletionStatus).toBeFocused();
     expect(await page.evaluate(() => document.activeElement === document.body)).toBe(false);
-    const evidenceMetrics = page.getByRole("heading", { name: "证据来源与验证" }).locator("..");
+  const evidenceMetrics = page.getByRole("article", { name: "证据来源与验证" });
     await expect(evidenceMetrics.getByText("暂无证据")).toBeVisible();
 
     const [studentDashboardStatus, crossClassStatus] = await page.evaluate(async () =>
@@ -70,20 +76,14 @@ test.describe("teacher analytics flow", () => {
 
   test("teacher evidence workspace has no page-level horizontal overflow at 375px", async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 812 });
-    await page.goto("/");
-    await page.getByRole("tab", { name: "教师" }).click();
-    await page.getByLabel("教师访问码").fill("e2e-teacher-code");
-    await page.getByRole("button", { name: "教师进入" }).click();
+    await signInCurrentTeacher(page);
     await page.getByRole("button", { name: "查看匿名-教师01" }).click();
     await expect(page.getByRole("heading", { name: "匿名-教师01" })).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
   });
 
   test("teacher audits an agent policy, real tool trace and correction in the browser", async ({ page }) => {
-    await page.goto("/");
-    await page.getByRole("tab", { name: "教师" }).click();
-    await page.getByLabel("教师访问码").fill("e2e-teacher-code");
-    await page.getByRole("button", { name: "教师进入" }).click();
+    await signInCurrentTeacher(page);
     await page.getByRole("button", { name: "查看匿名-教师01" }).click();
     await expect(page.getByRole("heading", { name: "智能体决策与工具审查" })).toBeVisible();
     await expect(page.getByText("competition-core@1").first()).toBeVisible();
@@ -100,13 +100,8 @@ test.describe("teacher analytics flow", () => {
   });
 
   test("a student cannot access teacher analytics", async ({ page }) => {
-    await page.goto("/");
-    await page.getByLabel("班级邀请码").fill("E2E2026");
-    await page.getByLabel("匿名编号").fill("AB7K-C9M2-Q4RP");
-    await page.getByRole("button", { name: "学生进入" }).click();
-    await expect(page).toHaveURL(/\/student$/);
-    const responseStatus = await page.evaluate(async () =>
-      (await fetch("/api/teacher/dashboard?classId=e2e-teacher-class")).status);
-    expect(responseStatus).toBe(403);
+    await enterLegacyStudent(page, "AB7K-C9M2-Q4RP", { waitForWorkspace: false });
+    const response = await page.request.get("/api/teacher/dashboard?classId=e2e-teacher-class");
+    expect(response.status()).toBe(403);
   });
 });

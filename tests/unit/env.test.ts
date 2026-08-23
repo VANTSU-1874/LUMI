@@ -123,6 +123,7 @@ describe("readEnv", () => {
 
     expect(env.ai.enabled).toBe(false);
     expect(env.publicAppUrl).toBeUndefined();
+    expect(env.studentSelfRegistrationClassId).toBeUndefined();
     expect(env.teacherAccessCode).toBe("teacher-demo-2026");
     expect(env.identityCodePepper).toBe(validSecret);
     expect(env.identityCodePepperSource).toBe("session-secret-fallback");
@@ -480,6 +481,7 @@ describe("readEnv", () => {
       SESSION_SECRET: `  ${validSecret}  `,
       DATABASE_PATH: "  ./data/custom.sqlite  ",
       PUBLIC_APP_URL: "  https://lumi.example.com/path  ",
+      STUDENT_SELF_REGISTRATION_CLASS_ID: "  competition-class  ",
       TEACHER_ACCESS_CODE: "  private-teacher-code  ",
       IDENTITY_CODE_PEPPER: `  ${validPepper}  `,
       AUTH_PROXY_SECRET: `  ${validProxySecret}  `,
@@ -497,6 +499,7 @@ describe("readEnv", () => {
       sessionSecret: validSecret,
       databasePath: "./data/custom.sqlite",
       publicAppUrl: "https://lumi.example.com",
+      studentSelfRegistrationClassId: "competition-class",
       evidenceRoot: "./data/evidence",
       teacherAccessCode: "private-teacher-code",
       identityCodePepper: validPepper,

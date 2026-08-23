@@ -25,6 +25,7 @@ describe("teacher decisions", () => {
       connection.sqlite.exec(`
         INSERT INTO classes(id,name,access_code) VALUES('c1','一班','C1'),('c2','二班','C2');
         INSERT INTO users(id,class_id,role,alias,created_at) VALUES('s1','c1','STUDENT','匿名-A',${now}),('s2','c2','STUDENT','匿名-B',${now}),('teacher',NULL,'TEACHER','课程负责人',${now});
+        INSERT INTO teacher_access_scopes VALUES('teacher','GLOBAL',NULL,'TEST_SETUP','测试课程负责人',${now});
         INSERT INTO course_modules(id,class_id,sequence,title,hours,focus) VALUES('m1','c1',1,'M',1,'F'),('m2','c2',1,'M',1,'F');
         INSERT INTO assignments(id,class_id,module_id,title,brief,allowed_tools,created_at) VALUES('a1','c1','m1','A','B','["DIGISHOW"]',${now}),('a2','c2','m2','A','B','["DIGISHOW"]',${now});
         INSERT INTO projects(id,class_id,assignment_id,student_id,stage,created_at,updated_at) VALUES('p1','c1','a1','s1','LOGIC_CARD',${now},${now}),('p2','c2','a2','s2','LOGIC_CARD',${now},${now});
@@ -313,6 +314,7 @@ describe("teacher decisions", () => {
     const upgraded = createDb(legacyPath);
     try {
       upgraded.sqlite.prepare("INSERT INTO users(id,class_id,role,alias,created_at) VALUES('teacher',NULL,'TEACHER','课程负责人',1700000000)").run();
+      upgraded.sqlite.prepare("INSERT INTO teacher_access_scopes VALUES('teacher','GLOBAL',NULL,'TEST_SETUP','测试课程负责人',1700000000)").run();
       const row = upgraded.sqlite.prepare("SELECT request_hash,original_snapshot_json,original_snapshot_hash FROM teacher_decisions WHERE id='ld'").get() as { request_hash: string; original_snapshot_json: string; original_snapshot_hash: string };
       expect(row.request_hash).toMatch(/^[0-9a-f]{64}$/);
       expect(row.request_hash).not.toBe("0".repeat(64));

@@ -663,10 +663,11 @@ function AssistantLabShell({
     setSidebarOpen(false);
   };
 
-  const openProject = (project: DesignTask) => {
-    setActiveSection("chat");
+  const openProject = async (project: DesignTask) => {
     setSidebarOpen(false);
-    void aui.threads().reload().then(() => aui.threads().switchToThread(project.id));
+    await aui.threads().reload();
+    await aui.threads().switchToThread(project.id);
+    setActiveSection("chat");
   };
 
   const toggleSavedInspiration = (entryId: string) => {

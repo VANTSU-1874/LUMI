@@ -28,6 +28,7 @@ describe("D-18 teacher-only Hermes candidate routes", () => {
     const connection = createDb(databasePath);
     try {
       connection.sqlite.exec("INSERT INTO users(id,class_id,role,alias,created_at) VALUES('teacher',NULL,'TEACHER','Test teacher',1700000000),('student-1',NULL,'STUDENT','Test student',1700000000);");
+      connection.sqlite.exec("INSERT INTO teacher_access_scopes VALUES('teacher','GLOBAL',NULL,'TEST_SETUP','测试课程负责人',1700000000)");
       connection.sqlite.prepare(`
         INSERT INTO inspiration_wiki_hermes_batches(
           batch_id, contract_version, package_digest, manifest_json, done_json,

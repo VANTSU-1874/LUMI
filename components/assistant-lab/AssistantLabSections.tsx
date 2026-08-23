@@ -40,7 +40,7 @@ export function AssistantLabSectionView({
 }: {
   activeProjectId: string | null;
   onBackToChat: () => void;
-  onOpenProject: (project: DesignTask) => void;
+  onOpenProject: (project: DesignTask) => Promise<void>;
   section: Exclude<AssistantLabSection, "chat">;
 }) {
   if (section === "library") {
@@ -225,7 +225,7 @@ function LabProjects({
 }: {
   activeProjectId: string | null;
   onBackToChat: () => void;
-  onOpenProject: (project: DesignTask) => void;
+  onOpenProject: (project: DesignTask) => Promise<void>;
 }) {
   const [projects, setProjects] = useState<StudentProject[]>([]);
   const [name, setName] = useState("");
@@ -268,7 +268,7 @@ function LabProjects({
       });
       setName("");
       const thread = detail.threads[0];
-      if (thread) onOpenProject(thread);
+      if (thread) await onOpenProject(thread);
     } catch (createError) {
       setError(createError instanceof Error ? createError.message : "新建项目失败");
     }
@@ -343,7 +343,7 @@ function LabProjects({
         method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ taskId: task.id }),
       });
       setSelected(detail);
-      onOpenProject(task);
+      await onOpenProject(task);
     } catch (createError) { setError(createError instanceof Error ? createError.message : "新建项目对话失败"); }
   };
 
@@ -393,7 +393,7 @@ function LabProjects({
           </div>
           <div className={styles.projectThreadList}>
             {selected.threads.map((thread) => (
-              <button key={thread.id} onClick={() => onOpenProject(thread)} type="button">
+              <button key={thread.id} onClick={() => void onOpenProject(thread)} type="button">
                 <span><strong>{thread.title}</strong><small>{formatDate(thread.updatedAt)}</small></span>
                 <ArrowUpRightIcon aria-hidden="true" size={16} />
               </button>

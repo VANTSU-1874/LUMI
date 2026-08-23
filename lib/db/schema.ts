@@ -310,6 +310,35 @@ export const users = sqliteTable(
   ],
 );
 
+export const teacherAccessScopes = sqliteTable(
+  "teacher_access_scopes",
+  {
+    teacherId: text("teacher_id")
+      .primaryKey()
+      .references(() => users.id, { onDelete: "cascade" }),
+    scopeKind: text("scope_kind", { enum: ["GLOBAL", "CLASS"] }).notNull(),
+    classId: text("class_id").references(() => classes.id, { onDelete: "restrict" }),
+    grantedBy: text("granted_by").notNull(),
+    grantReason: text("grant_reason").notNull(),
+    createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
+  },
+  (table) => [
+    index("teacher_access_scopes_class_idx").on(table.classId),
+    check(
+      "teacher_access_scopes_kind_check",
+      sql`${table.scopeKind} in ('GLOBAL', 'CLASS')`,
+    ),
+    check(
+      "teacher_access_scopes_class_check",
+      sql`(${table.scopeKind} = 'GLOBAL' and ${table.classId} is null) or (${table.scopeKind} = 'CLASS' and ${table.classId} is not null)`,
+    ),
+    check(
+      "teacher_access_scopes_audit_check",
+      sql`length(trim(${table.grantedBy})) between 1 and 120 and length(trim(${table.grantReason})) between 1 and 500`,
+    ),
+  ],
+);
+
 export const authRateLimits = sqliteTable(
   "auth_rate_limits",
   {

@@ -39,6 +39,7 @@ let directory: string;
 
 function seedReadyDrafts() {
   connection.sqlite.exec("INSERT INTO users(id,class_id,role,alias,created_at) VALUES('teacher',NULL,'TEACHER','Test teacher',1700000000);");
+  connection.sqlite.exec("INSERT INTO teacher_access_scopes VALUES('teacher','GLOBAL',NULL,'TEST_SETUP','测试课程负责人',1700000000)");
   connection.sqlite.prepare(`INSERT INTO inspiration_wiki_hermes_batches(
     batch_id,contract_version,package_digest,manifest_json,done_json,candidate_count,failure_count,
     intake_state,student_visible,current_page,r2,embedding,lumi_retrieval,imported_at

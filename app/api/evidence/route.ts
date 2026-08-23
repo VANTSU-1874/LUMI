@@ -3,7 +3,7 @@ import { randomUUID } from "node:crypto";
 import { NextResponse, type NextRequest } from "next/server";
 
 import { validateRequestSource } from "@/lib/auth/route-handler";
-import { SESSION_COOKIE_NAME, verifySession } from "@/lib/auth/session";
+import { readUnifiedSession } from "@/lib/auth/unified-session";
 import { readEnv } from "@/lib/config/env";
 import { createDb, type DatabaseConnection } from "@/lib/db/client";
 import { InvalidEvidenceListQueryError, listPrivateEvidence, PrivateEvidenceNotFoundError } from "@/lib/services/private-evidence";
@@ -16,11 +16,8 @@ export async function GET(request: NextRequest) {
   try {
     validateRequestSource(request);
     const config = readEnv(process.env);
-    const token = request.cookies.get(SESSION_COOKIE_NAME)?.value;
-    if (!token) return NextResponse.json({ error: "请先登录" }, { status: 401, headers: PRIVATE_HEADERS });
-    let actor;
-    try { actor = await verifySession(token, config.sessionSecret); }
-    catch { return NextResponse.json({ error: "请先登录" }, { status: 401, headers: PRIVATE_HEADERS }); }
+    const actor = await readUnifiedSession(request, config.sessionSecret);
+    if (!actor) return NextResponse.json({ error: "请先登录" }, { status: 401, headers: PRIVATE_HEADERS });
     connection = createDb(config.databasePath);
     return NextResponse.json(listPrivateEvidence(connection.db, actor, {
       limit: request.nextUrl.searchParams.get("limit"),

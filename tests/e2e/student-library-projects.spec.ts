@@ -10,7 +10,6 @@ async function registerStudent(page: Page) {
   await page.getByLabel("邮箱").fill(`student-library-${Date.now()}@e2e.invalid`);
   await page.locator('input[name="password"]').fill(E2E_PASSWORD);
   await page.locator('input[name="passwordConfirmation"]').fill(E2E_PASSWORD);
-  await page.getByLabel("班级邀请码").fill("E2E2026");
   const [registration] = await Promise.all([
     page.waitForResponse((response) => response.url().endsWith("/api/account/register")),
     page.getByRole("button", { name: "创建账号并进入" }).click(),

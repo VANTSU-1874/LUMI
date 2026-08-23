@@ -23,6 +23,11 @@ export type ModelProviderAdapter = {
     image: ModelVisionImage,
     options?: CompletionOptions,
   ): Promise<string>;
+  completeWithImages?(
+    messages: ModelMessage[],
+    images: ModelVisionImage[],
+    options?: CompletionOptions,
+  ): Promise<string>;
 };
 
 export function createOpenAICompatibleModelProvider(input: {
@@ -53,6 +58,7 @@ export function createOpenAICompatibleModelProvider(input: {
     complete: client.complete,
     respond: client.respond,
     completeWithImage: input.vision ? client.completeWithImage : undefined,
+    completeWithImages: input.vision ? client.completeWithImages : undefined,
   };
 }
 
@@ -63,5 +69,6 @@ export function modelClientAdapter(client: ModelClient): ModelProviderAdapter {
     complete: client.complete,
     respond: client.respond,
     completeWithImage: client.completeWithImage,
+    completeWithImages: client.completeWithImages,
   };
 }

@@ -1,11 +1,8 @@
 import { expect, test } from "./fixtures";
+import { enterLegacyStudent } from "./auth-helpers";
 
 test("generated tool-path details remain available through the authenticated contract after reload", async ({ page }) => {
-  await page.goto("/");
-  await page.getByLabel("班级邀请码").fill("E2E2026");
-  await page.getByLabel("匿名编号").fill("LM3T-R7V9-X2QA");
-  await page.getByRole("button", { name: "学生进入" }).click();
-  await expect(page).toHaveURL(/\/student$/);
+  await enterLegacyStudent(page, "LM3T-R7V9-X2QA");
 
   const readDashboard = () => page.evaluate(async () => {
     const response = await fetch("/api/student/dashboard");

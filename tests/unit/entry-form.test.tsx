@@ -1,17 +1,7 @@
-import { act, cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import {
-  destinationForRole,
-  EntryForm,
-} from "@/components/entry/EntryForm";
-
-function successfulResponse() {
-  return new Response(JSON.stringify({ ok: true }), {
-    status: 200,
-    headers: { "content-type": "application/json" },
-  });
-}
+import { EntryForm } from "@/components/entry/EntryForm";
 
 describe("EntryForm", () => {
   afterEach(() => {
@@ -20,15 +10,7 @@ describe("EntryForm", () => {
     window.history.replaceState({}, "", "/");
   });
 
-  it("maps each role to its dashboard destination", () => {
-    expect(destinationForRole("STUDENT")).toBe("/student");
-    expect(destinationForRole("STUDENT", "/assistant-lab")).toBe("/assistant-lab");
-    expect(destinationForRole("STUDENT", "//example.com")).toBe("/student");
-    expect(destinationForRole("STUDENT", "https://example.com")).toBe("/student");
-    expect(destinationForRole("TEACHER")).toBe("/teacher");
-  });
-
-  it("shows accessible student and teacher tabs with identity-code guidance", () => {
+  it("shows accessible student and teacher account tabs without access codes", () => {
     render(<EntryForm />);
 
     const studentTab = screen.getByRole("tab", { name: "学生" });
@@ -36,13 +18,9 @@ describe("EntryForm", () => {
     expect(studentTab).toHaveAttribute("aria-selected", "true");
     expect(studentTab).toHaveAttribute("tabindex", "0");
     expect(teacherTab).toHaveAttribute("tabindex", "-1");
-    expect(screen.getByLabelText("班级邀请码")).toBeInTheDocument();
-    expect(screen.getByLabelText("匿名编号")).toHaveAttribute(
-      "placeholder",
-      "例如：7K9M-2Q4R-P8TX",
-    );
-    expect(screen.getByLabelText("匿名编号")).toHaveAttribute("pattern", "[A-Za-z0-9\\-]+");
-    expect(screen.getByText(/教师分发的 12–32 位高熵学习身份码/)).toBeInTheDocument();
+    expect(screen.queryByLabelText("班级邀请码")).not.toBeInTheDocument();
+    expect(screen.queryByLabelText("匿名编号")).not.toBeInTheDocument();
+    expect(screen.getByText("学生账号")).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("tab", { name: "教师" }));
 
@@ -50,11 +28,8 @@ describe("EntryForm", () => {
       "aria-selected",
       "true",
     );
-    expect(screen.getByLabelText("教师访问码")).toBeInTheDocument();
-    expect(screen.getByLabelText("教师访问码")).toHaveAttribute(
-      "autocomplete",
-      "one-time-code",
-    );
+    expect(screen.queryByLabelText("教师访问码")).not.toBeInTheDocument();
+    expect(screen.getByText("教师账号")).toBeInTheDocument();
   });
 
   it("supports arrow, Home, and End keyboard navigation between tabs", () => {
@@ -78,92 +53,27 @@ describe("EntryForm", () => {
     expect(studentTab).toHaveFocus();
   });
 
-  it("fills the starter demo that begins at the diagnostic step", () => {
-    render(<EntryForm />);
-    fireEvent.click(screen.getByRole("button", { name: /填入可学习的演示账号/ }));
-    expect(screen.getByLabelText("班级邀请码")).toHaveValue("DIGI2026");
-    expect(screen.getByLabelText("匿名编号")).toHaveValue("4P6R-8T2W-Y5BC");
-  });
-
-  it("disables submission while a request is pending", async () => {
+  it("opens student self-registration without a class code", () => {
     const navigate = vi.fn();
-    let resolveRequest!: (response: Response) => void;
-    const pendingRequest = new Promise<Response>((resolve) => {
-      resolveRequest = resolve;
-    });
-    vi.stubGlobal("fetch", vi.fn(() => pendingRequest));
     render(<EntryForm navigate={navigate} />);
-    fireEvent.change(screen.getByLabelText("班级邀请码"), {
-      target: { value: "CLASS001" },
-    });
-    fireEvent.change(screen.getByLabelText("匿名编号"), {
-      target: { value: "7K9M-2Q4R-P8TX" },
-    });
-
-    fireEvent.click(screen.getByRole("button", { name: "学生进入" }));
-
-    expect(screen.getByRole("button", { name: "正在进入…" })).toBeDisabled();
-    await act(async () => resolveRequest(successfulResponse()));
-    expect(navigate).toHaveBeenCalledWith("/student");
+    fireEvent.click(screen.getByRole("button", { name: "创建学生账号" }));
+    expect(navigate).toHaveBeenCalledWith("/login?mode=register&role=student");
   });
 
-  it("shows an inline server error", async () => {
-    vi.stubGlobal(
-      "fetch",
-      vi.fn(async () =>
-        new Response(JSON.stringify({ ok: false, error: "班级邀请码无效" }), {
-          status: 401,
-          headers: { "content-type": "application/json" },
-        }),
-      ),
-    );
-    render(<EntryForm navigate={vi.fn()} />);
-    fireEvent.change(screen.getByLabelText("班级邀请码"), {
-      target: { value: "WRONG" },
-    });
-    fireEvent.change(screen.getByLabelText("匿名编号"), {
-      target: { value: "7K9M-2Q4R-P8TX" },
-    });
-
-    fireEvent.click(screen.getByRole("button", { name: "学生进入" }));
-
-    const alert = await screen.findByRole("alert");
-    expect(alert).toHaveTextContent("班级邀请码无效");
-    await waitFor(() => expect(alert).toHaveFocus());
-  });
-
-  it("navigates to the teacher destination after successful entry", async () => {
+  it("sends teachers to sign-in because teacher accounts are pre-provisioned", () => {
     const navigate = vi.fn();
-    vi.stubGlobal("fetch", vi.fn(async () => successfulResponse()));
     render(<EntryForm navigate={navigate} />);
     fireEvent.click(screen.getByRole("tab", { name: "教师" }));
-    fireEvent.change(screen.getByLabelText("教师访问码"), {
-      target: { value: "private-teacher-code" },
-    });
-
-    fireEvent.click(screen.getByRole("button", { name: "教师进入" }));
-
-    await expect.poll(() => navigate.mock.calls).toEqual([["/teacher"]]);
-    expect(fetch).toHaveBeenCalledWith(
-      "/api/auth/teacher",
-      expect.objectContaining({ method: "POST" }),
-    );
+    expect(screen.getByText("教师账号由课程管理员预置，使用已有邮箱和密码登录。"))
+      .toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "教师账号登录" }));
+    expect(navigate).toHaveBeenCalledWith("/login?role=teacher");
   });
 
-  it("returns a student to the requested assistant-lab page after login", async () => {
+  it("opens the shared login page for an existing account", () => {
     const navigate = vi.fn();
-    window.history.replaceState({}, "", "/?returnTo=%2Fassistant-lab");
-    vi.stubGlobal("fetch", vi.fn(async () => successfulResponse()));
     render(<EntryForm navigate={navigate} />);
-    fireEvent.change(screen.getByLabelText("班级邀请码"), {
-      target: { value: "CLASS001" },
-    });
-    fireEvent.change(screen.getByLabelText("匿名编号"), {
-      target: { value: "7K9M-2Q4R-P8TX" },
-    });
-
-    fireEvent.click(screen.getByRole("button", { name: "学生进入" }));
-
-    await expect.poll(() => navigate.mock.calls).toEqual([["/assistant-lab"]]);
+    fireEvent.click(screen.getByRole("button", { name: "已有账号，去登录" }));
+    expect(navigate).toHaveBeenCalledWith("/login");
   });
 });

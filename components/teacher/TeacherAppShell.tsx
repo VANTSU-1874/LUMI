@@ -66,7 +66,7 @@ export function TeacherAppShell({
           <p><strong>教师私有工作区</strong><span>学生不可见 · 发布通道关闭</span></p>
         </div>
       </aside>
-      <div className="teacherCanvas">
+      <main className="teacherCanvas">
         <header className="teacherTopbar">
           <div className="teacherTopbarCopy">
             {backHref ? <Link className="teacherBackLink" href={backHref}><ChevronLeft size={16} />{backLabel ?? "返回"}</Link> : null}
@@ -77,7 +77,7 @@ export function TeacherAppShell({
           {tools ? <div className="teacherTools">{tools}</div> : null}
         </header>
         <div className="teacherContent">{children}</div>
-      </div>
+      </main>
     </div>
   );
 }
