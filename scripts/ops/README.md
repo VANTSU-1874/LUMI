@@ -97,6 +97,21 @@ environment_write=not-requested
 迁移日志与全库外键一致性。失败时切回旧代码；新增结构保持向后兼容，不开放任何环境
 变量、匿名访问或额外学生数据通道。
 
+教师显式授权域与比赛版收口使用下面的精确组合：
+
+~~~text
+database_migration=teacher-scopes-0066-additive
+environment_write=not-requested
+~~~
+
+该策略在准备阶段继承并逐文件校验当前已封存的 Knowledge V2 运行包；切换阶段以
+`lumi` 服务用户运行规范迁移器，只新增 `teacher_access_scopes` 表及其索引。随后核验
+字段、约束数据、固定课程负责人回填、迁移日志与全库外键一致性，并只输出授权域数量，
+不输出教师身份。该策略与 Knowledge V2 发布一样，必须在切换前对候选运行 Agent Quality
+与 Harness、封存报告及哈希，并在切换时原子提升报告；新服务须通过
+`competitionReady` 健康门，否则代码链接与报告一起回退。0066 的新增结构保持向后兼容
+并保留审计记录。
+
 在**本机**对 `manifest` 签名，不上传私钥：
 
 ~~~powershell

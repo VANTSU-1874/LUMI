@@ -35,6 +35,7 @@ describe("paginated authorized evidence history", () => {
     connection.sqlite.exec(`
       INSERT INTO classes VALUES ('c1','一班','C1'),('c2','二班','C2');
       INSERT INTO users(id,class_id,role,alias,created_at) VALUES ('s1','c1','STUDENT','匿名一',1700000000),('s2','c2','STUDENT','匿名二',1700000000),('teacher',NULL,'TEACHER','课程负责人',1700000000),('t1','c1','TEACHER','一班教师',1700000000);
+      INSERT INTO teacher_access_scopes(teacher_id,scope_kind,class_id,granted_by,grant_reason,created_at) VALUES('teacher','GLOBAL',NULL,'TEST_SETUP','测试课程负责人',1700000000);
       INSERT INTO course_modules VALUES ('m1','c1',1,'模块',8,'信号'),('m2','c2',1,'模块',8,'信号');
       INSERT INTO assignments VALUES ('a1','c1','m1','旧作业','旧项目','["DIGISHOW"]',1700000000),('a2','c1','m1','新作业','新项目','["DIGISHOW"]',1700000001),('a3','c2','m2','二班作业','二班项目','["DIGISHOW"]',1700000000);
       INSERT INTO projects VALUES ('p-old','c1','a1','s1','COMPLETE',1700000000,1700000000,0),('p-new','c1','a2','s1','TROUBLESHOOT',1700000001,1700000001,0),('p-other','c2','a3','s2','TROUBLESHOOT',1700000000,1700000000,0);
@@ -100,7 +101,12 @@ describe("paginated authorized evidence history", () => {
 
   it("does not grant cross-class list access when the fixed teacher id has a class", async () => {
     const connection = createDb(databasePath);
-    try { connection.sqlite.prepare("UPDATE users SET class_id='c1' WHERE id='teacher'").run(); }
+    try {
+      connection.sqlite.transaction(() => {
+        connection.sqlite.prepare("DELETE FROM teacher_access_scopes WHERE teacher_id='teacher'").run();
+        connection.sqlite.prepare("UPDATE users SET class_id='c1' WHERE id='teacher'").run();
+      }).immediate();
+    }
     finally { connection.sqlite.close(); }
     const first = await (await GET(request("?limit=50", ownerTeacher))).json();
     const second = await (await GET(request(`?limit=50&cursor=${encodeURIComponent(first.nextCursor)}`, ownerTeacher))).json();

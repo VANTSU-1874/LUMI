@@ -4,7 +4,7 @@ import { randomUUID } from "node:crypto";
 import { after, NextResponse, type NextRequest } from "next/server";
 
 import { validateRequestSource } from "@/lib/auth/route-handler";
-import { SESSION_COOKIE_NAME, verifySession } from "@/lib/auth/session";
+import { readUnifiedSession } from "@/lib/auth/unified-session";
 import { readEnv } from "@/lib/config/env";
 import { createDb, type DatabaseConnection } from "@/lib/db/client";
 import { deletePrivateEvidence, EvidenceCleanupPendingError, openPrivateEvidence, PrivateEvidenceNotFoundError } from "@/lib/services/private-evidence";
@@ -39,19 +39,13 @@ export function scheduleCleanupAfterResponse(
   }
 }
 
-async function session(request: NextRequest, secret: string) {
-  const token = request.cookies.get(SESSION_COOKIE_NAME)?.value;
-  if (!token) return undefined;
-  try { return await verifySession(token, secret); } catch { return undefined; }
-}
-
 export async function GET(request: NextRequest, context: RouteContext) {
   const requestId = randomUUID();
   let connection: DatabaseConnection | undefined;
   try {
     validateRequestSource(request);
     const config = readEnv(process.env);
-    const actor = await session(request, config.sessionSecret);
+    const actor = await readUnifiedSession(request, config.sessionSecret);
     if (!actor) return NextResponse.json({ error: "请先登录" }, { status: 401, headers: PRIVATE_HEADERS });
     if (request.headers.has("range")) return NextResponse.json({ error: "不支持分段读取" }, { status: 416, headers: PRIVATE_HEADERS });
     const { evidenceId } = await context.params;
@@ -80,7 +74,7 @@ export async function deleteEvidenceRoute(
   try {
     validateRequestSource(request);
     const config = readEnv(process.env);
-    const actor = await session(request, config.sessionSecret);
+    const actor = await readUnifiedSession(request, config.sessionSecret);
     if (!actor) return NextResponse.json({ error: "请先登录" }, { status: 401, headers: PRIVATE_HEADERS });
     const { evidenceId } = await context.params;
     connection = createDb(config.databasePath);

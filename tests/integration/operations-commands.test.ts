@@ -55,7 +55,9 @@ describe("documented database commands", () => {
 
     const result = await runScript("lib/db/migrate.ts", root);
 
-    expect(result, result.stderr).toMatchObject({ code: 0, stderr: "" });
+    expect(result.code, result.stderr).toBe(0);
+    expect(result.stderr).toContain("\"event\":\"effective-database-config\"");
+    expect(result.stderr).toContain("\"source\":\"project-env\"");
     await expect(access(path.join(root, "runtime", "course-dev.sqlite"))).resolves.toBeUndefined();
     await expect(access(path.join(root, "data", "tonggan.sqlite"))).rejects.toMatchObject({ code: "ENOENT" });
   });
@@ -68,7 +70,9 @@ describe("documented database commands", () => {
       DATABASE_PATH: "./runtime/from-process-dev.sqlite",
     });
 
-    expect(result, result.stderr).toMatchObject({ code: 0, stderr: "" });
+    expect(result.code, result.stderr).toBe(0);
+    expect(result.stderr).toContain("\"event\":\"effective-database-config\"");
+    expect(result.stderr).toContain("\"source\":\"process-env\"");
     await expect(access(path.join(root, "runtime", "from-process-dev.sqlite"))).resolves.toBeUndefined();
     await expect(access(path.join(root, "runtime", "from-file-dev.sqlite"))).rejects.toMatchObject({ code: "ENOENT" });
   });

@@ -31,6 +31,7 @@ describe("teacher routes", () => {
     try { connection.sqlite.exec(`
       INSERT INTO classes(id,name,access_code) VALUES('c1','一班','PRIVATE'),('c2','二班','PRIVATE2');
       INSERT INTO users(id,class_id,role,alias,created_at) VALUES('s1','c1','STUDENT','匿名-A',${now}),('s2','c2','STUDENT','匿名-B',${now}),('teacher',NULL,'TEACHER','课程负责人',${now}),('t1','c1','TEACHER','一班教师',${now}),('t2','c2','TEACHER','二班教师',${now});
+      INSERT INTO teacher_access_scopes VALUES('teacher','GLOBAL',NULL,'TEST_SETUP','测试课程负责人',${now});
       INSERT INTO course_modules(id,class_id,sequence,title,hours,focus) VALUES('m1','c1',1,'M',1,'F'),('m2','c2',1,'M',1,'F');
       INSERT INTO assignments(id,class_id,module_id,title,brief,allowed_tools,created_at) VALUES('a1','c1','m1','A','B','["DIGISHOW"]',${now}),('a2','c2','m2','A','B','["DIGISHOW"]',${now});
       INSERT INTO projects(id,class_id,assignment_id,student_id,stage,created_at,updated_at) VALUES('p1','c1','a1','s1','LOGIC_CARD',${now},${now}),('p2','c2','a2','s2','LOGIC_CARD',${now},${now});

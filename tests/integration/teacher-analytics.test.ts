@@ -27,6 +27,7 @@ describe("teacher analytics", () => {
         INSERT INTO classes(id,name,access_code) VALUES('c1','数字交互一班','SECRET-C1'),('c2','数字交互二班','SECRET-C2');
         INSERT INTO users(id,class_id,role,alias,created_at) VALUES
           ('teacher',NULL,'TEACHER','任课教师',${now}),('s1','c1','STUDENT','匿名-A01',${now}),('s2','c1','STUDENT','匿名-A02',${now}),('s3','c2','STUDENT','匿名-B01',${now});
+        INSERT INTO teacher_access_scopes VALUES('teacher','GLOBAL',NULL,'TEST_SETUP','测试课程负责人',${now});
         INSERT INTO learner_profiles(user_id,level,decomposition,signal_understanding,mapping_design,troubleshooting,transfer,updated_at) VALUES
           ('s1','L2',2,3,2,1,2,${now}),('s2','L3',3,2,3,2,3,${now}),('s3','L1',1,1,1,1,1,${now});
         INSERT INTO course_modules(id,class_id,sequence,title,hours,focus) VALUES

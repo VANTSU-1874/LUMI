@@ -4,6 +4,7 @@ import { z } from "zod";
 
 import { ModelBaseUrlSchema } from "../config/model-url";
 import { normalizePublicHttpsUrl } from "../security/public-web-url";
+import { isGpt56ModelId } from "./model-id";
 
 const MAX_RESPONSE_TEXT_LENGTH = 32_000;
 const MAX_OBSERVED_EVENT_TYPES = 32;
@@ -91,6 +92,22 @@ const ImageSchema = z.object({
   mimeType: z.enum(["image/png", "image/jpeg", "image/webp"]),
   bytes: z.instanceof(Uint8Array).refine((value) => value.byteLength > 0 && value.byteLength <= 5 * 1024 * 1024),
 }).strict();
+const ModelImagesSchema = z.array(ImageSchema)
+  .max(5)
+  .superRefine((images, context) => {
+    const totalBytes = images.reduce(
+      (total, image) =>
+        total + image.bytes.byteLength,
+      0,
+    );
+    if (totalBytes > 15 * 1024 * 1024) {
+      context.addIssue({
+        code: "custom",
+        message:
+          "model images exceed aggregate byte limit",
+      });
+    }
+  });
 
 const ProviderMessageSchema = z.object({
   role: MessageSchema.shape.role,
@@ -106,7 +123,7 @@ const ProviderMessageSchema = z.object({
           ),
         }).strict(),
       }).strict(),
-    ])).min(1).max(2),
+    ])).min(1).max(6),
   ]),
 }).strict();
 
@@ -433,6 +450,13 @@ export type ModelUsage = {
   totalTokens: number;
 };
 
+export type ModelReasoningEffort = "none" | "low" | "medium" | "high" | "xhigh" | "max";
+
+export type ModelStructuredOutput = {
+  name: string;
+  schema: Record<string, unknown>;
+};
+
 export type CompletionOptions = {
   signal?: AbortSignal;
   /**
@@ -442,6 +466,11 @@ export type CompletionOptions = {
   idleTimeoutMs?: number;
   totalTimeoutMs?: number;
   onUsage?: (usage: ModelUsage) => void;
+  onTextDelta?: (delta: string) => void;
+  /** Reports raw stream transport activity, including reasoning-only events. */
+  onStreamActivity?: () => void;
+  reasoningEffort?: ModelReasoningEffort;
+  structuredOutput?: ModelStructuredOutput;
 };
 
 export type ModelResponseOptions = CompletionOptions & {
@@ -450,14 +479,9 @@ export type ModelResponseOptions = CompletionOptions & {
   hostedTools?: ModelHostedToolDefinition[];
   maxHostedToolCalls?: number;
   retryWithoutHostedTools?: boolean;
-  toolChoice?: "auto" | "none";
+  toolChoice?: "auto" | "none" | "required";
   image?: ModelVisionImage;
-  onTextDelta?: (delta: string) => void;
-  /**
-   * Reports raw stream transport activity, including reasoning-only Responses
-   * events that intentionally have no learner-visible text delta.
-   */
-  onStreamActivity?: () => void;
+  images?: ModelVisionImage[];
   onWebSearchProgress?: (event: ModelWebSearchProgress) => void;
 };
 
@@ -477,6 +501,57 @@ export type ModelWebSearchResult = {
   citations: ModelWebCitation[];
 };
 
+function responseImages(
+  options: ModelResponseOptions,
+) {
+  if (
+    options.image
+    && (options.images?.length ?? 0) > 0
+  ) {
+    throw new ModelServiceError(
+      "INVALID_RESPONSE",
+    );
+  }
+  return ModelImagesSchema.parse(
+    options.images
+    ?? (options.image ? [options.image] : []),
+  );
+}
+
+const ModelReasoningEffortSchema = z.enum([
+  "none",
+  "low",
+  "medium",
+  "high",
+  "xhigh",
+  "max",
+]);
+const MAX_STRUCTURED_OUTPUT_SCHEMA_BYTES = 64 * 1024;
+const ModelStructuredOutputSchema = z.object({
+  name: z.string()
+    .min(1)
+    .max(64)
+    .regex(/^[A-Za-z_][A-Za-z0-9_-]*$/),
+  schema: z.record(z.string(), z.unknown()),
+}).strict().superRefine((value, context) => {
+  try {
+    const serialized = JSON.stringify(value.schema);
+    if (Buffer.byteLength(serialized, "utf8") > MAX_STRUCTURED_OUTPUT_SCHEMA_BYTES) {
+      context.addIssue({
+        code: "custom",
+        path: ["schema"],
+        message: `Structured output schema exceeds ${MAX_STRUCTURED_OUTPUT_SCHEMA_BYTES} bytes`,
+      });
+    }
+  } catch {
+    context.addIssue({
+      code: "custom",
+      path: ["schema"],
+      message: "Structured output schema must be JSON serializable",
+    });
+  }
+});
+
 export type ModelResponse = {
   content: string | null;
   toolCalls: ModelToolCall[];
@@ -495,6 +570,11 @@ export type ModelClient = {
   completeWithImage?(
     messages: ModelMessage[],
     image: ModelVisionImage,
+    options?: CompletionOptions,
+  ): Promise<string>;
+  completeWithImages?(
+    messages: ModelMessage[],
+    images: ModelVisionImage[],
     options?: CompletionOptions,
   ): Promise<string>;
 };
@@ -703,6 +783,16 @@ async function indicatesHostedToolIncompatibility(response: Response, signal?: A
   try {
     const body = await readBoundedResponse(response.clone(), 16 * 1024, signal);
     return /(?:(?:hosted|web[ _.-]?search|max_tool_calls)[\s\S]{0,100}(?:unsupported|not supported|unknown|invalid|unrecognized)|(?:unsupported|not supported|unknown|unrecognized)[\s\S]{0,100}(?:hosted|web[ _.-]?search|max_tool_calls))/i.test(body);
+  } catch {
+    return false;
+  }
+}
+
+async function indicatesUnsupportedMaxToolCalls(response: Response, signal?: AbortSignal) {
+  if (![400, 404, 422].includes(response.status)) return false;
+  try {
+    const body = await readBoundedResponse(response.clone(), 16 * 1024, signal);
+    return /(?:max_tool_calls[\s\S]{0,100}(?:unsupported|not supported|unknown|invalid|unrecognized)|(?:unsupported|not supported|unknown|invalid|unrecognized)[\s\S]{0,100}max_tool_calls)/i.test(body);
   } catch {
     return false;
   }
@@ -1757,7 +1847,7 @@ export function createModelClient(
   const providerHost = new URL(config.baseUrl).hostname.toLowerCase();
   const usesDeepSeekControls = providerHost === "api.deepseek.com";
   const usesOpenAIControls = providerHost === "api.openai.com";
-  const usesResponsesApi = /^gpt-5\.6(?:-|$)/i.test(config.model);
+  const usesResponsesApi = isGpt56ModelId(config.model);
 
   async function requestChat(
     rawMessages: z.infer<typeof ProviderConversationMessageSchema>[],
@@ -1766,8 +1856,12 @@ export function createModelClient(
   ): Promise<ModelResponse> {
     let messages = z.array(ProviderConversationMessageSchema).min(1).max(60).parse(rawMessages);
     const tools = z.array(ModelToolDefinitionSchema).max(20).parse(options.tools ?? []);
-    if (options.image) {
-      const image = ImageSchema.parse(options.image);
+    const reasoningEffort = ModelReasoningEffortSchema.optional().parse(options.reasoningEffort);
+    const strictStructuredOutput = ModelStructuredOutputSchema.optional().parse(
+      options.structuredOutput,
+    );
+    const images = responseImages(options);
+    if (images.length > 0) {
       const userIndex = messages.findLastIndex((message) => message.role === "user");
       const userMessage = messages[userIndex];
       if (userIndex < 0 || !userMessage || typeof userMessage.content !== "string") {
@@ -1778,10 +1872,10 @@ export function createModelClient(
           role: "user" as const,
           content: [
             { type: "text" as const, text: userMessage.content as string },
-            {
+            ...images.map((image) => ({
               type: "image_url" as const,
               image_url: { url: `data:${image.mimeType};base64,${Buffer.from(image.bytes).toString("base64")}` },
-            },
+            })),
           ],
         } : message));
     }
@@ -1806,7 +1900,17 @@ export function createModelClient(
             ? { max_completion_tokens: config.maxOutputTokens }
             : { max_tokens: config.maxOutputTokens }),
           messages,
-          ...(useStructuredOutput ? { response_format: { type: "json_object" } } : {}),
+          ...(reasoningEffort ? { reasoning_effort: reasoningEffort } : {}),
+          ...(useStructuredOutput ? {
+            response_format: strictStructuredOutput ? {
+              type: "json_schema",
+              json_schema: {
+                name: strictStructuredOutput.name,
+                strict: true,
+                schema: strictStructuredOutput.schema,
+              },
+            } : { type: "json_object" },
+          } : {}),
           ...(tools.length > 0 ? {
             tools: tools.map((tool) => ({ type: "function", function: tool })),
             tool_choice: options.toolChoice ?? "auto",
@@ -1830,9 +1934,15 @@ export function createModelClient(
           );
         }
       };
-      let response = await send(structuredOutput);
+      const useStructuredOutput = structuredOutput || Boolean(strictStructuredOutput);
+      let response = await send(useStructuredOutput);
       throwForAbortCause(requestAbort.abortCause);
-      if (structuredOutput && !usesDeepSeekControls && [400, 422].includes(response.status)) {
+      if (
+        structuredOutput
+        && !strictStructuredOutput
+        && !usesDeepSeekControls
+        && [400, 422].includes(response.status)
+      ) {
         await response.body?.cancel();
         response = await send(false);
         throwForAbortCause(requestAbort.abortCause);
@@ -1906,11 +2016,15 @@ export function createModelClient(
     const tools = z.array(ModelToolDefinitionSchema).max(20).parse(options.tools ?? []);
     const hostedTools = z.array(ModelHostedToolDefinitionSchema).max(1).parse(options.hostedTools ?? []);
     const maxHostedToolCalls = z.number().int().min(1).max(10).optional().parse(options.maxHostedToolCalls);
-    const image = options.image ? ImageSchema.parse(options.image) : null;
-    const imageTargetIndex = image
+    const reasoningEffort = ModelReasoningEffortSchema.optional().parse(options.reasoningEffort);
+    const strictStructuredOutput = ModelStructuredOutputSchema.optional().parse(
+      options.structuredOutput,
+    );
+    const images = responseImages(options);
+    const imageTargetIndex = images.length > 0
       ? messages.findLastIndex((message) => message.role === "user")
       : -1;
-    if (image && imageTargetIndex < 0) throw new ModelServiceError("INVALID_RESPONSE");
+    if (images.length > 0 && imageTargetIndex < 0) throw new ModelServiceError("INVALID_RESPONSE");
     const inputItems = messages.flatMap((message, index): Record<string, unknown>[] => {
       if (message.role === "tool") {
         return [{ type: "function_call_output", call_id: message.toolCallId, output: message.content }];
@@ -1927,16 +2041,16 @@ export function createModelClient(
           })),
         ];
       }
-      if (image && index === imageTargetIndex) {
+      if (images.length > 0 && index === imageTargetIndex) {
         return [{
           role: "user",
           content: [
             { type: "input_text", text: message.content },
-            {
+            ...images.map((image) => ({
               type: "input_image",
               detail: "auto",
               image_url: `data:${image.mimeType};base64,${Buffer.from(image.bytes).toString("base64")}`,
-            },
+            })),
           ],
         }];
       }
@@ -1966,7 +2080,10 @@ export function createModelClient(
         ...options,
         onWebSearchProgress: reportWebSearchProgress,
       };
-      const requestBody = (includeHostedTools: boolean) => {
+      const requestBody = (
+        includeHostedTools: boolean,
+        includeHostedToolCallLimit: boolean,
+      ) => {
         const requestTools = [
           ...tools.map((tool) => ({ type: "function" as const, ...tool })),
           ...(includeHostedTools ? hostedTools.map((tool) => ({
@@ -1980,7 +2097,20 @@ export function createModelClient(
           max_output_tokens: config.maxOutputTokens,
           store: false,
           include: ["reasoning.encrypted_content"],
-          ...(includeHostedTools && maxHostedToolCalls ? { max_tool_calls: maxHostedToolCalls } : {}),
+          ...(reasoningEffort ? { reasoning: { effort: reasoningEffort } } : {}),
+          ...(strictStructuredOutput ? {
+            text: {
+              format: {
+                type: "json_schema",
+                name: strictStructuredOutput.name,
+                strict: true,
+                schema: strictStructuredOutput.schema,
+              },
+            },
+          } : {}),
+          ...(includeHostedTools && includeHostedToolCallLimit && maxHostedToolCalls
+            ? { max_tool_calls: maxHostedToolCalls }
+            : {}),
           ...(requestTools.length > 0 ? {
             tools: requestTools,
             tool_choice: options.toolChoice ?? "auto",
@@ -1988,12 +2118,15 @@ export function createModelClient(
           stream: streaming,
         };
       };
-      const send = async (includeHostedTools: boolean) => {
+      const send = async (
+        includeHostedTools: boolean,
+        includeHostedToolCallLimit = true,
+      ) => {
         try {
           return await waitForAbortable(fetchImpl(responsesEndpoint, {
             method: "POST",
             headers: { "content-type": "application/json", authorization: `Bearer ${config.apiKey}` },
-            body: JSON.stringify(requestBody(includeHostedTools)),
+            body: JSON.stringify(requestBody(includeHostedTools, includeHostedToolCallLimit)),
             signal: requestAbort.signal,
           }), requestAbort.signal);
         } catch (error) {
@@ -2006,6 +2139,15 @@ export function createModelClient(
       };
       let response = await send(hostedTools.length > 0);
       throwForAbortCause(requestAbort.abortCause);
+      const retryHostedToolsWithoutCallLimit = hostedTools.length > 0
+        && maxHostedToolCalls !== undefined
+        && await indicatesUnsupportedMaxToolCalls(response, requestAbort.signal);
+      throwForAbortCause(requestAbort.abortCause);
+      if (retryHostedToolsWithoutCallLimit) {
+        await response.body?.cancel();
+        response = await send(true, false);
+        throwForAbortCause(requestAbort.abortCause);
+      }
       let hostedWebSearchUnavailable = false;
       const hostedWebSearchCanFallback = hostedTools.length > 0
         && options.retryWithoutHostedTools !== false;
@@ -2082,6 +2224,20 @@ export function createModelClient(
     }
   }
 
+  async function completeWithImages(
+    rawMessages: ModelMessage[],
+    rawImages: ModelVisionImage[],
+    options?: CompletionOptions,
+  ) {
+    const messages = z.array(MessageSchema).min(1).max(30).parse(rawMessages);
+    const images = ModelImagesSchema.parse(rawImages);
+    const response = usesResponsesApi
+      ? await requestResponses(messages, { ...options, images })
+      : await requestChat(messages, { ...options, images }, true);
+    if (!response.content) throw new ModelServiceError("INVALID_RESPONSE");
+    return response.content;
+  }
+
   return {
     async complete(rawMessages, options) {
       const messages = z.array(MessageSchema).min(1).max(30).parse(rawMessages);
@@ -2117,31 +2273,9 @@ export function createModelClient(
       return requestChat(providerMessages, options, false);
     },
     async completeWithImage(rawMessages, rawImage, options) {
-      const messages = z.array(MessageSchema).min(1).max(30).parse(rawMessages);
       const image = ImageSchema.parse(rawImage);
-      if (usesResponsesApi) {
-        const response = await requestResponses(messages, { ...options, image });
-        if (!response.content) throw new ModelServiceError("INVALID_RESPONSE");
-        return response.content;
-      }
-      const last = messages.at(-1);
-      if (!last || last.role !== "user") throw new ModelServiceError("INVALID_RESPONSE");
-      const multimodal = [
-        ...messages.slice(0, -1),
-        {
-          role: "user" as const,
-          content: [
-            { type: "text" as const, text: last.content },
-            {
-              type: "image_url" as const,
-              image_url: { url: `data:${image.mimeType};base64,${Buffer.from(image.bytes).toString("base64")}` },
-            },
-          ],
-        },
-      ];
-      const response = await requestChat(multimodal, options, true);
-      if (!response.content) throw new ModelServiceError("INVALID_RESPONSE");
-      return response.content;
+      return completeWithImages(rawMessages, [image], options);
     },
+    completeWithImages,
   };
 }

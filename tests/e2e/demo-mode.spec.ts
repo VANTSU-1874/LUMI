@@ -1,29 +1,18 @@
 import { expect, test, type Page } from "./fixtures";
+import { enterLegacyStudent, signInCurrentTeacher } from "./auth-helpers";
 
 async function loginStudent(page: Page) {
-  await page.goto("/");
-  await page.getByLabel("班级邀请码").fill("E2E2026");
-  await page.getByLabel("匿名编号").fill("CD8L-N3R5-TQ9W");
-  await page.getByRole("button", { name: "学生进入" }).click();
-  await expect(page).toHaveURL(/\/student$/, { timeout: 30_000 });
-  await expect(page.getByRole("region", { name: "与 Lumi 对话" })).toBeVisible({ timeout: 30_000 });
+  await enterLegacyStudent(page, "CD8L-N3R5-TQ9W");
 }
 
 test("demo query still requires an authenticated Lumi identity", async ({ page }) => {
   await page.goto("/student?demo=1");
-  await expect(page.getByRole("heading", { name: "先登录，再继续对话" })).toBeVisible();
-  await expect(page.getByRole("link", { name: "前往登录" })).toHaveAttribute(
-    "href",
-    /returnTo=%2Fstudent/,
-  );
+  await expect(page).toHaveURL(/\/login\?.*returnTo=%2Fstudent/);
+  await expect(page.getByRole("heading", { name: "学生端登录" })).toBeVisible();
 });
 
 test("teacher keeps demo data opt-in when real classes exist", async ({ page }) => {
-  await page.goto("/");
-  await page.getByRole("tab", { name: "教师" }).click();
-  await page.getByLabel("教师访问码").fill("e2e-teacher-code");
-  await page.getByRole("button", { name: "教师进入" }).click();
-  await expect(page).toHaveURL(/\/teacher$/);
+  await signInCurrentTeacher(page);
   await expect(page.getByRole("heading", { name: "教师学习分析工作台" })).toBeVisible();
   await expect(page.getByText("加载完成", { exact: true })).toBeVisible();
 
@@ -50,9 +39,8 @@ test("teacher keeps demo data opt-in when real classes exist", async ({ page }) 
   });
   await page.getByLabel("选择班级").selectOption("demo-class-digi2026");
   expect((await demoAnalyticsResponse).status()).toBe(200);
-  await expect(page.getByText("真实 0 人 · 演示 5 人")).toBeVisible();
-  await expect(page.getByRole("heading", { name: "真实教学指标" })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "演示指标" })).toBeVisible();
+  await expect(page.getByText("真实 0 人 · 演示 5 人", { exact: true }).first()).toBeVisible();
+  await expect(page.getByRole("status")).toContainText("真实教学指标 / 演示指标分开计算");
   await expect(page.getByText("演示学习者A", { exact: true })).toBeVisible();
   await expect(page.getByText("演示数据").first()).toBeVisible();
 });

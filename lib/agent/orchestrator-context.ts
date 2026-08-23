@@ -39,6 +39,11 @@ import {
   type VerifiedEvidenceFact,
 } from "./verified-evidence-facts";
 
+export type AgentInterventionContext = {
+  mode: "FOLLOW_UP" | "STEER";
+  unansweredMessages: Array<{ id: string; content: string }>;
+};
+
 export type AgentOptions = {
   signal?: AbortSignal;
   cancellationRequested?: () => boolean;
@@ -72,6 +77,7 @@ export type AgentOptions = {
     summary: string;
   }) => void;
   toolExecutor?: AgentToolExecutor;
+  interventionContext?: AgentInterventionContext;
 };
 
 export type StudentContext = {

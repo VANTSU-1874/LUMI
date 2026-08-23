@@ -36,6 +36,7 @@ async function setup() {
   runMigrations(databasePath);
   const connection = createDb(databasePath);
   connection.sqlite.exec("INSERT INTO users(id,class_id,role,alias,created_at) VALUES('teacher',NULL,'TEACHER','测试教师',1700000000),('student-1',NULL,'STUDENT','测试学生',1700000000);");
+  connection.sqlite.exec("INSERT INTO teacher_access_scopes VALUES('teacher','GLOBAL',NULL,'TEST_SETUP','测试课程负责人',1700000000)");
   registerInspirationSource(connection.db, reviewPipelineSourceFixture);
   for (const item of recentReviewPipelineFixtures) ingestPrivateInspirationCandidate(connection.db, { sourceId: reviewPipelineSourceFixture.id, ...item });
   return connection;

@@ -57,6 +57,7 @@ describe("published inspiration browse API", () => {
     const connection = createDb(databasePath);
     try {
       connection.sqlite.exec("INSERT INTO users(id,class_id,role,alias,created_at) VALUES('teacher',NULL,'TEACHER','教师',1700000000),('student',NULL,'STUDENT','学生',1700000000),('deleted-student',NULL,'STUDENT','已删除学生',1700000000),('deleted-teacher',NULL,'TEACHER','已删除教师',1700000000); DELETE FROM users WHERE id IN ('deleted-student','deleted-teacher');");
+      connection.sqlite.exec("INSERT INTO teacher_access_scopes VALUES('teacher','GLOBAL',NULL,'TEST_SETUP','测试课程负责人',1700000000)");
       registerInspirationSource(connection.db, reviewPipelineSourceFixture);
       const visible = fixture("inspiration-intake:book-layout-active", "书籍版式案例", true, "a");
       const visibleSecond = fixture("inspiration-intake:book-layout-active-second", "书籍装帧案例", true, "d");

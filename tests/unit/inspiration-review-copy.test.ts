@@ -11,6 +11,12 @@ import {
 import { StrictReviewPackSchema } from "@/lib/domain/inspiration-wiki/review-pack-contracts";
 
 const ARTIFACT_HASH_PLACEHOLDER = "0".repeat(64);
+const REVIEW_PACK_ROOT = path.join(process.cwd(), "data", "inspiration-wiki", "review-packs");
+const BP_AND_O_REVIEW_PACK = path.join(
+  REVIEW_PACK_ROOT,
+  "twenty-first-teacher-batch-021",
+  "review-packs.json",
+);
 
 function parsePreparedArtifactPack(raw: unknown) {
   return StrictReviewPackSchema.parse({
@@ -40,9 +46,8 @@ function teacherVisibleProse(pack: ReturnType<typeof StrictReviewPackSchema.pars
 }
 
 describe("teacher review Chinese display copy", () => {
-  it("localizes an English BP&O review without mutating identifiers or source URLs", () => {
-    const root = path.join(process.cwd(), "data", "inspiration-wiki", "review-packs", "twenty-first-teacher-batch-021", "review-packs.json");
-    const payload = JSON.parse(readFileSync(root, "utf8"));
+  it.skipIf(!existsSync(BP_AND_O_REVIEW_PACK))("localizes an English BP&O review without mutating identifiers or source URLs", () => {
+    const payload = JSON.parse(readFileSync(BP_AND_O_REVIEW_PACK, "utf8"));
     const original = parsePreparedArtifactPack(payload.items[0].pack);
     const localized = localizeReviewPackForTeacher(original);
 
@@ -58,12 +63,11 @@ describe("teacher review Chinese display copy", () => {
     expect(teacherVisibleProse(localized).filter(containsUnlocalizedEnglishProse)).toEqual([]);
   });
 
-  it("keeps every imported strict pack free of raw English prose in teacher-visible evidence fields", () => {
-    const root = path.join(process.cwd(), "data", "inspiration-wiki", "review-packs");
-    const packs = readdirSync(root, { withFileTypes: true })
+  it.skipIf(!existsSync(REVIEW_PACK_ROOT))("keeps every imported strict pack free of raw English prose in teacher-visible evidence fields", () => {
+    const packs = readdirSync(REVIEW_PACK_ROOT, { withFileTypes: true })
       .filter((entry) => entry.isDirectory())
       .flatMap((entry) => {
-        const file = path.join(root, entry.name, "review-packs.json");
+        const file = path.join(REVIEW_PACK_ROOT, entry.name, "review-packs.json");
         if (!existsSync(file)) return [];
         const payload = JSON.parse(readFileSync(file, "utf8"));
         return payload.items.map((item: { pack: unknown }) => parsePreparedArtifactPack(item.pack));

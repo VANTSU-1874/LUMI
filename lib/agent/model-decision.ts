@@ -18,6 +18,7 @@ import type { VerifiedEvidenceFact } from "./verified-evidence-facts";
 import { knowledgeCorpus, plainKnowledgeItem, technicalTokens } from "./model-grounding";
 import type { PreparedAgentArtwork } from "./artwork-attachment";
 import type { ModelProviderAdapter } from "./model-provider-adapter";
+import type { AgentInterventionContext } from "./orchestrator-context";
 import { assertAtMostOneLearnerQuestion, assertTurnRequirementCoverage, limitLearnerQuestions, modelTurnRequirements } from "./model-turn-requirements";
 import { applyTechnicalVocabularyPolicy } from "./model-technical-vocabulary";
 
@@ -59,10 +60,13 @@ export async function decideAgentTurn(input: {
   availableTools: readonly AgentToolDescriptor[];
   toolExecutions: readonly AgentToolExecution[];
   artwork?: PreparedAgentArtwork;
+  artworks?: readonly PreparedAgentArtwork[];
   retryFeedback?: string | null;
   signal?: AbortSignal;
   totalTimeoutMs?: number;
   onUsage?: (usage: ModelUsage) => void;
+  onTextDelta?: (delta: string) => void;
+  interventionContext?: AgentInterventionContext;
 }) {
   const allowedDecisionCodes = Array.from(new Set(
     input.candidateEpisodes.flatMap((episode) => DECISION_CODES_BY_EPISODE[episode]),
@@ -71,12 +75,13 @@ export async function decideAgentTurn(input: {
     input.candidateEpisodes.flatMap((episode) => allowedActionTypes(episode)),
   ));
   const toolSources = toolExecutionSources(input.toolExecutions);
-  const artworkSourceId = input.artwork ? `artwork:${input.artwork.id}` : null;
+  const artworks = input.artworks ?? (input.artwork ? [input.artwork] : []);
+  const artworkSourceIds = artworks.map((artwork) => `artwork:${artwork.id}`);
   const allowedSourceIds = [
     ...input.knowledge.map(({ id }) => id),
     ...input.context.verifiedEvidenceFacts.map(({ sourceId }) => sourceId),
     ...toolSources.map(({ id }) => id),
-    ...(artworkSourceId ? [artworkSourceId] : []),
+    ...artworkSourceIds,
   ];
   const requiredSequence = sequenceRequirement(input.message, input.recentTurns, input.knowledge);
   const debugSourcesToAvoid = input.candidateEpisodes.includes("DEBUG")
@@ -93,13 +98,26 @@ export async function decideAgentTurn(input: {
   const allowedTechnicalVocabulary = technicalTokens(groundingText);
   const userPrompt = JSON.stringify({
         studentQuestion: input.message,
+        ...(input.interventionContext ? {
+          unansweredStudentMessages: input.interventionContext.unansweredMessages,
+          intervention: {
+            mode: input.interventionContext.mode,
+            instruction: input.interventionContext.mode === "STEER"
+              ? "当前 studentQuestion 是最新改向要求；冲突时以当前要求为准，同时回应仍未回答的较早原话。"
+              : "按顺序承接未回答的较早原话，再处理当前补充。",
+          },
+        } : {}),
         interfaceContext: { view: input.view, focus: input.focus },
         recentConversation: input.recentTurns,
         validationFeedback: input.retryFeedback ?? null,
         turnRequirements: modelTurnRequirements(input.message),
-        artworkInput: artworkSourceId ? {
-          sourceId: artworkSourceId,
+        artworkInput: artworkSourceIds.length === 1 ? {
+          sourceId: artworkSourceIds[0],
           instruction: "只有确实采用图片观察时才把sourceId放入sourceIds，并把message分成“作品读取结果：”与“通用设计建议：”两段；只描述静态画面可见内容，不推断交互、材质、动态或使用效果。无法可靠读取时不要引用sourceId。",
+        } : null,
+        artworkInputs: artworkSourceIds.length > 1 ? {
+          sourceIds: artworkSourceIds,
+          instruction: "只有确实采用图片观察时才把对应sourceId放入sourceIds，并将 message 分为“作品读取结果：”与“通用设计建议：”两段。若比较多张图，须在第一段点明比较对象；只描述静态画面可见内容，不推断交互、材质、动态或使用效果。无法可靠读取时不要引用sourceId。",
         } : null,
         followUpConstraint: requiredSequence ? {
           step: requiredSequence.step,
@@ -213,20 +231,32 @@ export async function decideAgentTurn(input: {
       content: userPrompt,
     },
   ];
-  const raw = input.artwork && input.client.completeWithImage
-    ? await input.client.completeWithImage(messages, {
-        mimeType: input.artwork.mimeType,
-        bytes: new Uint8Array(input.artwork.bytes),
-      }, {
+  const raw = artworks.length > 1 && input.client.completeWithImages
+    ? await input.client.completeWithImages(messages, artworks.map((artwork) => ({
+        mimeType: artwork.mimeType,
+        bytes: new Uint8Array(artwork.bytes),
+      })), {
         signal: input.signal,
         totalTimeoutMs: input.totalTimeoutMs,
         onUsage: input.onUsage,
+        onTextDelta: input.onTextDelta,
       })
-    : await input.client.complete(messages, {
-        signal: input.signal,
-        totalTimeoutMs: input.totalTimeoutMs,
-        onUsage: input.onUsage,
-      });
+    : artworks.length === 1 && input.client.completeWithImage
+      ? await input.client.completeWithImage(messages, {
+          mimeType: artworks[0]!.mimeType,
+          bytes: new Uint8Array(artworks[0]!.bytes),
+        }, {
+          signal: input.signal,
+          totalTimeoutMs: input.totalTimeoutMs,
+          onUsage: input.onUsage,
+          onTextDelta: input.onTextDelta,
+        })
+      : await input.client.complete(messages, {
+          signal: input.signal,
+          totalTimeoutMs: input.totalTimeoutMs,
+          onUsage: input.onUsage,
+          onTextDelta: input.onTextDelta,
+        });
 
   const decoded = JSON.parse(raw) as Record<string, unknown>;
   if (decoded.step === "CALL_TOOL") {
@@ -264,7 +294,10 @@ export async function decideAgentTurn(input: {
       ...item.actions.map(({ id, text }) => ({ id, title: text })),
     ]),
     ...toolSources.map(({ id, title }) => ({ id, title })),
-    ...(artworkSourceId ? [{ id: artworkSourceId, title: "本轮学生作品图片" }] : []),
+    ...artworkSourceIds.map((id, index) => ({
+      id,
+      title: artworks.length > 1 ? `本轮视觉参考 ${index + 1}` : "本轮学生作品图片",
+    })),
     ...input.context.verifiedEvidenceFacts.map(({ sourceId, label }) => ({
       id: sourceId,
       title: `已验证学习证据：${label}`,
@@ -299,7 +332,7 @@ export async function decideAgentTurn(input: {
     ),
   };
   if (
-    artworkSourceId && candidateDecision.sourceIds.includes(artworkSourceId) &&
+    artworkSourceIds.some((id) => candidateDecision.sourceIds.includes(id)) &&
     (!candidateDecision.message.includes("作品读取结果：") || !candidateDecision.message.includes("通用设计建议："))
   ) throw new Error("MODEL_ARTWORK_SECTIONS_REQUIRED");
   validateAnswerGrounding(candidateDecision, input.knowledge, requiredSequence);

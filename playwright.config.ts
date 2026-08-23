@@ -4,6 +4,14 @@ import { defineConfig, devices } from "@playwright/test";
 
 const e2ePort = Number(process.env.PLAYWRIGHT_PORT ?? "3000");
 const e2eBaseUrl = `http://127.0.0.1:${e2ePort}`;
+const fakeModelPortValue = process.env.PLAYWRIGHT_FAKE_MODEL_PORT?.trim();
+const fakeModelPort = fakeModelPortValue ? Number(fakeModelPortValue) : null;
+if (fakeModelPort !== null && (!Number.isInteger(fakeModelPort) || fakeModelPort < 1024 || fakeModelPort > 65_535)) {
+  throw new Error("PLAYWRIGHT_FAKE_MODEL_PORT must be a non-privileged TCP port");
+}
+const fakeModelBaseUrl = fakeModelPort === null
+  ? "http://127.0.0.1:9/v1"
+  : `http://127.0.0.1:${fakeModelPort}/v1`;
 const e2eNodeEnvironment = process.env.PLAYWRIGHT_USE_BUILD === "1"
   ? "production"
   : "development";
@@ -14,12 +22,20 @@ const e2eEnvironment = {
   NEXT_DIST_DIR: ".next/e2e-playwright",
   IDENTITY_CODE_PEPPER: "e2e-identity-pepper-at-least-32-characters-long",
   AUTH_PROXY_SECRET: "e2e-auth-proxy-secret-at-least-32-characters-long",
+  BETTER_AUTH_URL: e2eBaseUrl,
+  BETTER_AUTH_TRUSTED_ORIGINS: e2eBaseUrl,
   TEACHER_ACCESS_CODE: "e2e-teacher-code",
-  LLM_BASE_URL: "http://127.0.0.1:9/v1",
+  STUDENT_SELF_REGISTRATION_CLASS_ID: "e2e-class",
+  LLM_BASE_URL: fakeModelBaseUrl,
   LLM_API_KEY: "e2e-unavailable-provider",
   LLM_MODEL: "e2e-unavailable-model",
   LLM_VISION_ENABLED: "false",
   AGENT_V3_ENABLED: "true",
+  AGENT_UNIFIED_HARNESS_MODE: process.env.PLAYWRIGHT_HARNESS_MODE ?? "OFF",
+  AGENT_INTERVENTIONS_ENABLED: "true",
+  ...(process.env.PLAYWRIGHT_G0B_RECEIPT === "1"
+    ? { NEXT_PUBLIC_E2E_HARNESS_RECEIPT: "true" }
+    : {}),
 };
 const windowsChrome = "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe";
 const browserExecutable = process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH ??
@@ -29,6 +45,21 @@ const seedCommand = `${nodeExecutable} node_modules/tsx/dist/cli.mjs tests/e2e/s
 const e2eServer = process.env.PLAYWRIGHT_USE_BUILD === "1"
   ? `${nodeExecutable} node_modules/next/dist/bin/next start --hostname 127.0.0.1 --port ${e2ePort}`
   : `${nodeExecutable} node_modules/next/dist/bin/next dev --webpack --hostname 127.0.0.1 --port ${e2ePort}`;
+const appWebServer = {
+  command: `${seedCommand} && ${e2eServer}`,
+  url: e2eBaseUrl,
+  reuseExistingServer: process.env.PLAYWRIGHT_REUSE_SERVER === "1",
+  env: { ...process.env, ...e2eEnvironment, PUBLIC_APP_URL: e2eBaseUrl, NODE_ENV: e2eNodeEnvironment },
+};
+const fakeModelWebServer = fakeModelPort === null ? null : {
+  command: `${nodeExecutable} node_modules/tsx/dist/cli.mjs tests/e2e/g0b-fake-model-server.ts`,
+  url: `http://127.0.0.1:${fakeModelPort}/health`,
+  reuseExistingServer: false,
+  env: {
+    ...process.env,
+    G0B_FAKE_MODEL_PORT: String(fakeModelPort),
+  },
+};
 
 export default defineConfig({
   testDir: "./tests/e2e",
@@ -50,10 +81,5 @@ export default defineConfig({
       },
     },
   ],
-  webServer: {
-    command: `${seedCommand} && ${e2eServer}`,
-    url: `http://127.0.0.1:${e2ePort}`,
-    reuseExistingServer: process.env.PLAYWRIGHT_REUSE_SERVER === "1",
-    env: { ...process.env, ...e2eEnvironment, PUBLIC_APP_URL: e2eBaseUrl, NODE_ENV: e2eNodeEnvironment },
-  },
+  webServer: fakeModelWebServer ? [fakeModelWebServer, appWebServer] : appWebServer,
 });

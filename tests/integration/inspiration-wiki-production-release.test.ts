@@ -29,6 +29,9 @@ const bundleRoot = path.resolve(
 const describeProductionBundle = existsSync(path.join(bundleRoot, "manifest.json"))
   ? describe
   : describe.skip;
+const currentMigrationCount = (JSON.parse(
+  readFileSync(path.resolve("drizzle", "meta", "_journal.json"), "utf8"),
+) as { entries: unknown[] }).entries.length;
 
 function createTarget() {
   const root = mkdtempSync(path.join(os.tmpdir(), "lumi-d27-production-release-"));
@@ -40,6 +43,9 @@ function createTarget() {
   database.prepare(
     `INSERT INTO users (id, class_id, role, alias, nickname, major, onboarding_completed_at, created_at)
      VALUES ('teacher', NULL, 'TEACHER', '课程负责人', NULL, NULL, NULL, 1786499209)`,
+  ).run();
+  database.prepare(
+    "INSERT INTO teacher_access_scopes VALUES('teacher','GLOBAL',NULL,'TEST_SETUP','测试课程负责人',1786499209)",
   ).run();
   database.close();
   return { root, dataRoot, databasePath };
@@ -156,7 +162,7 @@ describeProductionBundle("D-27 Inspiration Wiki production release", () => {
     expect(result.databaseWrites).toBeGreaterThan(100);
     const database = new Database(target.databasePath, { readonly: true });
     expect(database.prepare("SELECT count(*) count FROM __drizzle_migrations").get())
-      .toEqual({ count: 64 });
+      .toEqual({ count: currentMigrationCount });
     expect(database.prepare(
       "SELECT count(*) count FROM sqlite_master WHERE type='table' AND name='knowledge_documents_v2'",
     ).get()).toEqual({ count: 1 });

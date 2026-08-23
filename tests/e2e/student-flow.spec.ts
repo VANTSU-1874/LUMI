@@ -1,20 +1,56 @@
 import { expect, test, type Page } from "./fixtures";
 
-const IDENTITY_CODES = ["AB7K-C9M2-Q4RP", "CD8L-N3R5-TQ9W", "EF9M-P4S6-VR2X"] as const;
+const E2E_PASSWORD = "E2e-local-only-password-2026";
+const E2E_TEACHER_EMAIL = "teacher.e2e@example.com";
+const E2E_TEACHER_PASSWORD = "LumiTeacher2026!";
 
-async function loginStudent(page: Page, identityCode: string = IDENTITY_CODES[0]) {
-  await page.goto("/");
-  await page.getByRole("tab", { name: "学生" }).click();
-  await page.getByLabel("班级邀请码").fill("E2E2026");
-  await page.getByLabel("匿名编号").fill(identityCode);
-  await page.getByRole("button", { name: "学生进入" }).click();
+type StudentAccount = {
+  email: string;
+  name: string;
+};
+
+async function completeStudentOnboarding(page: Page) {
+  for (let step = 0; step < 3; step += 1) {
+    await page.getByRole("button", { name: "这步先跳过" }).click();
+  }
+  await page.getByRole("button", { name: "跳过并进入 Lumi" }).click();
+  await expect(page.getByLabel("给 Lumi 发送消息")).toBeVisible({ timeout: 30_000 });
+}
+
+async function registerStudent(page: Page, account: StudentAccount) {
+  await page.goto("/login?mode=register&returnTo=%2Fstudent");
+  await expect(page.getByRole("heading", { name: "创建学生账号" })).toBeVisible();
+  await page.getByLabel("姓名或常用称呼").fill(account.name);
+  await page.getByLabel("邮箱").fill(account.email);
+  await page.locator('input[name="password"]').fill(E2E_PASSWORD);
+  await page.locator('input[name="passwordConfirmation"]').fill(E2E_PASSWORD);
+  const [registration] = await Promise.all([
+    page.waitForResponse((response) =>
+      response.url().endsWith("/api/account/register")
+      && response.request().method() === "POST"),
+    page.getByRole("button", { name: "创建账号并进入" }).click(),
+  ]);
+  expect(registration.status()).toBe(200);
+  await expect(page).toHaveURL(/\/student$/, { timeout: 30_000 });
+  await completeStudentOnboarding(page);
+}
+
+async function loginStudent(page: Page, account: StudentAccount) {
+  await page.context().clearCookies();
+  await page.goto("/login?returnTo=%2Fstudent");
+  await expect(page.getByRole("heading", { name: "学生端登录" })).toBeVisible();
+  await page.getByLabel("邮箱").fill(account.email);
+  await page.locator('input[name="password"]').fill(E2E_PASSWORD);
+  await page.getByRole("button", { name: "登录学生端" }).click();
   await expect(page).toHaveURL(/\/student$/, { timeout: 30_000 });
   await expect(page.getByLabel("给 Lumi 发送消息")).toBeVisible({ timeout: 30_000 });
 }
 
 test("student lands in the assistant-ui conversation workspace", async ({ page }) => {
   test.setTimeout(60_000);
-  await loginStudent(page);
+  const account = { email: "student-desktop@e2e.invalid", name: "桌面端学生" };
+  await registerStudent(page, account);
+  await loginStudent(page, account);
   await expect(page.getByRole("heading", { name: "你今天想一起把什么设计清楚？" })).toBeVisible();
   const history = page.getByRole("complementary", { name: "历史对话" });
   await expect(history).toBeVisible();
@@ -32,15 +68,13 @@ test("dashboard enforces student role", async ({ browser, request, page }) => {
   const anonymous = await request.get("/api/student/dashboard");
   expect(anonymous.status()).toBe(401);
 
-  await page.goto("/");
-  await page.getByRole("tab", { name: "教师" }).click();
-  await page.getByLabel("教师访问码").fill("e2e-teacher-code");
-  const [teacherLogin] = await Promise.all([
-    page.waitForResponse((response) => response.url().endsWith("/api/auth/teacher")),
-    page.getByRole("button", { name: "教师进入" }).click(),
-  ]);
-  expect(teacherLogin.status()).toBe(200);
+  await page.goto("/login?role=teacher&returnTo=%2Fteacher");
+  await expect(page.getByRole("heading", { name: "教师端登录" })).toBeVisible();
+  await page.getByLabel("邮箱").fill(E2E_TEACHER_EMAIL);
+  await page.locator('input[name="password"]').fill(E2E_TEACHER_PASSWORD);
+  await page.getByRole("button", { name: "登录教师端" }).click();
   await expect(page).toHaveURL(/\/teacher$/, { timeout: 30_000 });
+  await expect(page.getByRole("heading", { name: "教师学习分析工作台" })).toBeVisible();
   const deniedStatus = await page.evaluate(async () =>
     (await fetch("/api/student/dashboard")).status);
   expect(deniedStatus).toBe(403);
@@ -52,7 +86,9 @@ test("dashboard enforces student role", async ({ browser, request, page }) => {
 
 test("mobile assistant-ui can open history without horizontal overflow", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  await loginStudent(page, IDENTITY_CODES[2]);
+  const account = { email: "student-mobile@e2e.invalid", name: "移动端学生" };
+  await registerStudent(page, account);
+  await loginStudent(page, account);
   await expect(page.getByRole("main")).toBeVisible();
   const composer = page.getByLabel("给 Lumi 发送消息");
   const menuButton = page.getByRole("button", { name: "打开历史对话" });

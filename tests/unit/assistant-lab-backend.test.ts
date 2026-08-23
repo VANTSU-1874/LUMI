@@ -9,6 +9,7 @@ import {
   agentMessageToThreadMessage,
   createInitializingLumiHistoryAdapter,
   createLumiHistoryAdapter,
+  requestJson,
   waitForUserMessageWrite,
 } from "@/components/assistant-lab/assistant-lab-backend";
 import {
@@ -56,6 +57,12 @@ const assistantMessage: AgentMessageRecord = {
     episode: "EXPLORE",
     decisionCode: "EXPLORE_START_DIAGNOSTIC",
     aiMode: "MODEL_ASSISTED",
+    routingReceipt: {
+      schema: "specialty-route-receipt/v1",
+      coursePackId: "book-design",
+      coursePackVersion: "1",
+      reason: "INTERFACE_CONTEXT",
+    },
     executionSteps: [
       {
         id: "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
@@ -148,6 +155,35 @@ afterEach(() => {
 });
 
 describe("assistant-lab backend adapters", () => {
+  it("retries transient gateway failures for idempotent reads", async () => {
+    vi.useFakeTimers();
+    const fetchMock = vi.fn()
+      .mockResolvedValueOnce(new Response(null, { status: 502 }))
+      .mockResolvedValueOnce(new Response(null, { status: 503 }))
+      .mockResolvedValueOnce(new Response(JSON.stringify({ ok: true }), {
+        status: 200,
+        headers: { "content-type": "application/json" },
+      }));
+    vi.stubGlobal("fetch", fetchMock);
+
+    const result = requestJson<{ ok: boolean }>("/api/agent/runs/test");
+    await vi.runAllTimersAsync();
+
+    await expect(result).resolves.toEqual({ ok: true });
+    expect(fetchMock).toHaveBeenCalledTimes(3);
+  });
+
+  it("never automatically replays a failed write request", async () => {
+    const fetchMock = vi.fn(async () => new Response(null, { status: 502 }));
+    vi.stubGlobal("fetch", fetchMock);
+
+    await expect(requestJson("/api/agent/runs", {
+      method: "POST",
+      body: "payload",
+    })).rejects.toThrow("请求失败（502）");
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
   it("converts persisted Lumi structure into stable assistant-ui parts without losing facts", () => {
     const parts = agentMessageToAssistantParts(assistantMessage);
     expect(parts).toEqual([
@@ -189,6 +225,12 @@ describe("assistant-lab backend adapters", () => {
         data: expect.objectContaining({
           whyThisStep: "阅读入口会决定后续信息能否被看见。",
           basis: [{ kind: "COURSE_KNOWLEDGE", label: "课程知识" }],
+          routingReceipt: {
+            schema: "specialty-route-receipt/v1",
+            coursePackId: "book-design",
+            coursePackVersion: "1",
+            reason: "INTERFACE_CONTEXT",
+          },
         }),
       }),
       expect.objectContaining({
@@ -310,6 +352,88 @@ describe("assistant-lab backend adapters", () => {
 
     await adapter.append(repository.messages[1]!);
     expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
+  it("preserves controlled visual evidence metadata in the Lumi response data part", () => {
+    if (
+      assistantMessage.structure.kind
+      !== "assistant"
+    ) {
+      throw new Error(
+        "assistant fixture must be an assistant message",
+      );
+    }
+    const assistantStructure =
+      assistantMessage.structure;
+    const visualMessage: AgentMessageRecord = {
+      ...assistantMessage,
+      structure: {
+        ...assistantStructure,
+        reply: {
+          ...assistantStructure.reply,
+          sources: [{
+            id: "node-image-1",
+            title: "课程参考图",
+            authority: "COURSE_DESIGN",
+            scope: "版式设计课程参考图。",
+            evidence: {
+              schemaVersion: 2,
+              bundleId: "bundle-test",
+              objectId: "layout-object-1",
+              nodeId: "node-image-1",
+              sourceId: "source-layout-1",
+              evidenceKind: "VISUAL_REFERENCE",
+              assetId: "asset-layout-1",
+              assetSha256: "4".repeat(64),
+              assetWidthPx: 1200,
+              assetHeightPx: 800,
+              region: {
+                regionId: "region-layout-1",
+                bbox: {
+                  coordinateSpace: "NORMALIZED",
+                  x: 0.1,
+                  y: 0.2,
+                  width: 0.4,
+                  height: 0.5,
+                },
+              },
+              previewUrl:
+                "/api/knowledge/assets/asset-layout-1",
+              corpusBundleHash: "2".repeat(64),
+              activeIndexBundleHash: "3".repeat(64),
+            },
+          }],
+        },
+      },
+    };
+
+    const responsePart =
+      agentMessageToAssistantParts(
+        visualMessage,
+      ).find((part) =>
+        part.type === "data"
+        && part.name === "lumi-response");
+
+    expect(responsePart).toMatchObject({
+      type: "data",
+      name: "lumi-response",
+      data: {
+        evidenceSources: [{
+          id: "node-image-1",
+          evidence: {
+            objectId: "layout-object-1",
+            assetId: "asset-layout-1",
+            previewUrl:
+              "/api/knowledge/assets/asset-layout-1",
+            assetWidthPx: 1200,
+            assetHeightPx: 800,
+          },
+        }],
+      },
+    });
+    expect(
+      JSON.stringify(responsePart),
+    ).not.toContain("data/courses");
   });
 
   it("keeps live token text identical to the persisted completion parts", async () => {
@@ -1043,6 +1167,33 @@ describe("assistant-lab backend adapters", () => {
       type: "text-delta",
       path: [0],
       textDelta: "海报层级优化",
+    });
+  });
+
+  it("keeps a transient title-read failure out of the completed conversation", async () => {
+    vi.useFakeTimers();
+    const fetchMock = vi.fn(async () => new Response(
+      JSON.stringify({ error: "upstream unavailable" }),
+      { status: 502, headers: { "content-type": "application/json" } },
+    ));
+    vi.stubGlobal("fetch", fetchMock);
+
+    const pending = new LumiThreadListAdapter().generateTitle(taskId);
+    await vi.advanceTimersByTimeAsync(600);
+    const stream = await pending as ReadableStream<unknown>;
+    const reader = stream.getReader();
+    const events: unknown[] = [];
+    while (true) {
+      const next = await reader.read();
+      if (next.done) break;
+      events.push(next.value);
+    }
+
+    expect(fetchMock).toHaveBeenCalledTimes(3);
+    expect(events).toContainEqual({
+      type: "text-delta",
+      path: [0],
+      textDelta: "未命名设计任务",
     });
   });
 });

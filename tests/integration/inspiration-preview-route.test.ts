@@ -53,6 +53,7 @@ describe("protected inspiration previews", () => {
     const connection = createDb(databasePath);
     try {
       connection.sqlite.exec("INSERT INTO users(id,class_id,role,alias,created_at) VALUES('teacher',NULL,'TEACHER','教师',1700000000),('student',NULL,'STUDENT','学生',1700000000),('deleted-student',NULL,'STUDENT','已删除学生',1700000000); INSERT INTO classes(id,name,access_code) VALUES('review-class','审核班','PREVIEW'); INSERT INTO users(id,class_id,role,alias,created_at) VALUES('deleted-teacher','review-class','TEACHER','已删除教师',1700000000); DELETE FROM users WHERE id IN ('deleted-teacher','deleted-student');");
+      connection.sqlite.exec("INSERT INTO teacher_access_scopes VALUES('teacher','GLOBAL',NULL,'TEST_SETUP','测试课程负责人',1700000000)");
       registerInspirationSource(connection.db, reviewPipelineSourceFixture);
       activeId = "inspiration-intake:preview-active"; pendingId = "inspiration-intake:preview-pending"; withdrawnId = "inspiration-intake:preview-withdrawn"; frozenId = "inspiration-intake:preview-frozen"; stagedId = "inspiration-intake:preview-staged"; internalId = "inspiration-intake:preview-internal";
       for (const item of [fixture(activeId, "可展示案例"), fixture(pendingId, "待审案例"), fixture(withdrawnId, "撤下案例"), fixture(frozenId, "冻结案例"), fixture(stagedId, "尚未待审案例"), fixture(internalId, "仅内部案例")]) ingestPrivateInspirationCandidate(connection.db, { sourceId: reviewPipelineSourceFixture.id, ...item });

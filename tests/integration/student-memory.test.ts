@@ -1,5 +1,6 @@
 // @vitest-environment node
 
+import { readFileSync } from "node:fs";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -30,6 +31,10 @@ import { createDb } from "@/lib/db/client";
 import { runMigrations } from "@/lib/db/migrate";
 
 const SECRET = "student-memory-route-secret-at-least-32-characters";
+const MIGRATION_COUNT = (JSON.parse(readFileSync(
+  path.join(process.cwd(), "drizzle", "meta", "_journal.json"),
+  "utf8",
+)) as { entries: unknown[] }).entries.length;
 const MEMORY_ID = "11111111-1111-4111-8111-111111111111";
 const cookie = (token: string) => `${SESSION_COOKIE_NAME}=${token}`;
 
@@ -53,6 +58,7 @@ describe("long-term student memory storage and teacher control", () => {
           ('teacher',NULL,'TEACHER','课程负责人',1700000000),
           ('t1','c1','TEACHER','一班教师',1700000000),
           ('t2','c2','TEACHER','二班教师',1700000000);
+        INSERT INTO teacher_access_scopes VALUES('teacher','GLOBAL',NULL,'TEST_SETUP','测试课程负责人',1700000000);
         INSERT INTO design_project_tasks(id,student_id,class_id,title,status,created_at,updated_at,data_type) VALUES
           ('task-s1','s1','c1','任务一','ACTIVE',1700000000,1700000000,'REAL'),
           ('task-s2','s2','c1','任务二','ACTIVE',1700000000,1700000000,'REAL');
@@ -79,7 +85,7 @@ describe("long-term student memory storage and teacher control", () => {
   it("migrates a constrained independent memory table with ownership guards", () => {
     const connection = createDb(databasePath);
     try {
-      expect(connection.sqlite.prepare("SELECT count(*) count FROM __drizzle_migrations").get()).toEqual({ count: 48 });
+      expect(connection.sqlite.prepare("SELECT count(*) count FROM __drizzle_migrations").get()).toEqual({ count: MIGRATION_COUNT });
       expect(connection.sqlite.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='agent_student_memory'").get()).toEqual({ name: "agent_student_memory" });
       expect(connection.sqlite.prepare("SELECT count(*) count FROM sqlite_master WHERE type='trigger' AND name LIKE 'agent_student_memory_owner_source_%_guard'").get()).toEqual({ count: 2 });
       expect(connection.sqlite.prepare("SELECT count(*) count FROM sqlite_master WHERE type='trigger' AND name LIKE 'agent_student_memory_embedding_%_guard'").get()).toEqual({ count: 2 });

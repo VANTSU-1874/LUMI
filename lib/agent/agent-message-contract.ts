@@ -4,6 +4,7 @@ import {
   AgentArtworkAttachmentSchema,
   AgentExecutionStepSchema,
   AgentReplySchema,
+  AgentRoutingReceiptSchema,
   DesignSpecialtySchema,
 } from "./contracts";
 import { AgentRequestedCapabilitySchema } from "./requested-capability";
@@ -28,6 +29,7 @@ export const AgentAssistantMessageStructureSchema = z.object({
   episode: LearningEpisodeSchema,
   decisionCode: z.string().regex(/^[A-Z][A-Z0-9_]{2,63}$/),
   aiMode: z.enum(["MODEL_ASSISTED", "DETERMINISTIC_FALLBACK"]),
+  routingReceipt: AgentRoutingReceiptSchema.optional(),
   specialty: z.object({
     id: DesignSpecialtySchema,
     label: z.string().min(1).max(100),
@@ -101,6 +103,7 @@ export function assistantMessageStructure(input: {
   episode: z.infer<typeof LearningEpisodeSchema>;
   decisionCode: string;
   aiMode: "MODEL_ASSISTED" | "DETERMINISTIC_FALLBACK";
+  routingReceipt?: z.infer<typeof AgentRoutingReceiptSchema>;
   specialty?: {
     id: z.infer<typeof DesignSpecialtySchema>;
     label: string;

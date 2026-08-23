@@ -12,6 +12,7 @@ import {
   digestIdentityCode,
   normalizeIdentityCode,
 } from "@/lib/auth/identity-code";
+import { grantTeacherAccessScope } from "@/lib/auth/teacher-access";
 import type { DatabaseConnection } from "@/lib/db/client";
 import { assignments, classes, projects, studentIdentityCodes, users } from "@/lib/db/schema";
 
@@ -168,6 +169,13 @@ export function persistTeacherIdentity(db: CourseDatabase, identity: TeacherIden
     if (!stored || stored.id !== "teacher" || stored.role !== "TEACHER" || stored.classId !== null) {
       throw new Error("教师审计身份不可用");
     }
+    grantTeacherAccessScope(transaction, {
+      teacherId: stored.id,
+      scope: { kind: "GLOBAL" },
+      grantedBy: "LEGACY_TEACHER_ACCESS_CODE",
+      grantReason: "受控教师访问码登录时显式授予课程负责人范围",
+      now,
+    });
     return identity;
   }, { behavior: "immediate" });
 }

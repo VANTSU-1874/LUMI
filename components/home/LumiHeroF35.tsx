@@ -38,7 +38,7 @@ function LumiHeroTitle() {
           text={[
             "我们今天做什么",
             "LUMI",
-            "艺术专业AI成长导师",
+            "视觉传达设计教学智能体",
             "覆盖 11 门专业核心课程",
             "从初学到提升",
           ]}
@@ -106,7 +106,7 @@ export function LumiHeroF35() {
 
       <div className="lumi-f35-hero-poster">
         <p className="lumi-f35-satellite lumi-f35-satellite-left">
-          视觉传达设计专业<br />AI 成长导师
+          自建多模态检索增强<br />视觉传达设计教学智能体
         </p>
         <p className="lumi-f35-satellite lumi-f35-satellite-right">
           覆盖 11 门专业核心课程<br />从初学到提升
@@ -115,7 +115,7 @@ export function LumiHeroF35() {
         <LumiHeroTitle />
 
         <p className="lumi-f35-mobile-subtitle">
-          视觉传达设计专业 AI 成长导师 · 覆盖 11 门核心课程
+          自建多模态检索增强 · 视觉传达设计教学智能体
         </p>
 
         <LumiHeroLaptop />
@@ -140,9 +140,9 @@ export function LumiHeroF35() {
             <span aria-hidden="true">↗</span>
           </Link>
           <details>
-            <summary>我有班级码</summary>
-            <p>老师给了你班级邀请码和匿名编号，从这里登录进入。</p>
-            <Link href="/login">登录 Lumi</Link>
+            <summary>创建或登录账号</summary>
+            <p>学生可创建账号；教师账号由课程管理员预置。</p>
+            <Link href="/login?mode=register">创建学生账号</Link>
           </details>
         </aside>
       </div>

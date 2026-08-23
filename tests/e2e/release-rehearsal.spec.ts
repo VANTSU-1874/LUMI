@@ -1,16 +1,12 @@
 import { performance } from "node:perf_hooks";
 
 import { expect, test } from "./fixtures";
+import { enterLegacyStudent } from "./auth-helpers";
 
 import { validPng } from "../helpers/image-fixtures";
 
 async function loginStudent(page: import("./fixtures").Page, identityCode: string) {
-  await page.goto("/");
-  await page.getByLabel("班级邀请码").fill("E2E2026");
-  await page.getByLabel("匿名编号").fill(identityCode);
-  await page.getByRole("button", { name: "学生进入" }).click();
-  await expect(page).toHaveURL(/\/student$/, { timeout: 30_000 });
-  await expect(page.getByRole("region", { name: "与 Lumi 对话" })).toBeVisible({ timeout: 30_000 });
+  await enterLegacyStudent(page, identityCode);
 }
 
 test("machine-assisted local rehearsal exposes the formal layered Lumi workspace", async ({ page }) => {

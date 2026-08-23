@@ -39,9 +39,13 @@ readonly DATABASE_MIGRATION_K84='agent-interventions-0048-additive'
 readonly DATABASE_MIGRATION_KV2='knowledge-v2-0050-additive'
 readonly DATABASE_MIGRATION_INSPIRATION_D27='inspiration-wiki-0051-0063-d27'
 readonly DATABASE_MIGRATION_STUDENT_WORKSPACE='student-workspace-0064-0065-additive'
+readonly DATABASE_MIGRATION_TEACHER_SCOPES='teacher-scopes-0066-additive'
+readonly KNOWLEDGE_V2_LEGACY_RUNTIME_ABSENT_BASE='a554a83a35f740aa6a14bf07b0bbe508b48f8760'
+readonly KNOWLEDGE_V2_LEGACY_RUNTIME_ABSENT_MARKER='.lumi-knowledge-v2-runtime-legacy-absent'
 readonly ENVIRONMENT_WRITE_NONE='not-requested'
 readonly ENVIRONMENT_WRITE_K84='enable-agent-interventions'
 readonly ENVIRONMENT_WRITE_KV2='enable-knowledge-v2-text'
+readonly ENVIRONMENT_WRITE_STUDENT_REGISTRATION='enable-student-self-registration'
 
 ACTIVE_EVIDENCE=''
 ACTIVE_RUN_ID=''
@@ -66,6 +70,8 @@ usage() {
   cat <<'EOF'
 Usage:
   lumi-release status
+  lumi-release inspect-student-registration
+  lumi-release enable-student-registration <existing-class-id>
   lumi-release release-inventory
   lumi-release backup
   lumi-release prune-retired <40-hex-commit> [<40-hex-commit> ...]
@@ -94,7 +100,7 @@ The signed manifest contains exactly:
   built_sha256=<64-hex-sha256>
   build_id=<Next BUILD_ID>
   esbuild_version=<semver>
-  database_migration=not-required|agent-interventions-0048-additive|knowledge-v2-0050-additive|inspiration-wiki-0051-0063-d27|student-workspace-0064-0065-additive
+  database_migration=not-required|agent-interventions-0048-additive|knowledge-v2-0050-additive|inspiration-wiki-0051-0063-d27|student-workspace-0064-0065-additive|teacher-scopes-0066-additive
   environment_write=not-requested|enable-agent-interventions|enable-knowledge-v2-text
 EOF
 }
@@ -329,7 +335,17 @@ assert_release_policy() {
   if [[ "$database_migration" == "$DATABASE_MIGRATION_STUDENT_WORKSPACE" && "$environment_write" == "$ENVIRONMENT_WRITE_NONE" ]]; then
     return 0
   fi
+  if [[ "$database_migration" == "$DATABASE_MIGRATION_TEACHER_SCOPES" && "$environment_write" == "$ENVIRONMENT_WRITE_NONE" ]]; then
+    return 0
+  fi
   die 'RELEASE_POLICY_PAIR_NOT_ALLOWED'
+}
+
+release_policy_requires_candidate_audit() {
+  local database_migration=$1
+  local environment_write=$2
+  [[ "$database_migration" == "$DATABASE_MIGRATION_KV2" && "$environment_write" == "$ENVIRONMENT_WRITE_KV2" ]] \
+    || [[ "$database_migration" == "$DATABASE_MIGRATION_TEACHER_SCOPES" && "$environment_write" == "$ENVIRONMENT_WRITE_NONE" ]]
 }
 
 read_agent_interventions_env_state() {
@@ -369,6 +385,125 @@ elif values[0] in {"true", "false"}:
 else:
     raise SystemExit("AGENT_INTERVENTIONS_ENV_INVALID")
 PY
+}
+
+assert_class_id() {
+  [[ "$1" =~ ^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$ ]] || die 'CLASS_ID_INVALID'
+}
+
+read_student_registration_env_state() {
+  python3 - "$SERVICE_ENV" "$SERVICE_GROUP" <<'PY'
+import grp
+from pathlib import Path
+import re
+import stat
+import sys
+
+path = Path(sys.argv[1])
+expected_gid = grp.getgrnam(sys.argv[2]).gr_gid
+details = path.lstat()
+if not stat.S_ISREG(details.st_mode) or path.is_symlink():
+    raise SystemExit("SERVICE_ENV_UNSAFE")
+if details.st_uid != 0 or details.st_gid != expected_gid or stat.S_IMODE(details.st_mode) != 0o640:
+    raise SystemExit("SERVICE_ENV_METADATA_UNEXPECTED")
+
+target = "STUDENT_SELF_REGISTRATION_CLASS_ID"
+values = []
+for raw_line in path.read_text(encoding="utf-8").splitlines():
+    line = raw_line.strip()
+    if not line or line.startswith("#"):
+        continue
+    if line.startswith("export "):
+        line = line[7:].lstrip()
+    key, separator, value = line.partition("=")
+    if separator and key.strip() == target:
+        values.append(value.strip())
+
+if len(values) > 1:
+    raise SystemExit("STUDENT_REGISTRATION_ENV_DUPLICATED")
+if not values:
+    print("absent")
+elif re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._:-]{0,127}", values[0]):
+    print(values[0])
+else:
+    raise SystemExit("STUDENT_REGISTRATION_ENV_INVALID")
+PY
+}
+
+write_student_registration_env_state() {
+  local desired_state=$1
+  if [[ "$desired_state" != 'absent' ]]; then
+    assert_class_id "$desired_state"
+  fi
+  python3 - "$SERVICE_ENV" "$SERVICE_GROUP" "$desired_state" <<'PY'
+import grp
+import os
+from pathlib import Path
+import re
+import stat
+import sys
+
+path = Path(sys.argv[1])
+expected_gid = grp.getgrnam(sys.argv[2]).gr_gid
+desired = sys.argv[3]
+if desired != "absent" and not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._:-]{0,127}", desired):
+    raise SystemExit("STUDENT_REGISTRATION_CLASS_ID_INVALID")
+details = path.lstat()
+if not stat.S_ISREG(details.st_mode) or path.is_symlink():
+    raise SystemExit("SERVICE_ENV_UNSAFE")
+if details.st_uid != 0 or details.st_gid != expected_gid or stat.S_IMODE(details.st_mode) != 0o640:
+    raise SystemExit("SERVICE_ENV_METADATA_UNEXPECTED")
+
+target = "STUDENT_SELF_REGISTRATION_CLASS_ID"
+output = []
+seen = 0
+for raw_line in path.read_text(encoding="utf-8").splitlines():
+    line = raw_line.strip()
+    candidate = line[7:].lstrip() if line.startswith("export ") else line
+    key, separator, value = candidate.partition("=")
+    if separator and key.strip() == target:
+        seen += 1
+        current = value.strip()
+        if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._:-]{0,127}", current):
+            raise SystemExit("STUDENT_REGISTRATION_ENV_INVALID")
+        if desired != "absent":
+            output.append(f"{target}={desired}")
+    else:
+        output.append(raw_line)
+
+if seen > 1:
+    raise SystemExit("STUDENT_REGISTRATION_ENV_DUPLICATED")
+if seen == 0 and desired != "absent":
+    output.append(f"{target}={desired}")
+
+payload = ("\n".join(output).rstrip("\n") + "\n").encode("utf-8")
+temporary = path.with_name(f".{path.name}.lumi-release-{os.getpid()}.tmp")
+flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_CLOEXEC | os.O_NOFOLLOW
+try:
+    descriptor = os.open(temporary, flags, 0o640)
+    try:
+        offset = 0
+        while offset < len(payload):
+            offset += os.write(descriptor, payload[offset:])
+        os.fchown(descriptor, 0, expected_gid)
+        os.fchmod(descriptor, 0o640)
+        os.fsync(descriptor)
+    finally:
+        os.close(descriptor)
+    os.replace(temporary, path)
+except BaseException:
+    try:
+        temporary.unlink()
+    except FileNotFoundError:
+        pass
+    raise
+directory = os.open(path.parent, os.O_RDONLY | os.O_DIRECTORY)
+try:
+    os.fsync(directory)
+finally:
+    os.close(directory)
+PY
+  [[ "$(read_student_registration_env_state)" == "$desired_state" ]]
 }
 
 write_agent_interventions_env_state() {
@@ -698,6 +833,7 @@ for (const [type, name] of required) {
   const row = database.prepare("SELECT 1 present FROM sqlite_master WHERE type=? AND name=?").get(type, name);
   if (!row) throw new Error("STUDENT_WORKSPACE_MIGRATION_OBJECT_MISSING");
 }
+
 const columns = database.prepare("PRAGMA table_info(student_library_assets)").all();
 if (!columns.some((column) => column.name === "project_id")) {
   throw new Error("STUDENT_WORKSPACE_PROJECT_BINDING_MISSING");
@@ -711,6 +847,93 @@ if (database.pragma("foreign_key_check").length > 0) {
 }
 database.close();
 process.stdout.write("STUDENT_WORKSPACE_MIGRATION_VERIFY=PASS\\n");
+'
+
+  runuser -u "$SERVICE_USER" -- /bin/bash -c '
+    set -Eeuo pipefail
+    set -a
+    . "$1"
+    set +a
+    export NODE_ENV=production
+    export PATH=/usr/sbin:/usr/bin:/sbin:/bin
+    unset BASH_ENV ENV GIT_DIR GIT_WORK_TREE NODE_OPTIONS npm_config_userconfig
+    cd "$2"
+    exec "$3" -e "$4" "$2/node_modules/better-sqlite3"
+  ' -- "$SERVICE_ENV" "$release" "$RUNTIME_NODE" "$verifier"
+}
+
+run_teacher_scopes_database_migration() {
+  local release=$1
+  [[ -d "$release" && ! -L "$release" ]]
+
+  runuser -u "$SERVICE_USER" -- /bin/bash -c '
+    set -Eeuo pipefail
+    set -a
+    . "$1"
+    set +a
+    export NODE_ENV=production
+    export PATH=/usr/sbin:/usr/bin:/sbin:/bin
+    unset BASH_ENV ENV GIT_DIR GIT_WORK_TREE NODE_OPTIONS npm_config_userconfig
+    cd "$2"
+    exec "$3" "$2/node_modules/tsx/dist/cli.mjs" "$2/lib/db/migrate.ts"
+  ' -- "$SERVICE_ENV" "$release" "$RUNTIME_NODE"
+}
+
+verify_teacher_scopes_database_migration() {
+  local release=$1
+  local verifier
+  [[ -d "$release" && ! -L "$release" ]]
+  verifier='
+const Database = require(process.argv[1]);
+const database = new Database(process.env.DATABASE_PATH, { readonly: true, fileMustExist: true });
+database.pragma("query_only = ON");
+const required = [
+  ["table", "teacher_access_scopes"],
+  ["index", "teacher_access_scopes_class_idx"],
+];
+for (const [type, name] of required) {
+  const row = database.prepare("SELECT 1 present FROM sqlite_master WHERE type=? AND name=?").get(type, name);
+  if (!row) throw new Error("TEACHER_SCOPES_MIGRATION_OBJECT_MISSING");
+}
+const columns = database.prepare("PRAGMA table_info(teacher_access_scopes)").all();
+for (const name of ["teacher_id", "scope_kind", "class_id", "granted_by", "grant_reason", "created_at"]) {
+  if (!columns.some((column) => column.name === name)) {
+    throw new Error("TEACHER_SCOPES_MIGRATION_COLUMN_MISSING");
+  }
+}
+const invalid = database.prepare(`
+  SELECT count(*) count
+  FROM teacher_access_scopes
+  WHERE (scope_kind = ? AND class_id IS NOT NULL)
+     OR (scope_kind = ? AND class_id IS NULL)
+     OR scope_kind NOT IN (?, ?)
+     OR length(trim(granted_by)) NOT BETWEEN 1 AND 120
+     OR length(trim(grant_reason)) NOT BETWEEN 1 AND 500
+`).get("GLOBAL", "CLASS", "GLOBAL", "CLASS");
+if (!invalid || Number(invalid.count) !== 0) {
+  throw new Error("TEACHER_SCOPES_MIGRATION_DATA_INVALID");
+}
+const fixedTeacher = database.prepare("SELECT 1 present FROM users WHERE id=? AND role=? AND class_id IS NULL").get("teacher", "TEACHER");
+if (fixedTeacher) {
+  const fixedScope = database.prepare("SELECT 1 present FROM teacher_access_scopes WHERE teacher_id=? AND scope_kind=? AND class_id IS NULL").get("teacher", "GLOBAL");
+  if (!fixedScope) throw new Error("TEACHER_SCOPES_FIXED_TEACHER_BACKFILL_MISSING");
+}
+const latest = database.prepare("SELECT max(created_at) createdAt FROM __drizzle_migrations").get();
+if (!latest || Number(latest.createdAt) < 1787407983837) {
+  throw new Error("TEACHER_SCOPES_MIGRATION_JOURNAL_MISSING");
+}
+if (database.pragma("foreign_key_check").length > 0) {
+  throw new Error("TEACHER_SCOPES_MIGRATION_FOREIGN_KEY_FAILURE");
+}
+const counts = database.prepare(`
+  SELECT
+    count(*) total,
+    sum(CASE WHEN scope_kind=? THEN 1 ELSE 0 END) globalCount,
+    sum(CASE WHEN scope_kind=? THEN 1 ELSE 0 END) classCount
+  FROM teacher_access_scopes
+`).get("GLOBAL", "CLASS");
+database.close();
+process.stdout.write(`TEACHER_SCOPES_MIGRATION_VERIFY=PASS:${Number(counts.total || 0)}:${Number(counts.globalCount || 0)}:${Number(counts.classCount || 0)}\n`);
 '
 
   runuser -u "$SERVICE_USER" -- /bin/bash -c '
@@ -816,6 +1039,52 @@ verify_inspiration_wiki_d27_release() {
   grep -Fq '"assetWrites": 0' <<<"$output"
   printf '%s\n' "$output"
   printf 'INSPIRATION_WIKI_D27_VERIFY=PASS\n'
+}
+
+knowledge_v2_runtime_artifact_state() {
+  local release=$1
+  local manifest="$release/runtime-manifest.json"
+  local runtime_tree="$release/.runtime/knowledge-v2-linux"
+  [[ -d "$release" && ! -L "$release" ]]
+  if [[ -f "$manifest" && ! -L "$manifest" && -d "$runtime_tree" && ! -L "$runtime_tree" ]]; then
+    printf 'SEALED\n'
+  elif [[ ! -e "$manifest" && ! -L "$manifest" && ! -e "$runtime_tree" && ! -L "$runtime_tree" ]]; then
+    printf 'ABSENT\n'
+  else
+    return 1
+  fi
+}
+
+write_knowledge_v2_legacy_runtime_absent_marker() {
+  local release=$1
+  local marker="$release/$KNOWLEDGE_V2_LEGACY_RUNTIME_ABSENT_MARKER"
+  [[ -d "$release" && ! -L "$release" ]]
+  [[ ! -e "$marker" && ! -L "$marker" ]]
+  {
+    printf 'mode=legacy-source-absent\n'
+    printf 'source_commit=%s\n' "$KNOWLEDGE_V2_LEGACY_RUNTIME_ABSENT_BASE"
+  } > "$marker"
+  chown root:"$SERVICE_GROUP" "$marker"
+  chmod 0640 "$marker"
+}
+
+verify_knowledge_v2_legacy_runtime_absent_release() {
+  local release=$1
+  local marker="$release/$KNOWLEDGE_V2_LEGACY_RUNTIME_ABSENT_MARKER"
+  local runtime_state
+  runtime_state=$(knowledge_v2_runtime_artifact_state "$release") \
+    || die 'KNOWLEDGE_V2_RUNTIME_ARTIFACT_STATE_PARTIAL'
+  [[ "$runtime_state" == 'ABSENT' ]] \
+    || die 'KNOWLEDGE_V2_LEGACY_RUNTIME_ARTIFACT_UNEXPECTED'
+  [[ -f "$marker" && ! -L "$marker" ]]
+  [[ "$(stat -c '%U:%G:%a' -- "$marker")" == "root:$SERVICE_GROUP:640" ]]
+  grep -Fqx 'mode=legacy-source-absent' "$marker"
+  grep -Fqx "source_commit=$KNOWLEDGE_V2_LEGACY_RUNTIME_ABSENT_BASE" "$marker"
+  [[ "$(read_knowledge_v2_boolean_env_state)" == 'true,true,false' ]] \
+    || die 'KNOWLEDGE_V2_LEGACY_RUNTIME_ENVIRONMENT_UNEXPECTED'
+  assert_knowledge_v2_canary_configured
+  verify_knowledge_v2_database_activation "$release"
+  printf 'KNOWLEDGE_V2_RUNTIME_COMPATIBILITY=PASS:LEGACY_SOURCE_ABSENT\n'
 }
 
 reconstruct_knowledge_v2_corpus_for_d27() {
@@ -1261,6 +1530,9 @@ rollback_current() {
     elif [[ "$ENVIRONMENT_POLICY_ACTIVE" == "$ENVIRONMENT_WRITE_KV2" ]] \
       && write_knowledge_v2_boolean_env_state "$ENVIRONMENT_PREVIOUS"; then
       environment_restored=true
+    elif [[ "$ENVIRONMENT_POLICY_ACTIVE" == "$ENVIRONMENT_WRITE_STUDENT_REGISTRATION" ]] \
+      && write_student_registration_env_state "$ENVIRONMENT_PREVIOUS"; then
+      environment_restored=true
     fi
     if [[ "$environment_restored" == true ]]; then
       printf 'ROLLBACK_ENVIRONMENT=RESTORED_%s\n' "$ENVIRONMENT_PREVIOUS" >> "$ACTIVE_EVIDENCE/summary.log"
@@ -1637,6 +1909,7 @@ allowed_pairs = {
     ("knowledge-v2-0050-additive", "enable-knowledge-v2-text"),
     ("inspiration-wiki-0051-0063-d27", "not-requested"),
     ("student-workspace-0064-0065-additive", "not-requested"),
+    ("teacher-scopes-0066-additive", "not-requested"),
 }
 if (values["database_migration"], values["environment_write"]) not in allowed_pairs:
     raise SystemExit("MANIFEST_RELEASE_POLICY_PAIR_NOT_ALLOWED")
@@ -1954,6 +2227,20 @@ verify_release() {
   elif [[ "$database_migration" == "$DATABASE_MIGRATION_STUDENT_WORKSPACE" ]]; then
     runuser -u "$SERVICE_USER" -- test -r "$release/drizzle/0064_student_library_assets.sql"
     runuser -u "$SERVICE_USER" -- test -r "$release/drizzle/0065_student_projects.sql"
+  elif [[ "$database_migration" == "$DATABASE_MIGRATION_TEACHER_SCOPES" ]]; then
+    runuser -u "$SERVICE_USER" -- test -r "$release/drizzle/0066_explicit_teacher_scopes.sql"
+    local teacher_runtime_state
+    teacher_runtime_state=$(knowledge_v2_runtime_artifact_state "$release") \
+      || die 'KNOWLEDGE_V2_RUNTIME_ARTIFACT_STATE_PARTIAL'
+    if [[ "$teacher_runtime_state" == 'SEALED' ]]; then
+      [[ ! -e "$release/$KNOWLEDGE_V2_LEGACY_RUNTIME_ABSENT_MARKER" \
+        && ! -L "$release/$KNOWLEDGE_V2_LEGACY_RUNTIME_ABSENT_MARKER" ]]
+      runuser -u "$SERVICE_USER" -- test -r "$release/runtime-manifest.json"
+      runuser -u "$SERVICE_USER" -- test -x "$release/.runtime/knowledge-v2-linux/python/bin/python3"
+    else
+      verify_knowledge_v2_legacy_runtime_absent_release "$release" \
+        | tee -a "$ACTIVE_EVIDENCE/summary.log"
+    fi
   fi
   runuser -u "$SERVICE_USER" -- test -r "$marker"
   runuser -u "$SERVICE_USER" -- test -w "$release/.next/cache"
@@ -2152,18 +2439,35 @@ prepare() {
   chown -hR root:"$SERVICE_GROUP" "$release"
   find "$release" -xdev -type d -exec chmod 0750 {} +
   find "$release" -xdev -type f -exec chmod 0640 {} +
-  if [[ "$database_migration" == "$DATABASE_MIGRATION_INSPIRATION_D27" ]]; then
-    local knowledge_repair_root="$release/.lumi-d27-knowledge-repair"
-    reconstruct_knowledge_v2_corpus_for_d27 \
-      "$RELEASE_ROOT/$expected_current" "$release" "$knowledge_repair_root" \
-      | tee "$ACTIVE_EVIDENCE/knowledge-v2-corpus-repair.log"
-    inherit_knowledge_v2_runtime_for_d27 \
-      "$RELEASE_ROOT/$expected_current" "$release" "$knowledge_repair_root" \
-      | tee "$ACTIVE_EVIDENCE/knowledge-v2-runtime-inherit.log"
-    clone_knowledge_v2_runtime_tree_for_d27 \
-      "$RELEASE_ROOT/$expected_current" "$release" \
-      | tee "$ACTIVE_EVIDENCE/knowledge-v2-runtime-tree-clone.log"
-    rm -rf -- "$knowledge_repair_root"
+  if [[ "$database_migration" == "$DATABASE_MIGRATION_INSPIRATION_D27" || "$database_migration" == "$DATABASE_MIGRATION_TEACHER_SCOPES" ]]; then
+    local knowledge_source_state
+    knowledge_source_state=$(knowledge_v2_runtime_artifact_state "$RELEASE_ROOT/$expected_current") \
+      || die 'KNOWLEDGE_V2_RUNTIME_ARTIFACT_STATE_PARTIAL'
+    if [[ "$knowledge_source_state" == 'SEALED' ]]; then
+      local knowledge_repair_root="$release/.lumi-d27-knowledge-repair"
+      reconstruct_knowledge_v2_corpus_for_d27 \
+        "$RELEASE_ROOT/$expected_current" "$release" "$knowledge_repair_root" \
+        | tee "$ACTIVE_EVIDENCE/knowledge-v2-corpus-repair.log"
+      inherit_knowledge_v2_runtime_for_d27 \
+        "$RELEASE_ROOT/$expected_current" "$release" "$knowledge_repair_root" \
+        | tee "$ACTIVE_EVIDENCE/knowledge-v2-runtime-inherit.log"
+      clone_knowledge_v2_runtime_tree_for_d27 \
+        "$RELEASE_ROOT/$expected_current" "$release" \
+        | tee "$ACTIVE_EVIDENCE/knowledge-v2-runtime-tree-clone.log"
+      rm -rf -- "$knowledge_repair_root"
+    elif [[ "$database_migration" == "$DATABASE_MIGRATION_TEACHER_SCOPES" \
+      && "$expected_current" == "$KNOWLEDGE_V2_LEGACY_RUNTIME_ABSENT_BASE" ]]; then
+      local target_runtime_state
+      target_runtime_state=$(knowledge_v2_runtime_artifact_state "$release") \
+        || die 'KNOWLEDGE_V2_RUNTIME_ARTIFACT_STATE_PARTIAL'
+      [[ "$target_runtime_state" == 'ABSENT' ]] \
+        || die 'KNOWLEDGE_V2_LEGACY_RUNTIME_TARGET_UNEXPECTED'
+      write_knowledge_v2_legacy_runtime_absent_marker "$release"
+      verify_knowledge_v2_legacy_runtime_absent_release "$release" \
+        | tee "$ACTIVE_EVIDENCE/knowledge-v2-runtime-legacy-compatibility.log"
+    else
+      die 'KNOWLEDGE_V2_SEALED_RUNTIME_REQUIRED'
+    fi
   fi
   test -s "$release/.next/BUILD_ID"
   [[ "$(cat "$release/.next/BUILD_ID")" == "$build_id" ]]
@@ -2173,8 +2477,20 @@ prepare() {
   find "$release" -xdev -type d -exec chmod 0750 {} +
   find "$release" -xdev -type f -exec chmod 0640 {} +
   repair_executable_permissions "$release" "$stage/source.executables" "$stage/built.executables" "$ACTIVE_EVIDENCE/executable-permissions.tsv" | tee -a "$ACTIVE_EVIDENCE/summary.log"
-  if [[ "$database_migration" == "$DATABASE_MIGRATION_INSPIRATION_D27" ]]; then
-    repair_knowledge_v2_python_permission "$release" | tee -a "$ACTIVE_EVIDENCE/summary.log"
+  if [[ "$database_migration" == "$DATABASE_MIGRATION_INSPIRATION_D27" || "$database_migration" == "$DATABASE_MIGRATION_TEACHER_SCOPES" ]]; then
+    local prepared_runtime_state
+    prepared_runtime_state=$(knowledge_v2_runtime_artifact_state "$release") \
+      || die 'KNOWLEDGE_V2_RUNTIME_ARTIFACT_STATE_PARTIAL'
+    if [[ "$prepared_runtime_state" == 'SEALED' ]]; then
+      repair_knowledge_v2_python_permission "$release" | tee -a "$ACTIVE_EVIDENCE/summary.log"
+    elif [[ "$database_migration" == "$DATABASE_MIGRATION_TEACHER_SCOPES" ]]; then
+      verify_knowledge_v2_legacy_runtime_absent_release "$release" \
+        | tee -a "$ACTIVE_EVIDENCE/summary.log"
+      printf 'KNOWLEDGE_V2_PYTHON_PERMISSION_REPAIR=SKIPPED:LEGACY_SOURCE_ABSENT\n' \
+        | tee -a "$ACTIVE_EVIDENCE/summary.log"
+    else
+      die 'KNOWLEDGE_V2_SEALED_RUNTIME_REQUIRED'
+    fi
   fi
   install -d -o "$SERVICE_USER" -g "$SERVICE_GROUP" -m 0770 "$release/.next/cache"
   write_release_source_binding "$release" "$commit"
@@ -2245,8 +2561,8 @@ audit_prepared() {
   assert_commit "$commit"
   [[ "$expected_current" =~ ^[0-9a-f]{40}$ ]]
   [[ "$release" == "$RELEASE_ROOT/$commit" ]]
-  [[ "$database_migration" == "$DATABASE_MIGRATION_KV2" ]]
-  [[ "$environment_write" == "$ENVIRONMENT_WRITE_KV2" ]]
+  assert_release_policy "$database_migration" "$environment_write"
+  release_policy_requires_candidate_audit "$database_migration" "$environment_write"
   [[ "$(readlink -f "$CURRENT_LINK")" == "$RELEASE_ROOT/$expected_current" ]]
   verify_release "$commit" "$build_id" "$esbuild_version" "$database_migration" "$environment_write"
 
@@ -2361,8 +2677,8 @@ recover_audit() {
   assert_commit "$commit"
   [[ "$expected_current" =~ ^[0-9a-f]{40}$ ]]
   [[ "$release" == "$RELEASE_ROOT/$commit" ]]
-  [[ "$database_migration" == "$DATABASE_MIGRATION_KV2" ]]
-  [[ "$environment_write" == "$ENVIRONMENT_WRITE_KV2" ]]
+  assert_release_policy "$database_migration" "$environment_write"
+  release_policy_requires_candidate_audit "$database_migration" "$environment_write"
   [[ "$(readlink -f "$CURRENT_LINK")" == "$RELEASE_ROOT/$expected_current" ]]
   verify_release "$commit" "$build_id" "$esbuild_version" "$database_migration" "$environment_write"
 
@@ -2475,6 +2791,11 @@ cutover() {
     [[ "$environment_previous" =~ ^(absent|true|false),(absent|true|false),(absent|true|false)$ ]]
     [[ "$(read_knowledge_v2_boolean_env_state)" == "$environment_previous" ]]
     assert_knowledge_v2_canary_configured | tee -a "$ACTIVE_EVIDENCE/summary.log"
+  else
+    [[ "$environment_previous" == 'absent' || "$environment_previous" == 'true' || "$environment_previous" == 'false' ]]
+    [[ "$(read_agent_interventions_env_state)" == "$environment_previous" ]]
+  fi
+  if release_policy_requires_candidate_audit "$database_migration" "$environment_write"; then
     audit_quality_report=$(seal_field "$seal" audit_quality_report)
     audit_quality_sha=$(seal_field "$seal" audit_quality_sha256)
     audit_harness_report=$(seal_field "$seal" audit_harness_report)
@@ -2490,9 +2811,6 @@ cutover() {
     verify_candidate_quality_reports "$audit_quality_report" "$audit_harness_report" "$commit" > /dev/null
     QUALITY_REPORT_TARGET=$(service_report_target AGENT_EVAL_REPORT_PATH)
     HARNESS_REPORT_TARGET=$(service_report_target AGENT_HARNESS_REPORT_PATH)
-  else
-    [[ "$environment_previous" == 'absent' || "$environment_previous" == 'true' || "$environment_previous" == 'false' ]]
-    [[ "$(read_agent_interventions_env_state)" == "$environment_previous" ]]
   fi
   [[ "$expected_token_hash" =~ ^[0-9a-f]{64}$ ]]
   actual_token_hash=$(printf '%s' "$confirmation_token" | sha256sum | awk '{print $1}')
@@ -2543,8 +2861,13 @@ cutover() {
     run_student_workspace_database_migration "$release" > "$ACTIVE_EVIDENCE/database-migration.log" 2>&1
     MIGRATION_APPLIED=true
     verify_student_workspace_database_migration "$release" | tee -a "$ACTIVE_EVIDENCE/database-migration.log" "$ACTIVE_EVIDENCE/summary.log"
+  elif [[ "$database_migration" == "$DATABASE_MIGRATION_TEACHER_SCOPES" ]]; then
+    log 'STAGE=TEACHER_SCOPES_DATABASE_MIGRATION'
+    run_teacher_scopes_database_migration "$release" > "$ACTIVE_EVIDENCE/database-migration.log" 2>&1
+    MIGRATION_APPLIED=true
+    verify_teacher_scopes_database_migration "$release" | tee -a "$ACTIVE_EVIDENCE/database-migration.log" "$ACTIVE_EVIDENCE/summary.log"
   fi
-  if [[ "$environment_write" == "$ENVIRONMENT_WRITE_KV2" ]]; then
+  if release_policy_requires_candidate_audit "$database_migration" "$environment_write"; then
     log 'STAGE=QUALITY_REPORT_PROMOTION'
     QUALITY_REPORT_BACKUP="$ACTIVE_EVIDENCE/agent-eval.previous"
     HARNESS_REPORT_BACKUP="$ACTIVE_EVIDENCE/agent-harness.previous"
@@ -2564,7 +2887,7 @@ cutover() {
   [[ "$(readlink -f "$CURRENT_LINK")" == "$release" ]]
   systemctl start "$SERVICE"
   systemctl is-active --quiet "$SERVICE"
-  if [[ "$database_migration" == "$DATABASE_MIGRATION_KV2" || "$environment_write" == "$ENVIRONMENT_WRITE_KV2" ]]; then
+  if release_policy_requires_candidate_audit "$database_migration" "$environment_write"; then
     wait_for_health "$ACTIVE_EVIDENCE/new-health.json" | tee -a "$ACTIVE_EVIDENCE/summary.log"
     printf 'CUTOVER_HEALTH_GATE=COMPETITION_READY\n' >> "$ACTIVE_EVIDENCE/summary.log"
   else
@@ -3375,6 +3698,140 @@ discard_failed_work() {
   printf 'EVIDENCE=%s\n' "$EVIDENCE_ROOT/$run_id"
 }
 
+student_registration_inventory() {
+  local required_class_id=${1:-}
+  local current_release
+  local inspector
+  if [[ -n "$required_class_id" ]]; then
+    assert_class_id "$required_class_id"
+  fi
+  current_release=$(readlink -f "$CURRENT_LINK")
+  [[ "$current_release" == "$RELEASE_ROOT/"* ]]
+  [[ -d "$current_release" && ! -L "$current_release" ]]
+  inspector='
+const Database = require(process.argv[1]);
+const requiredClassId = process.argv[2] || "";
+const database = new Database(process.env.DATABASE_PATH, { readonly: true, fileMustExist: true });
+database.pragma("query_only = ON");
+const rows = database.prepare(`
+  SELECT
+    c.id,
+    c.name,
+    (SELECT count(*) FROM users u WHERE u.class_id = c.id AND u.role = ?) studentCount,
+    (SELECT count(*) FROM course_modules m WHERE m.class_id = c.id) moduleCount,
+    (SELECT count(*) FROM assignments a WHERE a.class_id = c.id) assignmentCount
+  FROM classes c
+  ORDER BY c.id
+`).all("STUDENT");
+if (requiredClassId) {
+  const selected = rows.find((row) => row.id === requiredClassId);
+  if (!selected) throw new Error("STUDENT_REGISTRATION_CLASS_NOT_FOUND");
+  if (Number(selected.moduleCount) < 1) throw new Error("STUDENT_REGISTRATION_CLASS_HAS_NO_MODULES");
+  if (Number(selected.assignmentCount) < 1) throw new Error("STUDENT_REGISTRATION_CLASS_HAS_NO_ASSIGNMENTS");
+}
+database.close();
+console.log(JSON.stringify({ classCount: rows.length, classes: rows }));
+'
+
+  runuser -u "$SERVICE_USER" -- /bin/bash -c '
+    set -Eeuo pipefail
+    set -a
+    . "$1"
+    set +a
+    export NODE_ENV=production
+    export PATH=/usr/sbin:/usr/bin:/sbin:/bin
+    unset BASH_ENV ENV GIT_DIR GIT_WORK_TREE NODE_OPTIONS npm_config_userconfig
+    cd "$2"
+    exec "$3" -e "$4" "$2/node_modules/better-sqlite3" "$5"
+  ' -- "$SERVICE_ENV" "$current_release" "$RUNTIME_NODE" "$inspector" "$required_class_id"
+}
+
+student_registration_ready() {
+  local state
+  state=$(read_student_registration_env_state)
+  if [[ "$state" == 'absent' ]]; then
+    printf 'false\n'
+  elif student_registration_inventory "$state" >/dev/null 2>&1; then
+    printf 'true\n'
+  else
+    printf 'false\n'
+  fi
+}
+
+inspect_student_registration() {
+  assert_operations_roots
+  [[ -L "$CURRENT_LINK" ]]
+  systemctl is-active --quiet "$SERVICE"
+  [[ -f "$SERVICE_ENV" && ! -L "$SERVICE_ENV" ]]
+  runuser -u "$SERVICE_USER" -- test -r "$SERVICE_ENV"
+  printf 'STUDENT_SELF_REGISTRATION_ENV=%s\n' "$(read_student_registration_env_state)"
+  printf 'STUDENT_SELF_REGISTRATION_READY=%s\n' "$(student_registration_ready)"
+  printf 'STUDENT_REGISTRATION_INVENTORY='
+  student_registration_inventory
+}
+
+enable_student_registration() {
+  local class_id=$1
+  local previous
+  local current
+  local run_id
+  local inventory
+  assert_class_id "$class_id"
+  assert_operations_roots
+  current=$(readlink -f "$CURRENT_LINK")
+  [[ "$current" == "$RELEASE_ROOT/"* ]]
+  [[ -d "$current" && ! -L "$current" ]]
+  systemctl is-active --quiet "$SERVICE"
+  inventory=$(student_registration_inventory "$class_id")
+  previous=$(read_student_registration_env_state)
+
+  run_id="student-registration-$(date -u +%Y%m%dT%H%M%SZ)-$$-$RANDOM"
+  make_evidence student-registration "$run_id"
+  ACTIVE_COMMIT=$(basename -- "$current")
+  CURRENT_BEFORE="$current"
+  service_preflight "$ACTIVE_EVIDENCE/before-health.json"
+  {
+    printf 'TARGET_CLASS_ID=%s\n' "$class_id"
+    printf 'PREVIOUS_ENV_STATE=%s\n' "$previous"
+    printf 'CLASS_INVENTORY=%s\n' "$inventory"
+  } >> "$ACTIVE_EVIDENCE/summary.log"
+
+  if [[ "$previous" != "$class_id" ]]; then
+    CUTOVER_STARTED=true
+    ENVIRONMENT_POLICY_ACTIVE="$ENVIRONMENT_WRITE_STUDENT_REGISTRATION"
+    ENVIRONMENT_PREVIOUS="$previous"
+    ENVIRONMENT_CHANGED=true
+    write_student_registration_env_state "$class_id"
+    systemctl restart "$SERVICE"
+    wait_for_health "$ACTIVE_EVIDENCE/after-health.json" | tee -a "$ACTIVE_EVIDENCE/summary.log"
+  else
+    capture_health "$ACTIVE_EVIDENCE/after-health.json" | tee -a "$ACTIVE_EVIDENCE/summary.log"
+  fi
+
+  [[ "$(read_student_registration_env_state)" == "$class_id" ]]
+  student_registration_inventory "$class_id" >/dev/null
+  [[ "$(student_registration_ready)" == 'true' ]]
+  {
+    printf 'SOURCE_COMMIT=%s\n' "$ACTIVE_COMMIT"
+    printf 'TARGET_CLASS_ID=%s\n' "$class_id"
+    printf 'SERVICE_RESTARTED=%s\n' "$([[ "$previous" == "$class_id" ]] && printf 'NO' || printf 'YES')"
+    printf 'STUDENT_SELF_REGISTRATION_READY=true\n'
+    printf 'STATUS=SUCCEEDED\n'
+  } > "$ACTIVE_EVIDENCE/SUCCEEDED.result"
+  release_failure_reserve
+  finalize_evidence
+  ACTIVE_EVIDENCE=''
+  CUTOVER_STARTED=false
+  ENVIRONMENT_CHANGED=false
+  ENVIRONMENT_POLICY_ACTIVE='not-requested'
+
+  printf 'STUDENT_SELF_REGISTRATION_ENABLED=YES\n'
+  printf 'TARGET_CLASS_ID=%s\n' "$class_id"
+  printf 'SERVICE_RESTARTED=%s\n' "$([[ "$previous" == "$class_id" ]] && printf 'NO' || printf 'YES')"
+  printf 'CURRENT=%s\n' "$current"
+  printf 'EVIDENCE=%s\n' "$EVIDENCE_ROOT/$run_id"
+}
+
 status() {
   assert_operations_roots
   [[ -L "$CURRENT_LINK" ]]
@@ -3384,12 +3841,15 @@ status() {
   [[ -f "$SERVICE_ENV" && ! -L "$SERVICE_ENV" ]]
   runuser -u "$SERVICE_USER" -- test -r "$SERVICE_ENV"
   printf 'SERVICE_ENV_READABLE_BY_LUMI=PASS\n'
+  printf 'STUDENT_SELF_REGISTRATION_ENV=%s\n' "$(read_student_registration_env_state)"
+  printf 'STUDENT_SELF_REGISTRATION_READY=%s\n' "$(student_registration_ready)"
   printf 'AGENT_INTERVENTIONS_ENV=%s\n' "$(read_agent_interventions_env_state)"
   printf 'KNOWLEDGE_V2_ENV=%s\n' "$(read_knowledge_v2_boolean_env_state)"
   printf 'KNOWLEDGE_V2_CANARY_COUNT=%s\n' "$(knowledge_v2_canary_count)"
   printf 'K84_RELEASE_POLICY=AVAILABLE\n'
   printf 'KNOWLEDGE_V2_RELEASE_POLICY=AVAILABLE\n'
   printf 'INSPIRATION_WIKI_D27_RELEASE_POLICY=AVAILABLE\n'
+  printf 'TEACHER_SCOPES_0066_RELEASE_POLICY=AVAILABLE\n'
   status_health
 }
 
@@ -3402,6 +3862,14 @@ main() {
     status)
       [[ "$#" -eq 1 ]] || die 'STATUS_TAKES_NO_ARGUMENTS'
       status
+      ;;
+    inspect-student-registration)
+      [[ "$#" -eq 1 ]] || die 'INSPECT_STUDENT_REGISTRATION_TAKES_NO_ARGUMENTS'
+      inspect_student_registration
+      ;;
+    enable-student-registration)
+      [[ "$#" -eq 2 ]] || die 'ENABLE_STUDENT_REGISTRATION_REQUIRES_CLASS_ID'
+      enable_student_registration "$2"
       ;;
     release-inventory)
       [[ "$#" -eq 1 ]] || die 'RELEASE_INVENTORY_TAKES_NO_ARGUMENTS'

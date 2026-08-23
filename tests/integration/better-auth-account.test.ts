@@ -65,6 +65,7 @@ describe("Better Auth account integration", () => {
     vi.stubEnv("DATABASE_PATH", databasePath);
     vi.stubEnv("SESSION_SECRET", SESSION_SECRET);
     vi.stubEnv("TEACHER_ACCESS_CODE", TEACHER_CODE);
+    vi.stubEnv("STUDENT_SELF_REGISTRATION_CLASS_ID", "class-1");
     vi.stubEnv("IDENTITY_CODE_PEPPER", IDENTITY_CODE_PEPPER);
     vi.stubEnv("AUTH_PROXY_SECRET", AUTH_PROXY_SECRET);
     vi.stubEnv("NODE_ENV", "test");
@@ -86,7 +87,6 @@ describe("Better Auth account integration", () => {
         email: "student@lumi.local",
         password: "LumiTest2026!",
         role: "STUDENT",
-        classCode: "DIGI2026",
         rememberMe: true,
       }),
     );
@@ -152,7 +152,68 @@ describe("Better Auth account integration", () => {
     });
   });
 
-  it("rejects direct Better Auth sign-up calls that bypass Lumi class checks", async () => {
+  it("rejects public teacher self-registration even when a teacher identity already exists", async () => {
+    const existing = createDb(databasePath);
+    try {
+      existing.sqlite.prepare(`
+        INSERT INTO auth_user(
+          id,name,email,email_verified,image,created_at,updated_at,role,class_id,alias
+        ) VALUES(?,?,?,?,?,?,?,?,?,?)
+      `).run(
+        "teacher",
+        "原教师",
+        "existing-teacher@lumi.local",
+        0,
+        null,
+        1700000000000,
+        1700000000000,
+        "TEACHER",
+        null,
+        "课程负责人",
+      );
+    } finally {
+      existing.sqlite.close();
+    }
+
+    const response = await registerAccount(
+      registrationRequest({
+        name: "测试教师",
+        email: "teacher@lumi.local",
+        password: "LumiTest2026!",
+        role: "TEACHER",
+        rememberMe: true,
+      }),
+    );
+    const payload = await response.json() as { error?: string };
+
+    expect(response.status).toBe(403);
+    expect(payload).toEqual({
+      error: "教师账号由课程管理员预置，请使用已有账号登录",
+    });
+
+    const connection = createDb(databasePath);
+    try {
+      expect(
+        connection.sqlite
+          .prepare("SELECT id, email, role, class_id FROM auth_user WHERE email = ?")
+          .get("teacher@lumi.local"),
+      ).toBeUndefined();
+      expect(
+        connection.sqlite
+          .prepare("SELECT id, email, role, class_id FROM auth_user WHERE email = ?")
+          .get("existing-teacher@lumi.local"),
+      ).toEqual({
+        id: "teacher",
+        email: "existing-teacher@lumi.local",
+        role: "TEACHER",
+        class_id: null,
+      });
+    } finally {
+      connection.sqlite.close();
+    }
+  });
+
+  it("rejects direct Better Auth sign-up calls that bypass the Lumi registration endpoint", async () => {
     const response = await getLumiAuthRuntime().auth.handler(
       new Request("http://localhost/api/auth/sign-up/email", {
         method: "POST",
@@ -210,31 +271,37 @@ describe("Better Auth account integration", () => {
     });
   });
 
-  it("rejects an unknown class invite before creating an account", async () => {
+  it("fails clearly when the default student class is unavailable", async () => {
+    const connection = createDb(databasePath);
+    try {
+      connection.sqlite.prepare("DELETE FROM classes").run();
+    } finally {
+      connection.sqlite.close();
+    }
+
     const response = await registerAccount(
       registrationRequest({
-        name: "无效班级学生",
-        email: "invalid-class@lumi.local",
+        name: "暂无课程学生",
+        email: "missing-class@lumi.local",
         password: "LumiTest2026!",
         role: "STUDENT",
-        classCode: "NOT-A-CLASS",
       }),
     );
 
-    expect(response.status).toBe(400);
+    expect(response.status).toBe(503);
     await expect(response.json()).resolves.toEqual({
-      error: "班级邀请码无效",
+      error: "学生注册暂未开放，请联系课程教师",
     });
 
-    const connection = createDb(databasePath);
+    const verificationConnection = createDb(databasePath);
     try {
       expect(
-        connection.sqlite
+        verificationConnection.sqlite
           .prepare("SELECT count(*) count FROM auth_user")
           .get(),
       ).toEqual({ count: 0 });
     } finally {
-      connection.sqlite.close();
+      verificationConnection.sqlite.close();
     }
   });
 

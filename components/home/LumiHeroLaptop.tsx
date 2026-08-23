@@ -125,7 +125,12 @@ export function LumiHeroLaptop() {
         ? createPortal(
             <div className="lumi-f35-macbook-flight" ref={flightRef} aria-hidden="true">
               <div className="lumi-f35-macbook-flight-viewport">
-                <Image src="/media/lumi-demo-interface.png" alt="" fill sizes="100vw" />
+                <Image
+                  src="/media/lumi-demo-interface.png"
+                  alt=""
+                  fill
+                  sizes="(max-width: 920px) calc(100vw - 40px), 1260px"
+                />
               </div>
             </div>,
             portalRoot,

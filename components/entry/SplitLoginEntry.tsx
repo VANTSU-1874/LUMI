@@ -23,11 +23,13 @@ import {
   type LumiAccountRole,
 } from "@/lib/auth/account-model";
 import { authClient } from "@/lib/auth/better-auth-client";
+import { notifySessionInvalidated } from "@/lib/auth/client-session-events";
 
 type AuthMode = "SIGN_IN" | "SIGN_UP";
 
 type SplitLoginEntryProps = {
   initialMode?: AuthMode;
+  initialRole?: LumiAccountRole;
   navigate?: (href: string) => void;
 };
 
@@ -36,6 +38,17 @@ const inputClassName =
 
 function defaultNavigation(href: string) {
   window.location.assign(href);
+}
+
+async function clearAuthenticatedSession() {
+  await Promise.allSettled([
+    authClient.signOut(),
+    fetch("/api/account/logout", {
+      method: "POST",
+      credentials: "same-origin",
+    }),
+  ]);
+  notifySessionInvalidated();
 }
 
 function requestedReturnPath() {
@@ -92,6 +105,9 @@ function betterAuthErrorMessage(error: { code?: string; message?: string }) {
   if (error.code === "INVALID_ORIGIN") {
     return "登录请求来源无效，请刷新页面后重试";
   }
+  if (error.code === "FAILED_TO_CREATE_USER") {
+    return "账号没有创建成功，请稍后重试；如果这个邮箱已注册，请直接返回登录";
+  }
   return error.message || "暂时无法完成登录，请稍后重试";
 }
 
@@ -137,16 +153,17 @@ function FlowField({
 
 export function SplitLoginEntry({
   initialMode = "SIGN_IN",
+  initialRole = "STUDENT",
   navigate = defaultNavigation,
 }: SplitLoginEntryProps) {
   const [mode, setMode] = useState<AuthMode>(initialMode);
-  const [role, setRole] = useState<LumiAccountRole>("STUDENT");
+  const [role, setRole] = useState<LumiAccountRole>(
+    initialMode === "SIGN_UP" ? "STUDENT" : initialRole,
+  );
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
-  const [classCode, setClassCode] = useState("");
-  const [teacherCode, setTeacherCode] = useState("");
   const [rememberMe, setRememberMe] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [pending, setPending] = useState(false);
@@ -156,6 +173,7 @@ export function SplitLoginEntry({
   const errorRef = useRef<HTMLParagraphElement>(null);
   const isSignUp = mode === "SIGN_UP";
   const studentSelected = role === "STUDENT";
+  const roleLabel = studentSelected ? "学生" : "教师";
 
   useEffect(() => {
     if (error) errorRef.current?.focus();
@@ -164,6 +182,7 @@ export function SplitLoginEntry({
   function switchMode(nextMode: AuthMode) {
     if (pending || nextMode === mode) return;
     setMode(nextMode);
+    if (nextMode === "SIGN_UP") setRole("STUDENT");
     setError(null);
     setPassword("");
     setPasswordConfirmation("");
@@ -212,7 +231,16 @@ export function SplitLoginEntry({
     });
     const authenticatedRole = sessionResult.data?.user.role;
     if (!isLumiAccountRole(authenticatedRole)) {
+      await clearAuthenticatedSession();
       setError("账号身份信息不完整，请联系课程教师");
+      return;
+    }
+
+    if (authenticatedRole !== role) {
+      await clearAuthenticatedSession();
+      setError(authenticatedRole === "TEACHER"
+        ? "这个邮箱是教师账号，请切换到“教师登录”"
+        : "这个邮箱是学生账号，请切换到“学生登录”");
       return;
     }
     navigate(destinationAfterAuth(authenticatedRole));
@@ -232,9 +260,7 @@ export function SplitLoginEntry({
         name,
         email,
         password,
-        role,
-        classCode: studentSelected ? classCode : undefined,
-        teacherCode: studentSelected ? undefined : teacherCode,
+        role: "STUDENT",
         rememberMe,
       }),
     });
@@ -300,62 +326,82 @@ export function SplitLoginEntry({
               className="text-[2.5rem] font-bold leading-[1.08] tracking-[-0.045em] text-white sm:text-[3rem]"
               id="login-title"
             >
-              {isSignUp ? "创建 Lumi 账号" : "欢迎回来"}
+              {isSignUp ? "创建学生账号" : `${roleLabel}端登录`}
             </h1>
             <p className="text-lg font-light text-white/[0.48] sm:text-xl">
               {isSignUp
-                ? "绑定你的课程，继续设计。"
-                : "继续上次没做完的设计。"}
+                ? "加入课程，开始你的设计项目。"
+                : `使用${roleLabel}账号进入对应工作台。`}
             </p>
           </header>
 
           {isSignUp ? (
+            <div className="mx-auto mb-5 max-w-sm rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm leading-6 text-white/[0.48]">
+              <strong className="block text-white/80">学生自主注册</strong>
+              教师账号由课程管理员预置，已有教师账号请返回登录。
+            </div>
+          ) : (
             <div
-              aria-label="注册身份"
+              aria-label="登录身份"
               className="mx-auto mb-5 flex w-fit items-center rounded-full border border-white/10 bg-white/[0.04] p-1 backdrop-blur-sm"
               role="tablist"
             >
-              <button
-                aria-controls="flow-student-entry-panel"
-                aria-selected={studentSelected}
-                className={cn(
-                  "rounded-full px-5 py-2 text-sm transition-colors",
-                  studentSelected
-                    ? "bg-white text-black"
-                    : "text-white/50 hover:text-white",
-                )}
-                disabled={pending}
-                id="flow-student-entry-tab"
-                onClick={() => chooseRole("STUDENT")}
-                onKeyDown={handleTabKeyDown}
-                ref={studentTabRef}
-                role="tab"
-                tabIndex={studentSelected ? 0 : -1}
-                type="button"
-              >
-                学生账号
-              </button>
-              <button
-                aria-controls="flow-teacher-entry-panel"
-                aria-selected={!studentSelected}
-                className={cn(
-                  "rounded-full px-5 py-2 text-sm transition-colors",
-                  !studentSelected
-                    ? "bg-white text-black"
-                    : "text-white/50 hover:text-white",
-                )}
-                disabled={pending}
-                id="flow-teacher-entry-tab"
-                onClick={() => chooseRole("TEACHER")}
-                onKeyDown={handleTabKeyDown}
-                ref={teacherTabRef}
-                role="tab"
-                tabIndex={studentSelected ? -1 : 0}
-                type="button"
-              >
-                教师账号
-              </button>
+            <button
+              aria-controls="flow-student-entry-panel"
+              aria-selected={studentSelected}
+              className={cn(
+                "min-h-11 whitespace-nowrap rounded-full px-5 py-2 text-sm transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white disabled:cursor-wait disabled:opacity-55",
+                studentSelected
+                  ? "bg-white text-black active:bg-white/85"
+                  : "text-white/50 hover:text-white active:bg-white/10 active:text-white",
+              )}
+              disabled={pending}
+              id="flow-student-entry-tab"
+              onClick={() => chooseRole("STUDENT")}
+              onKeyDown={handleTabKeyDown}
+              ref={studentTabRef}
+              role="tab"
+              tabIndex={studentSelected ? 0 : -1}
+              type="button"
+            >
+              学生登录
+            </button>
+            <button
+              aria-controls="flow-teacher-entry-panel"
+              aria-selected={!studentSelected}
+              className={cn(
+                "min-h-11 whitespace-nowrap rounded-full px-5 py-2 text-sm transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white disabled:cursor-wait disabled:opacity-55",
+                !studentSelected
+                  ? "bg-white text-black active:bg-white/85"
+                  : "text-white/50 hover:text-white active:bg-white/10 active:text-white",
+              )}
+              disabled={pending}
+              id="flow-teacher-entry-tab"
+              onClick={() => chooseRole("TEACHER")}
+              onKeyDown={handleTabKeyDown}
+              ref={teacherTabRef}
+              role="tab"
+              tabIndex={studentSelected ? -1 : 0}
+              type="button"
+            >
+              教师登录
+            </button>
             </div>
+          )}
+
+          {!isSignUp ? (
+            <p
+              aria-labelledby={studentSelected
+                ? "flow-student-entry-tab"
+                : "flow-teacher-entry-tab"}
+              className="mx-auto mb-5 max-w-sm text-sm leading-6 text-white/[0.42]"
+              id={studentSelected
+                ? "flow-student-entry-panel"
+                : "flow-teacher-entry-panel"}
+              role="tabpanel"
+            >
+              登录后进入{roleLabel}工作台。
+            </p>
           ) : null}
 
           <form className="space-y-4" onSubmit={submit}>
@@ -422,60 +468,22 @@ export function SplitLoginEntry({
               </FlowField>
 
               {isSignUp ? (
-                <>
-                  <FlowField label="确认密码">
-                    <input
-                      autoComplete="new-password"
-                      className={inputClassName}
-                      disabled={pending}
-                      maxLength={128}
-                      minLength={8}
-                      name="passwordConfirmation"
-                      onChange={(event) =>
-                        setPasswordConfirmation(event.target.value)}
-                      placeholder="再输入一次密码"
-                      required
-                      type={showPassword ? "text" : "password"}
-                      value={passwordConfirmation}
-                    />
-                  </FlowField>
-
-                  <div
-                    aria-labelledby={studentSelected
-                      ? "flow-student-entry-tab"
-                      : "flow-teacher-entry-tab"}
-                    className="sm:col-span-2"
-                    id={studentSelected
-                      ? "flow-student-entry-panel"
-                      : "flow-teacher-entry-panel"}
-                    role="tabpanel"
-                  >
-                    <FlowField
-                      label={studentSelected ? "班级邀请码" : "教师访问码"}
-                    >
-                      <input
-                        autoComplete="one-time-code"
-                        className={inputClassName}
-                        disabled={pending}
-                        maxLength={studentSelected ? 64 : 128}
-                        name={studentSelected ? "classCode" : "teacherCode"}
-                        onChange={(event) => {
-                          if (studentSelected) {
-                            setClassCode(event.target.value);
-                          } else {
-                            setTeacherCode(event.target.value);
-                          }
-                        }}
-                        placeholder={studentSelected
-                          ? "例如：DIGI2026"
-                          : "输入教师访问码"}
-                        required
-                        type={studentSelected ? "text" : "password"}
-                        value={studentSelected ? classCode : teacherCode}
-                      />
-                    </FlowField>
-                  </div>
-                </>
+                <FlowField label="确认密码">
+                  <input
+                    autoComplete="new-password"
+                    className={inputClassName}
+                    disabled={pending}
+                    maxLength={128}
+                    minLength={8}
+                    name="passwordConfirmation"
+                    onChange={(event) =>
+                      setPasswordConfirmation(event.target.value)}
+                    placeholder="再输入一次密码"
+                    required
+                    type={showPassword ? "text" : "password"}
+                    value={passwordConfirmation}
+                  />
+                </FlowField>
               ) : null}
             </div>
 
@@ -502,7 +510,7 @@ export function SplitLoginEntry({
             ) : null}
 
             <motion.button
-              className="flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-white px-5 text-sm font-semibold text-black transition-colors hover:bg-white/[0.88] disabled:cursor-wait disabled:opacity-55"
+              className="flex min-h-12 w-full items-center justify-center gap-2 whitespace-nowrap rounded-full bg-white px-5 text-sm font-semibold text-black transition-colors hover:bg-white/[0.88] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white disabled:cursor-wait disabled:opacity-55"
               disabled={pending}
               type="submit"
               whileTap={pending ? undefined : { scale: 0.985 }}
@@ -516,7 +524,7 @@ export function SplitLoginEntry({
               ) : null}
               {pending
                 ? isSignUp ? "正在创建账号…" : "正在登录…"
-                : isSignUp ? "创建账号并进入" : "登录 Lumi"}
+                : isSignUp ? "创建账号并进入" : `登录${roleLabel}端`}
             </motion.button>
           </form>
 

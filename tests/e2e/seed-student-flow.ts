@@ -1,10 +1,17 @@
 import { mkdir, rm } from "node:fs/promises";
 import path from "node:path";
 
-import { NextRequest } from "next/server";
-
-import { POST as registerAccount } from "@/app/api/account/register/route";
 import { digestIdentityCode } from "@/lib/auth/identity-code";
+import {
+  getLumiAuthRuntime,
+  LUMI_INTERNAL_REGISTRATION_HEADER,
+} from "@/lib/auth/better-auth";
+import { grantTeacherAccessScope } from "@/lib/auth/teacher-access";
+import { appendStudentAgentMessage } from "@/lib/agent/agent-message-store";
+import { createDesignTask } from "@/lib/agent/design-project-task";
+import { currentAgentRuntime } from "@/lib/agent/runtime/current-agent-runtime";
+import { claimAgentRun } from "@/lib/agent/runtime/agent-run-lifecycle";
+import { createAgentRun } from "@/lib/agent/runtime/run-state-store";
 import { createDb } from "@/lib/db/client";
 import { runMigrations } from "@/lib/db/migrate";
 import { ingestCoursePackKnowledge } from "@/lib/knowledge/course-pack-store";
@@ -17,6 +24,7 @@ const E2E_TEACHER_PASSWORD = "LumiTeacher2026!";
 export const E2E_IDENTITY_CODES = [
   "AB7K-C9M2-Q4RP", "CD8L-N3R5-TQ9W", "EF9M-P4S6-VR2X", "GH2N-Q5T7-WX3Z", "JK4P-R6V8-YZ5B",
   "LM3T-R7V9-X2QA", "NP4U-S8W2-Y3RB", "QR5V-T9X3-Z4SC",
+  "ST6W-U4Y8-A7KD",
 ] as const;
 
 async function main() {
@@ -41,16 +49,21 @@ async function main() {
         ('e2e-student-1','e2e-class','STUDENT','匿名编号 01',${now}),('e2e-student-2','e2e-class','STUDENT','匿名编号 02',${now}),('e2e-student-3','e2e-class','STUDENT','匿名编号 03',${now}),
         ('e2e-student-4','e2e-class','STUDENT','无障碍制作测试',${now}),('e2e-student-5','e2e-class','STUDENT','无障碍诊断测试',${now}),
         ('e2e-student-6','e2e-class','STUDENT','DigiShow传输测试',${now}),('e2e-student-7','e2e-class','STUDENT','TouchDesigner传输测试',${now}),
-        ('e2e-student-8','e2e-class','STUDENT','协同传输测试',${now});
+        ('e2e-student-8','e2e-class','STUDENT','协同传输测试',${now}),
+        ('e2e-student-9','e2e-class','STUDENT','运行中补充测试',${now});
+      UPDATE users SET onboarding_completed_at=${now}
+        WHERE class_id='e2e-class' AND role='STUDENT';
       INSERT INTO student_identity_codes(code_digest,class_id,claimed_user_id,created_at,claimed_at) VALUES
         ('${digests[0]}','e2e-class','e2e-student-1',${now},${now}),('${digests[1]}','e2e-class','e2e-student-2',${now},${now}),('${digests[2]}','e2e-class','e2e-student-3',${now},${now}),
         ('${digests[3]}','e2e-class','e2e-student-4',${now},${now}),('${digests[4]}','e2e-class','e2e-student-5',${now},${now}),
         ('${digests[5]}','e2e-class','e2e-student-6',${now},${now}),('${digests[6]}','e2e-class','e2e-student-7',${now},${now}),
-        ('${digests[7]}','e2e-class','e2e-student-8',${now},${now});
+        ('${digests[7]}','e2e-class','e2e-student-8',${now},${now}),
+        ('${digests[8]}','e2e-class','e2e-student-9',${now},${now});
       INSERT INTO learner_profiles(user_id,level,decomposition,signal_understanding,mapping_design,troubleshooting,transfer,updated_at) VALUES
         ('e2e-student-1','L2',2,2,2,2,2,${now}),('e2e-student-2','L2',2,2,2,2,2,${now}),('e2e-student-3','L2',2,2,2,2,2,${now}),
         ('e2e-student-4','L2',2,2,2,2,2,${now}),('e2e-student-6','L2',2,2,2,2,2,${now}),
-        ('e2e-student-7','L2',2,2,2,2,2,${now}),('e2e-student-8','L2',2,2,2,2,2,${now});
+        ('e2e-student-7','L2',2,2,2,2,2,${now}),('e2e-student-8','L2',2,2,2,2,2,${now}),
+        ('e2e-student-9','L2',2,2,2,2,2,${now});
       INSERT INTO course_modules(id,class_id,sequence,title,hours,focus) VALUES
         ('e2e-m1','e2e-class',1,'感知与诊断',8,'识别输入、输出与文化意图'),
         ('e2e-m2','e2e-class',2,'六元交互逻辑',16,'建立可验证的交互因果链'),
@@ -129,6 +142,42 @@ async function main() {
         'PRIVATE_CANDIDATE',0,'NOT_CREATED','DISABLED','DISABLED','DISABLED','DISABLED',${now},${now}
       );
     `);
+    const interventionActor = {
+      userId: "e2e-student-9",
+      role: "STUDENT" as const,
+    };
+    const interventionTask = createDesignTask(
+      connection,
+      interventionActor,
+      { title: "运行中的海报方案" },
+    );
+    const sourceMessageId = "e2e-intervention-source";
+    appendStudentAgentMessage({
+      connection,
+      actor: interventionActor,
+      taskId: interventionTask.id,
+      message: {
+        id: sourceMessageId,
+        content: "先分析这张活动海报的视觉方向",
+      },
+    });
+    const sourceRun = createAgentRun({
+      connection,
+      actor: interventionActor,
+      request: {
+        taskId: interventionTask.id,
+        clientMessageId: sourceMessageId,
+        message: "先分析这张活动海报的视觉方向",
+        context: { view: "AGENT" },
+      },
+      idempotencyKey: "e2e-intervention-source-run",
+      runtime: currentAgentRuntime.descriptor,
+    }).run;
+    claimAgentRun({
+      connection,
+      runId: sourceRun.id,
+      workerId: "e2e-held-worker",
+    });
     await ingestCoursePackKnowledge(connection);
   } finally { connection.sqlite.close(); }
   await seedDemoDatabase({
@@ -140,19 +189,21 @@ async function main() {
   });
 
   const publicAppUrl = process.env.PUBLIC_APP_URL ?? "http://127.0.0.1:3000";
-  const teacherRegistration = await registerAccount(new NextRequest(
-    new URL("/api/account/register", publicAppUrl),
+  const authRuntime = getLumiAuthRuntime();
+  const teacherRegistration = await authRuntime.auth.handler(new Request(
+    new URL("/api/auth/sign-up/email", publicAppUrl),
     {
       method: "POST",
       headers: {
         "content-type": "application/json",
+        [LUMI_INTERNAL_REGISTRATION_HEADER]: authRuntime.registrationToken,
       },
       body: JSON.stringify({
         name: "E2E 课程负责人",
         email: E2E_TEACHER_EMAIL,
         password: E2E_TEACHER_PASSWORD,
         role: "TEACHER",
-        teacherCode: process.env.TEACHER_ACCESS_CODE ?? "e2e-teacher-code",
+        alias: "pending",
         rememberMe: true,
       }),
     },
@@ -160,6 +211,16 @@ async function main() {
   if (!teacherRegistration.ok) {
     throw new Error(`E2E 教师账号创建失败：${teacherRegistration.status} ${await teacherRegistration.text()}`);
   }
+  const teacher = authRuntime.connection.sqlite.prepare(
+    "SELECT id FROM users WHERE role='TEACHER' AND id IN (SELECT id FROM auth_user WHERE email=?)",
+  ).get(E2E_TEACHER_EMAIL) as { id: string } | undefined;
+  if (!teacher) throw new Error("E2E 教师课程身份不存在");
+  grantTeacherAccessScope(authRuntime.connection.db, {
+    teacherId: teacher.id,
+    scope: { kind: "GLOBAL" },
+    grantedBy: "E2E_SEED",
+    grantReason: "专用端到端测试教师",
+  });
 }
 
 void main().catch((error: unknown) => { console.error(error); process.exitCode = 1; });

@@ -33,6 +33,7 @@ describe("teacher inspiration review API", () => {
     candidateId = fixture.candidate.id;
     try {
       connection.sqlite.exec("INSERT INTO users(id,class_id,role,alias,created_at) VALUES('teacher',NULL,'TEACHER','测试教师',1700000000),('student-1',NULL,'STUDENT','测试学生',1700000000),('deleted-teacher',NULL,'TEACHER','已删除教师',1700000000); DELETE FROM users WHERE id='deleted-teacher';");
+      connection.sqlite.exec("INSERT INTO teacher_access_scopes VALUES('teacher','GLOBAL',NULL,'TEST_SETUP','测试课程负责人',1700000000)");
       registerInspirationSource(connection.db, reviewPipelineSourceFixture);
       ingestPrivateInspirationCandidate(connection.db, { sourceId: reviewPipelineSourceFixture.id, ...fixture });
       let revision = 1;

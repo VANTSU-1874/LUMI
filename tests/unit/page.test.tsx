@@ -25,7 +25,7 @@ describe("Home", () => {
       "data-position",
       "left",
     );
-    expect(screen.getByText("我有班级码")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "创建学生账号" })).toBeInTheDocument();
     expect(container).not.toHaveTextContent(/触映|通感阶梯|门禁/);
   });
 });

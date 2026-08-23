@@ -187,7 +187,10 @@ export function createLumiAuthRuntime(
     rateLimit: {
       enabled: true,
       window: 60,
-      max: 100,
+      // Local browser regression repeatedly creates fresh contexts behind one
+      // loopback address. Keep the production ceiling strict while preventing
+      // unrelated E2E cases from exhausting a shared development bucket.
+      max: environment.NODE_ENV === "production" ? 100 : 1_000,
     },
     telemetry: {
       enabled: false,

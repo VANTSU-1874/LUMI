@@ -202,6 +202,7 @@ describe("teacher-private evidence-gap review service", () => {
     runMigrations(databasePath);
     connection = createDb(databasePath);
     connection.sqlite.exec("INSERT INTO users(id,class_id,role,alias,created_at) VALUES('teacher',NULL,'TEACHER','Test teacher',1700000000);");
+    connection.sqlite.exec("INSERT INTO teacher_access_scopes VALUES('teacher','GLOBAL',NULL,'TEST_SETUP','测试课程负责人',1700000000)");
     connection.sqlite.prepare(`
       INSERT INTO inspiration_wiki_hermes_batches(
         batch_id, contract_version, package_digest, manifest_json, done_json,

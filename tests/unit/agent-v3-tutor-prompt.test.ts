@@ -49,6 +49,34 @@ function evidence(index: number) {
 }
 
 describe("V3 tutor context source envelope", () => {
+  it("conditions numeric design guidance on evidence and observable tests", () => {
+    const prompt = buildTutorSystemPrompt(bookDesignCoursePack);
+
+    expect(prompt).toContain("不要把百分比、字号、像素、间距或阈值写成普适答案");
+    expect(prompt).toContain("试作起点");
+    expect(prompt).toContain("示例范围");
+    expect(prompt).toContain("对照测试");
+    expect(prompt).toContain("可观察成功标准");
+    expect(prompt).toContain("不要用精确数字制造专业感");
+  });
+
+  it("keeps follow-up steps, troubleshooting, and authority claims evidence-bound", () => {
+    const prompt = buildTutorSystemPrompt(bookDesignCoursePack);
+
+    expect(prompt).toContain("距离它最近的必要下一层");
+    expect(prompt).toContain("上一轮仅被建议的动作不能当成学生已经完成");
+    expect(prompt).toContain("Analyze/RMS");
+    expect(prompt).toContain("课程材料建议/指出");
+    expect(prompt).toContain("若其中有直接支撑当前判断或步骤的课程节点，应采用它");
+    expect(prompt).toContain("tutor-meta 就不是可选项");
+    expect(prompt).toContain("uncertainty 不能留空");
+    expect(prompt).toContain("先确认上游确实产生信号或事件");
+    expect(prompt).toContain("已满足项/待修正项");
+    expect(prompt).toContain("interfaceContext 的页面名称本身不是状态证据");
+    expect(prompt).toContain("字段为空或 null 也不等于系统已确认‘没有’");
+    expect(prompt).toContain("禁止声称系统显示无草稿");
+  });
+
   it("reports only references that survive context-budget compression", () => {
     const items = Array.from({ length: 5 }, (_, index) => knowledge(index + 1));
     const recentTurns: RecentConversationTurn[] = Array.from({ length: 8 }, () => ({
@@ -127,6 +155,64 @@ describe("V3 tutor context source envelope", () => {
     });
     expect(parsed.learningState.learnerIdentity.instruction).toContain("必须以 profile 为准");
     expect(buildTutorContextMessage(input)).toBe(built.content);
+  });
+
+  it("keeps unanswered originals ordered and marks the latest steer as authoritative", () => {
+    const content = buildTutorContextMessage({
+      studentQuestion: "现在改成低饱和并减少装饰",
+      view: "AGENT",
+      focus: null,
+      pack: bookDesignCoursePack,
+      context: {
+        taskId: "task-1",
+        studentId: "student-1",
+        classId: "class-1",
+        dataType: "REAL",
+        project: null,
+        profile: null,
+        onboarding: {
+          nickname: null,
+          displayName: "学生",
+          major: null,
+          selfAssessedLevel: null,
+          interests: null,
+          completedAt: null,
+          completed: false,
+        },
+        evidenceCount: 0,
+        evidenceSummary: [],
+        verifiedEvidenceFacts: [],
+        toolState: null,
+        projectBrief: emptyProjectBrief(),
+      },
+      recentTurns: [],
+      sessionSummary: null,
+      studentMemories: [],
+      knowledge: [],
+      interventionContext: {
+        mode: "STEER",
+        unansweredMessages: [
+          { id: "m1", content: "先做一张高对比海报" },
+          { id: "m2", content: "再给三个版式方案" },
+        ],
+      },
+      environment: {},
+    });
+    const parsed = JSON.parse(content) as {
+      studentQuestion: string;
+      unansweredStudentMessages: Array<{ id: string; content: string }>;
+      intervention: { mode: string; instruction: string };
+    };
+
+    expect(parsed.studentQuestion).toBe("现在改成低饱和并减少装饰");
+    expect(parsed.unansweredStudentMessages).toEqual([
+      { id: "m1", content: "先做一张高对比海报" },
+      { id: "m2", content: "再给三个版式方案" },
+    ]);
+    expect(parsed.intervention).toMatchObject({
+      mode: "STEER",
+      instruction: expect.stringContaining("优先"),
+    });
   });
 });
 

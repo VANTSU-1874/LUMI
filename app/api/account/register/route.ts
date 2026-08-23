@@ -9,7 +9,6 @@ import {
 import {
   BadRequestError,
   ForbiddenRequestError,
-  InvalidTeacherCodeError,
   PayloadTooLargeError,
   UnsupportedMediaTypeError,
 } from "@/lib/auth/errors";
@@ -18,7 +17,6 @@ import {
   validateRequestProtocol,
 } from "@/lib/auth/route-handler";
 import { classes } from "@/lib/db/schema";
-import { enterTeacher } from "@/lib/services/access";
 
 const registrationSchema = z
   .object({
@@ -26,27 +24,9 @@ const registrationSchema = z
     email: z.email().trim().toLowerCase(),
     password: z.string().min(8).max(128),
     role: z.enum(["STUDENT", "TEACHER"]),
-    classCode: z.string().trim().min(1).max(64).optional(),
-    teacherCode: z.string().trim().min(1).max(128).optional(),
     rememberMe: z.boolean().optional(),
   })
-  .strict()
-  .superRefine((input, context) => {
-    if (input.role === "STUDENT" && !input.classCode) {
-      context.addIssue({
-        code: "custom",
-        message: "请输入班级邀请码",
-        path: ["classCode"],
-      });
-    }
-    if (input.role === "TEACHER" && !input.teacherCode) {
-      context.addIssue({
-        code: "custom",
-        message: "请输入教师访问码",
-        path: ["teacherCode"],
-      });
-    }
-  });
+  .strict();
 
 const NO_STORE_HEADERS = {
   "Cache-Control": "private, no-store",
@@ -61,24 +41,32 @@ export async function POST(request: NextRequest) {
       registrationSchema,
       8 * 1024,
     );
+    if (input.role === "TEACHER") {
+      return NextResponse.json(
+        { error: "教师账号由课程管理员预置，请使用已有账号登录" },
+        { status: 403, headers: NO_STORE_HEADERS },
+      );
+    }
     const runtime = getLumiAuthRuntime();
 
-    let classId: string | undefined;
-    if (input.role === "STUDENT") {
-      const courseClass = runtime.connection.db
-        .select({ id: classes.id })
-        .from(classes)
-        .where(eq(classes.accessCode, input.classCode!))
-        .get();
-      if (!courseClass) {
-        return NextResponse.json(
-          { error: "班级邀请码无效" },
-          { status: 400, headers: NO_STORE_HEADERS },
-        );
-      }
-      classId = courseClass.id;
-    } else {
-      enterTeacher(input.teacherCode!, runtime.config.teacherAccessCode);
+    const selfRegistrationClassId = runtime.config.studentSelfRegistrationClassId;
+    if (!selfRegistrationClassId) {
+      return NextResponse.json(
+        { error: "学生注册暂未开放，请联系课程教师" },
+        { status: 503, headers: NO_STORE_HEADERS },
+      );
+    }
+
+    const courseClass = runtime.connection.db
+      .select({ id: classes.id })
+      .from(classes)
+      .where(eq(classes.id, selfRegistrationClassId))
+      .get();
+    if (!courseClass) {
+      return NextResponse.json(
+        { error: "学生注册暂未开放，请联系课程教师" },
+        { status: 503, headers: NO_STORE_HEADERS },
+      );
     }
 
     const headers = new Headers(request.headers);
@@ -98,8 +86,8 @@ export async function POST(request: NextRequest) {
           email: input.email,
           password: input.password,
           rememberMe: input.rememberMe ?? true,
-          role: input.role,
-          classId,
+          role: "STUDENT",
+          classId: courseClass.id,
           alias: "pending",
         }),
       }),
@@ -130,13 +118,6 @@ export async function POST(request: NextRequest) {
         },
       );
     }
-    if (error instanceof InvalidTeacherCodeError) {
-      return NextResponse.json(
-        { error: error.message },
-        { status: 401, headers: NO_STORE_HEADERS },
-      );
-    }
-
     console.error({
       route: "account-register",
       errorName: error instanceof Error ? error.name : "UnknownError",

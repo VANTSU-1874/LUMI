@@ -17,7 +17,7 @@ describe("constrained Lumi release wrapper", () => {
     expect(installer).toContain(`readonly WRAPPER_SHA256='${digest}'`);
   });
 
-  it("allows only the paired K8.4, Knowledge V2, D-27, and student workspace release policies", () => {
+  it("allows only the paired K8.4, Knowledge V2, D-27, student workspace, and teacher scope release policies", () => {
     const wrapper = readFileSync(wrapperPath, "utf8");
 
     expect(wrapper).toContain(
@@ -46,6 +46,12 @@ describe("constrained Lumi release wrapper", () => {
     );
     expect(wrapper).toContain(
       '("student-workspace-0064-0065-additive", "not-requested")',
+    );
+    expect(wrapper).toContain(
+      "readonly DATABASE_MIGRATION_TEACHER_SCOPES='teacher-scopes-0066-additive'",
+    );
+    expect(wrapper).toContain(
+      '("teacher-scopes-0066-additive", "not-requested")',
     );
     expect(wrapper).toContain("MANIFEST_RELEASE_POLICY_PAIR_NOT_ALLOWED");
     expect(wrapper).toContain("RELEASE_POLICY_PAIR_NOT_ALLOWED");
@@ -104,6 +110,49 @@ describe("constrained Lumi release wrapper", () => {
     expect(wrapper).toContain("EXPECTED_BYTES=");
     expect(wrapper).toContain("ACTUAL_SHA256=");
     expect(wrapper).toContain("KNOWLEDGE_V2_INHERIT_TARGET_ESCAPE");
+  });
+
+  it("allows only the exact legacy production base to omit an already-absent Knowledge V2 rebuild runtime", () => {
+    const wrapper = readFileSync(wrapperPath, "utf8");
+
+    expect(wrapper).toContain(
+      "readonly KNOWLEDGE_V2_LEGACY_RUNTIME_ABSENT_BASE='a554a83a35f740aa6a14bf07b0bbe508b48f8760'",
+    );
+    expect(wrapper).toContain("knowledge_v2_runtime_artifact_state()");
+    expect(wrapper).toContain("KNOWLEDGE_V2_RUNTIME_ARTIFACT_STATE_PARTIAL");
+    expect(wrapper).toContain(
+      '"$expected_current" == "$KNOWLEDGE_V2_LEGACY_RUNTIME_ABSENT_BASE"',
+    );
+    expect(wrapper).toContain(
+      '"$database_migration" == "$DATABASE_MIGRATION_TEACHER_SCOPES"',
+    );
+    expect(wrapper).toContain("KNOWLEDGE_V2_SEALED_RUNTIME_REQUIRED");
+    expect(wrapper).toContain(
+      "KNOWLEDGE_V2_RUNTIME_COMPATIBILITY=PASS:LEGACY_SOURCE_ABSENT",
+    );
+    expect(wrapper).toContain(
+      "verify_knowledge_v2_database_activation \"$release\"",
+    );
+    expect(wrapper).toContain(
+      "[[ \"$(read_knowledge_v2_boolean_env_state)\" == 'true,true,false' ]]",
+    );
+    expect(wrapper).toContain(
+      "readonly KNOWLEDGE_V2_LEGACY_RUNTIME_ABSENT_MARKER=",
+    );
+    expect(wrapper).toContain(
+      "KNOWLEDGE_V2_PYTHON_PERMISSION_REPAIR=SKIPPED:LEGACY_SOURCE_ABSENT",
+    );
+    const permissionRepair = wrapper.indexOf(
+      'repair_knowledge_v2_python_permission "$release"',
+      wrapper.indexOf("prepare()"),
+    );
+    const sealedRuntimeGuard = wrapper.lastIndexOf(
+      'if [[ "$prepared_runtime_state" == \'SEALED\' ]]',
+      permissionRepair,
+    );
+    expect(permissionRepair).toBeGreaterThan(-1);
+    expect(sealedRuntimeGuard).toBeGreaterThan(-1);
+    expect(sealedRuntimeGuard).toBeLessThan(permissionRepair);
   });
 
   it("verifies every K8.4 schema object and restores the previous flag on rollback", () => {
@@ -181,12 +230,30 @@ describe("constrained Lumi release wrapper", () => {
     expect(wrapper).toContain('test -r "$release/drizzle/0065_student_projects.sql"');
   });
 
+  it("runs and verifies the additive explicit teacher scope migration", () => {
+    const wrapper = readFileSync(wrapperPath, "utf8");
+
+    expect(wrapper).toContain("run_teacher_scopes_database_migration()");
+    expect(wrapper).toContain("verify_teacher_scopes_database_migration()");
+    expect(wrapper).toContain("teacher_access_scopes");
+    expect(wrapper).toContain("TEACHER_SCOPES_MIGRATION_DATA_INVALID");
+    expect(wrapper).toContain("TEACHER_SCOPES_FIXED_TEACHER_BACKFILL_MISSING");
+    expect(wrapper).toContain("TEACHER_SCOPES_MIGRATION_FOREIGN_KEY_FAILURE");
+    expect(wrapper).toContain("TEACHER_SCOPES_MIGRATION_VERIFY=PASS:");
+    expect(wrapper).toContain('test -r "$release/drizzle/0066_explicit_teacher_scopes.sql"');
+    expect(wrapper).toContain("TEACHER_SCOPES_0066_RELEASE_POLICY=AVAILABLE");
+    expect(wrapper).toContain("release_policy_requires_candidate_audit()");
+    expect(wrapper).toContain(
+      '[[ "$database_migration" == "$DATABASE_MIGRATION_TEACHER_SCOPES" && "$environment_write" == "$ENVIRONMENT_WRITE_NONE" ]]',
+    );
+  });
+
   it("scopes the post-cutover health gate to the release policy", () => {
     const wrapper = readFileSync(wrapperPath, "utf8");
 
     expect(wrapper).toContain("wait_for_base_health()");
     expect(wrapper).toContain(
-      'if [[ "$database_migration" == "$DATABASE_MIGRATION_KV2" || "$environment_write" == "$ENVIRONMENT_WRITE_KV2" ]]; then',
+      'if release_policy_requires_candidate_audit "$database_migration" "$environment_write"; then',
     );
     expect(wrapper).toContain("CUTOVER_HEALTH_GATE=COMPETITION_READY");
     expect(wrapper).toContain("CUTOVER_HEALTH_GATE=BASE");
@@ -456,6 +523,27 @@ describe("constrained Lumi release wrapper", () => {
     expect(wrapper).toContain("STUDENT_SMOKE_MODE=%s");
   });
 
+  it("inspects and enables student self-registration only for an existing course-ready class", () => {
+    const wrapper = readFileSync(wrapperPath, "utf8");
+
+    expect(wrapper).toContain("lumi-release inspect-student-registration");
+    expect(wrapper).toContain(
+      "lumi-release enable-student-registration <existing-class-id>",
+    );
+    expect(wrapper).toContain("STUDENT_SELF_REGISTRATION_CLASS_ID");
+    expect(wrapper).toContain("STUDENT_REGISTRATION_CLASS_NOT_FOUND");
+    expect(wrapper).toContain("STUDENT_REGISTRATION_CLASS_HAS_NO_MODULES");
+    expect(wrapper).toContain("STUDENT_REGISTRATION_CLASS_HAS_NO_ASSIGNMENTS");
+    expect(wrapper).toContain(
+      "readonly ENVIRONMENT_WRITE_STUDENT_REGISTRATION='enable-student-self-registration'",
+    );
+    expect(wrapper).toContain(
+      'write_student_registration_env_state "$ENVIRONMENT_PREVIOUS"',
+    );
+    expect(wrapper).toContain("STUDENT_SELF_REGISTRATION_READY=%s");
+    expect(wrapper).not.toContain("INSERT INTO classes");
+  });
+
   it("audits a prepared Knowledge V2 release before promoting quality reports", () => {
     const wrapper = readFileSync(wrapperPath, "utf8");
     const agentEval = readFileSync(
@@ -474,6 +562,9 @@ describe("constrained Lumi release wrapper", () => {
     expect(wrapper).toContain("QUALITY_REPORT_PROMOTION=SUCCEEDED");
     expect(wrapper).toContain("ROLLBACK_QUALITY_REPORTS=RESTORED");
     expect(wrapper).toContain("RELEASE_SOURCE_BINDING_PATH");
+    expect(wrapper).toContain(
+      'if release_policy_requires_candidate_audit "$database_migration" "$environment_write"; then',
+    );
     expect(agentEval).toContain(
       "LUMI_RELEASE_AUDIT_AGENT_EVAL_REPORT_PATH",
     );

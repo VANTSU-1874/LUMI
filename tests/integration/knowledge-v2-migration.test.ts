@@ -164,7 +164,7 @@ describe("KnowledgeObjectV2 additive migration", () => {
   it("restores a sealed production-0049 database and reapplies the current chain", async () => {
     const root = await mkdtemp(path.join(tmpdir(), "lumi-production-0049-restore-"));
     roots.push(root);
-    const { destination } = await migrationsThrough(root, 49);
+    const { destination, journal } = await migrationsThrough(root, 49);
     const databasePath = path.join(root, "production.sqlite");
     const restorePointPath = path.join(root, "production-0049.restore.sqlite");
     runMigrations(databasePath, destination);
@@ -209,7 +209,7 @@ describe("KnowledgeObjectV2 additive migration", () => {
     try {
       expect(reapplied.sqlite.prepare(
         "SELECT count(*) count FROM __drizzle_migrations",
-      ).get()).toEqual({ count: 64 });
+      ).get()).toEqual({ count: journal.entries.length });
       expect(reapplied.sqlite.prepare(`
         SELECT count(*) count FROM sqlite_master
         WHERE type='table' AND name='knowledge_corpora_v2'

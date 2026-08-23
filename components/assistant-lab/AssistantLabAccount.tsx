@@ -35,6 +35,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { isLumiAccountRole } from "@/lib/auth/account-model";
 import { authClient } from "@/lib/auth/better-auth-client";
+import { notifySessionInvalidated } from "@/lib/auth/client-session-events";
 import {
   StudentOnboardingProfileSchema,
   type StudentOnboardingProfile,
@@ -317,6 +318,7 @@ export function LabAccountArea({ navigate = defaultNavigation }: LabAccountAreaP
               disabled={signingOut}
               onClick={async () => {
                 setSigningOut(true);
+                notifySessionInvalidated();
                 await Promise.allSettled([
                   authClient.signOut(),
                   fetch("/api/account/logout", {

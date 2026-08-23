@@ -52,6 +52,7 @@ const envSchema = z
       .min(1)
       .default("./data/tonggan.sqlite"),
     PUBLIC_APP_URL: z.string().trim().url().optional(),
+    STUDENT_SELF_REGISTRATION_CLASS_ID: optionalNonEmptyString,
     EVIDENCE_ROOT: z.string().trim().min(1)
       .refine((value) => !/(^|[\\/])public([\\/]|$)/i.test(value), {
         message: "EVIDENCE_ROOT must not be inside a public directory",
@@ -273,6 +274,7 @@ export function readEnv(environment: Environment = process.env) {
     publicAppUrl: parsed.PUBLIC_APP_URL
       ? new URL(parsed.PUBLIC_APP_URL).origin
       : undefined,
+    studentSelfRegistrationClassId: parsed.STUDENT_SELF_REGISTRATION_CLASS_ID,
     evidenceRoot: parsed.EVIDENCE_ROOT,
     teacherAccessCode: parsed.TEACHER_ACCESS_CODE,
     identityCodePepper: parsed.IDENTITY_CODE_PEPPER ?? parsed.SESSION_SECRET,
