@@ -1,3 +1,5 @@
+/* Hallmark · pre-emit critique: P5 H5 E4 S5 R5 V4 */
+/* Component: preview failure diagnostics · genre: technical · tone: utilitarian · palette: existing Lumi · structure: inline error / diagnostic / action */
 .previewLab {
   --lab-bg: #fff;
   --lab-panel: #fff;
@@ -132,6 +134,47 @@
   color: var(--lab-muted);
   font-size: 0.75rem;
   line-height: 1.5;
+}
+
+.failureDiagnostic {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.75rem;
+  margin: 0.45rem 0 0;
+  color: var(--lab-muted);
+  font-family: var(--font-ui);
+  font-size: 0.66rem;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.failureActions.failureActions {
+  margin-top: 0.65rem;
+  padding-bottom: 0;
+}
+
+.failureActions > button {
+  min-height: 2.75rem;
+  flex: 0 1 auto;
+  white-space: nowrap;
+}
+
+.failureActions.failureActions > button:first-of-type:focus-visible {
+  outline: 2px solid var(--lab-accent);
+  outline-offset: 2px;
+}
+
+.failureActions > button:disabled {
+  cursor: wait;
+  opacity: 0.55;
+  transform: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .failureActions > button:not(:disabled):hover {
+    transform: translateY(-1px);
+  }
 }
 
 .turnPair {

@@ -112,4 +112,130 @@ describe("EvaluatorPreview", () => {
       }],
     });
   });
+
+  it("shows an actionable model failure with its stable diagnostic identifiers", async () => {
+    const outcome = {
+      code: "STAGE_CONCLUSION",
+      label: "阶段性结论",
+      description: "已明确本轮应先判断的关键对象与边界，可据此继续讨论。",
+    };
+    const scenario = {
+      id: "S5_LEARNING_EVIDENCE",
+      title: "海报风格融合设计",
+      capability: "受控评估流程",
+      description: "帮助评委看到一个可达的中间结果。",
+      sourceLabel: "评委预览",
+      initial: {
+        id: "S5_EVIDENCE_START",
+        label: "开始梳理融合主线",
+        prompt: "请根据三张海报提炼融合主线。",
+        outcome,
+        attachments: [],
+      },
+      suggestions: [],
+    };
+    const requestId = "00000000-0000-4000-8000-000000000123";
+    const failure = {
+      runId: "00000000-0000-4000-8000-000000000780",
+      code: "MODEL_TIMEOUT",
+      error: "模型响应超时。本次回答没有在现场等待时间内完成，请重新运行。",
+      requestId,
+      stage: "MODEL_REQUEST",
+      retryable: true,
+    };
+    const completedResponse = {
+      title: "先确定融合主线",
+      message: "先选一种信息秩序作为主线，再把其他语言放在辅助层。",
+      whyThisStep: "先建立优先级，避免平均拼贴。",
+      uncertainty: "尚未看到你的第一版小样。",
+      sources: [],
+      branch: {
+        directionId: scenario.id,
+        directionTitle: scenario.title,
+        suggestionId: scenario.initial.id,
+        suggestionLabel: scenario.initial.label,
+        outcome,
+      },
+    };
+    const fetchMock = vi.fn()
+      .mockResolvedValueOnce(new Response(JSON.stringify({
+        expiresAt: "2026-08-26T00:00:00.000Z",
+        scenarios: [scenario],
+      }), { status: 200, headers: { "content-type": "application/json" } }))
+      .mockResolvedValueOnce(new Response(
+        `event: error\ndata: ${JSON.stringify(failure)}\n\n`,
+        { status: 200, headers: { "content-type": "text/event-stream" } },
+      ))
+      .mockResolvedValueOnce(new Response(
+        `event: complete\ndata: ${JSON.stringify({ runId: "run-retry", response: completedResponse })}\n\n`,
+        { status: 200, headers: { "content-type": "text/event-stream" } },
+      ));
+    vi.stubGlobal("fetch", fetchMock);
+
+    render(<EvaluatorPreview />);
+    const initial = await screen.findByLabelText("海报风格融合设计的预设首问");
+    fireEvent.click(within(initial).getByRole("button", { name: "开始梳理融合主线" }));
+
+    expect(await screen.findByText("模型响应超时")).toBeInTheDocument();
+    expect(screen.getByRole("alert")).toHaveTextContent("没有在现场等待时间内完成");
+    expect(screen.getByRole("alert")).toHaveTextContent("请重新运行");
+    expect(screen.getByLabelText("本次失败诊断信息")).toHaveTextContent("MODEL_TIMEOUT");
+    expect(screen.getByLabelText("本次失败诊断信息")).toHaveTextContent(failure.runId);
+    expect(screen.getByLabelText("本次失败诊断信息")).toHaveTextContent(requestId);
+    fireEvent.click(screen.getByRole("button", { name: "重新运行这次提问" }));
+    expect(await screen.findByText("先选一种信息秩序作为主线，再把其他语言放在辅助层。")).toBeInTheDocument();
+    expect(JSON.parse(fetchMock.mock.calls[2]?.[1]?.body as string)).toEqual({
+      scenarioId: scenario.id,
+      suggestionId: scenario.initial.id,
+    });
+  });
+
+  it("does not suggest retrying a configuration failure", async () => {
+    const outcome = {
+      code: "STAGE_CONCLUSION",
+      label: "阶段性结论",
+      description: "已明确本轮应先判断的关键对象与边界，可据此继续讨论。",
+    };
+    const scenario = {
+      id: "S1_DIGITAL_PRODUCT",
+      title: "TouchDesigner 交互操作",
+      capability: "受控评估流程",
+      description: "帮助评委看到一个可达的中间结果。",
+      sourceLabel: "评委预览",
+      initial: {
+        id: "S1_PRODUCT_START",
+        label: "开始定位节点问题",
+        prompt: "请先检查节点与参数。",
+        outcome,
+        attachments: [],
+      },
+      suggestions: [],
+    };
+    const fetchMock = vi.fn()
+      .mockResolvedValueOnce(new Response(JSON.stringify({
+        expiresAt: "2026-08-26T00:00:00.000Z",
+        scenarios: [scenario],
+      }), { status: 200, headers: { "content-type": "application/json" } }))
+      .mockResolvedValueOnce(new Response(
+        `event: error\ndata: ${JSON.stringify({
+          runId: "00000000-0000-4000-8000-000000000450",
+          code: "PREVIEW_MODEL_NOT_CONFIGURED",
+          error: "现场模型尚未配置。请联系维护者检查模型设置后重新运行。",
+          requestId: "00000000-0000-4000-8000-000000000456",
+          stage: "MODEL_SETUP",
+          retryable: false,
+        })}\n\n`,
+        { status: 200, headers: { "content-type": "text/event-stream" } },
+      ));
+    vi.stubGlobal("fetch", fetchMock);
+
+    render(<EvaluatorPreview />);
+    const initial = await screen.findByLabelText("TouchDesigner 交互操作的预设首问");
+    fireEvent.click(within(initial).getByRole("button", { name: "开始定位节点问题" }));
+
+    expect(await screen.findByText("现场模型未配置")).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "重新运行这次提问" })).not.toBeInTheDocument();
+    expect(screen.getByLabelText("本分支结果状态")).toHaveTextContent("需要维护者检查");
+    expect(screen.getByLabelText("本分支结果状态")).toHaveTextContent("诊断码和请求号");
+  });
 });

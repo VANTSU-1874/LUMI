@@ -71,3 +71,20 @@ export type PreviewResponse = z.infer<typeof PreviewResponseSchema>;
 
 export const PreviewRunStatusSchema = z.enum(["RUNNING", "COMPLETED", "FAILED"]);
 export type PreviewRunStatus = z.infer<typeof PreviewRunStatusSchema>;
+
+export const PreviewFailureStageSchema = z.enum([
+  "MODEL_SETUP",
+  "MODEL_REQUEST",
+  "MODEL_RESPONSE",
+]);
+export type PreviewFailureStage = z.infer<typeof PreviewFailureStageSchema>;
+
+export const PreviewRunFailureEventSchema = z.object({
+  runId: z.string().uuid(),
+  code: z.string().regex(/^[A-Z][A-Z0-9_]{2,63}$/),
+  error: z.string().min(1).max(240),
+  requestId: z.string().uuid(),
+  stage: PreviewFailureStageSchema,
+  retryable: z.boolean(),
+}).strict();
+export type PreviewRunFailureEvent = z.infer<typeof PreviewRunFailureEventSchema>;

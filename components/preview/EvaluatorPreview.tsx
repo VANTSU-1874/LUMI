@@ -17,7 +17,13 @@ import Image from "next/image";
 import { MessageResponse } from "@/components/ai-elements/message";
 import labStyles from "@/components/assistant-lab/assistant-lab.module.css";
 import { ThinkingTool } from "@/components/ui/thinking-tool";
-import type { PreviewOutcome, PreviewResponse, PreviewScenarioId } from "@/lib/preview/contracts";
+import {
+  PreviewRunFailureEventSchema,
+  type PreviewOutcome,
+  type PreviewResponse,
+  type PreviewRunFailureEvent,
+  type PreviewScenarioId,
+} from "@/lib/preview/contracts";
 
 import styles from "./evaluator-preview.module.css";
 
@@ -55,7 +61,16 @@ type RunState = {
   status: "idle" | "streaming" | "completed" | "failed";
   message: string;
   response?: PreviewResponse;
-  error?: string;
+  error?: PreviewFailureView;
+};
+
+type PreviewFailureView = {
+  title: string;
+  message: string;
+  runId: string | null;
+  code: string | null;
+  requestId: string | null;
+  retryable: boolean;
 };
 
 type PreviewTurn = {
@@ -108,10 +123,53 @@ function payloadResponse(data: unknown) {
     : null;
 }
 
-function payloadError(data: unknown) {
-  return typeof data === "object" && data !== null && "error" in data && typeof data.error === "string"
-    ? data.error
-    : "现场模型暂时不可用，请稍后再试";
+function failureTitle(code: string) {
+  if (code === "MODEL_TIMEOUT") return "模型响应超时";
+  if (code === "MODEL_RATE_LIMIT") return "模型请求较多";
+  if (code === "MODEL_TRANSPORT") return "模型连接中断";
+  if (code === "MODEL_PROVIDER_STATUS") return "模型服务未完成请求";
+  if (code === "MODEL_CANCELLED") return "模型请求已中止";
+  if (code === "MODEL_INVALID_RESPONSE" || code === "MODEL_RESPONSE_REJECTED") return "模型回答格式未通过校验";
+  if (code === "PREVIEW_MODEL_NOT_CONFIGURED") return "现场模型未配置";
+  if (code === "PREVIEW_VISION_UNAVAILABLE") return "当前模型无法读取这组图片";
+  if (code === "PREVIEW_ROUTING_UNAVAILABLE") return "预设流程未匹配";
+  if (code === "PREVIEW_DECISION_UNAVAILABLE") return "模型未形成可展示回答";
+  return "回答未完成";
+}
+
+function failureView(event: PreviewRunFailureEvent): PreviewFailureView {
+  return {
+    title: failureTitle(event.code),
+    message: event.error,
+    runId: event.runId,
+    code: event.code,
+    requestId: event.requestId,
+    retryable: event.retryable,
+  };
+}
+
+function payloadFailure(data: unknown) {
+  const parsed = PreviewRunFailureEventSchema.safeParse(data);
+  if (parsed.success) return failureView(parsed.data);
+  return {
+    title: "回答未完成",
+    message: "现场模型暂时不可用，请稍后再试",
+    runId: null,
+    code: null,
+    requestId: null,
+    retryable: true,
+  } satisfies PreviewFailureView;
+}
+
+function localFailure(error: unknown): PreviewFailureView {
+  return {
+    title: "预览连接中断",
+    message: error instanceof Error ? error.message : "预览运行暂时不可用",
+    runId: null,
+    code: "CLIENT_PREVIEW_ERROR",
+    requestId: null,
+    retryable: true,
+  };
 }
 
 function markdownResponse(text: string, isStreaming: boolean) {
@@ -374,7 +432,7 @@ export function EvaluatorPreview() {
             setTurnsByScenario((current) => ({
               ...current,
               [scenario.id]: (current[scenario.id] ?? []).map((candidate) => candidate.id === turnId
-                ? { ...candidate, run: { status: "failed", message: "", error: payloadError(event.data) } }
+                ? { ...candidate, run: { status: "failed", message: "", error: payloadFailure(event.data) } }
                 : candidate),
             }));
             complete = true;
@@ -391,7 +449,7 @@ export function EvaluatorPreview() {
               run: {
                 status: "failed",
                 message: "",
-                error: error instanceof Error ? error.message : "预览运行暂时不可用",
+                error: localFailure(error),
               },
             }
           : candidate),
@@ -530,11 +588,43 @@ export function EvaluatorPreview() {
                               ) : null}
                               {turn.run.status === "failed" ? (
                                 <>
-                                  <div className={labStyles.messageError} role="alert"><CircleAlertIcon aria-hidden="true" size={17} /><div><strong>回答未完成</strong><span>{turn.run.error}</span></div></div>
+                                  <div className={labStyles.messageError} role="alert">
+                                    <CircleAlertIcon aria-hidden="true" size={17} />
+                                    <div>
+                                      <strong>{turn.run.error?.title ?? "回答未完成"}</strong>
+                                      <span>{turn.run.error?.message ?? "现场模型暂时不可用，请稍后再试"}</span>
+                                      {turn.run.error?.code ? (
+                                        <p aria-label="本次失败诊断信息" className={styles.failureDiagnostic}>
+                                          <span>诊断码 {turn.run.error.code}</span>
+                                          {turn.run.error.runId ? <span>运行号 {turn.run.error.runId}</span> : null}
+                                          {turn.run.error.requestId ? <span>请求号 {turn.run.error.requestId}</span> : null}
+                                        </p>
+                                      ) : null}
+                                    </div>
+                                  </div>
+                                  {turn.run.error?.retryable ? (
+                                    <div className={`${labStyles.followups} ${styles.failureActions}`}>
+                                      <button
+                                        disabled={Boolean(runningTurnId)}
+                                        onClick={() => void runTurn(selectedScenario, {
+                                          label: turn.label,
+                                          prompt: turn.prompt,
+                                          suggestionId: turn.suggestionId,
+                                          attachments: turn.attachments,
+                                        })}
+                                        type="button"
+                                      >
+                                        {runningTurnId ? <LoaderCircleIcon aria-hidden="true" className={labStyles.spin} size={15} /> : <PlayIcon aria-hidden="true" size={15} />}
+                                        <span>{runningTurnId ? "正在重新运行…" : "重新运行这次提问"}</span>
+                                      </button>
+                                    </div>
+                                  ) : null}
                                   <section aria-label="本分支结果状态" className={styles.branchOutcome}>
                                     <small>本分支结果</small>
-                                    <strong>待重新运行</strong>
-                                    <p>这次提问尚未形成可用结果；可直接重试或换一条后续建议。</p>
+                                    <strong>{turn.run.error?.retryable ? "待重新运行" : "需要维护者检查"}</strong>
+                                    <p>{turn.run.error?.retryable
+                                      ? "这次提问尚未形成可用结果；可直接重新运行或换一条后续建议。"
+                                      : "本次失败不能靠重复运行解决；请把诊断码和请求号交给维护者。"}</p>
                                   </section>
                                 </>
                               ) : null}

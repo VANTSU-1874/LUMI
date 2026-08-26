@@ -3,14 +3,14 @@ import { randomUUID } from "node:crypto";
 import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
 
-import { ModelServiceError } from "@/lib/ai/client";
 import { BadRequestError, ForbiddenRequestError, UnsupportedMediaTypeError } from "@/lib/auth/errors";
 import { parseRequestBody, validateRequestProtocol } from "@/lib/auth/route-handler";
 import { getActiveAgentPolicy, resolveAgentPolicyTimeouts } from "@/lib/agent/policy-registry";
 import { readEnv } from "@/lib/config/env";
 import { createDb, type DatabaseConnection } from "@/lib/db/client";
 import { PreviewRunRequestSchema } from "@/lib/preview/contracts";
-import { PreviewMessageDeltaDecoder, PreviewModelUnavailableError, runPreviewScenario } from "@/lib/preview/preview-runner";
+import { describePreviewFailure } from "@/lib/preview/failure";
+import { PreviewMessageDeltaDecoder, runPreviewScenario } from "@/lib/preview/preview-runner";
 import {
   createPreviewFreeInput,
   getPreviewScenario,
@@ -45,12 +45,6 @@ function jsonError(message: string, status: number, headers: Record<string, stri
     status,
     headers: { "Cache-Control": "private, no-store", Vary: "Cookie", "x-lumi-data-type": "DEMONSTRATION_DATA", ...headers },
   });
-}
-
-function publicFailureCode(error: unknown) {
-  if (error instanceof PreviewModelUnavailableError) return "MODEL_UNAVAILABLE";
-  if (error instanceof ModelServiceError) return `MODEL_${error.code}`;
-  return "MODEL_RESPONSE_REJECTED";
 }
 
 export async function POST(request: NextRequest) {
@@ -127,19 +121,34 @@ export async function POST(request: NextRequest) {
           });
           send("complete", { runId: started.runId, response });
         } catch (error) {
-          const code = publicFailureCode(error);
+          const failure = describePreviewFailure(error);
           try {
             failPreviewRun({
               connection: streamConnection,
               runId: started.runId,
               sessionId: payload.sessionId,
-              errorCode: code,
+              errorCode: failure.code,
             });
           } catch {
             // The client still receives the stable failure boundary below.
           }
-          console.error({ requestId, route: "preview-run", errorName: error instanceof Error ? error.name : "UnknownError" });
-          send("error", { code, error: "现场模型暂时不可用，请稍后再试" });
+          console.error({
+            requestId,
+            runId: started.runId,
+            route: "preview-run",
+            errorCode: failure.code,
+            failureStage: failure.stage,
+            retryable: failure.retryable,
+            ...failure.log,
+          });
+          send("error", {
+            runId: started.runId,
+            code: failure.code,
+            error: failure.publicMessage,
+            requestId,
+            stage: failure.stage,
+            retryable: failure.retryable,
+          });
         } finally {
           streamConnection.sqlite.close();
           controller.close();
@@ -148,7 +157,7 @@ export async function POST(request: NextRequest) {
     });
     return new Response(stream, {
       status: 200,
-      headers: HEADERS,
+      headers: { ...HEADERS, "x-lumi-request-id": requestId },
     });
   } catch (error) {
     if (error instanceof z.ZodError || error instanceof BadRequestError || error instanceof UnsupportedMediaTypeError || error instanceof PreviewSuggestionNotFoundError) {

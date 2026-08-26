@@ -10,7 +10,11 @@ import { getActiveAgentPolicy } from "@/lib/agent/policy-registry";
 import type { ModelProviderAdapter } from "@/lib/agent/model-provider-adapter";
 import { createDb } from "@/lib/db/client";
 import { runMigrations } from "@/lib/db/migrate";
-import { PreviewMessageDeltaDecoder, runPreviewScenario } from "@/lib/preview/preview-runner";
+import {
+  PreviewMessageDeltaDecoder,
+  PreviewModelUnavailableError,
+  runPreviewScenario,
+} from "@/lib/preview/preview-runner";
 import { getPreviewSuggestion, listPreviewScenarios } from "@/lib/preview/scenarios";
 
 describe("evaluator preview runner", () => {
@@ -148,6 +152,31 @@ describe("evaluator preview runner", () => {
       expect(receivedImages.map(({ mimeType }) => mimeType)).toEqual(["image/png", "image/png", "image/png"]);
       expect(receivedImages.every(({ bytes }) => bytes.byteLength > 0)).toBe(true);
       expect(response.branch.directionTitle).toBe("海报风格融合设计");
+    } finally {
+      connection.sqlite.close();
+    }
+  });
+
+  it("classifies a missing multi-image capability before the model request", async () => {
+    const connection = createDb(databasePath);
+    const adapter: ModelProviderAdapter = {
+      provider: "TEST",
+      capabilities: { vision: false },
+      async complete() { throw new Error("text completion must not run for poster references"); },
+    };
+    try {
+      await expect(runPreviewScenario({
+        connection,
+        ...getPreviewSuggestion("S5_LEARNING_EVIDENCE", "S5_EVIDENCE_START", "poster-diagnostic-session"),
+        ai: undefined,
+        modelProviderAdapter: adapter,
+        policy: getActiveAgentPolicy(),
+      })).rejects.toMatchObject({
+        name: PreviewModelUnavailableError.name,
+        code: "PREVIEW_VISION_UNAVAILABLE",
+        stage: "MODEL_SETUP",
+        retryable: false,
+      });
     } finally {
       connection.sqlite.close();
     }

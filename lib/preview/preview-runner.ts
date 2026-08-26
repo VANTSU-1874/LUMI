@@ -8,6 +8,7 @@ import { getCoursePack } from "@/lib/course-packs/registry";
 import type { DatabaseConnection } from "@/lib/db/client";
 
 import {
+  type PreviewFailureStage,
   PreviewResponseSchema,
   type PreviewConversationTurn,
   type PreviewResponse,
@@ -16,7 +17,15 @@ import { loadPreviewAttachments } from "./assets";
 import type { PreviewScenario, PreviewSuggestion } from "./scenarios";
 
 export class PreviewModelUnavailableError extends Error {
-  constructor() {
+  constructor(
+    readonly code:
+      | "PREVIEW_ROUTING_UNAVAILABLE"
+      | "PREVIEW_MODEL_NOT_CONFIGURED"
+      | "PREVIEW_VISION_UNAVAILABLE"
+      | "PREVIEW_DECISION_UNAVAILABLE",
+    readonly stage: PreviewFailureStage,
+    readonly retryable: boolean,
+  ) {
     super("预览模型当前不可用");
     this.name = "PreviewModelUnavailableError";
   }
@@ -87,7 +96,13 @@ export async function runPreviewScenario(input: {
     "AGENT",
     pack.supportedEpisodes,
   );
-  if (candidateEpisodes.length === 0) throw new PreviewModelUnavailableError();
+  if (candidateEpisodes.length === 0) {
+    throw new PreviewModelUnavailableError(
+      "PREVIEW_ROUTING_UNAVAILABLE",
+      "MODEL_SETUP",
+      false,
+    );
+  }
   const knowledge = selectKnowledge(
     input.connection,
     pack.id,
@@ -98,7 +113,13 @@ export async function runPreviewScenario(input: {
     ai: input.ai,
     modelProviderAdapter: input.modelProviderAdapter,
   }, input.policy);
-  if (!client) throw new PreviewModelUnavailableError();
+  if (!client) {
+    throw new PreviewModelUnavailableError(
+      "PREVIEW_MODEL_NOT_CONFIGURED",
+      "MODEL_SETUP",
+      false,
+    );
+  }
   // The fixed starter establishes the visual reference for the theme. Every
   // later branch and free follow-up receives that same server-selected input,
   // so a stateless model never has to pretend it can see an earlier image.
@@ -113,7 +134,11 @@ export async function runPreviewScenario(input: {
       || (attachments.length > 1 && !client.completeWithImages)
     )
   ) {
-    throw new PreviewModelUnavailableError();
+    throw new PreviewModelUnavailableError(
+      "PREVIEW_VISION_UNAVAILABLE",
+      "MODEL_SETUP",
+      false,
+    );
   }
   const artworks = attachments.length > 0
     ? await loadPreviewAttachments(attachments)
@@ -162,7 +187,13 @@ export async function runPreviewScenario(input: {
     totalTimeoutMs: input.policy.budgets.modelTimeoutMs,
     onTextDelta: input.onModelJsonDelta,
   });
-  if (result.kind !== "ANSWER") throw new PreviewModelUnavailableError();
+  if (result.kind !== "ANSWER") {
+    throw new PreviewModelUnavailableError(
+      "PREVIEW_DECISION_UNAVAILABLE",
+      "MODEL_RESPONSE",
+      true,
+    );
+  }
   const sources = knowledge
     .filter((item) => result.decision.sourceIds.includes(item.id))
     .map((item) => ({
